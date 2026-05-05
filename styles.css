@@ -8,25 +8,38 @@
   --rule: #E2E2DC;
 }
 
-/* Hide Quarto's auto title block on the home page */
+/* Hide Quarto's auto title block (we render our own hero) */
 header.quarto-title-block,
 header#title-block-header,
 .quarto-title-block { display: none !important; }
 
-/* Hero */
+/* Hide the docked sidebar so the hero is centered on full width */
+#quarto-sidebar,
+.sidebar.sidebar-navigation,
+nav#quarto-sidebar { display: none !important; }
+
+main.content,
+#quarto-document-content,
+.quarto-container > .content {
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+/* ---------- Hero ---------- */
 .aem-hero {
   text-align: center;
-  padding: 3rem 1rem 1.25rem;
+  padding: 2.75rem 1rem 1.25rem;
   max-width: 720px;
   margin: 0 auto;
 }
 .aem-hero .hero-eyebrow {
-  font-size: 1rem;
-  font-weight: 700;
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--muted);
   letter-spacing: 0.18em;
   text-transform: uppercase;
-  color: var(--muted);
   margin: 0 0 0.6rem;
+  line-height: 1.2;
 }
 .aem-hero .hero-title {
   font-size: 2.1rem;
@@ -36,16 +49,16 @@ header#title-block-header,
   line-height: 1.1;
   margin: 0 0 1rem;
 }
-.aem-hero .hero-meta {
-  font-size: 0.95rem;
-  color: var(--muted);
-  max-width: 520px;
+.aem-hero .hero-tagline {
+  font-size: 1rem;
+  color: #4A4A4A;
+  max-width: 640px;
   margin: 0 auto 1.25rem;
   line-height: 1.55;
 }
-.aem-hero .hero-meta a { color: var(--cornell-red); }
+.aem-hero .hero-tagline a { color: var(--cornell-red); }
 
-/* "Work in progress" badge */
+/* ---------- Work-in-progress badge ---------- */
 .wip-badge {
   display: inline-block;
   padding: 0.35rem 0.85rem;
@@ -60,7 +73,72 @@ header#title-block-header,
   margin-bottom: 1.5rem;
 }
 
-/* Info panel */
+/* ---------- Offerings (root landing) ---------- */
+.offerings-label {
+  text-align: center;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin: 2.5rem 0 1rem;
+}
+.offerings {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  max-width: 640px;
+  margin: 0 auto 2rem;
+}
+.offering {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.85rem 1rem;
+  border: 1px solid var(--rule);
+  border-radius: 6px;
+  background: var(--panel);
+  text-decoration: none;
+  color: inherit;
+  transition: background 0.15s ease, transform 0.15s ease, border-color 0.15s ease;
+}
+.offering:hover {
+  background: #F7F4E9;
+  border-color: var(--cornell-red);
+  text-decoration: none;
+  color: inherit;
+}
+.offering .term {
+  font-weight: 700;
+  font-size: 1.05rem;
+  color: var(--ink);
+}
+.offering .dates {
+  font-size: 0.85rem;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+  margin-left: 0.5rem;
+}
+.offering .badge {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 0.2rem 0.55rem;
+  border-radius: 3px;
+}
+.offering .badge.current {
+  background: var(--cornell-red);
+  color: #fff;
+}
+.offering .badge.frozen {
+  background: #efeee8;
+  color: var(--muted);
+  border: 1px solid #d9d8d2;
+}
+
+/* ---------- About panel (used on the Fall 2026 stub page) ---------- */
 .aem-panel {
   max-width: 620px;
   margin: 1.5rem auto 0;
