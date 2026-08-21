@@ -238,31 +238,77 @@ thead th {
   color: #6b6b6b;
   line-height: 1.6;
 }
-// The one course table: sessions grouped under their block names, homework
-// folded into the last column. Group rows carry the 7010 accent palette.
+// Cornell seal between the hero and the table — the page's one branding mark.
+.hero-brand {
+  text-align: center;
+  margin: 0.25rem 0 1.6rem;
+}
+.hero-brand .cornell-seal {
+  height: 84px;
+  width: auto;
+}
+
+// The one course table. Deliberately line-free (instructor: "too many
+// horizontal lines"): no cell borders, three content columns — date, topic,
+// homework — and a colored rail cell that spans each lecture group's rows.
 .grouped-schedule {
   overflow-x: auto;
   margin-bottom: 1.25rem;
 }
 .grouped-schedule table {
   width: 100%;
+  // Fixed layout + the colgroup in index.qmd: the topic column gets the
+  // leftover width instead of being squeezed by the homework column's
+  // intrinsic size. min-width makes phones scroll the table sideways rather
+  // than crush the topic column.
+  table-layout: fixed;
+  min-width: 640px;
   font-size: 0.92rem;
+  border-collapse: collapse;
 }
 .grouped-schedule th,
 .grouped-schedule td {
-  padding: 0.45rem 0.6rem;
+  padding: 0.4rem 1.1rem 0.4rem 0;
   vertical-align: top;
+  border: none !important;
+  background: none;
 }
-// Number and date columns shrink to content and never wrap.
-.grouped-schedule td:nth-child(1),
-.grouped-schedule th:nth-child(1),
-.grouped-schedule td:nth-child(2),
-.grouped-schedule th:nth-child(2) {
-  width: 1%;
+.grouped-schedule thead th {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #6b6b6b;
+  border-bottom: 1px solid #e3e3de !important;
+  padding-bottom: 0.5rem;
+}
+// The group rail: one cell per lecture group, spanning its rows, with the
+// accent bar running the group's full height.
+.grouped-schedule .g-rail {
+  border-left: 3px solid #6b6b6b !important;
+  padding-left: 0.65rem;
+  padding-top: 0.5rem;
+  width: 7rem;
+  min-width: 7rem;
+  font-size: 0.8rem;
+  font-weight: 700;
+  line-height: 1.25;
+  color: #343a40;
+}
+.grouped-schedule .g-rail.g-blue  { border-left-color: #1f4e8c !important; }
+.grouped-schedule .g-rail.g-green { border-left-color: #0f6e56 !important; }
+.grouped-schedule .g-rail.g-red   { border-left-color: $carnelian !important; }
+// Breathing room where a new group starts (no line needed).
+.grouped-schedule .g-first td { padding-top: 0.85rem; }
+.grouped-schedule .g-first td.g-rail { padding-top: 0.95rem; }
+// Date column: quiet, fixed, never wraps.
+.grouped-schedule td:nth-child(2):not(.topic),
+.grouped-schedule tr:not(.g-first):not(.part-row) td:first-child {
   white-space: nowrap;
+  width: 1%;
+  color: #6b6b6b;
   font-variant-numeric: tabular-nums;
 }
-.grouped-schedule td:nth-child(1) { color: #6b6b6b; }
 // Topic links read as text; the accent appears on hover.
 .grouped-schedule .topic a {
   color: inherit;
@@ -275,6 +321,7 @@ thead th {
 .grouped-schedule td.hw {
   font-size: 0.88rem;
   min-width: 11rem;
+  padding-right: 0;
 }
 .grouped-schedule td.hw a { font-weight: 600; }
 .grouped-schedule .due {
@@ -290,27 +337,8 @@ thead th {
   letter-spacing: 0.14em;
   text-transform: uppercase;
   color: #6b6b6b;
-  padding: 1.5rem 0.6rem 0.5rem;
-  background: #fff;
+  padding: 1.6rem 0 0.6rem;
 }
-// Block rows: the former spine-block headers, now table sections.
-.grouped-schedule .group-row td {
-  font-weight: 700;
-  color: #1b1b1b;
-  background: #fafaf7;
-  border-left: 3px solid #6b6b6b;
-}
-.grouped-schedule .group-row .g-dates {
-  float: right;
-  font-weight: 400;
-  font-size: 0.78rem;
-  color: #6b6b6b;
-  font-variant-numeric: tabular-nums;
-  line-height: 1.6;
-}
-.grouped-schedule .g-blue td  { border-left-color: #1f4e8c; }
-.grouped-schedule .g-green td { border-left-color: #0f6e56; }
-.grouped-schedule .g-red td   { border-left-color: $carnelian; }
 .grouped-schedule .break-row td {
   color: #6b6b6b;
   font-style: italic;
