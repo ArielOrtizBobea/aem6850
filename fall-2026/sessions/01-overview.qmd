@@ -1,0 +1,716 @@
+---
+title: "1 · Course overview, install party, onboarding"
+subtitle: "Tuesday, August 25, 2026"
+pagetitle: "AEM 6850 · Session 1 · Overview & onboarding"
+execute:
+  echo: true
+format:
+  html:
+    toc: true
+    toc-depth: 2
+  revealjs:
+    output-file: 01-overview-slides.html
+    theme: [default, slides.scss]
+    footer: "AEM 6850 · Session 1"
+    slide-number: c/t
+    incremental: false
+    code-line-numbers: false
+    code-overflow: scroll
+    history: false
+    link-external-newwindow: true
+---
+
+```{r}
+#| purl: false
+#| include: false
+knitr::opts_chunk$set(
+  comment = "#>",
+  collapse = FALSE,
+  fig.width = 8,
+  fig.height = 4,
+  fig.align = "center",
+  dpi = 150
+)
+```
+
+::: {.content-hidden when-format="revealjs"}
+
+[Slides](01-overview-slides.html) · [Live script](01-overview.R) ·
+[Source](https://github.com/ArielOrtizBobea/aem6850/blob/main/fall-2026/sessions/01-overview.qmd)
+
+This page is the manual for the session. The slides are the same material in
+the shape it takes in the room; the live script is every line of code below,
+in order, ready to run. All three come out of one file, so they cannot
+disagree with each other.
+
+:::
+
+## Objectives {#objectives}
+
+By the end of this session you can:
+
+- State the course thesis and read the course map.
+- Run a script and find its outputs.
+- Predict what a simple script prints, then reconcile the prediction with what
+  actually happened.
+- Accept a GitHub Classroom assignment and commit a change in the browser.
+
+::: {.content-hidden when-format="revealjs"}
+
+**How the 75 minutes run.** Bring a laptop; bring nothing else.
+
+| Time | Minutes | What happens |
+|:--|--:|:--|
+| 8:40 | 20 | The thesis and the course map |
+| 9:00 | 20 | Install party — R, then RStudio, then check it works |
+| 9:20 | 15 | Onboarding — GitHub account, accept the repo, commit in the browser |
+| 9:35 | 15 | The demo — predict, run, reconcile |
+| 9:50 | 5  | What happens before Thursday |
+
+The install party runs at very different speeds on different laptops. If yours
+is done early, start the onboarding section; if yours is still churning at
+9:20, do the onboarding anyway — it happens entirely in a browser and needs
+nothing installed. The demo is driven from the front of the room. Following
+along on your own machine is better, watching is fine, and the script is on
+this page either way.
+
+## Before class {#before-class}
+
+Nothing is required. Bring a laptop you can install software on. If you
+already have R and RStudio, make sure you can launch both.
+
+If your laptop is locked down, borrowed, or eight years old, come anyway. The
+fallback path — a free browser-based R — is in the [install
+party](#install-check), and it is a perfectly good way to get through the
+first weeks while you sort out a local install.
+
+:::
+
+## The thesis {#thesis}
+
+::: {.content-hidden when-format="revealjs"}
+
+Every empirical paper you have ever read rests on a dataset somebody had to
+find, fetch, clean, check, and reshape. Your methods courses begin *after*
+that work is finished. This course is that work.
+
+Two things about it have changed recently.
+
+The first is the raw material. The evidence economists now use arrives as
+text, PDFs and scans, photographs, satellite tiles, audio, and maps — not just
+as tables. Nightlights measure growth where the national accounts are thin;
+scraped listings measure prices at daily frequency; a scanned census from 1890
+measures things nobody digitized until someone did.
+
+The second is that a machine will now write a competent first draft of the
+code that handles all of it. This does not make the work easier. It moves
+where the work is. If plausible code takes seconds to produce, the scarce
+skill is no longer producing it — it is knowing whether the result is right.
+
+:::
+
+::: {.content-visible when-format="revealjs"}
+
+- The data economists use now arrives as text, documents, images, audio, maps
+  — not just tables.
+- A model will write a competent first draft of the code that handles it.
+- That does not make the work easier. It moves where the work is.
+
+:::
+
+> **Models draft. You verify.**
+>
+> "It runs" is not "it's right." A wrong number that runs clean is the
+> characteristic failure of this era, and it is the one this course trains you
+> to catch.
+
+::: {.content-hidden when-format="revealjs"}
+
+So every homework this semester ends the same way: with a number checked
+against something outside the computer. A published total. A figure printed on
+the page the table came from. A calendar fact. A place you have been. That
+check is not a formality at the end of the assignment — it is the assignment.
+
+:::
+
+::: {.content-visible when-format="revealjs"}
+::: {.notes}
+Do not rush this. Everything else in the course is downstream of the students
+believing this claim. Ask the room: who has already had a model hand them code
+that ran fine and was wrong?
+:::
+:::
+
+## The course map {#map}
+
+Twenty-eight meetings, two parts.
+
+::: {.content-visible when-format="revealjs"}
+
+- **Part I — the workbench** (1–12). The whole pipeline, on ordinary tables.
+  By hand through session 7; AI enters at session 8.
+- **Part II — the data** (13–28). One family of unconventional data per
+  session, each through the same pipeline.
+
+:::
+
+::: {.content-hidden when-format="revealjs"}
+
+**Part I — the workbench** (sessions 1–12, weeks 1–6). The whole pipeline, on
+ordinary tables: R, diagnostic plots, wrangling, joins, functions and
+debugging, git, AI, verification strategy, reproducible projects, graphics for
+readers. You work by hand through session 7; AI enters the toolkit at session
+8, once you can tell whether its output is any good.
+
+**Part II — the data** (sessions 13–28, weeks 7–15). One family of
+unconventional data per session, each walked through the same pipeline: what
+the family is good for, where to get it, how to process it, and the checks
+that particular family demands.
+
+The [full schedule](../index.qmd#schedule) lists all twenty-eight sessions.
+The [syllabus](../syllabus.qmd) has the grading, the AI policy, and the
+homework calendar.
+
+:::
+
+## The six families {#families}
+
+**messy tables · text · documents (PDFs & scans) · images · audio · maps &
+rasters**
+
+Cutting across them are the *channels* — the ways data reaches you: packaged
+downloads, APIs, scraping, licensed vendors, replication archives, and data
+you collect yourself.
+
+**What this course does not cover.** No causal inference, no econometric
+theory, no estimation strategy — that is AEM 6851 in the spring, and this
+course is its prerequisite in spirit. No machine-learning theory: we *use*
+models, we do not derive them. No video, no network data.
+
+::: {.content-hidden when-format="revealjs"}
+
+And no package worship: the point is never `dplyr`, it is what `dplyr` is for.
+
+:::
+
+## Install party {#install}
+
+Do these in order. Order matters: RStudio looks for R when it starts, so R has
+to be there first.
+
+**1 — Install R.** [cran.r-project.org](https://cran.r-project.org) → your
+operating system.
+
+- *macOS:* there are two builds. Apple silicon (M1–M4) needs the `arm64`
+  installer; older Intel Macs need the `x86_64` one. Apple menu → About This
+  Mac tells you which you have.
+- *Windows:* click "base", then the download link. You do not need Rtools.
+
+**2 — Install RStudio.**
+[posit.co/download/rstudio-desktop](https://posit.co/download/rstudio-desktop)
+→ the free Desktop version. Quarto ships inside it; there is nothing else to
+install.
+
+## Check it worked {#install-check}
+
+**3 —** Open RStudio — not R — and type this into the Console, bottom left:
+
+```{r}
+#| label: check-install
+#| script: "Check the install"
+#| eval: false
+R.version.string
+```
+
+You should see version 4-point-something. If you see an error, or RStudio says
+it cannot find an R installation, raise your hand.
+
+**4 — One setting, right now.** Tools → Global Options → General: uncheck
+**"Restore .RData into workspace at startup"**, and set **"Save workspace to
+.RData on exit"** to **Never**.
+
+::: {.content-hidden when-format="revealjs"}
+
+This takes fifteen seconds and prevents a whole category of misery. By default
+RStudio saves your invisible leftovers between sessions, so a script can
+appear to work because of an object you made an hour ago and have since
+deleted from the file. With the setting off, your script is the only record of
+what you did — which is the entire premise of a reproducible project.
+
+**Four panes, and which one matters today.** The Console (bottom left) runs
+code the moment you press Return. The Source pane (top left) holds scripts:
+code you keep. The Environment tab (top right) lists the objects you have
+made. Plots and Files (bottom right) is where figures and your folder show up.
+For now: type in the Console, keep anything worth keeping in Source.
+
+::: {.column-margin}
+**If your laptop refuses.** Make a free account at
+[posit.cloud](https://posit.cloud) — it is RStudio in a browser, and
+everything in the first weeks works there. Then bring the machine to office
+hours and we will fix the local install properly.
+:::
+
+:::
+
+::: {.content-visible when-format="revealjs"}
+
+Laptop refusing? [posit.cloud](https://posit.cloud) is RStudio in a browser.
+Free, works today, fix the local install later.
+
+:::
+
+## Onboarding — get your repo {#onboarding}
+
+Not graded. Everyone finishes this today, in the room. It happens entirely in
+a browser, so a half-installed laptop is no obstacle.
+
+**1 — Get a GitHub account.** [github.com/signup](https://github.com/signup).
+
+::: {.content-hidden when-format="revealjs"}
+
+Any email address works; you can add your Cornell address later to claim the
+free GitHub Education benefits. Pick a username you would be willing to put on
+a CV, because for many of you this account will eventually *be* your CV.
+Already have an account? Sign in with it. Do not make a second one.
+
+:::
+
+**2 — Click the invite link.** It is on Canvas and on the screen.
+
+**3 — Accept the assignment.** Authorize GitHub Classroom when it asks, find
+your name in the roster list, and click through. Wait for "You're ready to
+go!" and follow the link to your new repository.
+
+That repository is private, it belongs to you, and the instructor can see it.
+Nothing you put there is visible to the rest of the class.
+
+## Onboarding — your first commit {#onboarding-commit}
+
+**4 — Edit the README in the browser.** Click `README.md`, then the pencil
+icon. Fill in the three lines:
+
+```
+Name:
+Program:
+One dataset or question I would like to be able to handle by December:
+```
+
+**5 — Commit.** Green **"Commit changes…"** button, top right. Type a short
+message — `add my intro` — leave "Commit directly to the `main` branch"
+selected, and click **Commit changes**.
+
+**6 — Look at what you did.** Reload the repository's front page. Your text is
+there, and above it your message, `add my intro`, with a timestamp.
+
+## You just used version control {#onboarding-reveal}
+
+::: {.callout-note appearance="simple"}
+**What just happened.** That was a commit — a permanent, timestamped,
+attributed snapshot of your work, the thing version control exists to produce.
+You made one without installing git, opening a terminal, or learning a single
+git command, because the browser did it for you.
+:::
+
+That is how the first three homeworks get handed in: edit or drag files onto
+the repository page, click Commit. Session 7 pulls the curtain back and shows
+you what you have been doing for three weeks — doing it first and
+understanding it second is deliberate.
+
+**7 — Check in.** Paste your repository URL into the poll. That is today's
+attendance, and it is also the verification step: it proves forty repositories
+exist, not that forty people nodded.
+
+::: {.content-hidden when-format="revealjs"}
+
+**If something goes wrong.**
+
+| Symptom | Fix |
+|:--|:--|
+| Your name is not in the roster list | Use "Skip to the next step", then email the instructor your GitHub username |
+| The link 404s or says the invitation expired | Raise your hand — links get regenerated in seconds |
+| You accepted with the wrong GitHub account | Sign out, sign in as the right one, click the link again |
+| No pencil icon on the README | You are looking at someone else's repository, or you are signed out |
+
+:::
+
+## Predict before you run {#predict}
+
+::: {.content-hidden when-format="revealjs"}
+
+On January 7, 2025, two fires started in Los Angeles County — the Palisades
+fire near the coast, the Eaton fire above Altadena. Between them they
+destroyed something like sixteen thousand structures. We will come back to
+those fires all semester; they are the running example the homeworks are built
+on. Today they are just a reason to pull one small file.
+
+:::
+
+::: {.content-visible when-format="revealjs"}
+
+January 7, 2025: the Palisades and Eaton fires start in Los Angeles County.
+The semester's running example. Today, just a reason to pull one file.
+
+:::
+
+We are about to download daily weather for downtown Los Angeles — December 1,
+2024 through February 28, 2025, ninety days, six columns — and plot the
+strongest wind gust recorded each day.
+
+**Before any of that, write down three predictions.** On paper, or in a
+comment at the top of your script. Written down, not held in your head.
+
+1. Which date in that window has the largest daily maximum gust?
+2. Roughly how many times bigger is that gust than a typical day's?
+3. How much rain fell on Los Angeles in December 2024?
+
+::: {.content-hidden when-format="revealjs"}
+
+You are allowed — encouraged — to reason from what you already know about
+those fires and about Southern California in winter. That is the difference
+between a prediction and a guess.
+
+:::
+
+::: {.content-visible when-format="revealjs"}
+::: {.notes}
+Take answers out loud before running anything. Someone will say Jan 7 for Q1;
+ask them why they believe it. Q2 gets wild spread — good, that is the point.
+Q3 is the one nobody predicts well.
+:::
+:::
+
+## Step 1 — Pull the data {#demo-pull}
+
+The data comes from [Open-Meteo](https://open-meteo.com), which serves
+historical weather as a plain CSV over a URL. No account, no key, no package.
+
+```{r}
+#| label: demo-pull
+#| script: "Pull the data"
+#| message: false
+url <- paste0(
+  "https://archive-api.open-meteo.com/v1/archive",
+  "?latitude=34.05&longitude=-118.24",
+  "&start_date=2024-12-01&end_date=2025-02-28",
+  "&daily=wind_gusts_10m_max,wind_speed_10m_max,",
+  "temperature_2m_max,relative_humidity_2m_min,precipitation_sum",
+  "&timezone=America%2FLos_Angeles&format=csv"
+)
+
+la <- read.csv(url, skip = 3)
+names(la) <- c("date", "gust", "wind", "tmax", "rh_min", "precip")
+la$date <- as.Date(la$date)
+```
+
+::: {.content-hidden when-format="revealjs"}
+
+Three things in there are worth a sentence each.
+
+`read.csv()` takes a URL as happily as a filename. `skip = 3` is there because
+the first three lines of the file are about the *location* — latitude,
+longitude, elevation, time zone — not about the weather; the real header is on
+line four. Open the URL in a browser tab and you can see it. And the file
+ships column names like `wind_gusts_10m_max..km.h.`, which is what happens
+when R sanitizes `wind_gusts_10m_max (km/h)`. Renaming them yourself is not
+cosmetic: you will type these names two hundred times today.
+
+::: {.callout-tip collapse="true"}
+## If the download fails
+
+Campus wifi, a rate limit, a sleeping API — it happens. A copy of the exact
+response is saved with this session, so the rest of the demo still works:
+
+```r
+la <- read.csv(paste0(
+  "https://arielortizbobea.github.io/aem6850/fall-2026/sessions/",
+  "data/la-weather-dec2024-feb2025.csv"
+), skip = 3)
+```
+
+Committing the raw response so a pipeline can be re-run identically later is a
+habit we formalize in session 14.
+:::
+
+:::
+
+## Step 2 — Look at what arrived {#demo-look}
+
+Never compute on a file you have not looked at. Three lines, every time:
+
+```{r}
+#| label: demo-look
+#| script: "Look at what arrived"
+dim(la)
+str(la)
+summary(la$gust)
+```
+
+::: {.content-hidden when-format="revealjs"}
+
+`dim()` says ninety rows and six columns — which is what ninety days of daily
+data should be, and if it said 89 or 91 we would stop and find out why.
+`str()` says `date` is a Date and the rest are numbers, so nothing arrived as
+text by accident. `summary()` gives the range: if the largest gust were 4 or
+4000, something would be wrong with the units before we ever made a plot.
+
+None of this is ceremony. Session 3 turns it into a named habit — arrival
+checks — and every homework from here on expects it.
+
+:::
+
+## Step 3 — One plot {#demo-plot}
+
+```{r}
+#| label: demo-plot
+#| script: "One plot"
+#| fig-alt: "Daily maximum wind gust in downtown Los Angeles, December 2024 through February 2025. Most days sit near 20 km/h. A single spike reaches about 66 km/h on January 7, 2025, with a second, smaller spike the following day."
+plot(la$date, la$gust,
+     type = "h", col = "grey30",
+     xlab = "", ylab = "Maximum wind gust (km/h)",
+     main = "Downtown Los Angeles, daily maximum gust")
+
+abline(h = median(la$gust), lty = 2, col = "grey60")
+abline(v = as.Date("2025-01-07"), col = "#b31b1b", lwd = 2)
+text(as.Date("2025-01-07"), max(la$gust), "  Jan 7",
+     col = "#b31b1b", adj = c(0, 1))
+```
+
+::: {.content-hidden when-format="revealjs"}
+
+That is base R graphics, which is what session 3 is about: plots you make in
+one line to interrogate a column, not plots you make for readers. `type = "h"`
+draws each day as a vertical spike, which is the right shape for the question
+"how unusual was this one day."
+
+:::
+
+## Step 4 — Reconcile {#demo-reconcile}
+
+Now compare the screen against what you wrote down.
+
+```{r}
+#| label: demo-reconcile
+#| script: "Reconcile against the predictions"
+la$date[which.max(la$gust)]                 # 1. the windiest day
+max(la$gust) / median(la$gust)              # 2. how unusual it was
+sum(la$precip[format(la$date, "%Y-%m") == "2024-12"])  # 3. December rain, in mm
+```
+
+::: {.content-hidden when-format="revealjs"}
+
+**The windiest day of the winter is the day the fires started.** Not the week
+— the day. The data and the world agree, and they agree on something specific
+enough that the agreement means something.
+
+**The gust is 3.3 times a normal day.** Most winter days in downtown LA top
+out around 20 km/h; January 7 hit 66.
+
+**December brought half a millimetre of rain.** Not half an inch. Two days in
+the entire month recorded anything at all. Wind does not burn a city on its
+own; wind arriving on three months of dry fuel does.
+
+:::
+
+::: {.content-visible when-format="revealjs"}
+
+- The windiest day of the winter is the day the fires started.
+- It was 3.3× a normal day.
+- December's total rainfall: half a millimetre.
+
+:::
+
+## Where the number came from {#measurement}
+
+66 km/h is about 41 mph. The National Weather Service was warning about that
+windstorm in far more dramatic terms than 41 mph, and it was right to. Both
+numbers are correct.
+
+This file reports **one model grid cell over downtown Los Angeles, ten metres
+above flat ground.** The fires started in canyons twenty kilometres away,
+where Santa Ana winds funnel and accelerate.
+
+::: {.callout-important appearance="simple"}
+A dataset is not the world. It is a measurement of the world, taken somewhere
+specific, by some specific method, at some specific resolution. Half the
+mistakes in empirical work are made by people who forgot to ask where their
+number came from.
+:::
+
+::: {.content-hidden when-format="revealjs"}
+
+**Your turn:** find the peak gust the National Weather Service actually
+recorded during that windstorm, and where the station was. Write both numbers
+down and bring them Thursday. That is a reconciliation — the smallest possible
+version of what every homework in this course asks you to do.
+
+:::
+
+::: {.content-visible when-format="revealjs"}
+
+**Before Thursday:** find the NWS's recorded peak gust for that windstorm, and
+the station that recorded it. Bring both numbers.
+
+:::
+
+## You try {#you-try}
+
+Five minutes. The stub is in the live script.
+
+```{r}
+#| label: you-try
+#| exercise: true
+#| script: "You try (5 minutes)"
+#| eval: false
+# 1. Pick a place you care about. Look up its latitude and longitude, put them
+#    into the URL above, and re-run everything from the top.
+#
+# 2. Plot `tmax` instead of `gust`. What units is it in? (If you are not sure,
+#    look at line 4 of the raw file -- open the URL in a browser.)
+#
+# 3. Add one comment saying, in a sentence, what your plot shows.
+```
+
+## Verify {#verify}
+
+Each session in this course ends with the verification habit it installs.
+This is the first one, and everything later is a variation on it.
+
+> **Predict, then run, then reconcile.**
+
+::: {.content-hidden when-format="revealjs"}
+
+Write the prediction down before you run the code. A prediction you keep in
+your head quietly reshapes itself to match whatever appears on the screen —
+you will remember having expected exactly that. A written one cannot do that.
+
+When the prediction and the output disagree, exactly one of three things is
+true:
+
+- **Your prediction was wrong** — you learned something about the world.
+- **The code is wrong** — you learned something about your code.
+- **The data is not what you thought it was** — you learned something about
+  the data, which is usually the most valuable of the three.
+
+All three are wins. The only losing move is not predicting, because then the
+output has nothing to disagree with and you will believe it.
+
+:::
+
+::: {.content-visible when-format="revealjs"}
+
+Prediction ≠ output means one of three things, all of them useful:
+
+- your prediction was wrong → you learned about the world
+- the code is wrong → you learned about your code
+- the data is not what you thought → you learned about the data
+
+No prediction, no disagreement, no learning.
+
+:::
+
+## Quick reference {#quick-reference}
+
+::: {.content-visible when-format="revealjs"}
+
+Everything from today lives on the session page:
+
+- the install checklist
+- every command we used, with a one-line description
+- the keyboard shortcuts
+- this deck, and the runnable script
+
+:::
+
+::: {.content-hidden when-format="revealjs"}
+
+**Install checklist**
+
+| Step | Where | Done when |
+|:--|:--|:--|
+| R | [cran.r-project.org](https://cran.r-project.org) — match your chip on macOS | `R.version.string` prints 4.x |
+| RStudio | [posit.co/download/rstudio-desktop](https://posit.co/download/rstudio-desktop) | It opens and finds R |
+| Workspace setting | Tools → Global Options → General | Restore is off, Save is Never |
+| GitHub | [github.com/signup](https://github.com/signup) | You can sign in |
+| Course repo | The Classroom invite link | Your commit shows on the repo page |
+| Fallback | [posit.cloud](https://posit.cloud) | Only if the laptop lost |
+
+**Today's R, in one screen**
+
+| Code | What it does |
+|:--|:--|
+| `R.version.string` | Which R you are running |
+| `read.csv(url, skip = 3)` | Read a CSV from a file or a URL, ignoring the first 3 lines |
+| `names(d) <- c(...)` | Rename all the columns |
+| `as.Date(x)` | Turn text like `"2025-01-07"` into a date |
+| `dim(d)`, `str(d)`, `summary(d$x)` | The three arrival checks |
+| `d$x` | One column, by name |
+| `d$x[which.max(d$y)]` | The value of `x` in the row where `y` is largest |
+| `plot(x, y, type = "h")` | Scatter, or spikes with `type = "h"` |
+| `abline(h =, v =, lty =, col =)` | A horizontal or vertical reference line |
+| `median(x)`, `max(x)`, `sum(x)` | The obvious three |
+
+**Keyboard**
+
+| Keys | What |
+|:--|:--|
+| `Cmd`/`Ctrl` + `Return` | Run the current line and move down |
+| `Cmd`/`Ctrl` + `Shift` + `Return` | Run the whole script |
+| `Ctrl` + `L` | Clear the console |
+| `Tab` | Complete a name |
+| `↑` | The last thing you typed |
+
+**Links**
+
+- Session materials: [slides](01-overview-slides.html) ·
+  [live script](01-overview.R) ·
+  [snapshot of today's data](data/la-weather-dec2024-feb2025.csv)
+- [Syllabus](../syllabus.qmd) · [full schedule](../index.qmd#schedule)
+- Open-Meteo historical archive: [open-meteo.com](https://open-meteo.com)
+
+:::
+
+## After class {#after-class}
+
+**Before Thursday**, four things:
+
+1. R and RStudio installed and opening, with the workspace setting off.
+2. Your course repository accepted, with your commit on it.
+3. Today's script run once on your own machine, start to finish.
+4. The two NWS numbers from the reconciliation above.
+
+::: {.content-hidden when-format="revealjs"}
+
+**Thursday** is R essentials — objects, vectors, types, data frames, reading a
+real and slightly broken file, subsetting. It is the densest session of the
+semester, and the live script for it is the safety net: everything we do in
+the room, you can re-run at home, one line at a time.
+
+**HW1 posts Thursday after class** and is due the following Thursday at 8:40
+am. It uses EPA air-quality data from the same fires. You hand it in the way
+you handed in today's README: edit or drag files onto the repository page,
+click Commit.
+
+**No textbook.** These pages are the manual. They stay at these URLs, and next
+year's version of the course lives somewhere else, so a link you save today
+keeps working.
+
+**Stuck?** Office hours, or ask in class. Nobody in this room is expected to
+have done this before — that is what "no prerequisites" means, and it is
+enforced.
+
+:::
+
+::: {.content-visible when-format="revealjs"}
+
+Thursday: R essentials. HW1 posts after class.
+
+:::
+
+```{r}
+#| purl: false
+#| include: false
+# Single-source build: the .R live script is generated from this file every
+# time the page renders, so it cannot fall out of step with the prose.
+source("_purl.R")
+purl_session("01-overview.qmd", "01-overview.R")
+```

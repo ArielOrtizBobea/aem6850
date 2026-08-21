@@ -1,0 +1,169 @@
+/*-- scss:defaults --*/
+// AEM 6850 — minimal theme layer over cosmo.
+// Typography and chrome are matched to r4ds.hadley.nz, read off the rendered
+// page rather than guessed: Source Sans Pro, 18px root, 1.5 line height,
+// #343a40 body text, white sidebar 250px wide, sidebar links 0.925rem #595959.
+
+$web-font-path: "https://fonts.googleapis.com/css2?family=Source+Sans+Pro:ital,wght@0,300;0,400;0,600;0,700;1,400&display=swap";
+
+$font-family-sans-serif: "Source Sans Pro", -apple-system, "system-ui", "Segoe UI",
+  Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji",
+  "Segoe UI Emoji", "Segoe UI Symbol";
+$font-family-monospace: SFMono-Regular, Menlo, Monaco, Consolas,
+  "Liberation Mono", "Courier New", monospace;
+
+$font-size-root:   18px;
+$line-height-base: 1.5;
+
+$body-color: #343a40;
+$body-bg:    #ffffff;
+
+$h1-font-size: 2rem;
+$headings-font-weight: 600;
+
+// One accent token, used as a state signal — never as decoration.
+$carnelian: #b31b1b;
+$primary:    $carnelian;
+$link-color: $carnelian;
+
+// Chrome stays white, as on the reference site; no grey sidebar panel.
+$sidebar-bg:         #ffffff;
+$sidebar-fg:         #595959;
+$navbar-bg:          #ffffff;
+$body-secondary-bg:  #ffffff;
+$border-color:       #e3e3de;
+$table-border-color: #dee2e6;
+
+$grid-sidebar-width: 250px;
+
+/*-- scss:rules --*/
+
+// The sidebar is the only navigation surface; keep it flat and white so the
+// content column, not a shaded panel, is what the eye lands on.
+#quarto-sidebar,
+.sidebar-navigation,
+#quarto-margin-sidebar,
+.quarto-sidebar-collapse-item {
+  background-color: #fff;
+}
+
+#quarto-sidebar {
+  border-right: 1px solid #e9ecef;
+}
+
+// Sidebar entries: r4ds sizing, quiet grey, tight leading so a 40-item list
+// stays scannable.
+.sidebar-navigation .sidebar-item .sidebar-item-container .sidebar-item-text {
+  font-size: 0.925rem;
+  line-height: 1.25;
+  color: #595959;
+}
+
+.sidebar-navigation .sidebar-item {
+  margin-bottom: 0.15rem;
+}
+
+// Accent marks the current page only.
+.sidebar-navigation .sidebar-item-container .active,
+.sidebar-navigation .sidebar-item-container .show > .sidebar-link {
+  color: $carnelian;
+  font-weight: 600;
+}
+
+// Section headers ("Act I — The workbench") read as labels, not as links.
+.sidebar-navigation .sidebar-item-section > .sidebar-item-container > .sidebar-item-text,
+.sidebar-navigation .sidebar-item-section > .sidebar-item-container > .sidebar-link {
+  font-size: 0.95rem;
+  color: #343a40;
+}
+
+// Site title above the search box.
+.sidebar .sidebar-title,
+.sidebar-title a {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #343a40;
+}
+
+// Right-hand contents list.
+.sidebar nav[role="doc-toc"] > h2,
+#toc-title {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #343a40;
+}
+
+.sidebar nav[role="doc-toc"] ul > li > a {
+  font-size: 0.875rem;
+  line-height: 1.3;
+}
+
+.sidebar nav[role="doc-toc"] ul > li > a.active {
+  border-left-color: $carnelian;
+  color: $carnelian;
+}
+
+// Narrow-leading-column tables. Pandoc derives column widths from the dash
+// counts in the source and writes them as inline styles on the <col> elements,
+// which routinely hands 37% to a "Date" column and starves the prose column.
+// This hits every table shaped label · label · prose — the shared schedule and
+// homework partials, and the run-of-show tables in session pages.
+//
+// Wrap such a table and every column but the last shrinks to its content while
+// the last column absorbs the remainder. Works at any column count:
+//
+//     ::: {.tight-cols}
+//     | # | Date | Topic |
+//     ...
+//     :::
+//
+// `.schedule` is the original name, kept because pages already use it.
+.schedule table,
+.tight-cols table {
+  width: 100%;
+}
+
+// !important: pandoc's inline <col> styles outrank a stylesheet rule.
+.schedule table col,
+.tight-cols table col {
+  width: auto !important;
+}
+
+// width:1% is shrink-to-fit under auto table layout. :not(:last-child) rather
+// than a fixed nth-child count, so the same rule serves any table whose last
+// column is the prose one.
+.schedule table th:not(:last-child),
+.schedule table td:not(:last-child),
+.tight-cols table th:not(:last-child),
+.tight-cols table td:not(:last-child) {
+  width: 1%;
+}
+
+// Data cells never wrap: a date broken across lines is unreadable.
+.schedule table td:not(:last-child),
+.tight-cols table td:not(:last-child) {
+  white-space: nowrap;
+}
+
+// Headers are a separate case. They are often longer than what they label
+// ("Due (Thu 8:40)" over "Sep 10"), and holding one on a single line sets the
+// whole column to the header's width. On a 375px screen that stole ~57px from
+// the prose column and pushed every homework row to three or more lines, so
+// narrow viewports let headers wrap. Wide ones have the room and read better
+// with headers intact, hence the one media query — measured, not assumed:
+// 375px prose column 103px -> 171px, worst row 5 lines -> 2.
+@media (min-width: 768px) {
+  .schedule table th,
+  .tight-cols table th {
+    white-space: nowrap;
+  }
+}
+
+table {
+  font-size: 0.94rem;
+}
+
+thead th {
+  border-bottom: 2px solid #cfcfc9;
+  font-weight: 600;
+}
