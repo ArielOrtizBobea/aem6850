@@ -4,7 +4,7 @@
      leave this repo. This README is exported verbatim, so keep it
      written for the public audience. -->
 
-# AEM 6850 — Unconventional Data for Economists
+# AEM 6850 — Empirical Methods for Applied Economists
 
 Course site for AEM 6850 (Charles H. Dyson School of Applied
 Economics and Management, Cornell University), taught by

@@ -84,12 +84,34 @@ $grid-sidebar-width: 270px;
   color: #343a40;
 }
 
-// Site title above the search box.
-.sidebar .sidebar-title,
-.sidebar-title a {
-  font-size: 1.25rem;
+// Sidebar masthead: same feel as the front-door hero — centered,
+// letterspaced course number with the official catalog title in carnelian
+// beneath. The title line is injected with ::after so the whole block stays
+// one home link and _quarto.yml keeps a plain-text sidebar title.
+.sidebar-header {
+  text-align: center !important;
+}
+.sidebar .sidebar-title a {
+  display: block;
+  text-align: center;
+  font-size: 0.9rem;
   font-weight: 600;
-  color: #343a40;
+  color: #6b6b6b;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  line-height: 1.2;
+  text-decoration: none;
+}
+.sidebar .sidebar-title a::after {
+  content: "Empirical Methods for Applied Economists";
+  display: block;
+  margin-top: 0.35rem;
+  color: $carnelian;
+  font-weight: 700;
+  font-size: 1rem;
+  line-height: 1.25;
+  letter-spacing: normal;
+  text-transform: none;
 }
 
 // Right-hand contents list.
@@ -203,11 +225,6 @@ thead th {
   line-height: 1.15;
   letter-spacing: -0.01em;
 }
-.aem-hero .hero-tagline {
-  font-size: 1.02rem;
-  color: #343a40;
-  margin: 0 0 1.1rem;
-}
 .aem-hero .hero-instructors {
   font-size: 0.92rem;
   color: #6b6b6b;
@@ -221,104 +238,80 @@ thead th {
   color: #6b6b6b;
   line-height: 1.6;
 }
-.spine-label {
+// The one course table: sessions grouped under their block names, homework
+// folded into the last column. Group rows carry the 7010 accent palette.
+.grouped-schedule {
+  overflow-x: auto;
+  margin-bottom: 1.25rem;
+}
+.grouped-schedule table {
+  width: 100%;
+  font-size: 0.92rem;
+}
+.grouped-schedule th,
+.grouped-schedule td {
+  padding: 0.45rem 0.6rem;
+  vertical-align: top;
+}
+// Number and date columns shrink to content and never wrap.
+.grouped-schedule td:nth-child(1),
+.grouped-schedule th:nth-child(1),
+.grouped-schedule td:nth-child(2),
+.grouped-schedule th:nth-child(2) {
+  width: 1%;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+.grouped-schedule td:nth-child(1) { color: #6b6b6b; }
+// Topic links read as text; the accent appears on hover.
+.grouped-schedule .topic a {
+  color: inherit;
+  text-decoration: none;
+}
+.grouped-schedule .topic a:hover {
+  color: $carnelian;
+  text-decoration: underline;
+}
+.grouped-schedule td.hw {
+  font-size: 0.88rem;
+  min-width: 11rem;
+}
+.grouped-schedule td.hw a { font-weight: 600; }
+.grouped-schedule .due {
+  color: #6b6b6b;
+  font-size: 0.8rem;
+  white-space: nowrap;
+}
+// "Part I — Foundations" separator rows.
+.grouped-schedule .part-row td {
   text-align: center;
   font-size: 0.78rem;
   font-weight: 700;
   letter-spacing: 0.14em;
   text-transform: uppercase;
   color: #6b6b6b;
-  margin: 2.25rem 0 0.9rem;
-}
-.course-spine {
-  display: grid;
-  // min(205px, 100%) lets tracks shrink on narrow screens instead of forcing
-  // the whole page wider than the viewport (auto-fill resolves against an
-  // indefinite width inside Quarto's page grid).
-  grid-template-columns: repeat(auto-fill, minmax(min(205px, 100%), 1fr));
-  align-items: stretch;
-  gap: 0.75rem;
-  margin: 0 auto 1rem;
-  min-width: 0;
-}
-@media (max-width: 640px) {
-  .course-spine { grid-template-columns: 1fr; }
-}
-.spine-block {
-  border: 1px solid #e2e2dc;
-  border-radius: 6px;
-  background: #fafaf7;
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-}
-.spine-block .block-header {
-  padding: 0.7rem 0.9rem 0.6rem;
-  border-bottom: 1px solid #e2e2dc;
+  padding: 1.5rem 0.6rem 0.5rem;
   background: #fff;
 }
-.spine-block .block-name {
-  display: block;
+// Block rows: the former spine-block headers, now table sections.
+.grouped-schedule .group-row td {
   font-weight: 700;
-  font-size: 0.98rem;
   color: #1b1b1b;
-  line-height: 1.2;
+  background: #fafaf7;
+  border-left: 3px solid #6b6b6b;
 }
-.spine-block .block-dates {
-  display: block;
+.grouped-schedule .group-row .g-dates {
+  float: right;
+  font-weight: 400;
   font-size: 0.78rem;
   color: #6b6b6b;
   font-variant-numeric: tabular-nums;
-  margin-top: 0.2rem;
+  line-height: 1.6;
 }
-.spine-block .block-body {
-  padding: 0.55rem;
-  display: flex;
-  flex-direction: column;
-  gap: 0.4rem;
-  flex: 1;
+.grouped-schedule .g-blue td  { border-left-color: #1f4e8c; }
+.grouped-schedule .g-green td { border-left-color: #0f6e56; }
+.grouped-schedule .g-red td   { border-left-color: $carnelian; }
+.grouped-schedule .break-row td {
+  color: #6b6b6b;
+  font-style: italic;
 }
-.spine-session {
-  display: block;
-  padding: 0.45rem 0.6rem;
-  border-radius: 4px;
-  background: #fff;
-  border-left: 3px solid $carnelian;
-  text-decoration: none;
-  color: inherit;
-  font-size: 0.86rem;
-  line-height: 1.3;
-  transition: background 0.15s ease, transform 0.15s ease;
-}
-.spine-session:hover {
-  background: #f7f4e9;
-  transform: translateX(2px);
-  text-decoration: none;
-  color: inherit;
-}
-.spine-session .num {
-  font-size: 0.68rem;
-  font-weight: 700;
-  letter-spacing: 0.1em;
-  color: $carnelian;
-  text-transform: uppercase;
-  display: block;
-}
-.spine-session .title {
-  display: block;
-  font-weight: 600;
-  margin-top: 0.1rem;
-}
-// Block accents, rotating through the 7010 palette.
-.color-grey  { border-top: 4px solid #6b6b6b; }
-.color-grey  .num { color: #6b6b6b; }
-.color-grey  .spine-session { border-left-color: #6b6b6b; }
-.color-blue  { border-top: 4px solid #1f4e8c; }
-.color-blue  .num { color: #1f4e8c; }
-.color-blue  .spine-session { border-left-color: #1f4e8c; }
-.color-green { border-top: 4px solid #0f6e56; }
-.color-green .num { color: #0f6e56; }
-.color-green .spine-session { border-left-color: #0f6e56; }
-.color-red   { border-top: 4px solid $carnelian; }
-.color-red   .num { color: $carnelian; }
-.color-red   .spine-session { border-left-color: $carnelian; }

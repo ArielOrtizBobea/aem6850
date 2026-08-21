@@ -1,5 +1,5 @@
 # = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
-# AEM 6850 -- Unconventional Data for Economists
+# AEM 6850 -- Empirical Methods for Applied Economists
 # Session 1 -- Course overview, install party, onboarding
 # Tuesday, August 25, 2026
 #

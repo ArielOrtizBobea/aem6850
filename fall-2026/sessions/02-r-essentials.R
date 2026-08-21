@@ -1,5 +1,5 @@
 # = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
-# AEM 6850 -- Unconventional Data for Economists
+# AEM 6850 -- Empirical Methods for Applied Economists
 # Session 2 -- R essentials
 # Thursday, August 27, 2026
 #

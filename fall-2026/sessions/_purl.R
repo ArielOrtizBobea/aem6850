@@ -68,7 +68,7 @@
 #' @return `out`, invisibly
 purl_session <- function(qmd,
                          out = sub("\\.qmd$", ".R", qmd),
-                         course = "AEM 6850 -- Unconventional Data for Economists",
+                         course = "AEM 6850 -- Empirical Methods for Applied Economists",
                          how = paste("Run it one line at a time: put the cursor on a line and press",
                                      "Cmd-Return (Mac) or Ctrl-Enter (Windows).")) {
 
