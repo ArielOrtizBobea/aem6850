@@ -1,3 +1,9 @@
+<!-- This private repo (aem6850-internal) is the source of truth.
+     The public repo (aem6850) is a clean export produced by
+     _publish/publish.sh — planning docs and course internals never
+     leave this repo. This README is exported verbatim, so keep it
+     written for the public audience. -->
+
 # AEM 6850 — Unconventional Data for Economists
 
 Course site for AEM 6850 (Charles H. Dyson School of Applied
