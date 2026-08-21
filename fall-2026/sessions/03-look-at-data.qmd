@@ -1,12 +1,48 @@
 ---
 title: "3 · Look at your data"
-subtitle: "Tuesday, Sep 1, 2026"
+subtitle: "Tuesday, September 1, 2026"
 pagetitle: "AEM 6850 · Session 3 · Look at your data"
+execute:
+  echo: true
+format:
+  html:
+    toc: true
+    toc-depth: 2
+  revealjs:
+    output-file: 03-look-at-data-slides.html
+    theme: [default, slides.scss]
+    footer: "AEM 6850 · Session 3"
+    slide-number: c/t
+    incremental: false
+    code-line-numbers: false
+    code-overflow: scroll
+    history: false
+    link-external-newwindow: true
 ---
 
-::: {.callout-note appearance="simple"}
-Materials for this session are not published yet. They appear here
-before class.
+```{r}
+#| purl: false
+#| include: false
+knitr::opts_chunk$set(
+  comment = "#>",
+  collapse = FALSE,
+  fig.width = 8,
+  fig.height = 4,
+  fig.align = "center",
+  dpi = 150
+)
+```
+
+::: {.content-hidden when-format="revealjs"}
+
+[Slides](03-look-at-data-slides.html) · [Live script](03-look-at-data.R) ·
+[Source](https://github.com/ArielOrtizBobea/aem6850/blob/main/fall-2026/sessions/03-look-at-data.qmd)
+
+Session 2 taught you to inspect a file with `str()` and `summary()`. This
+session adds the checks those two cannot do — four base-R plots, one line
+each, used as instruments rather than illustrations. It reuses Thursday's
+file, so the first minutes rebuild what you already know.
+
 :::
 
 ## Objectives {#objectives}
@@ -18,13 +54,846 @@ By the end of this session you can:
 - Read a distribution for skew, outliers, and impossible values.
 - Say when a plot beats a summary table, and why.
 
-## What we cover {#coverage}
+::: {.content-hidden when-format="revealjs"}
 
-- Base graphics as instruments, not illustrations: `hist()`, `plot()`,
-  `boxplot()`, `barplot()` — one-liners over the data frames from
-  session 2.
-- The histogram that catches a sentinel value; the scatterplot that
-  catches a unit error.
-- The habit required in every homework from here on.
+**How the 75 minutes run.**
 
-**Verification habit.** Plot the column before you trust the column.
+| Time | Minutes | What happens |
+|:--|--:|:--|
+| 8:40 | 4  | Where we left off; rebuild Thursday's table |
+| 8:44 | 4  | The four instruments |
+| 8:48 | 12 | `hist()` — the shape of a column, then the sentinel |
+| 9:00 | 12 | `plot()` — time, scatter, and the unit error |
+| 9:12 | 7  | `boxplot()` — a column by groups |
+| 9:19 | 8  | `barplot()` — and the missing spring |
+| 9:27 | 8  | Choosing the instrument; Anscombe |
+| 9:35 | 8  | You try |
+| 9:43 | 7  | The habit, and what HW2 will expect |
+| 9:50 | 5  | HW1 is due Thursday; what posts Thursday |
+
+Everything below is in the live script. If we run behind, the parts that get
+cut are Anscombe and the second `table()` in the missing-spring section — both
+read fine on this page on your own.
+
+## Before class {#before-class}
+
+Bring the laptop with Thursday's `data/` folder in place — today reuses
+`data/epa_pm25_compton_2025.csv` and brings back session 1's weather file. If
+either file is missing, the [rebuild section](#rebuild) has a download
+fallback that takes thirty seconds.
+
+**HW1 is due Thursday at 8:40 am.** If you have not started, start tonight.
+Everything it asks for was done at least once on [session
+2's page](02-r-essentials.qmd), and today adds the instruments that let you
+*see* whether your answers are right before you hand them in.
+
+:::
+
+## Where we left off {#recap}
+
+::: {.content-hidden when-format="revealjs"}
+
+Thursday ended with a surprise: the worst air of the winter at the Compton
+monitor was **January 1** — New Year's fireworks — not the January 7 fires. We
+found that by sorting, and we believed it because five other Los Angeles
+monitors peak on the same day.
+
+But look at what the finding cost. `summary()` handed us one number, the
+maximum. Sorting handed us five rows. The other fifty-four days of the window
+never crossed the screen — and every question we answered, we had to think to
+ask first.
+
+:::
+
+::: {.content-visible when-format="revealjs"}
+
+- Thursday's surprise: the worst air was **January 1** — fireworks, not fires.
+- We found it by sorting, and confirmed it across five other monitors.
+- But every question we answered, we had to think to ask first.
+
+:::
+
+> **A summary answers the question you asked. A plot volunteers answers to
+> questions you did not think to ask.**
+
+Today: four instruments, one line each, over the data frames you already know.
+
+::: {.content-visible when-format="revealjs"}
+::: {.notes}
+Thirty-second callback quiz before anything else: what was the peak day, what
+was the peak value, roughly, and how did we know it was real? (Jan 1, 53.2,
+five other monitors.) Then move.
+:::
+:::
+
+## Rebuild Thursday's table {#rebuild}
+
+What took forty minutes on Thursday takes four statements today. That is not
+review — that is the point of Thursday.
+
+```{r}
+#| label: rebuild
+#| script: "Rebuild session 2's data frame"
+pm <- read.csv("data/epa_pm25_compton_2025.csv",
+               colClasses = c("Site.ID"          = "character",
+                              "State.FIPS.Code"  = "character",
+                              "County.FIPS.Code" = "character"))
+names(pm)[names(pm) == "Daily.Mean.PM2.5.Concentration"] <- "pm25"
+pm$date <- as.Date(pm$Date, format = "%m/%d/%Y")
+
+one <- pm[pm$date <= as.Date("2025-02-28") &
+          pm$POC == 1 & pm$AQS.Parameter.Code == 88101, ]
+nrow(one)   # 59 -- one row per day, as established Thursday
+```
+
+::: {.content-hidden when-format="revealjs"}
+
+Identifiers protected at read time, the unbearable column renamed, the date
+made a real date, and the window cut to one instrument in a single subset —
+the two conditions joined with `&`. If any line surprises you, session 2 is
+the page to reread before Thursday's homework deadline.
+
+::: {.callout-tip collapse="true"}
+## If `data/` is missing a file
+
+Run these once and you are caught up — they fetch the same snapshots these
+pages are built from:
+
+```{r}
+#| label: data-fallback
+#| script: "If data/ is missing a file"
+#| eval: false
+# dir.create("data", showWarnings = FALSE)
+# download.file(paste0("https://arielortizbobea.github.io/aem6850/",
+#                      "fall-2026/sessions/data/epa_pm25_compton_2025.csv"),
+#               "data/epa_pm25_compton_2025.csv")
+# download.file(paste0("https://arielortizbobea.github.io/aem6850/",
+#                      "fall-2026/sessions/data/la-weather-dec2024-feb2025.csv"),
+#               "data/la-weather-dec2024-feb2025.csv")
+```
+
+Where both files came from, byte for byte, is documented in [the data
+folder's provenance notes](data/SOURCE.md).
+:::
+
+:::
+
+## Four instruments {#instruments}
+
+::: {.tight-cols}
+
+| The instrument | What it draws |
+|:--|:--|
+| `hist(x)` | The shape of one numeric column |
+| `plot(x, y)` | Two columns against each other — or one through time |
+| `boxplot(y ~ g)` | One column, split by the groups in another |
+| `barplot(table(g))` | How often each category shows up |
+
+:::
+
+::: {.content-hidden when-format="revealjs"}
+
+Call them instruments, not figures. A figure is for readers: labeled, titled,
+polished, defensible — that is session 12, and it takes an hour. An instrument
+is for you: one line, ten seconds, often ugly, never leaves your screen. You
+make dozens of them on a normal working day, the way a mechanic listens to an
+engine.
+
+Nothing new arrives underneath: every one of these takes the vectors and
+data-frame columns from session 2. The only genuinely new notation is the
+`~` in `boxplot()`, and we will read it aloud when we get there.
+
+:::
+
+::: {.content-visible when-format="revealjs"}
+
+Instruments, not figures. One line, ten seconds, often ugly, never leaves
+your screen. Figures for readers are session 12.
+
+:::
+
+## `hist()` — the shape of one column {#hist}
+
+```{r}
+#| label: hist-default
+#| script: "The first instrument: hist()"
+#| fig-alt: "Histogram of daily PM2.5 at Compton for January and February 2025, drawn with default settings. Most days fall between 5 and 25 micrograms per cubic meter, and a long right tail stretches past 50."
+hist(one$pm25)
+```
+
+::: {.content-hidden when-format="revealjs"}
+
+One line, no options, default title and all. R chops the column into bins and
+draws how many days fell in each. For the first time you are looking at all
+fifty-nine days at once — not the five a sort showed you, not the six numbers
+`summary()` compresses them into.
+
+Do not clean this plot up. It is an instrument reading, and its ugliness is a
+feature: the moment you start polishing, you have started making a figure, and
+you will stop making the plot at all.
+
+:::
+
+## Reading the shape {#hist-read}
+
+```{r}
+#| label: hist-breaks
+#| script: "Turning up the resolution"
+#| fig-alt: "The same histogram with twenty bins and a dashed red line at 35 micrograms per cubic meter. The bulk of days sits between 5 and 25, and a separated island of four days lies beyond 40."
+hist(one$pm25, breaks = 20,
+     main = "", xlab = "Daily PM2.5 (ug/m3)")
+abline(v = 35, col = "#b31b1b", lty = 2)   # the EPA 24-hour standard
+```
+
+::: {.content-hidden when-format="revealjs"}
+
+`breaks = 20` asks for more bins — more resolution on the same column. Three
+things to read off this one, in the order your eye should learn to run:
+
+- **Where the mass sits.** Most winter days at Compton land between 5 and 25
+  µg/m³. That is what ordinary air looks like at this monitor.
+- **The long right tail.** The distribution is *right-skewed*: it leans on a
+  wall at zero and stretches rightward. Skew is why the mean (17.6) sits
+  above the median (15.3) — a handful of bad days drag the average around,
+  which you already exploited on Thursday without naming it.
+- **The island.** Past the red line — the EPA 24-hour standard, 35 µg/m³ —
+  sit four separated days: January 1, and January 8, 9, 10. A gap between
+  the mass and a clump of stragglers is the signature of *events*, distinct
+  from the ordinary process that made the rest.
+
+:::
+
+::: {.content-visible when-format="revealjs"}
+
+- **The mass:** ordinary days, 5–25 µg/m³.
+- **The tail:** right skew — mean 17.6 above median 15.3.
+- **The island past 35:** four days — January 1, then 8, 9, 10.
+
+:::
+
+## The sentinel {#sentinel}
+
+::: {.content-hidden when-format="revealjs"}
+
+Our AQS file marks a missing day by *absence* — the row simply is not there.
+Plenty of files instead put a number where the gap is: `-999`, `9999`, `0`.
+That number is called a **sentinel**, and EPA's own real-time feed, AirNow,
+ships `-999` to this day. Sooner or later a column with sentinels in it will
+cross your desk.
+
+::: {.column-margin}
+**Why −999?** Old data formats had no way to leave a field blank — every cell
+had to hold a number — so agencies picked one no real measurement could
+produce. The formats died; the convention did not.
+:::
+
+Thursday we verified this file is clean, so we corrupt a copy ourselves to
+see the shape of the failure before it costs you anything:
+
+:::
+
+```{r}
+#| label: sentinel
+#| script: "The sentinel"
+bad <- one$pm25
+bad[c(40, 45, 50, 55)] <- -999   # four missing days, the AirNow way
+mean(bad)
+summary(bad)
+```
+
+::: {.content-hidden when-format="revealjs"}
+
+Thursday's `"n/a"` at least produced an `NA` and a warning. This produced
+nothing. `-999` is a perfectly legitimate number, so R has no idea anything is
+wrong — `mean()` ran clean and handed you an answer that is garbage. If −51
+fed a difference or a ratio instead of your eyes, nothing downstream would
+ever flag it.
+
+`summary()` does show the damage — `Min. -999` — *if* you read all six
+numbers and know the physical floor is zero. That is two ifs.
+
+:::
+
+::: {.content-visible when-format="revealjs"}
+
+- No error, no warning, no `NA`. It ran clean and it is wrong.
+- `summary()` shows it — if you read all six numbers, and know the floor is
+  zero. Two ifs.
+
+:::
+
+## The histogram catches it {#sentinel-hist}
+
+```{r}
+#| label: sentinel-hist
+#| script: "The histogram catches it"
+#| fig-alt: "Histogram of the corrupted column: a lone short bar at minus 1000, a wide empty gap, and all the real data crushed into a single tall bar near zero."
+hist(bad, main = "", xlab = "Daily PM2.5 (ug/m3)")
+```
+
+```{r}
+#| label: sentinel-repair
+#| script: "The repair"
+bad[bad == -999] <- NA        # sentinel to honest missing
+mean(bad, na.rm = TRUE)       # back on Earth
+```
+
+::: {.content-hidden when-format="revealjs"}
+
+You do not need to know what PM2.5 is to see that something is wrong with
+this picture: a lone bar a thousand units from everything else, and the real
+data crushed into one tower because the axis stretched to make room for the
+garbage. **A ruined histogram is itself a reading** — when everything you
+care about collapses into one bin, the axis is telling you the range is
+poisoned.
+
+The repair is one line of Thursday's logical subsetting, and then the mean is
+back to 17.6. The order matters: *look, then repair, then compute* — never
+straight to the computing.
+
+:::
+
+## `plot()` — a column through time {#plot-time}
+
+```{r}
+#| label: plot-time
+#| script: "A column through time"
+#| fig-alt: "Daily PM2.5 at Compton drawn as vertical spikes from January through February 2025. The tallest spike stands alone on January 1. A red vertical line marks January 7, followed immediately by a three-day cluster of high readings. February is much calmer."
+plot(one$date, one$pm25, type = "h", col = "grey30",
+     xlab = "", ylab = "Daily PM2.5 (ug/m3)")
+abline(v = as.Date("2025-01-07"), col = "#b31b1b", lwd = 2)
+```
+
+::: {.content-hidden when-format="revealjs"}
+
+Same instrument as session 1's wind plot: `type = "h"` draws one spike per
+day. Give a column with a natural order — time, almost always — the plot that
+respects the order, and the winter tells its story in one glance: a lone
+spike on January 1, then the red line, then a broad three-day shoulder as the
+fires burn, then February settling back to normal.
+
+Compare that with what sorting told us Thursday. The sorted list put January
+9, 8, and 10 at ranks two, three, and four — three separate entries, order
+destroyed. The plot shows what they actually are: **one event**, three days
+wide, starting the day after ignition. And it shows January 1 the way the
+sort never could — not merely the biggest value, but *alone*, with quiet on
+both sides. Fireworks last one night; fires last days. The shape is the
+argument.
+
+:::
+
+::: {.content-visible when-format="revealjs"}
+
+- The sort said: ranks 1, 2, 3, 4. The plot says: a one-day spike, then a
+  **three-day event** starting the day after ignition.
+- Fireworks last one night; fires last days. The shape is the argument.
+
+:::
+
+## `plot()` — two columns together {#plot-scatter}
+
+Session 1's weather file comes back — same ninety days, snapshotted with
+these pages.
+
+```{r}
+#| label: weather-load
+#| script: "Bring back session 1's weather"
+la <- read.csv("data/la-weather-dec2024-feb2025.csv", skip = 3)
+names(la) <- c("date", "gust", "wind", "tmax", "rh_min", "precip")
+la$date <- as.Date(la$date)
+```
+
+```{r}
+#| label: plot-scatter
+#| script: "Two columns together"
+#| fig-alt: "Scatterplot of daily maximum gust against daily maximum sustained wind for ninety winter days in Los Angeles. The points form one tight upward ray. The windiest days sit far up the ray but on it."
+plot(la$wind, la$gust,
+     xlab = "Max sustained wind (km/h)", ylab = "Max gust (km/h)")
+```
+
+::: {.content-hidden when-format="revealjs"}
+
+A scatterplot is a claim about a *relationship*, and these two columns must
+have one: a gust is a burst on top of the sustained wind, so gusts should run
+above wind speed by some believable factor. They do — one tight ray, gusts at
+roughly two to four times the sustained speed, every day of the winter.
+
+Look at where January 7 and 8 sit: far up the ray, *and on it*. Extreme in
+both columns, ordinary in their relationship — exactly what a real windstorm
+looks like. **Extreme is not the same as wrong.** The point to worry about is
+never the one far along the ray; it is the one *off* it.
+
+:::
+
+::: {.content-visible when-format="revealjs"}
+::: {.notes}
+Read it live: one ray, gusts at 2–4× the sustained wind, every day. Point at
+Jan 7–8 — far up the ray and ON it: extreme, but consistent. The point to
+worry about is never far along the ray; it is off it. That sentence sets up
+the next slide.
+:::
+:::
+
+## The unit error {#unit-error}
+
+::: {.content-hidden when-format="revealjs"}
+
+Now the classic failure this instrument exists to catch. Weather feeds serve
+wind in km/h, m/s, mph, or knots, and the choice rides in a header field or a
+query parameter — Open-Meteo's is literally `wind_speed_unit`. Stitch
+together files pulled with different settings and you get one column, two
+units. Corrupt a copy so you can watch it happen:
+
+:::
+
+```{r}
+#| label: unit-error
+#| script: "The unit error"
+mixed <- la$wind
+jan   <- format(la$date, "%Y-%m") == "2025-01"
+mixed[jan] <- round(la$wind[jan] / 3.6, 1)   # January delivered in m/s
+
+summary(la$wind)    # the honest column
+summary(mixed)      # the corrupted one
+```
+
+::: {.content-hidden when-format="revealjs"}
+
+Read the corrupted summary and try to reject it. Minimum 0.9 — a calm day.
+Maximum 21.8 — a windy one. Mean 6.5 — a touch low for winter, if you happen
+to carry LA wind climatology in your head. **Every number in it is a
+plausible wind speed in km/h.** There is no sentinel to spot and no
+impossible value to catch, because the corruption lives not in any single
+value but in how thirty-one of them relate to the rest — and single numbers
+cannot show a relationship.
+
+:::
+
+::: {.content-visible when-format="revealjs"}
+
+Min 0.9, max 21.8, mean 6.5 — **every number is a plausible wind speed.**
+Nothing is impossible; the corruption lives in the *relationships*.
+
+:::
+
+## The scatterplot catches it {#unit-error-plot}
+
+```{r}
+#| label: unit-error-plot
+#| script: "The scatterplot catches it"
+#| fig-alt: "The same gust-versus-wind scatterplot after January's wind speeds arrive in meters per second: the single ray splits into two distinct rays with clearly different slopes."
+plot(mixed, la$gust,
+     xlab = "Wind speed, as delivered", ylab = "Max gust (km/h)")
+```
+
+::: {.content-hidden when-format="revealjs"}
+
+Two rays. The right-hand one is December and February, gusts at two to four
+times the wind, as physics runs. The steep left-hand one is January — the
+same relationship, times 3.6, because its x-values shrank by exactly the
+km/h-to-m/s factor. Thirty-one points do not drift off a cloud by accident
+and land on a second straight line; **a ray that splits in two means two
+regimes in one column**, and a clean split at a constant factor means units.
+
+This is the strongest version of today's claim. The sentinel was in
+`summary()` if you squinted. The unit error was not there at all — no single
+number was wrong, so no list of single numbers could catch it. Only the
+picture of the *relationship* could.
+
+:::
+
+::: {.content-visible when-format="revealjs"}
+
+- Two rays = two regimes in one column. A clean constant factor = units.
+- `summary()` had nothing to show: no individual number was wrong.
+- Only the picture of the relationship could catch it.
+
+:::
+
+## `boxplot()` — a column by groups {#boxplot}
+
+```{r}
+#| label: boxplot-month
+#| script: "A column by groups: boxplot()"
+#| fig-alt: "Box plots of daily PM2.5 for January and February 2025. January's box sits higher and stretches wider, with a single outlier dot far above its whisker. February's box is lower and tighter, with no outliers."
+one$month <- format(one$date, "%Y-%m")
+boxplot(pm25 ~ month, data = one)
+```
+
+::: {.content-hidden when-format="revealjs"}
+
+Read `pm25 ~ month` aloud as "pm25, *by* month" — the `~` is R's word for
+"split by," and `data = one` says which data frame the two names live in.
+(`"%Y-%m"` rather than `"%m"` so the labels sort chronologically even when a
+window crosses New Year — the weather file's December would otherwise file
+after February.)
+
+One box per group, five readings per box: the heavy line is the median; the
+box is the middle half of the days; the whiskers cover the ordinary range;
+anything beyond them is drawn as its own dot — a candidate for a closer look,
+not automatically an error.
+
+Now read this one against the histogram, because the two instruments
+disagree in an instructive way. The histogram showed an island of four days;
+here only one of them survives as a dot — January 1. The three fire days sit
+at the top of January's whisker, *inside* the ordinary range, because a
+boxplot judges "beyond" against each group's own spread, and January's
+spread is enormous. In a month that dirty, three bad days read as the high
+end of normal. Neither instrument is wrong; they are answering different
+questions — "extreme for this data?" versus "extreme for this group?"
+
+The medians are the quieter finding: 16.9 in January against 12.6 in
+February. Take out the four event days and January's median is still 14.5 to
+February's 12.6 — a shifted baseline, not just bad days. The plot does not
+say why — lingering smoke from a fire month? stronger winter inversions? — it
+just volunteers the question. The events you knew about; the shifted baseline
+you probably did not. Instruments pay for themselves in the second kind of
+finding.
+
+:::
+
+::: {.content-visible when-format="revealjs"}
+
+- `pm25 ~ month` reads "pm25, **by** month."
+- One dot survives: Jan 1. The fire days land *inside* January's whisker —
+  a boxplot judges "extreme" against each group's own spread.
+- The quieter finding: January's *median* (16.9) beats February's (12.6).
+  The baseline shifted, not just the events.
+
+:::
+
+## `barplot()` — counts of categories {#barplot}
+
+Thursday's window was 59 days of a 662-row file. Zoom out to the whole year:
+did the regulatory instrument actually run all of it?
+
+```{r}
+#| label: barplot-months
+#| script: "Counts of categories: barplot()"
+#| fig-alt: "Bar chart of days with a reading per month of 2025 for the regulatory instrument at Compton. Most months show about thirty days, but April shows two and May shows one."
+year <- pm[pm$POC == 1 & pm$AQS.Parameter.Code == 88101, ]
+barplot(table(format(year$date, "%m")),
+        xlab = "Month of 2025", ylab = "Days with a reading")
+```
+
+::: {.content-hidden when-format="revealjs"}
+
+`table()` counts — you met it Thursday — and `barplot()` draws the counts.
+The pairing is the whole trick: any categorical column, months here, goes
+through `table()` and comes out as a picture of coverage.
+
+And the picture has a hole in it. **April has two days. May has one.** Nobody
+planted that — it is in the file exactly as EPA ships it, and we walked past
+it twice: session 2 never looked outside the winter window, and the file's
+662 rows *looked* like plenty.
+
+:::
+
+::: {.content-visible when-format="revealjs"}
+
+**April: 2 days. May: 1.** In the shipped file, exactly as EPA serves it.
+We walked past it twice.
+
+:::
+
+## The missing spring {#missing-spring}
+
+```{r}
+#| label: missing-spring
+#| script: "The missing spring: site or sampler?"
+table(format(year$date, "%m"))    # the numbers behind the bars
+
+other <- pm[pm$POC == 3 & pm$AQS.Parameter.Code == 88502, ]
+table(format(other$date, "%m"))   # the site's OTHER instrument
+```
+
+::: {.content-hidden when-format="revealjs"}
+
+Same move as Thursday's "was it real?" — check against an independent
+measurement, and the site conveniently carries one. The continuous
+instrument, POC 3, reported 30 days in April and 31 in May. The *site* was
+fine; the *regulatory sampler* was down for two months. (AQS validation can
+also invalidate readings after the fact — either way, the regulatory series
+has no spring.)
+
+Now the consequence. Compute "the 2025 annual mean" from the regulatory
+series and nothing errors, nothing warns: you get a clean number that
+quietly skips almost all of spring — mild, clean-aired months — and lands
+biased. Every mean you ever compute is a mean *of the days that are there*.
+The count plot is how you find out which days those are, and this one took
+two lines against a file we had already "checked" for a week.
+
+:::
+
+::: {.content-visible when-format="revealjs"}
+
+- POC 3 ran 30 and 31 days those months: the **sampler** was down, not the
+  site.
+- An "annual mean" of the regulatory series silently skips spring — and
+  lands biased.
+- Every mean is a mean *of the days that are there.*
+
+:::
+
+## Choosing the instrument {#choosing}
+
+Start from the suspicion, not from the plot type.
+
+::: {.tight-cols}
+
+| The instrument | The suspicion it answers |
+|:--|:--|
+| `hist(x)` | Anything impossible in here? Skew? A gap? A second hump? |
+| `plot(d$date, y, type = "h")` | Did something happen in time — a spike, a break, a dead stretch? |
+| `plot(x, y)` | Do these two columns relate the way they are supposed to? |
+| `boxplot(y ~ g, data = d)` | Is one group hiding something the pooled column averages away? |
+| `barplot(table(g))` | Is every category, month, or site actually there, as often as it should be? |
+
+:::
+
+::: {.content-hidden when-format="revealjs"}
+
+Where do suspicions come from? From `str()` and `summary()` — a character
+column that should be numeric, a minimum that grazes an impossible value.
+From the data's own documentation, like the two-instrument structure we found
+in the POC table. And from the world: you knew when the fires started before
+you ever opened the file, which is what made the January 1 spike a surprise
+worth chasing. The instruments do not replace knowing things; they are how
+what you know interrogates what you have.
+
+:::
+
+## Same summaries, different data {#anscombe}
+
+```{r}
+#| label: anscombe
+#| script: "Same summaries, different data: Anscombe 1973"
+#| fig-height: 5
+#| fig-alt: "Anscombe's four datasets as four scatterplots: a loose linear cloud, a smooth arch, a tight line with one far outlier, and a vertical stack of identical x values with one point far to the right."
+par(mfrow = c(2, 2), mar = c(4, 4, 1, 1))
+plot(anscombe$x1, anscombe$y1)
+plot(anscombe$x2, anscombe$y2)
+plot(anscombe$x3, anscombe$y3)
+plot(anscombe$x4, anscombe$y4)
+par(mfrow = c(1, 1))
+```
+
+::: {.content-hidden when-format="revealjs"}
+
+In 1973 the statistician Francis Anscombe built four small datasets to make
+today's argument permanent, and they ship inside R as `anscombe`. All four
+pairs have the same x mean, the same y mean, the same variances, and the same
+correlation of 0.82. Every summary statistic you have met says these four
+are the same data.
+
+They are a linear cloud; a smooth curve with nothing linear about it; a
+perfect line wrecked by a single outlier; and ten identical x's propped up by
+one point that single-handedly manufactures the correlation. Fifty years
+on, this is still the shortest proof that **a summary is a compression, and
+compression discards exactly the structure you needed to see.**
+
+(`par(mfrow = c(2, 2))` splits the plot window into panels, and it sticks
+until you set it back — hence the last line. `cor()` gets its full
+introduction later; here it is just one more summary that cannot tell these
+apart.)
+
+::: {.callout-tip collapse="true"}
+## Check the claim
+
+```{r}
+#| label: anscombe-check
+#| script: "Anscombe: check the claim"
+colMeans(anscombe)
+cor(anscombe$x1, anscombe$y1)
+cor(anscombe$x2, anscombe$y2)
+cor(anscombe$x3, anscombe$y3)
+cor(anscombe$x4, anscombe$y4)
+```
+:::
+
+:::
+
+::: {.content-visible when-format="revealjs"}
+
+Four datasets. Same means, same variances, same correlation, to two decimal
+places. Every summary you have met calls them identical.
+
+:::
+
+## You try {#you-try}
+
+Five minutes, on the weather frame `la`. Stubs are in the live script.
+
+```{r}
+#| label: you-try
+#| exercise: true
+#| script: "You try (5 minutes)"
+#| eval: false
+# 1. hist(la$rh_min) -- each day's LOWEST relative humidity. Read it in one
+#    sentence. Twelve days sit in single digits; la$date[la$rh_min < 10]
+#    says when they were. What do those dates line up with?
+#
+# 2. plot(la$date, la$precip, type = "h") -- when did the drought break?
+#    Now run summary(la$precip). Could you have read the break off that?
+#
+# 3. la$month <- format(la$date, "%Y-%m")
+#    boxplot(gust ~ month, data = la)
+#    Which month owns the extremes -- and are they a shifted box, or dots
+#    beyond the whisker? Those are different claims about January.
+```
+
+::: {.content-visible when-format="revealjs"}
+::: {.notes}
+Debriefs, one sentence each: (1) the single-digit days run Dec 10-Jan 24 —
+Santa Ana air, the fire weather itself; (2) Jan 26 breaks the drought — 17 mm
+after seven bone-dry weeks — and the biggest storm is Feb 13 at 38 mm;
+summary() shows a median of 0 and a max, never *when*; (3) January's monsters
+are dots — Jan 7 at 66 far beyond the whisker — while its median (22.7) only
+just beats February's (21.6): extreme days, not a windier month throughout.
+:::
+:::
+
+## Verify {#verify}
+
+::: {.content-hidden when-format="revealjs"}
+
+Session 1 installed *predict, then run, then reconcile*. Session 2 added *run
+`str()` before you compute*. This session completes the arrival ritual:
+
+:::
+
+> **Plot the column before you trust the column.**
+
+::: {.content-hidden when-format="revealjs"}
+
+Any column that feeds a number you will report — plotted, once, before you
+believe anything computed from it. Ten seconds per column, and it is the only
+check in the kit that works when every individual value is plausible and the
+lie lives in the shape.
+
+**From HW2 on, this is graded.** Homeworks ask for diagnostic plots, and each
+one must be read in one written sentence — what the shape says, the way this
+page read each plot above. A plot nobody reads is decoration.
+
+The arrival checks, now five:
+
+| Check | Question it answers |
+|:--|:--|
+| `dim()` | Did I get the number of rows I expected? |
+| `str()` | Is every column the type it should be? |
+| `head()` | Does row one look like a row of data? |
+| `summary()` | Is anything impossible, or off by a factor of a thousand? |
+| `hist()` / `plot()` | Is anything wrong that no single number can show? |
+
+:::
+
+::: {.content-visible when-format="revealjs"}
+
+The arrival checks, now five:<br>
+`dim()` — the rows I expected?<br>
+`str()` — the types I expected?<br>
+`head()` — does row one look like data?<br>
+`summary()` — anything impossible?<br>
+`hist()` / `plot()` — anything wrong that **no single number can show?**
+
+From HW2 on: every diagnostic plot, read in one written sentence. Graded.
+
+:::
+
+## Quick reference {#quick-reference}
+
+::: {.content-visible when-format="revealjs"}
+
+On the session page: the four instruments with their options, a
+what-shapes-mean table, and every command from today.
+
+:::
+
+::: {.content-hidden when-format="revealjs"}
+
+**The four instruments**
+
+| Code | What it draws |
+|:--|:--|
+| `hist(x)` | The shape of one numeric column |
+| `hist(x, breaks = 20)` | Same, with more resolution |
+| `plot(d$date, y, type = "h")` | A column through time, one spike per day |
+| `plot(x, y)` | Two columns against each other |
+| `boxplot(y ~ g, data = d)` | `y` split by the groups in `g` — read `~` as "by" |
+| `barplot(table(g))` | How often each category shows up |
+
+**Dressing an instrument (only when it earns it)**
+
+| Code | What it does |
+|:--|:--|
+| `main = "", xlab = "", ylab = ""` | Title and axis labels |
+| `abline(v = 35)`, `abline(h = 10)` | A vertical or horizontal reference line |
+| `col =`, `lty =`, `lwd =` | Color, line type, line width |
+| `par(mfrow = c(2, 2))` | Panels in one window — reset with `c(1, 1)` |
+
+**What a shape is telling you**
+
+::: {.tight-cols}
+
+| You see | It usually means |
+|:--|:--|
+| A bar far from the mass | A sentinel or impossible value — go look at those rows |
+| Everything crushed into one bin | The axis stretched for garbage; the range is poisoned |
+| Two humps | Two populations in one column — units, instruments, or groups |
+| A long right tail | Skew; mean and median will disagree, and the mean is the fragile one |
+| A ray that splits in two | Two regimes; a clean constant factor means units |
+| Dots beyond the whiskers | Outliers worth naming — candidates, not convictions |
+| A short bar in a count plot | A coverage gap — days or categories missing |
+
+:::
+
+**Links**
+
+- Session materials: [slides](03-look-at-data-slides.html) ·
+  [live script](03-look-at-data.R) ·
+  [EPA data](data/epa_pm25_compton_2025.csv) ·
+  [weather data](data/la-weather-dec2024-feb2025.csv) ·
+  [where they came from](data/SOURCE.md)
+- [Session 2](02-r-essentials.qmd) — the subsetting this session leans on
+- [Syllabus](../syllabus.qmd) · [full schedule](../index.qmd#schedule)
+
+:::
+
+## After class {#after-class}
+
+**HW1 is due Thursday at 8:40 am.** Before you submit, point today's
+instruments at your own answers: `hist()` the concentration column,
+`plot()` it through time. If your peak day is not visibly the peak of the
+plot, one of them is wrong — better you find out than the grader.
+
+::: {.content-hidden when-format="revealjs"}
+
+**Thursday** is Wrangling I: `dplyr` — the verbs, the pipe, grouped
+summaries. First session where the code starts reading like sentences.
+
+**HW2 posts Thursday after class** — [*What did the fire
+destroy?*](../assignments/hw02-fire-damage.qmd), due September 10. The data
+is CAL FIRE's structure-by-structure damage inspections from the Eaton and
+Palisades fires: every inspected building, its damage category, its year
+built. It asks for three diagnostic plots, each read in one written
+sentence — the habit from today, now graded. One of its columns has a
+surprise in it that `summary()` will not show you. Plot first.
+
+:::
+
+::: {.content-visible when-format="revealjs"}
+
+- Thursday: Wrangling I — `dplyr`.
+- HW2 posts Thursday: *What did the fire destroy?* Three diagnostic plots,
+  each read in one sentence. The habit is now graded.
+
+:::
+
+```{r}
+#| purl: false
+#| include: false
+# Single-source build: the .R live script is generated from this file every
+# time the page renders, so it cannot fall out of step with the prose.
+source("_purl.R")
+purl_session("03-look-at-data.qmd", "03-look-at-data.R")
+```
