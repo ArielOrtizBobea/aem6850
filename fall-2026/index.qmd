@@ -8,8 +8,9 @@ toc: false
   <p class="hero-number">AEM 6850</p>
   <p class="hero-title">Empirical Methods for Applied Economists</p>
   <p class="hero-instructors">Taught by
-    <a href="https://arielortizbobea.github.io">Prof.&nbsp;Ariel Ortiz-Bobea</a>,
-    with Senjie Huang (grad TA)</p>
+    <a href="https://arielortizbobea.github.io">Prof.&nbsp;Ariel Ortiz-Bobea</a><br>
+    TAs: <a href="mailto:sh2723@cornell.edu">Senjie Huang</a> (PhD student) ·
+    <a href="mailto:st2332@cornell.edu">Samuel Topper</a> (MS student)</p>
   <div class="hero-meta">
     Fall 2026 · Tue/Thu 8:40 to 9:55 am · Malott 406 · Bring a laptop<br>
     Office hours: TBA in week 1, posted on Canvas
@@ -231,14 +232,15 @@ toc: false
   var today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
   var rows = document.querySelectorAll('.grouped-schedule tbody tr');
   for (var i = 0; i < rows.length; i++) {
-    if (rows[i].classList.contains('part-row')) continue;
+    if (rows[i].classList.contains('part-row') ||
+        rows[i].classList.contains('break-row')) continue;
     var cells = rows[i].cells;
     for (var j = 0; j < cells.length; j++) {
       var m = cells[j].textContent.trim()
         .match(/^(?:Mon|Tue|Wed|Thu|Fri|Sat|Sun) ([A-Z][a-z]{2}) (\d{1,2})$/);
       if (!m) continue;
       if (new Date(2026, months[m[1]], +m[2]) >= today) {
-        rows[i].classList.add('today-line');
+        rows[i].classList.add('next-class');
         cells[j].classList.add('today-cell');
         return;
       }
