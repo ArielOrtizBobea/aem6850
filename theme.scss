@@ -309,31 +309,51 @@ thead th {
   background: #fff;
   box-shadow: 0 1px 0 #e3e3de;  // border-bottom detaches when sticky
 }
-// The group tab: one cell per lecture group, spanning its rows, holding a
-// solid-color tab whose label reads sideways, bottom to top.
+// Group tabs + outlines. Each lecture group is outlined top and bottom in
+// its own color, with a full-height sideways tab in the same color. Two
+// ramps: grey deepening across Part I (g01–g06), carnelian deepening across
+// Part II (g07–g11) — progress through a part reads as rising intensity.
+// The g-first row opens a group's box; the g-last row closes it; the rail
+// cell's own bottom border closes the tab column.
+$group-colors: (
+  g01: #78786f, g02: #6a6a62, g03: #5c5c55,
+  g04: #4e4e48, g05: #40403b, g06: #33332e,
+  g07: #b31b1b, g08: #a01818, g09: #8c1616,
+  g10: #781314, g11: #641012
+);
 .grouped-schedule .g-rail {
-  padding: 0 0.35rem 0 0;
+  position: relative;
+  padding: 0;
 }
 .grouped-schedule .g-rail span {
-  display: block;
-  margin: 0 auto;
+  position: absolute;
+  top: 0.3rem;
+  bottom: 0.3rem;
+  left: 0;
+  right: 0.45rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   writing-mode: vertical-rl;
   transform: rotate(180deg);   // vertical-rl reads down; flipped reads up
-  background: #595959;
+  overflow: hidden;
   color: #fff;
   font-size: 0.68rem;
   font-weight: 600;
   letter-spacing: 0.06em;
   line-height: 1;
   white-space: nowrap;
-  padding: 0.6rem 0.3rem;
   border-radius: 4px;
 }
-.grouped-schedule .g-rail.g-blue span  { background: #1f4e8c; }
-.grouped-schedule .g-rail.g-green span { background: #0f6e56; }
-.grouped-schedule .g-rail.g-red span   { background: $carnelian; }
-// Breathing room where a new group starts (no line needed).
+@each $g, $c in $group-colors {
+  .grouped-schedule tr.g-first.#{$g} .g-rail span { background: $c; }
+  .grouped-schedule tr.g-first.#{$g} td { border-top: 1px solid $c !important; }
+  .grouped-schedule tr.g-first.#{$g} td.g-rail { border-bottom: 1px solid $c !important; }
+  .grouped-schedule tr.g-last.#{$g} td { border-bottom: 1px solid $c !important; }
+}
+// Breathing room where a new group starts.
 .grouped-schedule .g-first td { padding-top: 0.85rem; }
+.grouped-schedule .g-first td.g-rail { padding-top: 0; }
 // Date column: quiet, fixed, never wraps.
 .grouped-schedule td:nth-child(2):not(.topic),
 .grouped-schedule tr:not(.g-first):not(.part-row) td:first-child {
@@ -388,7 +408,9 @@ thead th {
 }
 // The "we are here" line — a script on the front door marks the next class
 // day during the term (inert in any other year).
-.grouped-schedule tr.today-line td {
+// Doubled class: outranks the group-outline border-top when the next class
+// happens to be a group's first row.
+.grouped-schedule tr.today-line.today-line td {
   border-top: 2px solid $carnelian !important;
 }
 .grouped-schedule td.today-cell { position: relative; }
