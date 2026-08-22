@@ -284,7 +284,7 @@ thead th {
 }
 .grouped-schedule th,
 .grouped-schedule td {
-  padding: 0.4rem 1.1rem 0.4rem 0;
+  padding: 0.4rem 0.9rem 0.4rem 0.55rem;
   vertical-align: top;
   border: none !important;
   background: none;
@@ -321,14 +321,14 @@ $group-colors: (
 );
 .grouped-schedule .g-rail {
   position: relative;
-  padding: 0;
+  padding: 0 !important;
 }
+// The tab fills its cell exactly: flush square right edge against the
+// content column, so a row highlight meets it with no gap and no corner
+// notch. Rounding stays on the outer (left) side only.
 .grouped-schedule .g-rail span {
   position: absolute;
-  top: 0.3rem;
-  bottom: 0.3rem;
-  left: 0;
-  right: 0.45rem;
+  inset: 0;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -342,16 +342,23 @@ $group-colors: (
   text-transform: uppercase;
   line-height: 1;
   white-space: nowrap;
-  border-radius: 4px;
+  border-radius: 4px 0 0 4px;
 }
 // No dividing lines between groups: the full-height tabs delimit them, and
 // whitespace does the separating (instructor, 2026-08-22).
 @each $g, $c in $group-colors {
   .grouped-schedule tr.g-first.#{$g} .g-rail span { background: $c; }
 }
-// Breathing room where a new group starts.
-.grouped-schedule .g-first td { padding-top: 1.4rem; }
-.grouped-schedule .g-first td.g-rail { padding-top: 0.55rem; }
+// Breathing room where a new group starts. The gap is a white BORDER, not
+// padding, so a row highlight's background can never bleed into it — the
+// band's top edge and the tab's top edge land on the same line.
+.grouped-schedule .g-first td {
+  border-top: 1.05rem solid #fff !important;
+  padding-top: 0.35rem;
+}
+.grouped-schedule .g-first td.g-rail {
+  border-top: 1.05rem solid #fff !important;
+}
 // Date column: quiet, fixed, never wraps.
 .grouped-schedule td:nth-child(2):not(.topic),
 .grouped-schedule tr:not(.g-first):not(.part-row) td:first-child {
@@ -408,9 +415,6 @@ $group-colors: (
 // band is the only highlight in the table.
 .grouped-schedule tr.next-class td:not(.g-rail) {
   background: #fbeeec;
-  // Fill the gutter between the tab and the band so the highlight connects
-  // to the group tab instead of floating beside it.
-  box-shadow: -0.45rem 0 0 #fbeeec;
 }
 .grouped-schedule td.today-cell::before {
   content: "next class";
