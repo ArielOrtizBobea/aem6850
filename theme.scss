@@ -342,7 +342,11 @@ $group-colors: (
   text-transform: uppercase;
   line-height: 1;
   white-space: nowrap;
-  border-radius: 4px 0 0 4px;
+  // The span is rotated 180°, so corner values are mirrored: this renders as
+  // VISUALLY rounded outer (left) corners and sharp inner (right) corners —
+  // a proper tab. Sits above the highlight extension that tucks underneath.
+  border-radius: 0 10px 10px 0;
+  z-index: 2;
 }
 // No dividing lines between groups: the full-height tabs delimit them, and
 // whitespace does the separating (instructor, 2026-08-22).
@@ -414,7 +418,10 @@ $group-colors: (
 // class day during the term (inert in any other year). The soft carnelian
 // band is the only highlight in the table.
 .grouped-schedule tr.next-class td:not(.g-rail) {
-  background: #fbeeec;
+  background: #f0f0ec;
+}
+.grouped-schedule td.today-cell {
+  position: relative;
 }
 .grouped-schedule td.today-cell::before {
   content: "next class";
@@ -426,4 +433,16 @@ $group-colors: (
   color: $carnelian;
   line-height: 1.2;
   margin-bottom: 0.15rem;
+}
+// The band slides half a tab-width under the tab, so it reads as ending
+// where the tab begins. The tab (z-index 2) paints over it.
+.grouped-schedule td.today-cell::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: -1.3rem;
+  width: 1.3rem;
+  background: #f0f0ec;
+  z-index: 1;
 }
