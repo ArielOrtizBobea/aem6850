@@ -247,13 +247,26 @@ thead th {
   height: 84px;
   width: auto;
 }
+.hero-summary {
+  max-width: 44rem;
+  margin: 0 auto 2rem;
+  font-size: 0.98rem;
+  line-height: 1.55;
+  color: #343a40;
+}
+.hero-summary p { margin: 0; }
 
 // The one course table. Deliberately line-free (instructor: "too many
 // horizontal lines"): no cell borders, three content columns — date, topic,
 // homework — and a colored rail cell that spans each lecture group's rows.
 .grouped-schedule {
-  overflow-x: auto;
   margin-bottom: 1.25rem;
+}
+// Phones scroll the table sideways; wider viewports must NOT get a scroll
+// container, or the sticky header would stick to the wrapper instead of the
+// viewport. 680 ≈ the table's 640px minimum plus margin.
+@media (max-width: 679.98px) {
+  .grouped-schedule { overflow-x: auto; }
 }
 .grouped-schedule table {
   width: 100%;
@@ -264,7 +277,10 @@ thead th {
   table-layout: fixed;
   min-width: 640px;
   font-size: 0.92rem;
-  border-collapse: collapse;
+  // separate, not collapse: collapsed borders detach from position:sticky
+  // headers in Chrome. All cell borders are off anyway.
+  border-collapse: separate;
+  border-spacing: 0;
 }
 .grouped-schedule th,
 .grouped-schedule td {
@@ -279,28 +295,39 @@ thead th {
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: #6b6b6b;
-  border-bottom: 1px solid #e3e3de !important;
   padding-bottom: 0.5rem;
+  // The header sticks to the viewport while the semester scrolls under it.
+  position: sticky;
+  top: 0;
+  z-index: 3;
+  background: #fff;
+  box-shadow: 0 1px 0 #e3e3de;  // border-bottom detaches when sticky
 }
-// The group rail: one cell per lecture group, spanning its rows, with the
-// accent bar running the group's full height.
+// The group tab: one cell per lecture group, spanning its rows, holding a
+// solid-color tab whose label reads sideways, bottom to top.
 .grouped-schedule .g-rail {
-  border-left: 3px solid #6b6b6b !important;
-  padding-left: 0.65rem;
-  padding-top: 0.5rem;
-  width: 7rem;
-  min-width: 7rem;
-  font-size: 0.8rem;
-  font-weight: 700;
-  line-height: 1.25;
-  color: #343a40;
+  padding: 0 0.35rem 0 0;
 }
-.grouped-schedule .g-rail.g-blue  { border-left-color: #1f4e8c !important; }
-.grouped-schedule .g-rail.g-green { border-left-color: #0f6e56 !important; }
-.grouped-schedule .g-rail.g-red   { border-left-color: $carnelian !important; }
+.grouped-schedule .g-rail span {
+  display: block;
+  margin: 0 auto;
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);   // vertical-rl reads down; flipped reads up
+  background: #595959;
+  color: #fff;
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  line-height: 1;
+  white-space: nowrap;
+  padding: 0.6rem 0.3rem;
+  border-radius: 4px;
+}
+.grouped-schedule .g-rail.g-blue span  { background: #1f4e8c; }
+.grouped-schedule .g-rail.g-green span { background: #0f6e56; }
+.grouped-schedule .g-rail.g-red span   { background: $carnelian; }
 // Breathing room where a new group starts (no line needed).
 .grouped-schedule .g-first td { padding-top: 0.85rem; }
-.grouped-schedule .g-first td.g-rail { padding-top: 0.95rem; }
 // Date column: quiet, fixed, never wraps.
 .grouped-schedule td:nth-child(2):not(.topic),
 .grouped-schedule tr:not(.g-first):not(.part-row) td:first-child {
@@ -339,7 +366,8 @@ thead th {
   color: #6b6b6b;
   padding: 1.6rem 0 0.6rem;
 }
+// Break days: a quiet grey band, no italics.
 .grouped-schedule .break-row td {
   color: #6b6b6b;
-  font-style: italic;
+  background: #f0f0eb;
 }
