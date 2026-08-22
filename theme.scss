@@ -244,7 +244,7 @@ thead th {
   margin: 0.25rem 0 1.6rem;
 }
 .hero-brand .cornell-seal {
-  height: 84px;
+  height: 64px;
   width: auto;
 }
 .hero-summary {
@@ -289,6 +289,12 @@ thead th {
   border: none !important;
   background: none;
 }
+// Column widths live on the header cells: under table-layout fixed the
+// first row defines the columns, and pandoc strips a <colgroup> out of raw
+// HTML blocks, so CSS is the only reliable carrier.
+.grouped-schedule thead th:nth-child(1) { width: 2.6rem; }
+.grouped-schedule thead th:nth-child(2) { width: 6.4rem; }
+.grouped-schedule thead th:nth-child(4) { width: 18rem; }
 .grouped-schedule thead th {
   font-size: 0.75rem;
   font-weight: 700;
@@ -336,14 +342,23 @@ thead th {
   color: #6b6b6b;
   font-variant-numeric: tabular-nums;
 }
-// Topic links read as text; the accent appears on hover.
+// Topic cell: a short title on its own line, then an understated grey
+// description. The title reads as text; the accent appears on hover.
 .grouped-schedule .topic a {
+  display: block;
   color: inherit;
+  font-weight: 600;
   text-decoration: none;
 }
 .grouped-schedule .topic a:hover {
   color: $carnelian;
   text-decoration: underline;
+}
+.grouped-schedule .topic .t-desc {
+  display: block;
+  margin-top: 0.1rem;
+  color: #8e8e89;
+  line-height: 1.4;
 }
 .grouped-schedule td.hw {
   font-size: 0.88rem;
@@ -370,4 +385,24 @@ thead th {
 .grouped-schedule .break-row td {
   color: #6b6b6b;
   background: #f0f0eb;
+}
+// The "we are here" line — a script on the front door marks the next class
+// day during the term (inert in any other year).
+.grouped-schedule tr.today-line td {
+  border-top: 2px solid $carnelian !important;
+}
+.grouped-schedule td.today-cell { position: relative; }
+.grouped-schedule td.today-cell::before {
+  content: "next class";
+  position: absolute;
+  top: -0.75em;
+  left: 0;
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: $carnelian;
+  background: #fff;
+  padding-right: 0.4em;
+  line-height: 1.2;
 }
