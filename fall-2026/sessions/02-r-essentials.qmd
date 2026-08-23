@@ -53,6 +53,8 @@ By the end of this session you can:
 - Read a CSV and inspect what actually arrived.
 - Subset rows and columns with logical conditions.
 - Protect an identifier column from being turned into a number.
+- Recognize the other containers — factors, matrices, lists — and say
+  what each is for.
 
 ::: {.content-hidden when-format="revealjs"}
 
@@ -303,6 +305,85 @@ d[1, ]            # first row, all columns
 d[, "pm25"]       # all rows, one column
 d[d$pm25 > 40, ]  # the rows where a condition is TRUE
 ```
+
+## Factors {#factors}
+
+A factor is how R stores a **categorical** column: the values live as
+numeric codes, with a lookup table of labels called *levels*.
+
+```{r}
+#| label: factors
+#| script: "Factors"
+site <- factor(c("Compton", "Reseda", "Compton", "Compton"))
+site
+levels(site)
+table(site)
+```
+
+::: {.content-hidden when-format="revealjs"}
+
+You rarely *make* factors on purpose this early; you *meet* them —
+some functions return them, some files arrive as them, and from
+session 4 on, grouping and counting lean on them. For now, know what
+one is and know its one famous bite, on the next slide.
+
+:::
+
+## The factor trap {#factor-trap}
+
+Remember `"10"` sorting before `"9"`? Factors have a sneakier version.
+
+```{r}
+#| label: factor-trap
+#| script: "The factor trap"
+f <- factor(c("10", "9", "100"))   # numbers, stored as categories
+as.numeric(f)                      # NOT the numbers -- the level codes
+as.numeric(as.character(f))        # the repair: text first, then number
+```
+
+::: {.content-hidden when-format="revealjs"}
+
+`as.numeric()` on a factor returns the internal codes — the position
+of each value in the (alphabetically sorted) level table — not the
+numbers the labels spell. No error, no warning, plausible output:
+silent conversion's meaner cousin. The repair is always the same two
+steps: `as.character()` first, then `as.numeric()`.
+
+:::
+
+## Matrices and lists {#matrices-lists}
+
+Two more containers you will meet later — today just their names and
+their one-line reasons to exist.
+
+```{r}
+#| label: matrices-lists
+#| script: "Matrices and lists, at introduction depth"
+m <- matrix(1:6, nrow = 2)   # a vector with dimensions
+m
+m[2, 3]                      # row 2, column 3
+
+l <- list(site = "Compton", readings = c(53.2, 33.6), clean = TRUE)
+str(l)                       # a container of anything
+l$readings
+```
+
+::: {.content-hidden when-format="revealjs"}
+
+A **matrix** is one vector wearing dimensions — every element the same
+type, addressed as `m[row, column]`. It returns in Part II: a photo is
+a matrix of pixels, a weather grid is a matrix of temperatures
+(sessions 19 and 24).
+
+A **list** holds anything, including other lists — and a data frame is
+secretly a list of column vectors, which is why `d$pm25` and `l$readings`
+look alike. Lists are what `lapply()` eats and returns when you run a
+function over every file in a folder; that's session 6.
+
+Neither needs practice today. When they matter, they will be
+reintroduced where they are used.
+
+:::
 
 ## Where am I? {#working-directory}
 
@@ -654,6 +735,10 @@ arrival checks and the format strings for dates.
 | `rep(x, times =)`, `rep(x, each =)` | Repetition, two different ways |
 | `length(x)`, `class(x)` | How many, and what type |
 | `ls()` | What is in the workspace |
+| `?mean` | The help page for a function |
+| `factor(x)`, `levels(f)` | A categorical column and its categories |
+| `matrix(1:6, nrow = 2)`, `m[2, 3]` | A vector with dimensions |
+| `list(a = 1, b = "x")`, `l$a` | A container of anything |
 
 **Types and missingness**
 
@@ -694,6 +779,7 @@ arrival checks and the format strings for dates.
 | An ID lost its leading zero | `read.csv()` decided a label was a number |
 | `mean()` returns `NA` | There are `NA`s; use `na.rm = TRUE` |
 | `x == NA` gives `NA` | Use `is.na(x)` |
+| `as.numeric()` on a factor gives codes | `as.character()` first, then `as.numeric()` |
 | More rows than days | More than one instrument, or a bad join later |
 
 **Links**

@@ -105,6 +105,29 @@ d[, "pm25"]       # all rows, one column
 d[d$pm25 > 40, ]  # the rows where a condition is TRUE
 
 
+# Factors ----
+site <- factor(c("Compton", "Reseda", "Compton", "Compton"))
+site
+levels(site)
+table(site)
+
+
+# The factor trap ----
+f <- factor(c("10", "9", "100"))   # numbers, stored as categories
+as.numeric(f)                      # NOT the numbers -- the level codes
+as.numeric(as.character(f))        # the repair: text first, then number
+
+
+# Matrices and lists, at introduction depth ----
+m <- matrix(1:6, nrow = 2)   # a vector with dimensions
+m
+m[2, 3]                      # row 2, column 3
+
+l <- list(site = "Compton", readings = c(53.2, 33.6), clean = TRUE)
+str(l)                       # a container of anything
+l$readings
+
+
 # Where am I ----
 getwd()
 list.files()

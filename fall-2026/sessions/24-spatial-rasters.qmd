@@ -24,11 +24,20 @@ By the end of this session you can:
 
 - The workhorse of climate economics: gridded weather aggregated onto
   counties.
+- The personal opener: geocode a place you care about — home town,
+  birthplace — find its grid cell, and pull its century of
+  temperatures from the stack.
+- A raster is a georeferenced matrix: matrices from session 2 return
+  for ten minutes — create, index, multiply — because extraction is
+  just subsetting one, and the fast method below is multiplying one.
 - Alignment, raster algebra, zonal statistics.
 - Fast zonal at scale: precompute the cell-to-polygon weights *once*
   as a sparse matrix, and any new layer's zonal statistics become one
   sparse multiply — the trick behind 40-year daily county panels.
-- Benchmarked against the canned function, not asserted.
+- Benchmarked against the canned function, not asserted — and the
+  efficiency kit for jobs this size: `system.time()` from week two
+  returns, `mclapply()` for the embarrassingly parallel step,
+  `fread()` for the giant file.
 
 **Verification habit.** Hand-check one unit; weighted-vs-unweighted
 differs in a predictable direction — confirm it; benchmark claims are

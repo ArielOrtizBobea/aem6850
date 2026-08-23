@@ -14,9 +14,12 @@ before class.
 By the end of this session you can:
 
 - Frame a photos-to-variable pipeline.
+- Compute a feature from raw pixels yourself — a photo is a grid of
+  numbers.
 - Score images with a vision model, or with embeddings plus a simple
   classifier.
-- Validate model scores against ground truth.
+- Validate scores against ground truth on photos the model never
+  saw — and say which method won, by how much.
 - Articulate the ethics constraints that face data demands.
 
 ## What we cover {#coverage}
@@ -24,9 +27,15 @@ By the end of this session you can:
 - What photographs have measured: pollution from haze, crowd sizes,
   emotion in public life.
 - The full arc on ordinary photos: labels → model → score → validate.
-- Three routes, at "use, not build" depth: zero-shot scoring with a
-  vision model; embeddings plus a simple classifier; fine-tuning as a
-  concept.
+- First, the baseline you build yourself: a photo is a grid of
+  numbers — average the sky's pixels for color, take the variance for
+  contrast, and you have a haze score in thirty lines of plain R.
+- Then the model routes: zero-shot scoring with a vision model;
+  embeddings plus a simple classifier; fine-tuning as a concept.
+- The contest, measured: the vision model against your thirty lines,
+  both scored on held-out photos against the matched monitor
+  readings. The model should win — the interesting number is by how
+  much.
 - Live demo: emotion classification on faces, scored against a gold
   set labeled in class — with the ethics conversation face data
   demands.
