@@ -447,3 +447,30 @@ $group-colors: (
   background: #f0f0ec;
   z-index: 1;
 }
+
+// ---------------------------------------------------------------------------
+// Code blocks are "windows": clearly separate from prose, copyable in one
+// click (code-copy: true in _quarto.yml keeps the button always visible).
+// Ported from the AEM 7010 site (instructor request, 2026-08-24). The accent
+// border marks "this is runnable input" -- output blocks stay plain, so what
+// you type and what R prints never look alike.
+div.sourceCode,
+pre.sourceCode {
+  border-left: 3px solid $carnelian;
+  background-color: #fafaf7;
+}
+
+// Plain fenced blocks (no language — e.g. text you type into a form or a
+// README) get the same window and wrap instead of clipping. R output under
+// a code cell is excluded on purpose: input looks like a window, printed
+// output stays plain.
+:not(.cell-output) > pre:not(.sourceCode) {
+  border-left: 3px solid $carnelian;
+  background-color: #fafaf7;
+  padding: 0.5em 0.75em;
+  white-space: pre-wrap;
+
+  > code {
+    white-space: pre-wrap;  // the inner <code> overrides the pre otherwise
+  }
+}

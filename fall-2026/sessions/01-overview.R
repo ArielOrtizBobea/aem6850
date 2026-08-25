@@ -1,6 +1,6 @@
 # = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 # AEM 6850 -- Empirical Methods for Applied Economists
-# Session 1 -- Course overview, install party, onboarding
+# Session 1 -- Overview
 # Tuesday, August 25, 2026
 #
 # Run it one line at a time: put the cursor on a line and press Cmd-Return

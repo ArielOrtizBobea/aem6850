@@ -75,7 +75,7 @@ purl_session <- function(qmd,
   src <- readLines(qmd, warn = FALSE)
   fm <- .front_matter(src)
 
-  # "1 · Course overview, ..." reads better as "Session 1 -- Course overview, ..."
+  # "1 · Overview" reads better as "Session 1 -- Overview"
   session_line <- if (!is.na(fm$title)) {
     sub("^([0-9]+)\\s*·\\s*", "Session \\1 -- ", fm$title)
   } else NA_character_
