@@ -46,7 +46,7 @@ text(as.Date("2025-01-07"), max(la$gust), "  Jan 7",
      col = "#b31b1b", adj = c(0, 1))
 
 
-# Reconcile against the predictions ----
+# Reconcile against what you wrote down ----
 la$date[which.max(la$gust)]                 # 1. the windiest day
 max(la$gust) / median(la$gust)              # 2. how unusual it was
 sum(la$precip[format(la$date, "%Y-%m") == "2024-12"])  # 3. December rain, in mm

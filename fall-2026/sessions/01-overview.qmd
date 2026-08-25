@@ -52,9 +52,13 @@ This page is the "manual" for the session. The slides are the same material but 
 
 [**pollev.com/arielortizbobea090** · text **arielortizbobea090** to **22333**]{style="font-size:0.75em"}
 
+[A short background survey. Your answers shape how I teach the next few weeks. Graded quizzes and attendance will run on this same tool all semester.]{style="font-size:0.6em; color:#6b6b6b"}
+
 ::: {.notes}
 Items 1–10 of the background survey run one at a time while people arrive.
-Item 11 (the free point) right after, as the graded-quiz demo.
+Item 11 (the free point) right after, as the graded-quiz demo. Say the
+calibration point out loud: the tool split and the AI answers decide how
+hard sessions 2–9 lean.
 :::
 
 :::
@@ -63,9 +67,9 @@ Item 11 (the free point) right after, as the graded-quiz demo.
 
 By the end of this session you can:
 
-- State the course’s objectives and navigate the course map.
+- State what the course covers and navigate the course map.
 - Run a script and find its outputs.
-- Predict what a simple script prints.
+- Write down what a dataset should show, run the code, and check.
 - Get your private course repository (repo) and commit a change in the browser.
 
 ::: {.content-hidden when-format="revealjs"}
@@ -193,7 +197,9 @@ fine and was wrong?
 
 > **AI models draft and execute code. You supervise and verify.**
 >
-> If the code runs without an error, it does not mean it is correct. A wrong number coming our of your error-less code is the key challenge of this AI era. This course will develop your skills to avoid that.
+> Error-free is not correct. A wrong number from code that runs clean is
+> the key challenge of the AI era; this course builds the skills to catch
+> it.
 
 ::: {.content-hidden when-format="revealjs"}
 
@@ -269,7 +275,7 @@ no network data.
 3. **documents**: tables out of PDFs and scans
 4. **images**: pixels into measurements
 5. **audio**: speech, pauses, tone as data
-6. **maps & rasters**: places, joins, vectors
+6. **maps & rasters**: places, joins, exposures
 
 Cross-cutting *channels*: downloads, APIs, scraping, vendors,
 archives, your own collection.
@@ -443,9 +449,9 @@ Any email works; add your Cornell address later for the free GitHub
 Education benefits. Pick a username you would put on a CV. Already have an
 account? Use it; do not create a second one.
 
-**2. Submit the sign-up form.** Open it either way: scan the QR on the
-screen, or click the **Sign-up form** link in the Canvas welcome
-announcement. It is a Google form with three boxes: your name, your NetID,
+**2. Submit the sign-up form.** Open it either way: click the **Sign-up
+form** link in the Canvas welcome announcement, or scan the QR shown in
+class. It is a Google form with three boxes: your name, your NetID,
 your GitHub username. Fill them in and press **Submit**. (Your username is
 the name under the top-right menu on github.com, not your email address.)
 
@@ -529,10 +535,25 @@ attendance today, and it shows us your setup worked end to end.
 
 | Symptom | Fix |
 |:--|:--|
-| No invitation after a few minutes | Check [github.com/notifications](https://github.com/notifications) and your email (spam too); then raise your hand; a typo'd username takes seconds to fix |
+| No invitation while classmates get theirs | Check [github.com/notifications](https://github.com/notifications) and your email (spam too); then raise your hand; a typo'd username takes seconds to fix |
 | You submitted the wrong username | Submit the form again with the right one, and raise your hand |
 | You accepted while signed into the wrong account | Tell us; we re-invite the right one. Do not make a second account |
 | No pencil icon on the README | You are looking at someone else's repository, or you are signed out |
+
+:::
+
+::: {.content-visible when-format="revealjs"}
+
+## The warning, the day before
+
+![](figures/nws-pds-warning-20250106.png){fig-align="center" height="520"}
+
+::: {.notes}
+Read the amber lines out loud. This is the National Weather Service on
+January 6 at 3:24 PM, eighteen hours before ignition. It names the exact
+foothills where the Eaton fire exploded. This document is the "story" our
+data will be checked against.
+:::
 
 :::
 
@@ -553,14 +574,26 @@ homework this semester.
 
 :::
 
-## Predict before you run {#predict}
+## What should the data show? {#predict}
 
 ::: {.content-hidden when-format="revealjs"}
 
+The pattern for this whole course: something happens in the world, and we
+check whether the data agrees. Here is the something.
+
 On January 7, 2025, two fires started in Los Angeles County: the Palisades
-fire near the coast, the Eaton fire above Altadena. Together they destroyed
-about sixteen thousand structures. The homeworks build on these fires all
-semester. Today they just give us a reason to pull one small file.
+fire near the coast, the Eaton fire above Altadena. A violent windstorm
+drove both, and a drought fed them. Together they destroyed about sixteen
+thousand structures. The homeworks build on these fires all semester.
+Today they give us a reason to pull one small file.
+
+The National Weather Service saw it coming. At 3:24 PM on January 6, the
+day before ignition, its Los Angeles office issued a rare "Particularly
+Dangerous Situation" red flag warning: "THIS WILL LIKELY BE A LIFE
+THREATENING, DESTRUCTIVE, AND WIDESPREAD WINDSTORM", with "destructive
+wind gusts between 80 and 100 mph" expected in the San Gabriel mountains
+and foothills ([archived
+product](https://mesonet.agron.iastate.edu/p.php?pid=202501062324-KLOX-WWUS86-RFWLOX)).
 
 ![Smoke from the Palisades (coast) and Eaton (inland) fires, January 10,
 2025\. Source: [NASA Earth
@@ -571,8 +604,9 @@ Terra/MODIS; labels added.](figures/la-fires-2025-annotated.jpg)
 
 ::: {.content-visible when-format="revealjs"}
 
-January 7, 2025: the Palisades and Eaton fires start in Los Angeles County.
-The semester's running example. Today, just a reason to pull one file.
+The story so far, from the previous slides: both fires exploded on
+January 7, driven by a violent windstorm, in the middle of a drought.
+Strong wind spreads fire; dry ground feeds it.
 
 :::
 
@@ -580,25 +614,33 @@ We are about to download daily weather for downtown Los Angeles (December 1,
 2024 through February 28, 2025: ninety days, six columns) and plot the
 strongest wind gust recorded each day.
 
-**Before any of that, write down three predictions.** On paper, or in a
-comment at the top of your script. Written down, not held in your head.
+**Before running anything, write down what the data should show if it is
+right.** On paper, or in a comment at the top of your script. The story
+above implies three things; turn each into a number or a date.
 
-1. Which date in that window has the largest daily maximum gust?
-2. Roughly how many times bigger is that gust than a typical day's?
-3. How much rain fell on Los Angeles in December 2024?
+1. If the story is right, which date should show the biggest gust? Write
+   the date down.
+2. A typical winter day downtown gusts near 20 km/h. How tall should the
+   spike be? Write a number.
+3. "Drought" is a claim about rain. Write down December's total rainfall
+   in millimetres, as the story implies it.
 
 ::: {.content-hidden when-format="revealjs"}
 
-Use what you already know about the fires and about Southern California in
-winter. That knowledge turns a guess into a prediction.
+You are not guessing; you are reading the story's implications into
+numbers. When the plot appears, it will either confirm what you wrote or
+surprise you. Both are useful, and neither is possible with nothing
+written down.
 
 :::
 
 ::: {.content-visible when-format="revealjs"}
 ::: {.notes}
-Take answers out loud before running anything. Someone will say Jan 7 for Q1;
-ask them why they believe it. Q2 gets wild spread; good, that is the point.
-Q3 is the one nobody predicts well.
+Say it plainly: the story makes promises about the data. Jan 7 should be
+the spike (Q1). The spike's height is genuinely open; the anchor is 20
+(Q2, answer 66). Drought should mean near-zero December rain (Q3, answer
+0.5 mm). If the plot breaks a promise, something is wrong with the data,
+the code, or the story.
 :::
 :::
 
@@ -710,7 +752,7 @@ Now compare the screen against what you wrote down.
 
 ```{r}
 #| label: demo-reconcile
-#| script: "Reconcile against the predictions"
+#| script: "Reconcile against what you wrote down"
 la$date[which.max(la$gust)]                 # 1. the windiest day
 max(la$gust) / median(la$gust)              # 2. how unusual it was
 sum(la$precip[format(la$date, "%Y-%m") == "2024-12"])  # 3. December rain, in mm
@@ -786,35 +828,35 @@ Five minutes. The stub is in the live script.
 Each session ends with the verification habit it installs. This is the
 first one; the rest build on it.
 
-> **Predict, then run, then reconcile.**
+> **Write down what the data should show. Run. Reconcile.**
 
 ::: {.content-hidden when-format="revealjs"}
 
-Write the prediction down before you run the code. A prediction in your
-head bends to match whatever appears on screen; you will remember expecting
-exactly that. A written one stays put.
+Write your expectation down before you run the code. An expectation in
+your head bends to match whatever appears on screen; you will remember
+expecting exactly that. A written one stays put.
 
 When the prediction and the output disagree, one of three things happened:
 
-- **Your prediction was wrong**: you learned about the world.
+- **Your expectation was wrong**: you learned about the world.
 - **The code is wrong**: you learned about your code.
 - **The data is not what you thought**: you learned about the data, usually
   the most valuable of the three.
 
-All three teach you something. Skip the prediction and the output has
-nothing to disagree with, and you will just believe it.
+All three teach you something. Write nothing down and the output has
+nothing to disagree with; you will just believe it.
 
 :::
 
 ::: {.content-visible when-format="revealjs"}
 
-Prediction ≠ output means one of three things, all useful:
+Expectation ≠ output means one of three things, all useful:
 
-- your prediction was wrong → you learned about the world
+- your expectation was wrong → you learned about the world
 - the code is wrong → you learned about your code
 - the data is not what you thought → you learned about the data
 
-No prediction → nothing to check.
+Nothing written down → nothing to check.
 
 :::
 
