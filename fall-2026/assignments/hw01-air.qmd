@@ -4,96 +4,112 @@ subtitle: "Out Aug 27 · due Sep 3, 8:40 am"
 pagetitle: "AEM 6850 · HW1"
 ---
 
+![NASA Terra/MODIS, January 10, 2025. Smoke from the Palisades and Eaton
+fires streaming out over the Pacific. Your monitor sits downtown, under
+it.](../sessions/figures/la-fires-2025-annotated.jpg){fig-alt="Satellite
+image of Los Angeles on January 10, 2025, with smoke plumes from the
+Palisades and Eaton fires blowing offshore."}
+
 ## The goal
 
-On January 7, 2025, two wildfires ignited in Los Angeles County,
-California: the Palisades fire and the Eaton fire. This homework asks a
-plain question about that event: how bad did the air get, at one
-monitor, in downtown Los Angeles?
+On January 7, 2025, the Palisades and Eaton fires ignited in Los Angeles
+County. How bad did the air get, at one monitor downtown, that winter?
 
-You answer with six numbers: the highest daily reading of that winter,
-the day it happened, the January 2025 average, the number of days above
-the health standard, the number of days with no reading at all, and the
-peak relative to the December average.
+You answer with six numbers, written to a file called `results.csv`.
 
-The data is from the US Environmental Protection Agency (EPA), the
-federal environmental regulator. It reports PM2.5: airborne particles
-smaller than 2.5 micrometers, the standard measure of smoke, in
-micrograms per cubic meter (µg/m³). EPA's 24-hour health standard is
-35 µg/m³.
+## The six numbers
 
-Everything is base R: `read.csv()`, subsetting, dates, `NA`. No
-packages.
+Your window is **December 1, 2024 through February 28, 2025**, at EPA site
+`06-037-1103` ("Los Angeles-North Main Street"), primary regulatory monitor
+only.
 
-The files come to you exactly as EPA ships them. `read.csv()` silently
-damages two of the columns. The winter window has more days than the
-file has rows, and the gaps carry no marker. Working from the file as
-shipped, and catching what it does to you, is the assignment.
+| `quantity` | what it is | format |
+|:--|:--|:--|
+| `peak_pm25` | The highest daily PM2.5 reading in the window | 1 decimal, e.g. `47.3` |
+| `peak_date` | The day that peak fell on | `YYYY-MM-DD` |
+| `jan_mean` | Mean of the January 2025 readings | 2 decimals |
+| `days_above_35` | Days strictly above 35 µg/m³ | whole number |
+| `missing_days` | Calendar days in the window with no reading at all | whole number |
+| `peak_over_dec_mean` | `peak_pm25` divided by the December 2024 mean | 2 decimals |
+
+`results.csv` has exactly two columns, `quantity` and `value`, and exactly
+those six rows in that order. `results_spec.md` in your starter is the full
+contract, and the grader reads the file against it.
+
+PM2.5 is fine particulate matter, in micrograms per cubic meter (µg/m³).
+EPA's 24-hour health standard is 35 µg/m³.
+
+## Do this one without AI {#no-ai}
+
+The syllabus permits AI tools on homework by default. **This assignment is
+an exception**, and it is the only kind of exception the course makes: an
+assignment where the whole point is the vocabulary.
+
+Everything you need is on the [R essentials](../sessions/02-r-essentials.qmd)
+page. Every function, every repair, every check. If you hand this to a
+chatbot it will produce six correct numbers in about nine seconds, and you
+will have learned nothing that the rest of the semester depends on. You
+cannot verify a model's work in a language you do not read, and verifying is
+what this course is for.
+
+Ask a classmate. Ask in office hours. Re-run the session script until the
+pieces stick. Then write it yourself.
 
 ## The data
 
-EPA AirData publishes a daily summary from every regulatory air
-monitor in the United States. Your two files cover one site: 060371103,
-"Los Angeles-North Main Street", in downtown Los Angeles. A site is a
-place; a monitor is one instrument at that place. This site runs five
-instruments, and keeping the right one is part of the work.
+Two CSVs in `data/`, exactly as EPA's download tool ships them. Nothing has
+been cleaned, sorted, or reformatted. `data/SOURCE.md` records the source
+URL, the exact download selections, and file checksums, so you can
+re-download and compare.
 
-You get one CSV per calendar year, because EPA's download tool splits
-at the year boundary. Your window, December 2024 through February 2025,
-straddles it. The files are byte for byte what the tool returned:
-nothing was cleaned, sorted, or reformatted. `data/SOURCE.md` in your
-starter repo records the source URL, the exact download selections, and
-the file checksums, so you can re-download and compare.
+Two things about the files that are not mistakes:
+
+- **You get two files.** EPA's tool downloads one calendar year at a time,
+  and your window crosses the year boundary. The columns are identical.
+- **The site runs five instruments.** A site is a place; a monitor is one
+  instrument at that place. Keep all five and you get up to five rows for
+  the same day. The assignment tells you which one to keep.
+
+`read.csv()` also damages two columns on the way in, silently. Catching that
+is part of the work.
 
 ## Reference checkpoints
 
-This course discloses expected values on purpose: the CHECK blocks in
-`hw1.R` and the answer table in `results_spec.md` print them. The
-pipeline from raw file to answer is the assignment; the numbers were
-never the secret.
+The expected values are disclosed on purpose. The pipeline from raw file to
+answer is the assignment; the numbers were never the secret.
 
-Anchors you can check your work against:
-
-- EPA's 24-hour PM2.5 standard is 35 µg/m³. One of your six numbers
-  counts the days above it.
-- The shipped file carries EPA's own Air Quality Index in the
-  `Daily AQI Value` column. On the peak day it reads 182, a level EPA
-  labels "Unhealthy".
-- [Schollaert et al. (2025)](https://pubs.acs.org/doi/10.1021/acs.estlett.5c00486)
-  report a 101.7 µg/m³ peak at this monitor, drawn from EPA's
-  real-time feed. Your file is the quality-assured archive, and it says
-  something close but not identical. `data/SOURCE.md` explains why both
-  numbers are right.
+- EPA's 24-hour PM2.5 standard is 35 µg/m³.
+- The file carries EPA's own Air Quality Index in `Daily AQI Value`. On the
+  peak day it reads 182, which EPA labels "Unhealthy".
+- Four `stopifnot()` checks in `hw1.R` gate the stages. Uncomment each as
+  you reach it. **Editing a check so it passes scores worse than leaving it
+  failing honestly.**
 
 ## What to submit
 
 Two files, due Thursday, September 3, 8:40 am:
 
-- `hw1.R`: your edited script.
-- `results.csv`: written by your script, in the exact format
-  `results_spec.md` specifies.
+- `hw1.R` — your edited script
+- `results.csv` — written by that script
 
-Upload by browser: open your private repo in the course GitHub
-organization, drag both files onto the repo page, and commit. Sign-up
-instructions are on Canvas. No git client is needed; git arrives in
-session 7.
+Open your private repo in the course GitHub organization, drag both files
+onto the repo page, and commit. No git client needed.
 
-Before you upload, restart R and source your script from scratch. It
-must run top to bottom in a fresh session with no errors. The grader
-runs it exactly that way.
+Before you upload, restart R and source your script from scratch. It must
+run top to bottom in a fresh session with no errors. The grader runs it
+exactly that way.
 
-## How this one is weighted
+## Weighting
 
 | Dimension | Points | The question it asks |
-|-----------|-------:|----------------------|
+|:--|--:|:--|
 | Reproduces | 15 | Does the script run, start to finish, in a fresh session? |
 | Correct | 60 | Are the six numbers right, and does your script compute them? |
 | Verified | 15 | Did you check your own work? |
 | Craft | 10 | Can someone else read it? |
 
-The question points inside `hw1.R` sum to 100 and scale by 0.6 into
-Correct. A `results.csv` with the right numbers and a script that does
-not compute them scores 0 on Correct. Editing a CHECK block so it
-passes scores worse than leaving it failing honestly. The full HW1
-rubric ships in your starter as `rubric.md`; the course-wide grading
-scheme is in the [syllabus](../syllabus.qmd#homework).
+The question points inside `hw1.R` sum to 100 and scale by 0.6 into Correct.
+A `results.csv` with the right numbers and a script that does not compute
+them scores 0 on Correct. The full rubric ships in your starter as
+`rubric.md`; the course-wide scheme is in the
+[syllabus](../syllabus.qmd#homework).

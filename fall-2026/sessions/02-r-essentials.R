@@ -219,7 +219,7 @@ pm <- read.csv("data/epa_pm25_compton_2025.csv")
 #               "data/epa_pm25_compton_2025.csv")
 
 
-# Arrival checks ----
+# Quick checks ----
 dim(pm)
 names(pm)
 

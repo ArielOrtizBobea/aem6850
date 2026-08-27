@@ -951,13 +951,13 @@ roughly downwind. Which calendar day between January 1 and February 28
 should show the worst air at this monitor? Write the date down.
 :::
 
-## Arrival checks {#arrival-checks}
+## Quick checks {#quick-checks}
 
 The same three questions, now on a file with twenty-two columns.
 
 ```{r}
-#| label: arrival-checks
-#| script: "Arrival checks"
+#| label: quick-checks
+#| script: "Quick checks"
 dim(pm)
 names(pm)
 ```
@@ -1200,7 +1200,7 @@ site identifier had become a number and the date had not become a date. At
 that point each had a one-line repair. Three joins later, each would have
 been expensive.
 
-Run the four arrival checks in this order:
+Run the four quick checks in this order:
 
 | Check | Question it answers |
 |:--|:--|
@@ -1391,7 +1391,7 @@ as.Date("2025-02-28") - as.Date("2025-01-07")
 ::: {.content-visible when-format="revealjs"}
 
 The session page has every command from today in one table, plus the four
-arrival checks and the format strings for dates.
+quick checks and the format strings for dates.
 
 :::
 
@@ -1441,7 +1441,7 @@ arrival checks and the format strings for dates.
 | `read.csv(path)` | Path or URL, either one |
 | `read.csv(p, colClasses = c("Site.ID" = "character"))` | Keep the leading zeros on read |
 | `names(d)[names(d) == "old"] <- "new"` | Rename one column |
-| `dim()`, `str()`, `head()`, `summary()` | The arrival checks |
+| `dim()`, `str()`, `head()`, `summary()` | The quick checks |
 
 **Things that bite**
 
@@ -1455,14 +1455,11 @@ arrival checks and the format strings for dates.
 | `as.numeric()` on a factor gives codes | `as.character()` first, then `as.numeric()` |
 | More rows than days | More than one instrument, or a bad join later |
 
-**Links**
+**Today's data**
 
-- Session materials: [slides](02-r-essentials-slides.html) ·
-  [live script](02-r-essentials.R) ·
-  [today's data](data/epa_pm25_compton_2025.csv) ·
-  [where it came from](data/SOURCE.md)
-- EPA AirData: [Download Daily Data](https://www.epa.gov/outdoor-air-quality-data/download-daily-data)
-- [Syllabus](../syllabus.qmd) · [full schedule](../index.qmd#schedule)
+[The file](data/epa_pm25_compton_2025.csv) ·
+[where it came from](data/SOURCE.md) ·
+[EPA's download tool](https://www.epa.gov/outdoor-air-quality-data/download-daily-data)
 
 :::
 
