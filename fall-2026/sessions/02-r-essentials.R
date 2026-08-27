@@ -8,19 +8,13 @@
 # (Mac) or Ctrl-Enter (Windows).
 # = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 
-# Everything that exists is an object ----
+# Objects and calls ----
 x <- c(1, 2, 3)
 f <- function(v) v * 2
 
-class(x)
-class(f)        # a function is an object too
+class(f)        # a function is an object, exactly like a vector
 class(`+`)      # so is the plus sign
-
-
-# Everything that happens is a function call ----
-x + 1
-`+`(x, 1)      # the same call, written plainly
-`[`(x, 2)      # the square bracket is a function too
+`+`(x, 1)       # so x + 1 is a call to that object
 
 
 # One function, many classes ----
@@ -70,7 +64,8 @@ sum(x)
 mean(x)
 min(x)
 max(x)
-range(x)      # both ends at once
+range(x)         # both ends at once
+round(mean(x), 2)   # trim the decimals before you report a number
 
 
 # = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
@@ -160,6 +155,14 @@ d <- data.frame(
 )
 d
 str(d)
+
+
+# Stacking two frames ----
+e <- data.frame(site = "Reseda", date = "2025-01-02", pm25 = 41.5)
+
+identical(names(d), names(e))   # same columns, same order?
+both <- rbind(d, e)             # stack the rows
+nrow(both)
 
 
 # Getting at rows and columns ----
@@ -259,6 +262,8 @@ pm$date <- as.Date(pm$Date, format = "%m/%d/%Y")
 class(pm$date)
 range(pm$date)
 
+format(pm$date[1], "%Y-%m")   # pull pieces back out of a date
+
 
 # Subset to the window ----
 win <- pm[pm$date <= as.Date("2025-02-28"), ]
@@ -271,7 +276,8 @@ nrow(one) == length(unique(one$date))   # one row per day now?
 
 
 # Predict, then reconcile ----
-one$date[which.max(one$pm25)]
+which.max(one$pm25)              # the POSITION of the largest value
+one$date[which.max(one$pm25)]    # ...so this is the date it fell on
 max(one$pm25)
 median(one$pm25)
 
@@ -292,6 +298,24 @@ head(one[order(-one$pm25), c("date", "pm25")], 5)
 # = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 
 
+
+
+# Writing your answer out ----
+answers <- data.frame(
+  quantity = c("peak_pm25", "peak_date"),
+  value    = c(round(max(one$pm25), 1),
+               format(one$date[which.max(one$pm25)], "%Y-%m-%d"))
+)
+answers
+
+write.csv(answers, "results.csv", row.names = FALSE)
+
+
+# Checking your own work ----
+stopifnot(
+  nrow(one) == 59,
+  !anyNA(one$pm25)
+)
 
 
 # = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
