@@ -1,12 +1,11 @@
 # = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 # AEM 6850 -- Empirical Methods for Applied Economists
+# Prof. Ariel Ortiz-Bobea
 # Session 3 -- Look at your data
 # Tuesday, September 1, 2026
 #
 # Run it one line at a time: put the cursor on a line and press Cmd-Return
 # (Mac) or Ctrl-Enter (Windows).
-#
-# Generated from 03-look-at-data.qmd -- edit the .qmd, not this file.
 # = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 
 # Rebuild session 2's data frame ----

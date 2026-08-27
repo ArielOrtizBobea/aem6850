@@ -63,12 +63,14 @@
 #'
 #' @param qmd    path to the session source
 #' @param out    path to write; defaults to the .qmd path with an .R extension
-#' @param course banner line 1
-#' @param how    banner line for how to run it
+#' @param course     banner line 1
+#' @param instructor banner line 2
+#' @param how        banner line for how to run it
 #' @return `out`, invisibly
 purl_session <- function(qmd,
                          out = sub("\\.qmd$", ".R", qmd),
                          course = "AEM 6850 -- Empirical Methods for Applied Economists",
+                         instructor = "Prof. Ariel Ortiz-Bobea",
                          how = paste("Run it one line at a time: put the cursor on a line and press",
                                      "Cmd-Return (Mac) or Ctrl-Enter (Windows).")) {
 
@@ -83,12 +85,11 @@ purl_session <- function(qmd,
   banner <- c(
     .rule,
     paste0("# ", course),
+    paste0("# ", instructor),
     if (!is.na(session_line)) paste0("# ", session_line),
     if (!is.na(fm$subtitle)) paste0("# ", fm$subtitle),
     "#",
     paste0("# ", strwrap(how, width = 74)),
-    "#",
-    paste0("# Generated from ", basename(qmd), " -- edit the .qmd, not this file."),
     .rule
   )
 

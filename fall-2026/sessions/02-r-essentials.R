@@ -1,21 +1,41 @@
 # = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 # AEM 6850 -- Empirical Methods for Applied Economists
+# Prof. Ariel Ortiz-Bobea
 # Session 2 -- R essentials
 # Thursday, August 27, 2026
 #
 # Run it one line at a time: put the cursor on a line and press Cmd-Return
 # (Mac) or Ctrl-Enter (Windows).
-#
-# Generated from 02-r-essentials.qmd -- edit the .qmd, not this file.
 # = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 
+# Everything is an object, every action is a function ----
+x <- c(1, 2, 3)
+x + 1
+`+`(x, 1)      # the same call, written plainly
+`[`(x, 2)      # the square bracket is a function too
+
+
+# One function, many classes ----
+summary(c(1, 2, 3, 100))
+summary(c("a", "b", "a"))
+
+
 # Objects and assignment ----
-x <- c(1, 2, 3, 4, 5)
+x <- c(1, 2, 3, 4, 5)   # the arrow points from the value into the name
+x = c(1, 2, 3, 4, 5)    # also assigns; you will meet it in other code
+c(1, 2, 3, 4, 5) -> x   # legal, and points the other way
+
 x
 class(x)
 length(x)
 
 ls()          # what is in your workspace right now
+
+
+# Asking R for help ----
+?seq             # the help page for seq()
+help(seq)        # the same thing
+??regression     # search the help system when you do not know the name
 
 
 # Building vectors ----
@@ -32,6 +52,22 @@ x + c(10, 20, 30, 40, 50)
 x + c(0, 100)      # lengths do not match -- R recycles, and warns
 
 
+# Summaries ----
+sum(x)
+mean(x)
+min(x)
+max(x)
+range(x)      # both ends at once
+
+
+# = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+# Exercise 1 ----
+# One line, two commands: what is the mean of 0, 25, 50, 75, 100?
+# = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+
+
+
+
 # Types ----
 class(1)
 class("a")
@@ -39,16 +75,20 @@ class(TRUE)
 class(as.Date("2025-01-07"))
 
 
-# Silent type conversion ----
+# Silent conversion ----
 c(1, 2, 3)
 c(1, 2, "three")          # one text value converts the whole vector
 class(c(1, 2, "three"))
 
-sum(c(TRUE, FALSE, TRUE))  # TRUE becomes 1, FALSE becomes 0
-mean(c(TRUE, FALSE, TRUE)) # ... so the mean of a logical is a proportion
 
+# TRUE is 1 ----
+sum(c(TRUE, FALSE, TRUE))   # TRUE becomes 1, FALSE becomes 0
+mean(c(TRUE, FALSE, TRUE))  # so the mean of a logical is a proportion
+
+
+# Text sorts like text ----
 sort(c(10, 9, 100))
-sort(c("10", "9", "100"))  # text sorts character by character
+sort(c("10", "9", "100"))   # character by character
 
 
 # What silent conversion costs you ----
@@ -70,7 +110,7 @@ mean(temps, na.rm = TRUE)
 
 is.na(temps)
 sum(is.na(temps))
-temps == NA        # not how you test for NA -- use is.na()
+temps == NA        # == tests for equality; this is not how you test for NA
 
 
 # Indexing ----
@@ -88,6 +128,17 @@ sum(x > 25)        # count them -- TRUE is 1
 x[x > 25 & x < 45] # & is and, | is or
 
 
+# = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+# Exercise 2 ----
+# w <- c(12, 45, 7, 33, 88, 21)
+#
+# One line each: how many values are above 20?
+#                what is the mean of just those?
+# = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+
+
+
+
 # Data frames ----
 d <- data.frame(
   site = c("Compton", "Compton", "Reseda"),
@@ -103,6 +154,13 @@ d$pm25            # one column, by name
 d[1, ]            # first row, all columns
 d[, "pm25"]       # all rows, one column
 d[d$pm25 > 40, ]  # the rows where a condition is TRUE
+
+
+# Sorting by position ----
+v <- c(10, 50, 30)
+order(v)              # positions, not values
+v[order(v)]           # which is what sort() does
+d[order(d$pm25), ]    # so this sorts the whole frame by one column
 
 
 # Factors ----
@@ -218,6 +276,42 @@ head(one[order(-one$pm25), c("date", "pm25")], 5)
 # 3. The site's OTHER instrument is POC 3, parameter 88502. Pull its rows for
 #    the window and compare its January mean with POC 1's. Two instruments,
 #    one site, same air -- how close do they agree?
+# = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+
+
+
+
+# = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+# Practice: 19 exercises (solutions on the session page) ----
+# Vectors and sequences
+#  1. Build the whole numbers 1 to 20.
+#  2. Build the even numbers from 2 to 20.
+#  3. Repeat "yes" and "no", alternating, four times each.
+#  4. How many odd numbers are there between 1 and 99? Two commands, one line.
+#
+# Classes and conversion
+#  5. Predict first, then check: what class is c(1, 2, "3")?
+#  6. x <- c("4.5", "2.1", "8.8") arrived as text. Get its mean.
+#  7. Sort c("5", "10", "9") into true numeric order, in one line.
+#  8. y <- c(3, NA, 7, NA, 12). How many values are missing?
+#  9. Same y: what is its mean, ignoring the gaps?
+#
+# Subsetting
+# 10. z <- c(10, 25, 3, 47, 18, 60). Keep only the values above 20.
+# 11. Same z: how many values are above 20?
+# 12. Same z: what is the mean of the values above 20?
+# 13. Same z: drop the first and the last value, however long z is.
+# 14. Same z: put it in order without using sort().
+#
+# Data frames and factors
+# 15. Build a data frame: city = Ithaca, Buffalo; pop = 30, 275.
+# 16. From it, print the row where pop is above 100.
+# 17. f <- factor(c("2019", "2007", "2013")). Put the years in order,
+#     as numbers.
+# 18. Same f: what does as.numeric(f) give instead, and why?
+#
+# Dates
+# 19. How many days are there between 2025-01-07 and 2025-02-28?
 # = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 
 

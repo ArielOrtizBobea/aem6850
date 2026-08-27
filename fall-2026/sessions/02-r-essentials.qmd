@@ -51,9 +51,9 @@ need to memorize anything today.
 By the end of this session you can:
 
 - Build vectors and do arithmetic on them.
-- Say what R does when a vector mixes types, and why that turns a column
+- Say what R does when a vector mixes classes, and why that turns a column
   of numbers into text.
-- Read a CSV and check its size, its column types, and its ranges.
+- Read a CSV and check its size, its column classes, and its ranges.
 - Subset rows and columns with logical conditions.
 - Protect an identifier column so R does not turn it into a number.
 - Recognize factors, matrices, and lists, and say what each is for.
@@ -74,14 +74,155 @@ troubleshooting. Bring the machine to office hours instead.
 
 :::
 
+## R is a language and a program {#language-and-program}
+
+R is a language: a grammar for saying what to do with data. R is also a
+program: the thing you installed from CRAN, which reads that grammar and
+runs it.
+
+RStudio is neither. It is an editor with an R console attached. Delete
+RStudio and R still works. Delete R and nothing works.
+
+::: {.content-hidden when-format="revealjs"}
+
+The distinction tells you who to ask when something breaks. "R does not have
+that function" is a language question, and the answer is a package or a
+different function. "R will not start" is a program question, and the answer
+is a reinstall. Most people report the second when they mean the first.
+
+:::
+
+## Everything is an object. Every action is a function. {#everything-is-a-call}
+
+```{r}
+#| label: everything-is-a-call
+#| script: "Everything is an object, every action is a function"
+x <- c(1, 2, 3)
+x + 1
+`+`(x, 1)      # the same call, written plainly
+`[`(x, 2)      # the square bracket is a function too
+```
+
+::: {.content-hidden when-format="revealjs"}
+
+Every value you make is an object. Every operation you run is a function
+applied to objects. `x + 1` calls a function whose name is `+`. The
+backticks let you write that name where R would otherwise read an operator.
+
+You will never write code this way. Knowing it is true explains why R is
+consistent: there is one mechanism underneath, not a list of special cases.
+
+:::
+
+## One function, many classes {#dispatch}
+
+```{r}
+#| label: dispatch
+#| script: "One function, many classes"
+summary(c(1, 2, 3, 100))
+summary(c("a", "b", "a"))
+```
+
+::: {.content-visible when-format="revealjs"}
+
+One name, two behaviors. R reads the object's class and picks the method.
+A person runs, a program runs, a river runs, a nose runs: the noun fixes
+the verb.
+
+:::
+
+::: {.content-hidden when-format="revealjs"}
+
+`summary()` is one name and two different behaviors. On numbers it returns
+six statistics. On text it reports length, class and mode, because quartiles
+of "a" mean nothing. R reads the object's class and picks the matching
+method.
+
+That is what "object-oriented" means here: the object carries its class, and
+the function adapts to it. English does the same thing. A person runs, a
+program runs, a river runs, a nose runs. One verb, and the noun fixes the
+meaning. `print()` and `plot()` behave the same way.
+
+R's oldest and most common system for this is called S3. An object carries a
+`class` attribute, and a generic like `summary()` dispatches to
+`summary.factor()` or `summary.data.frame()`. Newer systems exist (S4, R5,
+S7). This course needs none of them.
+
+:::
+
+::: {.content-hidden when-format="revealjs"}
+
+## Class and type {#class-and-type}
+
+Two words that sound alike and are not.
+
+```{r}
+#| label: class-and-type
+#| script: "Class and type"
+#| purl: false
+class(as.Date("2025-01-07"))
+typeof(as.Date("2025-01-07"))
+
+class(factor("a"))
+typeof(factor("a"))
+```
+
+**Class** is what an object announces, and what functions dispatch on.
+**Type** is how R stores it underneath. Usually the two agree, and you can
+ignore the difference. When they disagree you get the traps in this session.
+A Date is a number with a class attached, counting days from 1970. A factor
+is a set of integers with a class attached.
+
+This page says class almost everywhere, because `class()` is the function you
+will actually run. Type comes back once, at the factor trap, which is where
+the difference costs you something.
+
+:::
+
+## R next to Stata and Python {#r-vs-others}
+
+::: {.tight-cols}
+
+| | Stata | R | Python |
+|:--|:--|:--|:--|
+| Built for | data analysis | data analysis | general programming |
+| Data in memory | one dataset | many named objects | many named objects |
+| Naming the data | implicit: `regress y x` | explicit: `lm(y ~ x, data = d)` | explicit, via pandas |
+| Vectors and tables | built in | built in | added by numpy and pandas |
+
+:::
+
+::: {.content-hidden when-format="revealjs"}
+
+Stata holds one dataset at a time, and commands act on it without naming it.
+R holds as many objects as you like, each with a name, and every function
+says which one it works on. The result of `lm()` is itself an object you can
+store, print, and take apart.
+
+Grammar makes the difference concrete. A Stata command drops its subject
+because the subject is understood. R names every noun, and lets several be
+in play at once. That is why R needs `data = d` and Stata does not, and why R
+can hold your raw file, your cleaned file, and three models at the same time.
+
+Python is a general-purpose language that acquired data tools later. R was
+built for data analysis from the start, so vectors, data frames, and formulas
+like `y ~ x` belong to the language rather than to a library. Python is
+stronger for general software. R is stronger when the job is a table and a
+model.
+
+:::
+
 ## Objects {#objects}
 
-Everything in R is an object with a name you give it and a type R assigns.
+Everything in R is an object with a name you give it and a class R assigns.
 
 ```{r}
 #| label: objects
 #| script: "Objects and assignment"
-x <- c(1, 2, 3, 4, 5)
+x <- c(1, 2, 3, 4, 5)   # the arrow points from the value into the name
+x = c(1, 2, 3, 4, 5)    # also assigns; you will meet it in other code
+c(1, 2, 3, 4, 5) -> x   # legal, and points the other way
+
 x
 class(x)
 length(x)
@@ -91,16 +232,53 @@ ls()          # what is in your workspace right now
 
 ::: {.content-hidden when-format="revealjs"}
 
-`<-` is the assignment arrow. `=` also works and you will see it in other
-people's code, but `<-` is the convention in R and it is what this course
-uses. R prints nothing when you assign; that is normal. Type the object's
-name on its own line to see it.
+`<-` is the assignment arrow, and it is the convention in R. `=` assigns
+too, and you will meet it in other people's code and in code an AI writes
+for you. `->` assigns rightward. It is legal and rare.
+
+Two reasons this course writes `<-`. The arrow shows which way the value
+moves, and `=` does not. And `=` already means something else inside a
+function call: in `seq(from = 1)`, the `=` sets an argument, it does not
+create an object called `from`.
+
+Do not confuse `=` with `==`. One assigns. The other tests two things for
+equality and returns `TRUE` or `FALSE`. You meet it in the next section.
+
+R prints nothing when you assign; that is normal. Type the object's name on
+its own line to see it.
+
+:::
+
+## Asking R for help {#help}
+
+Every function ships with a help page. Both of these open it, from the
+console:
+
+```{r}
+#| label: help
+#| script: "Asking R for help"
+#| eval: false
+?seq             # the help page for seq()
+help(seq)        # the same thing
+??regression     # search the help system when you do not know the name
+```
+
+::: {.content-hidden when-format="revealjs"}
+
+The page opens in RStudio's Help pane. Read the **Usage** block first: it
+lists the arguments and their defaults. Then go to **Examples** at the bottom
+and run one. The prose in between is written for people who already know the
+function.
+
+`?` needs the exact name. `??` searches titles and keywords, so reach for it
+when you know what you want but not what it is called.
 
 :::
 
 ## Vectors {#vectors}
 
-A vector is an ordered sequence of values of **one type**. It is the basic unit of
+A vector is an ordered sequence of values that are all the same class:
+all numbers, or all text, or all `TRUE`/`FALSE`. It is the basic unit of
 R: the single number `5` is a vector of length one.
 
 ```{r}
@@ -126,7 +304,54 @@ x + c(10, 20, 30, 40, 50)
 x + c(0, 100)      # lengths do not match -- R recycles, and warns
 ```
 
-## Types {#types}
+## Summaries {#summaries}
+
+One number out of a whole vector.
+
+```{r}
+#| label: summaries
+#| script: "Summaries"
+sum(x)
+mean(x)
+min(x)
+max(x)
+range(x)      # both ends at once
+```
+
+## Exercise 1 {#exercise-1}
+
+::: {.panel-tabset}
+
+### Exercise
+
+```{r}
+#| label: exercise-1
+#| exercise: true
+#| script: "Exercise 1"
+#| eval: false
+# One line, two commands: what is the mean of 0, 25, 50, 75, 100?
+```
+
+### Solution
+
+```{r}
+#| label: exercise-1-solution
+#| purl: false
+mean(seq(0, 100, by = 25))
+```
+
+:::
+
+::: {.content-hidden when-format="revealjs"}
+
+R reads from the inside out. `seq()` runs first and hands its answer to
+`mean()`. Nesting is how you combine commands today, and it is worth getting
+comfortable with: most real lines do two or three things at once. Session 4
+gives you a second way to write the same chain, left to right.
+
+:::
+
+## Classes {#classes}
 
 ```{r}
 #| label: types
@@ -139,7 +364,7 @@ class(as.Date("2025-01-07"))
 
 ::: {.content-hidden when-format="revealjs"}
 
-Four types carry almost all of empirical work: **numeric** (numbers),
+Four classes carry almost all of empirical work: **numeric** (numbers),
 **character** (text), **logical** (`TRUE`/`FALSE`), and **Date**. A vector
 holds exactly one of them. That constraint sets up the next section.
 
@@ -147,28 +372,60 @@ holds exactly one of them. That constraint sets up the next section.
 
 ## Silent conversion {#coercion}
 
-A vector can only hold one type. So when you mix types, R does not stop or
-warn. It silently converts everything to a type that can hold them all.
+A vector can only hold **one class**. So when you mix classes, R does not
+stop or warn. It silently converts everything to a class that can hold them
+all.
 
 ```{r}
 #| label: coercion
-#| script: "Silent type conversion"
+#| script: "Silent conversion"
 c(1, 2, 3)
 c(1, 2, "three")          # one text value converts the whole vector
 class(c(1, 2, "three"))
+```
 
-sum(c(TRUE, FALSE, TRUE))  # TRUE becomes 1, FALSE becomes 0
-mean(c(TRUE, FALSE, TRUE)) # ... so the mean of a logical is a proportion
+## TRUE is 1 {#logical-arithmetic}
 
+```{r}
+#| label: logical-arithmetic
+#| script: "TRUE is 1"
+sum(c(TRUE, FALSE, TRUE))   # TRUE becomes 1, FALSE becomes 0
+mean(c(TRUE, FALSE, TRUE))  # so the mean of a logical is a proportion
+```
+
+::: {.content-hidden when-format="revealjs"}
+
+This one is useful rather than dangerous, and you will use it all semester.
+Counting how many rows meet a condition is a `sum()` over a logical vector.
+The share of rows that meet it is a `mean()` over the same vector.
+
+:::
+
+## Text sorts like text {#coercion-sort}
+
+```{r}
+#| label: coercion-sort
+#| script: "Text sorts like text"
 sort(c(10, 9, 100))
-sort(c("10", "9", "100"))  # text sorts character by character
+sort(c("10", "9", "100"))   # character by character
 ```
 
 ::: {.content-visible when-format="revealjs"}
 ::: {.notes}
-Ask before running the last pair: "where does 9 go?" Let them be wrong out
+Ask before running the second line: "where does 9 go?" Let them be wrong out
 loud. This is the single most important slide in the session.
 :::
+:::
+
+::: {.content-hidden when-format="revealjs"}
+
+Text sorts character by character, so `"100"` lands before `"9"` because
+`"1"` comes before `"9"`. Nothing errors. A column of years, ZIP codes, or
+account numbers read as text will sort into an order that looks almost
+right.
+This returns twice today: at the factor trap, and again when the months in
+session 4 print February before January.
+
 :::
 
 ## What it costs you {#coercion-matters}
@@ -203,10 +460,11 @@ readings
 mean(readings, na.rm = TRUE)
 ```
 
-## NA {#na}
+## NA: not available {#na}
 
-`NA` is not zero and it is not text. It means *we do not know*, and R
-enforces that: any computation that touches an unknown returns an unknown.
+`NA` stands for **not available**. It is not zero, and it is not the text
+`"NA"`. It marks a value R does not have, and R enforces that: any
+computation touching an unknown returns an unknown.
 
 ```{r}
 #| label: na
@@ -217,8 +475,21 @@ mean(temps, na.rm = TRUE)
 
 is.na(temps)
 sum(is.na(temps))
-temps == NA        # not how you test for NA -- use is.na()
+temps == NA        # == tests for equality; this is not how you test for NA
 ```
+
+::: {.content-hidden when-format="revealjs"}
+
+`==` is a test, not an assignment. It asks whether two things are equal and
+returns `TRUE` or `FALSE` for each element.
+
+Testing against `NA` returns `NA` rather than `FALSE`, and that is
+consistent rather than broken. R does not know whether an unknown value
+equals an unknown value, so it declines to guess. This is why `is.na()`
+exists: it asks a different question, "is this value missing," which R can
+always answer.
+
+:::
 
 ## Indexing {#indexing}
 
@@ -257,10 +528,47 @@ counts the `TRUE`s.
 
 :::
 
+## Exercise 2 {#exercise-2}
+
+::: {.panel-tabset}
+
+### Exercise
+
+```{r}
+#| label: exercise-2
+#| exercise: true
+#| script: "Exercise 2"
+#| eval: false
+# w <- c(12, 45, 7, 33, 88, 21)
+#
+# One line each: how many values are above 20?
+#                what is the mean of just those?
+```
+
+### Solution
+
+```{r}
+#| label: exercise-2-solution
+#| purl: false
+w <- c(12, 45, 7, 33, 88, 21)
+sum(w > 20)
+mean(w[w > 20])
+```
+
+:::
+
+::: {.content-hidden when-format="revealjs"}
+
+The second line nests too: the subset runs first, then `mean()` gets what
+survives. This pair is the single most reused pattern in the course. Session
+4 writes it as `filter()` and `summarize()`, over the same idea.
+
+:::
+
 ## Data frames {#data-frames}
 
 A data frame is a set of equal-length vectors standing side by side: columns
-of possibly different types, rows that line up. Every dataset in this course
+of possibly different classes, rows that line up. Every dataset in this course
 is one.
 
 ```{r}
@@ -288,6 +596,33 @@ d[1, ]            # first row, all columns
 d[, "pm25"]       # all rows, one column
 d[d$pm25 > 40, ]  # the rows where a condition is TRUE
 ```
+
+## Sorting by position {#order}
+
+`sort()` returns values. `order()` returns the positions that would put a
+vector in order.
+
+```{r}
+#| label: order
+#| script: "Sorting by position"
+v <- c(10, 50, 30)
+order(v)              # positions, not values
+v[order(v)]           # which is what sort() does
+d[order(d$pm25), ]    # so this sorts the whole frame by one column
+```
+
+::: {.content-hidden when-format="revealjs"}
+
+Positions are what you need when the values are one column of a table.
+`sort()` puts a column in order but cannot bring the other columns with it.
+`order()` hands you the row numbers instead, and the brackets do the rest.
+`order(-x)` reverses it.
+
+This is the third way to subset, after position and condition, and it is the
+one you compute rather than type. It comes back at the end of today, when we
+ask which days were worst, and again in session 4 as `arrange()`.
+
+:::
 
 ## Factors {#factors}
 
@@ -332,6 +667,12 @@ of each value in the alphabetically sorted level table), not the
 numbers the labels spell. You get no error, no warning, and plausible
 output. The repair is always the same two steps: `as.character()`
 first, then `as.numeric()`.
+
+This is the one place today where class and type come apart. A factor's
+*class* is `factor`; its *type*, the way R stores it, is integer.
+`as.numeric()` reaches past the class down to the storage, which is why you
+get codes. `as.character()` first asks the class for its labels, and then
+there are real numbers to convert.
 
 :::
 
@@ -686,7 +1027,7 @@ Run the four arrival checks in this order:
 | Check | Question it answers |
 |:--|:--|
 | `dim()` | Did I get the number of rows I expected? |
-| `str()` | Is every column the type it should be? |
+| `str()` | Is every column the class it should be? |
 | `head()` | Does row one look like a row of data, or like a stray header? |
 | `summary()` | Is anything impossible, or off by a factor of a thousand? |
 
@@ -695,9 +1036,117 @@ Run the four arrival checks in this order:
 ::: {.content-visible when-format="revealjs"}
 
 `dim()`: the right number of rows?<br>
-`str()`: is every column the type it should be?<br>
+`str()`: is every column the class it should be?<br>
 `head()`: does row one look like data?<br>
 `summary()`: is anything impossible, or off by 1000×?
+
+:::
+
+## Practice {#practice}
+
+::: {.content-visible when-format="revealjs"}
+
+Nineteen more on the session page, with solutions behind a click. One or
+two lines each, in the order we covered them. Work through them before
+Tuesday.
+
+:::
+
+::: {.content-hidden when-format="revealjs"}
+
+Nineteen exercises, one or two lines each, in the order the session covered
+them. They are in the live script too. Try each one before you open the
+solutions.
+
+```{r}
+#| label: practice
+#| exercise: true
+#| script: "Practice: 19 exercises (solutions on the session page)"
+#| eval: false
+# Vectors and sequences
+#  1. Build the whole numbers 1 to 20.
+#  2. Build the even numbers from 2 to 20.
+#  3. Repeat "yes" and "no", alternating, four times each.
+#  4. How many odd numbers are there between 1 and 99? Two commands, one line.
+#
+# Classes and conversion
+#  5. Predict first, then check: what class is c(1, 2, "3")?
+#  6. x <- c("4.5", "2.1", "8.8") arrived as text. Get its mean.
+#  7. Sort c("5", "10", "9") into true numeric order, in one line.
+#  8. y <- c(3, NA, 7, NA, 12). How many values are missing?
+#  9. Same y: what is its mean, ignoring the gaps?
+#
+# Subsetting
+# 10. z <- c(10, 25, 3, 47, 18, 60). Keep only the values above 20.
+# 11. Same z: how many values are above 20?
+# 12. Same z: what is the mean of the values above 20?
+# 13. Same z: drop the first and the last value, however long z is.
+# 14. Same z: put it in order without using sort().
+#
+# Data frames and factors
+# 15. Build a data frame: city = Ithaca, Buffalo; pop = 30, 275.
+# 16. From it, print the row where pop is above 100.
+# 17. f <- factor(c("2019", "2007", "2013")). Put the years in order,
+#     as numbers.
+# 18. Same f: what does as.numeric(f) give instead, and why?
+#
+# Dates
+# 19. How many days are there between 2025-01-07 and 2025-02-28?
+```
+
+::: {.callout-tip collapse="true"}
+## Solutions
+
+```{r}
+#| label: practice-solutions
+#| purl: false
+#| collapse: true
+# 1
+1:20
+# 2
+seq(2, 20, by = 2)
+# 3
+rep(c("yes", "no"), times = 4)
+# 4
+length(seq(1, 99, by = 2))
+# 5  one text value converts the whole vector
+class(c(1, 2, "3"))
+# 6
+ex <- c("4.5", "2.1", "8.8")
+mean(as.numeric(ex))
+# 7
+sort(as.numeric(c("5", "10", "9")))
+# 8
+y <- c(3, NA, 7, NA, 12)
+sum(is.na(y))
+# 9
+mean(y, na.rm = TRUE)
+# 10
+z <- c(10, 25, 3, 47, 18, 60)
+z[z > 20]
+# 11
+sum(z > 20)
+# 12
+mean(z[z > 20])
+# 13
+z[-c(1, length(z))]
+# 14
+z[order(z)]
+# 15
+cities <- data.frame(city = c("Ithaca", "Buffalo"), pop = c(30, 275))
+cities
+# 16
+cities[cities$pop > 100, ]
+# 17
+f <- factor(c("2019", "2007", "2013"))
+sort(as.numeric(as.character(f)))
+# 18  the level codes, not the years: levels sort alphabetically as
+#     "2007" "2013" "2019", so 2019 is code 3, 2007 is 1, 2013 is 2
+as.numeric(f)
+# 19
+as.Date("2025-02-28") - as.Date("2025-01-07")
+```
+:::
 
 :::
 
@@ -719,7 +1168,8 @@ arrival checks and the format strings for dates.
 | `x <- c(1, 2, 3)` | Assign a vector |
 | `1:10`, `seq(0, 100, by = 25)` | Regular sequences |
 | `rep(x, times =)`, `rep(x, each =)` | Repetition, two different ways |
-| `length(x)`, `class(x)` | How many, and what type |
+| `length(x)`, `class(x)` | How many, and what class |
+| `sum(x)`, `mean(x)`, `min(x)`, `max(x)`, `range(x)` | One number out of a vector |
 | `ls()` | What is in the workspace |
 | `?mean` | The help page for a function |
 | `factor(x)`, `levels(f)` | A categorical column and its categories |
@@ -740,6 +1190,7 @@ arrival checks and the format strings for dates.
 | Code | What it does |
 |:--|:--|
 | `x[1]`, `x[c(1, 3)]`, `x[-1]` | By position; `-` drops |
+| `order(x)`, `x[order(x)]` | The positions that sort it; `-x` reverses |
 | `x[x > 25]` | "x, where x is greater than 25" |
 | `sum(x > 25)`, `which(x > 25)` | Count them; find where they are |
 | `d$col` | One column by name |
@@ -804,7 +1255,8 @@ purpose; the script is where you slow down.
 
 ::: {.content-visible when-format="revealjs"}
 
-Re-run today's script at home, line by line. Tuesday: *Look at your data*.
+Re-run today's script at home, line by line. Nineteen practice exercises,
+with solutions, are on the session page. Tuesday: *Look at your data*.
 
 :::
 

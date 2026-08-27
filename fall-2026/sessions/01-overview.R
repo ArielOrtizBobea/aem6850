@@ -1,12 +1,11 @@
 # = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 # AEM 6850 -- Empirical Methods for Applied Economists
+# Prof. Ariel Ortiz-Bobea
 # Session 1 -- Overview
 # Tuesday, August 25, 2026
 #
 # Run it one line at a time: put the cursor on a line and press Cmd-Return
 # (Mac) or Ctrl-Enter (Windows).
-#
-# Generated from 01-overview.qmd -- edit the .qmd, not this file.
 # = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 
 # Check the install ----
