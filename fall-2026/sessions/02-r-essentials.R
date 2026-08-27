@@ -8,8 +8,16 @@
 # (Mac) or Ctrl-Enter (Windows).
 # = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 
-# Everything is an object, every action is a function ----
+# Everything that exists is an object ----
 x <- c(1, 2, 3)
+f <- function(v) v * 2
+
+class(x)
+class(f)        # a function is an object too
+class(`+`)      # so is the plus sign
+
+
+# Everything that happens is a function call ----
 x + 1
 `+`(x, 1)      # the same call, written plainly
 `[`(x, 2)      # the square bracket is a function too
@@ -29,7 +37,12 @@ x
 class(x)
 length(x)
 
-ls()          # what is in your workspace right now
+
+# Your environment ----
+ls()            # everything you have named, right now
+
+5 + 3           # this prints, and is gone
+ls()            # nothing new: it was never given a name
 
 
 # Asking R for help ----

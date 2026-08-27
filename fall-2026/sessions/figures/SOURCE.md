@@ -23,3 +23,8 @@ captions on the session pages carry the citations.
   smoke-streams-from-palisades-and-eaton-fires-153813). Public domain
   (NASA); annotated copy adds fire/city labels for the session-1 context
   slide.
+- `Rlogo.svg` — the R logo, downloaded 2026-08-26 from
+  https://www.r-project.org/logo/Rlogo.svg (724x561 viewBox, 2 KB).
+  © The R Foundation, used unmodified under CC-BY-SA 4.0
+  (https://creativecommons.org/licenses/by-sa/4.0/). The session-2 page
+  carries the credit line and the licence link, as CC-BY-SA requires.

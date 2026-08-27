@@ -76,12 +76,25 @@ troubleshooting. Bring the machine to office hours instead.
 
 ## R is a language and a program {#language-and-program}
 
-R is a language: a grammar for saying what to do with data. R is also a
-program: the thing you installed from CRAN, which reads that grammar and
-runs it.
+:::: {.columns}
+::: {.column width="74%"}
 
-RStudio is neither. It is an editor with an R console attached. Delete
-RStudio and R still works. Delete R and nothing works.
+- **R is a language.** A grammar for saying what to do with data.
+- **R is also a program.** The thing you installed, which reads that
+  grammar and runs it.
+- **CRAN is where the program comes from.** The Comprehensive R Archive
+  Network: mirrored servers holding identical copies of R and of the
+  roughly 25,000 packages people have written for it.
+- **RStudio is neither.** It is an editor with an R console attached.
+- Delete RStudio and R still works. Delete R and nothing works.
+
+:::
+::: {.column width="26%"}
+
+![](figures/Rlogo.svg){fig-alt="The R logo" width="100%"}
+
+:::
+::::
 
 ::: {.content-hidden when-format="revealjs"}
 
@@ -90,14 +103,45 @@ that function" is a language question, and the answer is a package or a
 different function. "R will not start" is a program question, and the answer
 is a reinstall. Most people report the second when they mean the first.
 
+You will not touch CRAN directly today. Session 4 installs the course's
+first package from it, with `install.packages()`.
+
+[R logo](https://www.r-project.org/logo/) © The R Foundation, used
+unmodified under
+[CC-BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/).
+
 :::
 
-## Everything is an object. Every action is a function. {#everything-is-a-call}
+## Everything that exists is an object {#everything-is-an-object}
+
+```{r}
+#| label: everything-is-an-object
+#| script: "Everything that exists is an object"
+x <- c(1, 2, 3)
+f <- function(v) v * 2
+
+class(x)
+class(f)        # a function is an object too
+class(`+`)      # so is the plus sign
+```
+
+::: {.content-hidden when-format="revealjs"}
+
+Not just data. A function is an object with a class, a name you gave it, and
+a place in your environment, exactly like a vector. You can store one in a
+list, pass one to another function, or print it by typing its name without
+parentheses. `class()` says `function` for all three above.
+
+Underneath, the classes differ: `typeof(f)` is `closure` and `` typeof(`+`) ``
+is `builtin`. That is the class-and-type distinction again.
+
+:::
+
+## Everything that happens is a function call {#everything-is-a-call}
 
 ```{r}
 #| label: everything-is-a-call
-#| script: "Everything is an object, every action is a function"
-x <- c(1, 2, 3)
+#| script: "Everything that happens is a function call"
 x + 1
 `+`(x, 1)      # the same call, written plainly
 `[`(x, 2)      # the square bracket is a function too
@@ -105,16 +149,19 @@ x + 1
 
 ::: {.content-hidden when-format="revealjs"}
 
-Every value you make is an object. Every operation you run is a function
-applied to objects. `x + 1` calls a function whose name is `+`. The
-backticks let you write that name where R would otherwise read an operator.
+The two headings above are
+[John Chambers'](https://adv-r.hadley.nz/functions.html), one of R's
+designers. They are a pair, and the second is the half people garble: the
+function is the object, and the *call* is what happens. `x + 1` is a call to
+the function object named `+`. The backticks let you write that name where R
+would otherwise read an operator.
 
 You will never write code this way. Knowing it is true explains why R is
 consistent: there is one mechanism underneath, not a list of special cases.
 
 :::
 
-## One function, many classes {#dispatch}
+## What "object-oriented" means {#oop}
 
 ```{r}
 #| label: dispatch
@@ -125,9 +172,10 @@ summary(c("a", "b", "a"))
 
 ::: {.content-visible when-format="revealjs"}
 
-One name, two behaviors. R reads the object's class and picks the method.
-A person runs, a program runs, a river runs, a nose runs: the noun fixes
-the verb.
+- One name, two behaviors. R reads the object's class and picks a method to
+  match. The word for this is **polymorphism**.
+- You learn `summary()`, `print()` and `plot()` once, and they keep working
+  on things you have not met yet.
 
 :::
 
@@ -135,18 +183,43 @@ the verb.
 
 `summary()` is one name and two different behaviors. On numbers it returns
 six statistics. On text it reports length, class and mode, because quartiles
-of "a" mean nothing. R reads the object's class and picks the matching
-method.
+of "a" mean nothing. R reads the object's class and picks a method to match.
+The technical word is **polymorphism**: one interface, many implementations,
+chosen by the class of what you hand it.
 
-That is what "object-oriented" means here: the object carries its class, and
-the function adapts to it. English does the same thing. A person runs, a
-program runs, a river runs, a nose runs. One verb, and the noun fixes the
-meaning. `print()` and `plot()` behave the same way.
+That is the whole advantage, and it is worth being concrete. You learn
+`summary()`, `print()` and `plot()` once. Install a package next month that
+defines some new kind of object, and those three will usually work on it
+straight away, because the package author wrote methods for the generics you
+already know. You are not learning a fresh vocabulary per package. Without
+this you would need `summary_vector()`, `summary_data_frame()`,
+`summary_regression()`, and a new name for every type anyone ever invents.
 
-R's oldest and most common system for this is called S3. An object carries a
-`class` attribute, and a generic like `summary()` dispatches to
-`summary.factor()` or `summary.data.frame()`. Newer systems exist (S4, R5,
-S7). This course needs none of them.
+**Two ways to arrange it.** Python and Java put the methods *inside* the
+object, so calls read `object.method(arg)`. R puts them inside the
+*function*: `summary()` is a generic that owns a set of methods and chooses
+between them, so calls read `generic(object, arg)`. Same idea, opposite
+arrangement. R's version is why R code looks like ordinary function calls
+and never like `x.summary()`.
+
+**So which languages are object-oriented?** Python thoroughly, in the
+methods-inside-the-object style. R thoroughly, in the
+methods-inside-the-function style, and it has four systems for it: S3, S4 and
+Reference Classes in base R, plus R6 from a package. This course uses S3 and
+never says so, because S3 asks nothing of you: an object carries a `class`
+attribute, and a generic like `summary()` dispatches to `summary.factor()` or
+`summary.data.frame()`.
+
+Stata is the interesting case. The command language you type is not
+object-oriented: `regress y x` is an instruction, not a message to an object.
+But Stata's two *programming* languages both provide classes, `[P] class` for
+ado and `[M-2] class` for Mata. The distinction is between what a user types
+and what a package author writes, and it is a good reminder that
+"object-oriented" describes how code is organised, not how good it is.
+
+For the formal version, see the
+[OOP chapter](https://adv-r.hadley.nz/oo.html) of *Advanced R*, linked from
+the [Resources](../resources.qmd) page.
 
 :::
 
@@ -186,18 +259,32 @@ the difference costs you something.
 | | Stata | R | Python |
 |:--|:--|:--|:--|
 | Built for | data analysis | data analysis | general programming |
-| Data in memory | one dataset | many named objects | many named objects |
-| Naming the data | implicit: `regress y x` | explicit: `lm(y ~ x, data = d)` | explicit, via pandas |
-| Vectors and tables | built in | built in | added by numpy and pandas |
+| Data in memory | one active dataset; more via `frames` | many named objects | many named objects |
+| Naming the data | implicit: `regress y x` | explicit: `lm(y ~ x, data = d)` | explicit |
+| Where tables come from | the dataset *is* the workspace | objects you create and name | from libraries |
+| Strongest at | a clean panel to a published table | statistical methods and graphics | pipelines, APIs, ML, production code |
+| Who uses it | economists, social scientists | statisticians, many fields | programmers, CS, machine learning |
 
 :::
 
+Economics is a Stata field. That is measured, not folklore.
+
 ::: {.content-hidden when-format="revealjs"}
 
-Stata holds one dataset at a time, and commands act on it without naming it.
-R holds as many objects as you like, each with a name, and every function
-says which one it works on. The result of `lm()` is itself an object you can
+Stata works on one active dataset, and commands act on it without naming it:
+`regress y x` needs no `data =` because there is only one thing it could
+mean. Since Stata 16 the `frames` command holds several datasets at once,
+but one of them is still the active one, and that shapes how Stata code
+reads.
+
+R has no ambient dataset. Every object has a name and every function says
+which one it works on. The result of `lm()` is itself an object you can
 store, print, and take apart.
+
+That is what the last row means. In Stata the table is the workspace: a
+variable is a column of the dataset, not a thing you can hold on its own. In
+R a vector or a data frame is an object like any other. You make it, name
+it, hand it to a function, and keep ten more beside it.
 
 Grammar makes the difference concrete. A Stata command drops its subject
 because the subject is understood. R names every noun, and lets several be
@@ -206,9 +293,56 @@ can hold your raw file, your cleaned file, and three models at the same time.
 
 Python is a general-purpose language that acquired data tools later. R was
 built for data analysis from the start, so vectors, data frames, and formulas
-like `y ~ x` belong to the language rather than to a library. Python is
-stronger for general software. R is stronger when the job is a table and a
-model.
+like `y ~ x` belong to the language rather than to a library.
+
+The last row of the table needs a word. `c()` and `data.frame()` work the
+moment R starts, because vectors and tables are part of R itself. Python has
+neither. You get them from **libraries**: collections of code somebody else
+wrote, which you install once and load in each script. Two matter for data
+work. **numpy** adds numeric arrays and fast arithmetic over them.
+**pandas** adds a table type called a DataFrame, which is R's data frame
+under a different name. A Python analyst loads both at the top of nearly
+every script.
+
+That is not a defect, it is what "general-purpose" means: Python keeps a
+small core and you add what the job needs. R made the opposite trade, which
+is why R feels quick for a table and a model and clumsy for building an
+application. R has libraries too, called packages, and you install your first
+one in session 4. The difference is what you get before you install anything.
+
+:::
+
+::: {.content-hidden when-format="revealjs"}
+
+**What each is strongest at.** Stata gives you the shortest path from a clean
+panel to a published table: one documented way to do most things, and
+versioned, so old code keeps running. R has the widest library of statistical
+methods and the strongest tools for turning a messy source into a publication
+figure. Python is general programming: pipelines, APIs, scraping, machine
+learning, and software other people run.
+
+Lars Vilhuber's annual [Report of the AEA Data
+Editor](https://www.aeaweb.org/articles?id=10.1257/pandp.114.878) (*AEA
+Papers and Proceedings* 114, 2024, 878-90) tabulates the software found in
+every replication package the AEA journals accept. Stata appears in the large
+majority of them. MATLAB and R follow, each in a substantial minority, and
+Python has gone from almost absent before 2016 to a meaningful share. The
+trend worth noticing is that a large and rising fraction of packages use more
+than one language: the question is becoming which tool for which step, not
+which tool.
+
+Across disciplines the picture is different. Robert Muenchen has tracked
+scholarly use by software for more than a decade in [The Popularity of Data
+Science Software](https://r4stats.com/articles/popularity/). R and Python
+dominate the overall counts, while Stata's use is concentrated in economics
+and parts of political science, sociology, and epidemiology. That
+concentration is why Stata can look universal from inside economics and
+marginal from outside it, and why a paper you want to reuse may well arrive
+in a language your field does not default to.
+
+None of this makes one of them correct. It does mean that the tool you know
+determines whose code you can read, and that reading other people's code is
+most of what reuse means.
 
 :::
 
@@ -226,8 +360,6 @@ c(1, 2, 3, 4, 5) -> x   # legal, and points the other way
 x
 class(x)
 length(x)
-
-ls()          # what is in your workspace right now
 ```
 
 ::: {.content-hidden when-format="revealjs"}
@@ -246,6 +378,35 @@ equality and returns `TRUE` or `FALSE`. You meet it in the next section.
 
 R prints nothing when you assign; that is normal. Type the object's name on
 its own line to see it.
+
+:::
+
+## Your environment {#environment}
+
+```{r}
+#| label: environment
+#| script: "Your environment"
+ls()            # everything you have named, right now
+
+5 + 3           # this prints, and is gone
+ls()            # nothing new: it was never given a name
+```
+
+::: {.content-hidden when-format="revealjs"}
+
+`ls()` lists what is in your environment. RStudio shows the same list in the
+Environment pane, top right, and that pane is worth watching while you work:
+if an object is not in it, no line of your script created it.
+
+The second half matters more than it looks. A result you do not assign is
+printed and discarded. `5 + 3` shows you `8` and leaves nothing behind, so
+the next line cannot use it. This is the most common reason a script "worked"
+in the console and then fails when you re-run it from the top: the object it
+needs was never actually stored, only displayed.
+
+`rm(x)` removes one object; `rm(list = ls())` empties the environment. Do
+that before a final re-run, so you find out whether the script really builds
+everything it uses.
 
 :::
 
