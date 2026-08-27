@@ -55,7 +55,7 @@ hist(bad, main = "", xlab = "Daily PM2.5 (ug/m3)")
 
 # The repair ----
 bad[bad == -999] <- NA        # sentinel to honest missing
-mean(bad, na.rm = TRUE)       # back on Earth
+mean(bad, na.rm = TRUE)       # back to 17.6
 
 
 # A column through time ----
@@ -135,7 +135,7 @@ cor(anscombe$x4, anscombe$y4)
 #
 # 3. la$month <- format(la$date, "%Y-%m")
 #    boxplot(gust ~ month, data = la)
-#    Which month owns the extremes -- and are they a shifted box, or dots
+#    Which month has the extremes -- and are they a shifted box, or dots
 #    beyond the whisker? Those are different claims about January.
 # = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 

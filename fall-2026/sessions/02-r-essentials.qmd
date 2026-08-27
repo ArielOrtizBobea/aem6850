@@ -40,9 +40,9 @@ knitr::opts_chunk$set(
 [Slides](02-r-essentials-slides.html) · [Live script](02-r-essentials.R) ·
 [Source](https://github.com/ArielOrtizBobea/aem6850/blob/main/fall-2026/sessions/02-r-essentials.qmd)
 
-The densest session of the semester. Everything below is in the live script —
-run it line by line at home, as many times as it takes. Nothing here needs to
-be memorized today.
+This is the densest session of the semester. Everything below is in the live
+script. Run it line by line at home, as many times as it takes. You do not
+need to memorize anything today.
 
 :::
 
@@ -50,53 +50,33 @@ be memorized today.
 
 By the end of this session you can:
 
-- Build and manipulate vectors.
-- Predict what R does when types mix, and name what it costs you.
-- Read a CSV and inspect what actually arrived.
+- Build vectors and do arithmetic on them.
+- Say what R does when a vector mixes types, and why that turns a column
+  of numbers into text.
+- Read a CSV and check its size, its column types, and its ranges.
 - Subset rows and columns with logical conditions.
-- Protect an identifier column from being turned into a number.
-- Recognize the other containers — factors, matrices, lists — and say
-  what each is for.
+- Protect an identifier column so R does not turn it into a number.
+- Recognize factors, matrices, and lists, and say what each is for.
 
 ::: {.content-hidden when-format="revealjs"}
 
-This is a lot for one session, and it is meant to be. You are not expected to
-absorb it in the room — you are expected to *see* it once, then re-run the
-script until it is yours.
+This is a lot for one session, and that is deliberate. Nobody absorbs it all
+in the room. See it once today, then re-run the script until it sticks.
 
 ## Before class {#before-class}
 
 Have R and RStudio open and working, and bring the two National Weather
 Service numbers from [session 1](01-overview.qmd#measurement).
 
-If your install still is not working, sit next to someone whose is, and use
-[posit.cloud](https://posit.cloud) today. Do not spend this session
-troubleshooting — the material does not wait.
+If your install still does not work, sit next to someone whose install does,
+and use [posit.cloud](https://posit.cloud) today. Do not spend this session
+troubleshooting. Bring the machine to office hours instead.
 
-:::
-
-## Where we left off {#recap}
-
-Session 1 ended with a reconciliation: our file said the peak gust in downtown
-LA was 66 km/h, about 41 mph, and the National Weather Service was describing
-that same windstorm in much more alarming terms. Both were right, because they
-were measuring different places.
-
-> **A dataset is a measurement of the world, taken somewhere specific, by some
-> specific method.**
-
-Today we do that again, with a messier file and a bigger surprise.
-
-::: {.content-visible when-format="revealjs"}
-::: {.notes}
-Collect the two NWS numbers out loud — 30 seconds, no more. If nobody did it,
-say so plainly and move on; the point lands again at the end of today.
-:::
 :::
 
 ## Objects {#objects}
 
-Everything in R is an object with a name you chose and a type you did not.
+Everything in R is an object with a name you give it and a type R assigns.
 
 ```{r}
 #| label: objects
@@ -113,15 +93,15 @@ ls()          # what is in your workspace right now
 
 `<-` is the assignment arrow. `=` also works and you will see it in other
 people's code, but `<-` is the convention in R and it is what this course
-uses. Nothing is printed when you assign — that is normal. Type the object's
+uses. R prints nothing when you assign; that is normal. Type the object's
 name on its own line to see it.
 
 :::
 
 ## Vectors {#vectors}
 
-A vector is an ordered run of values of **one type**. It is the basic unit of
-R — the single number `5` is a vector of length one.
+A vector is an ordered sequence of values of **one type**. It is the basic unit of
+R: the single number `5` is a vector of length one.
 
 ```{r}
 #| label: vectors
@@ -161,14 +141,14 @@ class(as.Date("2025-01-07"))
 
 Four types carry almost all of empirical work: **numeric** (numbers),
 **character** (text), **logical** (`TRUE`/`FALSE`), and **Date**. A vector
-holds exactly one of them. That constraint is where the next slide comes from.
+holds exactly one of them. That constraint sets up the next section.
 
 :::
 
 ## Silent conversion {#coercion}
 
-A vector can only hold one type. So when you mix types, R does not complain —
-it quietly converts everything to a type that can hold them all.
+A vector can only hold one type. So when you mix types, R does not stop or
+warn. It silently converts everything to a type that can hold them all.
 
 ```{r}
 #| label: coercion
@@ -193,8 +173,8 @@ loud. This is the single most important slide in the session.
 
 ## What it costs you {#coercion-matters}
 
-That behaviour is convenient right up until the moment it is expensive. One
-stray text entry in a column of numbers:
+The convenience has a cost. Here is what one stray text entry does to a
+column of numbers:
 
 ```{r}
 #| label: coercion-cost
@@ -208,12 +188,12 @@ mean(readings)
 
 `mean()` did not stop. It returned `NA` with a warning you will scroll past,
 and if that value had gone into a table nobody would have seen a red flag.
-This is the failure mode this whole course is organized around: **it ran, and
+This is the failure mode the whole course trains you to catch: **it ran, and
 it was wrong.**
 
 :::
 
-The repair, and the check:
+Repair it, then check the repair:
 
 ```{r}
 #| label: coercion-fix
@@ -225,8 +205,8 @@ mean(readings, na.rm = TRUE)
 
 ## NA {#na}
 
-`NA` is not zero and it is not text. It means *we do not know*, and R is
-deliberately stubborn about it: anything computed from an unknown is unknown.
+`NA` is not zero and it is not text. It means *we do not know*, and R
+enforces that: any computation that touches an unknown returns an unknown.
 
 ```{r}
 #| label: na
@@ -256,8 +236,8 @@ x[length(x)]       # the last, however long it is
 
 ## Logical subsetting {#logical-subsetting}
 
-This is the one to get comfortable with, because every filter you write for
-the rest of the semester is this.
+Get comfortable with this one: every filter you write for the rest of the
+semester works this way.
 
 ```{r}
 #| label: logical-subsetting
@@ -272,16 +252,16 @@ x[x > 25 & x < 45] # & is and, | is or
 
 Read `x[x > 25]` aloud as "x, where x is greater than 25." The condition
 inside the brackets produces a logical vector, and R keeps the positions that
-are `TRUE`. Once you see it that way, `sum(x > 25)` counting things stops
-being a trick and starts being obvious.
+are `TRUE`. Once you see it that way, `sum(x > 25)` is not a trick: it
+counts the `TRUE`s.
 
 :::
 
 ## Data frames {#data-frames}
 
 A data frame is a set of equal-length vectors standing side by side: columns
-of possibly different types, rows that line up. It is what every dataset in
-this course arrives as.
+of possibly different types, rows that line up. Every dataset in this course
+is one.
 
 ```{r}
 #| label: data-frames
@@ -297,7 +277,8 @@ str(d)
 
 ## Rows and columns {#df-subsetting}
 
-Two coordinates: `d[rows, columns]`. Leave one blank to mean "all of them."
+Subsetting takes two coordinates: `d[rows, columns]`. Leave one blank to
+mean "all of them."
 
 ```{r}
 #| label: data-frame-subsetting
@@ -324,16 +305,17 @@ table(site)
 
 ::: {.content-hidden when-format="revealjs"}
 
-You rarely *make* factors on purpose this early; you *meet* them —
-some functions return them, some files arrive as them, and from
-session 4 on, grouping and counting lean on them. For now, know what
-one is and know its one famous bite, on the next slide.
+You will rarely create a factor on purpose this early. You will run into
+them: some functions return them, some files load as them, and from
+session 4 on, grouping and counting use them. For now, know what one is,
+and know the trap in the next section.
 
 :::
 
 ## The factor trap {#factor-trap}
 
-Remember `"10"` sorting before `"9"`? Factors have a sneakier version.
+Remember `"10"` sorting before `"9"`? Factors do the same thing, and it
+is harder to see.
 
 ```{r}
 #| label: factor-trap
@@ -345,22 +327,22 @@ as.numeric(as.character(f))        # the repair: text first, then number
 
 ::: {.content-hidden when-format="revealjs"}
 
-`as.numeric()` on a factor returns the internal codes — the position
-of each value in the (alphabetically sorted) level table — not the
-numbers the labels spell. No error, no warning, plausible output:
-silent conversion's meaner cousin. The repair is always the same two
-steps: `as.character()` first, then `as.numeric()`.
+`as.numeric()` on a factor returns the internal codes (the position
+of each value in the alphabetically sorted level table), not the
+numbers the labels spell. You get no error, no warning, and plausible
+output. The repair is always the same two steps: `as.character()`
+first, then `as.numeric()`.
 
 :::
 
 ## Matrices and lists {#matrices-lists}
 
-Two more containers you will meet later — today just their names and
-their one-line reasons to exist.
+You will meet two more containers later. Today you only need their
+names and what each one is for.
 
 ```{r}
 #| label: matrices-lists
-#| script: "Matrices and lists, at introduction depth"
+#| script: "Matrices and lists"
 m <- matrix(1:6, nrow = 2)   # a vector with dimensions
 m
 m[2, 3]                      # row 2, column 3
@@ -372,18 +354,18 @@ l$readings
 
 ::: {.content-hidden when-format="revealjs"}
 
-A **matrix** is one vector wearing dimensions — every element the same
-type, addressed as `m[row, column]`. It returns in Part II: a photo is
-a matrix of pixels, a weather grid is a matrix of temperatures
-(sessions 19 and 24).
+A **matrix** is one vector with dimensions: every element has the same
+type, and you address it as `m[row, column]`. Matrices come back in Part
+II: a photo is a matrix of pixels, and a weather grid is a matrix of
+temperatures (sessions 19 and 24).
 
-A **list** holds anything, including other lists — and a data frame is
-secretly a list of column vectors, which is why `d$pm25` and `l$readings`
-look alike. Lists are what `lapply()` eats and returns when you run a
-function over every file in a folder; that's session 6.
+A **list** holds anything, including other lists. A data frame is in
+fact a list of column vectors, which is why `d$pm25` and `l$readings`
+look alike. `lapply()` takes a list and returns one when you run a
+function over every file in a folder; that is session 6.
 
-Neither needs practice today. When they matter, they will be
-reintroduced where they are used.
+Neither needs practice today. The sessions that use them reintroduce
+them.
 
 :::
 
@@ -403,7 +385,7 @@ list.files()
 ::: {.content-hidden when-format="revealjs"}
 
 In HW1 the data ships inside your repository, so you will write
-`read.csv("data/epa_airdata_pm25_060371103_2025.csv")` — a path relative to
+`read.csv("data/epa_airdata_pm25_060371103_2025.csv")`, a path relative to
 `getwd()`. If that errors, run `list.files()` and `list.files("data")` before
 you change anything: nine times in ten the file is fine and you are somewhere
 else. Session 11 makes this problem go away permanently.
@@ -412,13 +394,12 @@ else. Session 11 makes this problem go away permanently.
 
 ## Read a real file {#read}
 
-Today's file is a real EPA download: daily PM2.5 from the **Compton** monitor
-in Los Angeles County, calendar year 2025, exactly as EPA's "Download Daily
-Data" tool ships it.
+Today's file comes from EPA, the US Environmental Protection Agency: daily
+PM2.5 from the **Compton** monitor in Los Angeles County, calendar year 2025,
+exactly as EPA's "Download Daily Data" tool ships it.
 
-Download it from [this session's data
-folder](data/epa_pm25_compton_2025.csv) into a `data/` folder sitting next to
-your script — the same shape HW1 arrives in — then:
+Download [the file](data/epa_pm25_compton_2025.csv) into a `data/` folder
+next to your script (the same layout HW1 uses), then:
 
 ```{r}
 #| label: read
@@ -445,15 +426,16 @@ you think you are. Run `getwd()` and `list.files()` before changing anything.
 :::
 
 ::: {.callout-important appearance="simple"}
-**Predict before you look.** The Eaton and Palisades fires started January 7,
-2025. Compton is 25 km downwind-ish of the Eaton fire. Write down: which
-calendar day between January 1 and February 28 had the worst air at this
-monitor?
+**Write down what the data should show.** The Eaton and Palisades fires
+started January 7, 2025. Compton sits about 25 km from the Eaton fire,
+roughly downwind. Which calendar day between January 1 and February 28
+should show the worst air at this monitor? Write the date down.
 :::
 
 ## Arrival checks {#arrival-checks}
 
-Same three questions as session 1, now on a file with twenty-two columns.
+The three questions from session 1 apply again, now to a file with
+twenty-two columns.
 
 ```{r}
 #| label: arrival-checks
@@ -499,21 +481,23 @@ pm$County.FIPS.Code[1]
 
 ::: {.content-hidden when-format="revealjs"}
 
-The file says `"060371302"`, `"06"`, `"037"`. R saw digits, decided they were
-numbers, and ate the leading zeros. The site is now `60371302` and California
-is state `6`.
+The file says `"060371302"`, `"06"`, `"037"`. `read.csv()` read the digits as
+numbers and dropped the leading zeros. The site is now `60371302` and
+California is state `6`.
 
-This is not cosmetic. Census tract GEOIDs, FIPS codes, ZIP codes, CUSIPs and
+This is not cosmetic. Census tract GEOIDs, FIPS codes, and ZIP codes (three
+US systems for identifying places), CUSIPs (security identifiers), and
 account numbers are **labels that happen to be spelled with digits**. Strip a
-leading zero and the label no longer matches anything you try to join it to —
-and the join will not error, it will just silently match fewer rows. Session 5
-is where that bill comes due.
+leading zero and the label no longer matches anything you join it to. The
+join will not error; it will silently match fewer rows. Session 5 shows what
+that costs.
 
 :::
 
 ## Protect them at read time {#identifiers-fix}
 
-The fix goes at read time, not after — once a leading zero is gone, it is gone.
+The fix goes at read time, not after. Once a leading zero is gone, you
+cannot get it back.
 
 ```{r}
 #| label: identifiers-fix
@@ -543,17 +527,16 @@ table(pm$POC, pm$AQS.Parameter.Code)
 
 Compton runs two instruments. POC 1 is the regulatory FRM sampler reporting
 parameter 88101. POC 3 is a continuous instrument reporting mostly 88502, a
-non-regulatory series — plus seven stray rows under 88101. So filtering on
-`POC == 1` alone, or on the parameter alone, both leave you with the wrong
-set. You need both conditions.
+non-regulatory series, plus seven stray rows under 88101. Filtering on
+`POC == 1` alone leaves the wrong set; so does filtering on the parameter
+alone. You need both conditions.
 
 :::
 
 ## Dates {#dates}
 
-The date arrived as text in American order. One line converts it, and it is
-worth doing immediately — text dates sort wrong, exactly like `"10"` and
-`"9"`.
+R read the date as text, in the US order: month/day/year. One line converts
+it. Do it immediately: text dates sort wrong, exactly like `"10"` and `"9"`.
 
 ```{r}
 #| label: dates
@@ -570,15 +553,16 @@ range(pm$date)
 
 `%m/%d/%Y` is a format string describing where the pieces are: two-digit
 month, slash, two-digit day, slash, four-digit year. Get it wrong and you get
-`NA`s rather than an error, so check `range()` afterwards. Session 22 does
-time zones, daylight saving, and the ways clocks lie; this one line covers
-most of what you need until then.
+`NA`s rather than an error, so check `range()` afterwards. Session 22 deals
+with time zones, daylight saving, and the other ways timestamps go wrong;
+this one line covers most of what you need until then.
 
 :::
 
 ## Subset to the window {#subset}
 
-Now everything at once: rows in the window, from the right instrument.
+Now use everything at once: keep the rows in the window, from the right
+instrument.
 
 ```{r}
 #| label: subset
@@ -599,9 +583,9 @@ mean you computed before filtering would have been a blend of two different
 measurement methods.
 
 The last line is the check. January 1 to February 28 is 59 calendar days, we
-have 59 rows, and no date appears twice — so this monitor has no gaps in the
-window. The monitor you get in HW1 does have gaps. Same check, different
-answer; that is the point of running it rather than assuming.
+have 59 rows, and no date appears twice, so this monitor has no gaps in the
+window. The monitor you get in HW1 does have gaps. The same check returns a
+different answer there; that is why you run it rather than assume.
 
 :::
 
@@ -619,16 +603,16 @@ head(one[order(-one$pm25), c("date", "pm25")], 5)
 
 ::: {.content-visible when-format="revealjs"}
 
-The worst day at this monitor is **January 1** — not January 7.
+The worst day at this monitor is **January 1**, not January 7.
 
 :::
 
 ::: {.content-hidden when-format="revealjs"}
 
-The worst air of the winter at this monitor was **January 1**, a week before
-the fires started.
+The worst air of the winter at this monitor came on **January 1**, a week
+before the fires started.
 
-The fire is unmistakably in there — January 9, 8 and 10 are the next three
+The fire is unmistakably in there: January 9, 8 and 10 are the next three
 worst days, all far above the median of 15.3. But the single worst day belongs
 to something else, and if your script had simply reported "the peak," you
 would have written a sentence about wildfire smoke that was about New Year's
@@ -642,19 +626,19 @@ A spike on one instrument on one day has three explanations: a real event, an
 instrument problem, or a data-processing artifact. You cannot tell from this
 file alone.
 
-Two checks you could run, both of which you will have the tools for shortly:
+Two checks would settle it:
 
-- **Do other monitors see it?** An instrument fault is local to one machine; a
-  county-wide event is not. Five other Los Angeles monitors also peak on
+- **Do other monitors show it?** An instrument fault is local to one machine;
+  a county-wide event is not. Five other Los Angeles monitors also peak on
   January 1.
 - **Does it repeat?** Fireworks come back every year on the same date. Smoke
   does not.
 
 ::: {.content-hidden when-format="revealjs"}
 
-That is the shape of nearly every verification you will do this semester: find
-something the number implies about the world, then go look at whether the
-world agrees. Session 10 turns this into a strategy rather than a reflex.
+Nearly every verification this semester has that shape: work out what the
+number implies, then check that implication against a source that could
+contradict it. Session 10 makes it systematic.
 
 :::
 
@@ -683,8 +667,8 @@ built.
 
 ::: {.content-hidden when-format="revealjs"}
 
-Session 1 installed *predict, then run, then reconcile*. This session adds the
-habit that goes in front of it:
+Session 1 installed one habit: write down what the data should show, run,
+reconcile. This session adds the habit that goes in front of it:
 
 :::
 
@@ -693,11 +677,11 @@ habit that goes in front of it:
 ::: {.content-hidden when-format="revealjs"}
 
 Today `str()` would have told you, before you did any arithmetic, that the
-site identifier had become a number and the date had not become a date. Both
-were repairable in one line at that point. Both would have been expensive
-three joins later.
+site identifier had become a number and the date had not become a date. At
+that point each had a one-line repair. Three joins later, each would have
+been expensive.
 
-The four arrival checks, in the order worth running them:
+Run the four arrival checks in this order:
 
 | Check | Question it answers |
 |:--|:--|
@@ -710,10 +694,10 @@ The four arrival checks, in the order worth running them:
 
 ::: {.content-visible when-format="revealjs"}
 
-`dim()` — the right number of rows?<br>
-`str()` — is every column the type it should be?<br>
-`head()` — does row one look like data?<br>
-`summary()` — is anything impossible, or off by 1000×?
+`dim()`: the right number of rows?<br>
+`str()`: is every column the type it should be?<br>
+`head()`: does row one look like data?<br>
+`summary()`: is anything impossible, or off by 1000×?
 
 :::
 
@@ -768,7 +752,7 @@ arrival checks and the format strings for dates.
 |:--|:--|
 | `getwd()`, `list.files()` | Where am I, what is here |
 | `read.csv(path)` | Path or URL, either one |
-| `read.csv(p, colClasses = c("Site.ID" = "character"))` | Stop R eating leading zeros |
+| `read.csv(p, colClasses = c("Site.ID" = "character"))` | Keep the leading zeros on read |
 | `names(d)[names(d) == "old"] <- "new"` | Rename one column |
 | `dim()`, `str()`, `head()`, `summary()` | The arrival checks |
 
@@ -778,7 +762,7 @@ arrival checks and the format strings for dates.
 |:--|:--|
 | A numeric column is `chr` | One stray text value converted the whole thing |
 | `"100"` sorts before `"9"` | It is text; text sorts character by character |
-| An ID lost its leading zero | `read.csv()` decided a label was a number |
+| An ID lost its leading zero | `read.csv()` read a label as a number |
 | `mean()` returns `NA` | There are `NA`s; use `na.rm = TRUE` |
 | `x == NA` gives `NA` | Use `is.na(x)` |
 | `as.numeric()` on a factor gives codes | `as.character()` first, then `as.numeric()` |
@@ -797,21 +781,21 @@ arrival checks and the format strings for dates.
 
 ## After class {#after-class}
 
-**HW1 is out — "How bad was the air?"** Due Thursday, September 3, 8:40 am.
-Same tool, different monitor: downtown Los Angeles, December through February,
-five numbers in a `results.csv`.
+**HW1 is out: "How bad was the air?"** It is due Thursday, September 3, at
+8:40 am. It uses the same tool on a different monitor: downtown Los Angeles,
+December through February, five numbers in a `results.csv`.
 
 ::: {.content-hidden when-format="revealjs"}
 
-Everything it asks for, you did today at least once. It ships with the data
-already in the repository, a `results_spec.md` that states the format exactly,
-and CHECK values for three of the six numbers so you can tell whether you are
-on track without guessing. Hand it in the way you handed in your README: edit
-or drag files onto the repository page, click Commit.
+You did everything it asks for at least once today. It ships with the data
+already in the repository, a `results_spec.md` that states the format
+exactly, and CHECK values for three of the answers so you can tell whether
+you are on track without guessing. Hand it in the way you handed in your
+README: edit or drag files onto the repository page, then commit.
 
-**Re-run today's script before you start.** Not read it — run it, line by
-line, and change things to see what breaks. This session went fast on purpose;
-the script is where it goes slow.
+**Re-run today's script before you start.** Do not just read it; run it,
+line by line, and change things to see what breaks. The session went fast on
+purpose; the script is where you slow down.
 
 **Tuesday** is *Look at your data*: the one-line plots that catch the errors
 `str()` and `summary()` miss. It uses this same file, so bring it.

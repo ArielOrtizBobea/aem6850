@@ -118,7 +118,7 @@ as.numeric(f)                      # NOT the numbers -- the level codes
 as.numeric(as.character(f))        # the repair: text first, then number
 
 
-# Matrices and lists, at introduction depth ----
+# Matrices and lists ----
 m <- matrix(1:6, nrow = 2)   # a vector with dimensions
 m
 m[2, 3]                      # row 2, column 3

@@ -18,6 +18,11 @@ $line-height-base: 1.5;
 $body-color: #343a40;
 $body-bg:    #ffffff;
 
+// Code-block window tint. Must stay clearly distinguishable from white
+// on a washed-out classroom projector; #fafaf7 was a 2% tint and read
+// as plain white (instructor, 2026-08-26).
+$code-bg:    #eeece4;
+
 $h1-font-size: 2rem;
 $headings-font-weight: 600;
 
@@ -451,13 +456,13 @@ $group-colors: (
 // ---------------------------------------------------------------------------
 // Code blocks are "windows": clearly separate from prose, copyable in one
 // click (code-copy: true in _quarto.yml keeps the button always visible).
-// Ported from the AEM 7010 site (instructor request, 2026-08-24). The accent
-// border marks "this is runnable input" -- output blocks stay plain, so what
-// you type and what R prints never look alike.
+// Ported from the AEM 7010 site (instructor request, 2026-08-24), accent rule
+// dropped 2026-08-26. The tinted background marks "this is runnable input" --
+// output blocks stay plain, so what you type and what R prints never look
+// alike.
 div.sourceCode,
 pre.sourceCode {
-  border-left: 3px solid $carnelian;
-  background-color: #fafaf7;
+  background-color: $code-bg;
 }
 
 // Plain fenced blocks (no language — e.g. text you type into a form or a
@@ -465,8 +470,7 @@ pre.sourceCode {
 // a code cell is excluded on purpose: input looks like a window, printed
 // output stays plain.
 :not(.cell-output) > pre:not(.sourceCode) {
-  border-left: 3px solid $carnelian;
-  background-color: #fafaf7;
+  background-color: $code-bg;
   padding: 0.5em 0.75em;
   white-space: pre-wrap;
 

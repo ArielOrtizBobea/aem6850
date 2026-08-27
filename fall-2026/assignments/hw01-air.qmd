@@ -11,23 +11,94 @@ goes out on Aug 27.
 
 ## The goal
 
-*To be written.*
+On January 7, 2025, two wildfires ignited in Los Angeles County,
+California: the Palisades fire and the Eaton fire. This homework asks a
+plain question about that event: how bad did the air get, at one
+monitor, in downtown Los Angeles?
+
+You answer with six numbers: the highest daily reading of that winter,
+the day it happened, the January 2025 average, the number of days above
+the health standard, the number of days with no reading at all, and the
+peak relative to the December average.
+
+The data is from the US Environmental Protection Agency (EPA), the
+federal environmental regulator. It reports PM2.5: airborne particles
+smaller than 2.5 micrometers, the standard measure of smoke, in
+micrograms per cubic meter (µg/m³). EPA's 24-hour health standard is
+35 µg/m³.
+
+Everything is base R: `read.csv()`, subsetting, dates, `NA`. No
+packages.
+
+The files come to you exactly as EPA ships them. `read.csv()` silently
+damages two of the columns. The winter window has more days than the
+file has rows, and the gaps carry no marker. Working from the file as
+shipped, and catching what it does to you, is the assignment.
 
 ## The data
 
-*To be written.*
+EPA AirData publishes a daily summary from every regulatory air
+monitor in the United States. Your two files cover one site: 060371103,
+"Los Angeles-North Main Street", in downtown Los Angeles. A site is a
+place; a monitor is one instrument at that place. This site runs five
+instruments, and keeping the right one is part of the work.
+
+You get one CSV per calendar year, because EPA's download tool splits
+at the year boundary. Your window, December 2024 through February 2025,
+straddles it. The files are byte for byte what the tool returned:
+nothing was cleaned, sorted, or reformatted. `data/SOURCE.md` in your
+starter repo records the source URL, the exact download selections, and
+the file checksums, so you can re-download and compare.
 
 ## Reference checkpoints
 
-Published totals, documented counts, and known facts you can check your
-work against before submitting. *To be written.*
+This course discloses expected values on purpose: the CHECK blocks in
+`hw1.R` and the answer table in `results_spec.md` print them. The
+pipeline from raw file to answer is the assignment; the numbers were
+never the secret.
+
+Anchors you can check your work against:
+
+- EPA's 24-hour PM2.5 standard is 35 µg/m³. One of your six numbers
+  counts the days above it.
+- The shipped file carries EPA's own Air Quality Index in the
+  `Daily AQI Value` column. On the peak day it reads 182, a level EPA
+  labels "Unhealthy".
+- [Schollaert et al. (2025)](https://pubs.acs.org/doi/10.1021/acs.estlett.5c00486)
+  report a 101.7 µg/m³ peak at this monitor, drawn from EPA's
+  real-time feed. Your file is the quality-assured archive, and it says
+  something close but not identical. `data/SOURCE.md` explains why both
+  numbers are right.
 
 ## What to submit
 
-*To be written.* Starter and submission live in your private repo in
-the course GitHub organization; sign-up instructions are on Canvas.
+Two files, due Thursday, September 3, 8:40 am:
+
+- `hw1.R`: your edited script.
+- `results.csv`: written by your script, in the exact format
+  `results_spec.md` specifies.
+
+Upload by browser: open your private repo in the course GitHub
+organization, drag both files onto the repo page, and commit. Sign-up
+instructions are on Canvas. No git client is needed; git arrives in
+session 7.
+
+Before you upload, restart R and source your script from scratch. It
+must run top to bottom in a fresh session with no errors. The grader
+runs it exactly that way.
 
 ## How this one is weighted
 
-Reproduces / correct / verified / craft — *weights to be stated here.*
-The rubric is in the [syllabus](../syllabus.qmd#homework).
+| Dimension | Points | The question it asks |
+|-----------|-------:|----------------------|
+| Reproduces | 15 | Does the script run, start to finish, in a fresh session? |
+| Correct | 60 | Are the six numbers right, and does your script compute them? |
+| Verified | 15 | Did you check your own work? |
+| Craft | 10 | Can someone else read it? |
+
+The question points inside `hw1.R` sum to 100 and scale by 0.6 into
+Correct. A `results.csv` with the right numbers and a script that does
+not compute them scores 0 on Correct. Editing a CHECK block so it
+passes scores worse than leaving it failing honestly. The full HW1
+rubric ships in your starter as `rubric.md`; the course-wide grading
+scheme is in the [syllabus](../syllabus.qmd#homework).

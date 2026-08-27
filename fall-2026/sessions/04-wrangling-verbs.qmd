@@ -1,12 +1,50 @@
 ---
 title: "4 · Wrangling I — dplyr"
-subtitle: "Thursday, Sep 3, 2026"
+subtitle: "Thursday, September 3, 2026"
 pagetitle: "AEM 6850 · Session 4 · Wrangling I — dplyr"
+execute:
+  echo: true
+format:
+  html:
+    toc: true
+    toc-depth: 2
+  revealjs:
+    output-file: 04-wrangling-verbs-slides.html
+    theme: [default, slides.scss]
+    template-partials:
+      - title-slide.html
+    footer: "AEM 6850 · Session 4"
+    slide-number: c/t
+    incremental: false
+    code-line-numbers: false
+    code-overflow: scroll
+    history: false
+    link-external-newwindow: true
 ---
 
-::: {.callout-note appearance="simple"}
-Materials for this session are not published yet. They appear here
-before class.
+```{r}
+#| purl: false
+#| include: false
+knitr::opts_chunk$set(
+  comment = "#>",
+  collapse = FALSE,
+  fig.width = 8,
+  fig.height = 4,
+  fig.align = "center",
+  dpi = 150
+)
+```
+
+::: {.content-hidden when-format="revealjs"}
+
+[Slides](04-wrangling-verbs-slides.html) · [Live script](04-wrangling-verbs.R) ·
+[Source](https://github.com/ArielOrtizBobea/aem6850/blob/main/fall-2026/sessions/04-wrangling-verbs.qmd)
+
+Session 2 subset data frames with brackets and `$`. Session 3 found a
+two-month hole in the regulatory series with one bar chart. Today the same
+work gets better grammar: the dplyr verbs, chained with a pipe into lines you
+can read aloud. By the end, the hole is measured exactly, in three lines.
+
 :::
 
 ## Objectives {#objectives}
@@ -18,18 +56,849 @@ By the end of this session you can:
 - Read a pipe chain aloud as a sentence.
 - Predict row and group counts before running.
 
-## What we cover {#coverage}
+::: {.content-hidden when-format="revealjs"}
 
-- The course's first package, as its own moment:
-  `install.packages("dplyr")`, then `library(dplyr)` — install once,
-  load every session.
-- The verbs, one by one: `filter()`, `select()`, `mutate()`,
-  `arrange()`.
-- Pipes — chains you can read left to right.
-- `group_by()` + `summarize()`, and counting everything with `n()`.
-- Factors at work: the category columns from session 2, now grouped
-  and counted.
-- When something is slow: `system.time()` around it — a one-line
-  habit that returns in session 24.
+## Before class {#before-class}
 
-**Verification habit.** Predict the counts, then run.
+**HW1 is due today at 8:40 am**, when class begins. Submit before you walk
+in.
+
+Have the `data/` folder from sessions 2 and 3 in place; today reuses the EPA
+file and the weather file. Nothing to install ahead of time: we install the
+course's first package together, in class.
+
+:::
+
+## Where we left off {#recap}
+
+::: {.content-hidden when-format="revealjs"}
+
+Session 3 ended with a hole in the data. The bar chart of days per month
+showed almost no spring readings from the regulatory sampler (the POC 1
+instrument from session 2): two days in April, one in May. The site's other
+instrument ran through both months, so the sampler was down, not the site.
+
+We read those counts off the height of bars. Today we compute them exactly,
+and it takes three lines. Session 3 also pointed ahead to today:
+the code starts reading like sentences. The tool for both jobs is a package
+called dplyr, and installing it comes first.
+
+:::
+
+::: {.content-visible when-format="revealjs"}
+
+- Session 3's bar chart: almost no spring in the regulatory series. April
+  had 2 days, May had 1.
+- The site's other instrument ran both months. The sampler was down, not
+  the site.
+- Today: compute that table exactly, with the course's first package. And
+  the promised part: code that reads like sentences.
+
+:::
+
+::: {.content-visible when-format="revealjs"}
+::: {.notes}
+Thirty-second callback: what did the bars show (April 2, May 1), and how did
+we know the site itself was fine (the other instrument logged 30 and 31)?
+Then straight into the install moment.
+:::
+:::
+
+## The first package {#first-package}
+
+::: {.content-hidden when-format="revealjs"}
+
+Everything so far ran on base R, the toolkit every R installation ships
+with. A package is R code somebody else wrote, tested, and shared:
+functions, help pages, sometimes data. [dplyr](https://dplyr.tidyverse.org)
+is the standard package for wrangling data frames, and it is the first one
+this course needs.
+
+::: {.column-margin}
+dplyr belongs to a coordinated family of packages called the tidyverse.
+The course adds members as it needs them; ggplot2 comes in session 12.
+:::
+
+One command fetches it from [CRAN](https://cran.r-project.org), the archive
+R installs packages from. Type it in the console, not in a script:
+
+:::
+
+::: {.content-visible when-format="revealjs"}
+
+A package is R code somebody else wrote, tested, and shared. dplyr is the
+standard one for wrangling data frames. In the console:
+
+:::
+
+```{r}
+#| label: install
+#| purl: false
+#| eval: false
+install.packages("dplyr")
+```
+
+```{r}
+#| label: install-script
+#| script: "The first package (install once, in the console)"
+#| include: false
+# install.packages("dplyr")   # run once per machine, then leave commented
+```
+
+::: {.content-hidden when-format="revealjs"}
+
+The console fills with a minute of download messages and ends with a line
+saying the package was installed. That is the whole install. You do it once
+per machine, the way you installed R itself once. The command does not
+belong in a script: a script that carries an install line reinstalls the
+package on every run.
+
+:::
+
+::: {.content-visible when-format="revealjs"}
+
+- A minute of console messages is normal. It ends with one line saying the
+  package was installed.
+- Once per machine, like installing R itself. Never in a script.
+
+:::
+
+::: {.content-visible when-format="revealjs"}
+::: {.notes}
+Give the room two minutes to run it and narrate the console spew while it
+scrolls. Anyone whose install fails switches to posit.cloud now and brings
+the laptop to office hours. Classroom wifi is the usual suspect.
+:::
+:::
+
+## Load it, every session {#library}
+
+Installing put dplyr on the machine. `library()` puts it into the current R
+session:
+
+```{r}
+#| label: library
+#| script: "Load it (top of every script, every session)"
+#| message: true
+library(dplyr)
+```
+
+::: {.content-hidden when-format="revealjs"}
+
+The block about masked objects is information, not an error. dplyr provides
+functions named `filter()` and `lag()`, and base R already had functions
+with those names. Loading dplyr puts the new ones in front, and the message
+lists what moved. You will see it at every `library(dplyr)`.
+
+The rule from today on: install once per machine, load in every session,
+and every script opens with its `library()` lines.
+
+:::
+
+::: {.content-visible when-format="revealjs"}
+
+- The masked-objects block is information, not an error. dplyr's `filter()`
+  and `lag()` now stand in front of the base ones.
+- Install once per machine. `library()` at the top of every script.
+
+:::
+
+## Rebuild the frame {#rebuild}
+
+Arrival stays base R: the same read, repairs, and checks as sessions 2
+and 3.
+
+```{r}
+#| label: rebuild
+#| script: "Rebuild session 2's data frame"
+pm <- read.csv("data/epa_pm25_compton_2025.csv",
+               colClasses = c("Site.ID"          = "character",
+                              "State.FIPS.Code"  = "character",
+                              "County.FIPS.Code" = "character"))
+names(pm)[names(pm) == "Daily.Mean.PM2.5.Concentration"] <- "pm25"
+pm$date <- as.Date(pm$Date, format = "%m/%d/%Y")
+
+nrow(pm)   # the whole year, both instruments: 662 rows
+```
+
+::: {.content-hidden when-format="revealjs"}
+
+dplyr changes nothing about arrival. `read.csv()`, the identifier
+protection, the rename, the date conversion, and the arrival checks stay
+exactly as session 2 built them. What dplyr replaces is everything session
+2 did after this point with brackets and `$`. If `data/` is missing a file,
+[session 3's rebuild section](03-look-at-data.qmd#rebuild) has a
+thirty-second download fallback.
+
+:::
+
+## `filter()`: keep rows {#filter}
+
+Session 2 cut the winter window with brackets. Same subset, first verb:
+
+```{r}
+#| label: filter
+#| script: "filter(): keep rows"
+# session 2:  pm[pm$date <= as.Date("2025-02-28") &
+#                pm$POC == 1 & pm$AQS.Parameter.Code == 88101, ]
+
+one <- filter(pm,
+              date <= as.Date("2025-02-28"),
+              POC == 1,
+              AQS.Parameter.Code == 88101)
+
+nrow(one)   # session 2 says this must be 59
+```
+
+::: {.content-hidden when-format="revealjs"}
+
+`filter()` keeps the rows where every condition holds. Three things changed
+from the base line. The data frame comes first, then the conditions. Column
+names stand bare, because `filter()` looks them up inside `pm`, so no `pm$`
+and no brackets. Commas join conditions the way `&` did; `|` still spells
+or, inside a single condition. The answer did not change: 59 rows, one per
+calendar day of the window, as session 2 verified.
+
+:::
+
+::: {.content-visible when-format="revealjs"}
+
+- Data frame first, then conditions. Bare column names: no `pm$`.
+- Commas mean and. `|` still spells or, inside one condition.
+- Same rows out: 59, one per day, as verified in session 2.
+
+:::
+
+## `select()`: keep columns {#select}
+
+Base needed two coordinates and quoted names. `select()` takes bare names,
+in the order you want them:
+
+```{r}
+#| label: select
+#| script: "select(): keep columns"
+# session 2:  one[, c("date", "pm25")]
+
+head(select(one, date, pm25), 3)
+```
+
+::: {.content-hidden when-format="revealjs"}
+
+A minus sign drops instead of keeps: `select(one, -Date)` returns every
+column except the raw text date. The result is still a data frame, which is
+why `head()` works on it unchanged.
+
+:::
+
+## `mutate()`: add columns {#mutate}
+
+::: {.content-hidden when-format="revealjs"}
+
+`mutate()` adds columns computed from existing ones. Two at once here, and
+both get used today. Before running it, set the expectation:
+session 3's histogram put four days past the red line at 35 µg/m³, the
+24-hour standard set by EPA (the US environmental agency). Those days were
+January 1, 8, 9, and 10. So a TRUE/FALSE column for `pm25 > 35` must sum
+to 4.
+
+:::
+
+```{r}
+#| label: mutate
+#| script: "mutate(): add columns"
+# session 2:  one$above35 <- one$pm25 > 35
+
+one <- mutate(one,
+              above35 = pm25 > 35,
+              month   = format(date, "%b"))
+
+head(select(one, date, pm25, above35, month), 3)
+sum(one$above35)   # session 3's histogram says this must be 4
+```
+
+::: {.content-hidden when-format="revealjs"}
+
+Each new column is `name = expression`, computed inside the data frame, so
+`pm25` and `date` stand bare. `format(date, "%b")` pulls the short month
+name, `"Jan"`, out of a date: session 2's format strings, run in reverse.
+The sum confirms the histogram, with `TRUE` counting as 1 exactly as in
+session 2.
+
+:::
+
+::: {.content-visible when-format="revealjs"}
+
+- `name = expression`, computed inside the frame: bare column names again.
+- `"%b"` is the short month name. Session 2's format strings, in reverse.
+
+:::
+
+## `arrange()`: sort rows {#arrange}
+
+`arrange()` sorts rows by a column. `desc()` flips it to descending:
+
+```{r}
+#| label: arrange
+#| script: "arrange(): sort rows"
+# session 2:  head(one[order(-one$pm25), c("date", "pm25")], 5)
+
+worst <- arrange(one, desc(pm25))
+head(select(worst, date, pm25), 3)
+```
+
+::: {.content-hidden when-format="revealjs"}
+
+January 1 is back on top at 53.2, exactly where session 2's base sort put
+it. Notice the cost of working verb by verb: `worst` is a stored
+intermediate that nothing else will ever use. Session 2's base line avoided
+the intermediate by nesting the subset inside `head()`, and paid in
+readability. The pipe removes that trade-off.
+
+:::
+
+::: {.content-visible when-format="revealjs"}
+
+- January 1 on top at 53.2, as session 2 found by base sorting.
+- The cost so far: throwaway objects like `worst`, or nested calls you
+  read inside out. The pipe fixes this.
+
+:::
+
+## The pipe {#pipe}
+
+`|>` passes whatever is on its left to the function on its right, as that
+function's first argument:
+
+```{r}
+#| label: pipe
+#| script: "The pipe"
+nrow(filter(pm, POC == 1))         # nested: read inside out
+
+pm |> filter(POC == 1) |> nrow()   # piped: read left to right
+```
+
+::: {.content-hidden when-format="revealjs"}
+
+Both lines run the same computation and print the same 301. The piped one
+reads in the order things happen: start from `pm`, keep the regulatory
+instrument's rows, count them. Read `|>` aloud as "then". Every dplyr verb
+takes the data frame as its first argument precisely so chains like this
+work.
+
+Two practical notes. RStudio types the pipe for you with Cmd+Shift+M (Mac)
+or Ctrl+Shift+M (Windows), after you tick "Use native pipe operator" once
+under Tools, Global Options, Code. And you will meet an older pipe, `%>%`,
+all over existing code and AI-generated code. It does nearly the same job.
+Read it the same way; write `|>`.
+
+:::
+
+::: {.content-visible when-format="revealjs"}
+
+- Same computation, same 301. The piped line reads in the order things
+  happen.
+- Read `|>` as "then". Verbs take the data frame first so chains work.
+- Older code writes `%>%`. Read it the same way; write `|>`.
+
+:::
+
+## The chain, end to end {#chain}
+
+```{r}
+#| label: chain
+#| script: "The chain, end to end"
+# session 2:  head(one[order(-one$pm25), c("date", "pm25")], 5)
+
+pm |>
+  filter(date <= as.Date("2025-02-28"),
+         POC == 1, AQS.Parameter.Code == 88101) |>
+  arrange(desc(pm25)) |>
+  select(date, pm25) |>
+  head(5)
+```
+
+::: {.content-hidden when-format="revealjs"}
+
+Read it aloud: take the year, keep the winter window from the regulatory
+sampler, sort worst first, keep the date and the reading, show five. That is
+the sentence session 3 pointed to. The five rows match session 2's
+base sort to the decimal: 53.2, 47.7, 44.6, 42.2, 33.6.
+
+The chain also changes how you edit. Each verb sits on its own line, so
+adding a step later means inserting a line, not rebuilding a bracket
+expression from the inside out.
+
+:::
+
+::: {.content-visible when-format="revealjs"}
+
+- Aloud: take the year, keep the winter window, sort worst first, keep two
+  columns, show five.
+- Same five rows as session 2's sort: 53.2, 47.7, 44.6, 42.2, 33.6.
+- The sentence session 3 pointed to. One verb per line.
+
+:::
+
+## `group_by()` and `summarize()` {#group-by}
+
+::: {.content-hidden when-format="revealjs"}
+
+`group_by()` declares groups; every `summarize()` after it computes once
+per group. Before running the block below, write down the six numbers it
+should print. You already have the evidence. Days: the window has no
+gaps (session 2 checked), so January contributes 31 rows and February 28.
+Medians: session 3's boxplot put January at 16.9 and February at 12.6.
+Means: all four days above the standard belong to January, and in a
+right-skewed month the mean sits above the median (session 3), so January's
+mean should clear 16.9 with room. Write your six down, then run.
+
+:::
+
+::: {.content-visible when-format="revealjs"}
+
+Write down the six numbers this should print. Evidence: no gaps in the
+window, so 31 and 28 days. Boxplot medians were 16.9 and 12.6. January has
+all four event days, so its mean should clear its median with room.
+
+:::
+
+```{r}
+#| label: group-by
+#| script: "group_by() + summarize()"
+one |>
+  group_by(month) |>
+  summarize(days        = n(),
+            mean_pm25   = mean(pm25),
+            median_pm25 = median(pm25))
+```
+
+## Reading the grouped result {#grouped-result}
+
+::: {.content-hidden when-format="revealjs"}
+
+Reconcile line by line. The days column reads 31 and 28: `n()` takes no
+arguments and counts the rows of whatever group it stands in, and it only
+works inside `summarize()` and friends. The medians reproduce session 3's
+boxplot as numbers, 16.9 and 12.6. January's mean, 21.3, sits far above its
+own median because the four event days pull it up; February's, 13.4, barely
+moves off its median. (`summarise()` with an s does the same thing; both
+spellings work.)
+
+The header row is new. A tibble is dplyr's flavor of data frame: it behaves
+like the data frames you know and prints with its dimensions and column
+types attached. Grouped summaries come back as tibbles.
+
+And one thing nobody predicted: February printed before January. That is
+not a dplyr bug. `month` is text, and text sorts alphabetically. It is
+session 2's `"10"` before `"9"`, back again.
+
+:::
+
+::: {.content-visible when-format="revealjs"}
+
+- Days 31 and 28. `n()` counts the rows of its group; it works only inside
+  `summarize()`.
+- Medians 16.9 and 12.6: the boxplot, as numbers. January's mean sits at
+  21.3, pulled up by the four event days.
+- "A tibble": dplyr's flavor of data frame. Same behavior, more careful
+  printing.
+- Nobody predicted this part: February printed first. Text sorts
+  alphabetically.
+
+:::
+
+## Factors put months in order {#factor-order}
+
+```{r}
+#| label: factor-order
+#| script: "Factors put the months in order"
+month.abb   # a vector R ships with
+
+one <- mutate(one, month = factor(month, levels = month.abb))
+
+one |>
+  group_by(month) |>
+  summarize(days = n(), median_pm25 = median(pm25))
+```
+
+::: {.content-hidden when-format="revealjs"}
+
+Session 2 defined a factor as a categorical column with a level table.
+Today the level table does real work: `levels = month.abb` stores the
+categories in calendar order, and every grouped result now follows that
+order. This is what factors are for. Categories usually have an order that
+is not alphabetical: months, damage classes, education levels, income
+brackets. Set the levels once and every table downstream prints in the
+order you meant. (Session 2's warning stands: `as.numeric()` on a factor
+returns level codes, not the labels.)
+
+:::
+
+::: {.content-visible when-format="revealjs"}
+
+- The level table carries the order you meant. Every grouped result now
+  follows it.
+- This is the factor's job: categories with a real order, recorded once.
+
+:::
+
+## `count()`: the counting shorthand {#count}
+
+```{r}
+#| label: count
+#| script: "count(): the counting shorthand"
+# session 2:  table(pm$POC, pm$AQS.Parameter.Code)
+
+pm |> count(POC, AQS.Parameter.Code)
+```
+
+::: {.content-hidden when-format="revealjs"}
+
+`count(x)` is `group_by(x)` plus `summarize(n = n())` in one verb. Give it
+two columns and it counts every combination that occurs. Session 2 answered
+this question with `table()`; `count()` answers with a data frame, so the
+answer itself can go through more verbs. The numbers match session 2:
+301 regulatory days, 7 stray rows under the wrong code, 354 days from the
+continuous instrument. They sum to 662, every row in the file.
+
+:::
+
+::: {.content-visible when-format="revealjs"}
+
+- `count(x)` = `group_by(x)` + `summarize(n = n())`.
+- Same three cells as session 2's `table()`: 301, 7, 354. Sum: 662, the
+  whole file.
+- The difference: the answer is a data frame, so it can go through more
+  verbs.
+
+:::
+
+## The missing spring, measured {#missing-spring}
+
+Session 3 found the hole with a bar chart. Measuring it takes a chain you
+can now read:
+
+::: {.callout-important appearance="simple"}
+**Write down the twelve counts this should print.** The evidence: the
+`count()` above says the regulatory series has 301 rows. A full month has
+28 to 31 days. Session 3's bar chart showed ten tall bars, April near two
+days, May near one. Your twelve numbers must sum to 301.
+:::
+
+```{r}
+#| label: missing-spring
+#| script: "The missing spring, measured"
+year <- pm |>
+  filter(POC == 1, AQS.Parameter.Code == 88101) |>
+  mutate(month = factor(format(date, "%b"), levels = month.abb))
+```
+
+## The twelve counts {#coverage-table}
+
+```{r}
+#| label: coverage-table
+#| script: "The twelve counts"
+year |> count(month)
+```
+
+::: {.content-visible when-format="revealjs"}
+
+- April 2 and May 1, exactly as the bars showed.
+- The counts sum to 301. A complete year has 365 days: 64 are missing.
+- The part the bars could not show: March logged 30 of 31 days, June 28 of
+  30, September 27 of 30.
+
+:::
+
+## Reading the coverage table {#coverage-read}
+
+::: {.content-hidden when-format="revealjs"}
+
+Reconcile against your prediction. April and May land exactly where
+session 3's bars put them: 2 days and 1. The counts sum to 301, and a
+complete year has 365 days, so the regulatory series is missing 64. Of
+those, 58 are the spring outage: April is short 28 days and May 30.
+
+The other six days are the news. If you predicted a full 31 for March, the
+table corrects you by one day: March logged 30. June logged 28 of 30,
+September 27 of 30. A bar drawn one day short of thirty looks full; a
+count is exact. The plot found the hole. The count measured it, and turned
+up six more missing days nobody had noticed.
+
+One consequence, computed. The series' "2025 annual mean" is an average of
+the 301 days that exist:
+
+```{r}
+#| label: annual-mean
+#| script: "What the gap does to an annual mean"
+mean(year$pm25)   # "the 2025 annual mean" -- of the days that exist
+```
+
+Is 13.4 high, low, or fine? The missing days decide. The site's continuous
+instrument ran through the spring, and its numbers say April and May were
+the cleanest stretch of its year:
+
+```{r}
+#| label: annual-mean-check
+#| script: "The other instrument's spring"
+other <- pm |> filter(POC == 3, AQS.Parameter.Code == 88502)
+
+mean(other$pm25)   # its full-year mean
+other |>
+  mutate(month = format(date, "%b")) |>
+  filter(month == "Apr" | month == "May") |>
+  summarize(days = n(), mean_pm25 = mean(pm25))
+```
+
+The continuous instrument averages 12.3 over its year and 10.1 over April
+and May. The two instruments measure by different methods, so the levels
+are not exactly comparable. The direction is: the regulatory series is
+missing precisely the months that would have pulled its average down, so
+its 13.4 leans high. Session 3 said every mean is a mean of the days that
+are there. Today you can put numbers on what that costs.
+
+:::
+
+::: {.content-visible when-format="revealjs"}
+
+- 58 of the 64 missing days are the spring outage. The other six are
+  single days in March, June, and September that the bars could not show.
+- The cost, quantified on the page: the missing months were the cleanest
+  stretch of the year by the site's other instrument. An annual mean over
+  the 301 days leans high.
+
+:::
+
+::: {.content-visible when-format="revealjs"}
+::: {.notes}
+If someone asks why the sampler was down: this file does not say, and AQS
+validation can also remove readings after the fact (session 3's page). The
+point stands either way: the series has no spring.
+:::
+:::
+
+## The one-line stopwatch {#timing}
+
+One more habit joins the kit today. Wrap any line in `system.time()` and R
+reports how long it took:
+
+```{r}
+#| label: timing
+#| script: "system.time(): the one-line stopwatch"
+system.time(read.csv("data/epa_pm25_compton_2025.csv"))
+```
+
+::: {.content-hidden when-format="revealjs"}
+
+Read the `elapsed` column: the seconds you actually waited. For this file
+the answer is effectively zero, and it will be for everything in Part I.
+Part II changes that. Satellite rasters, statewide parcel tables, and
+folders of hourly files make single lines take minutes. The habit costs one
+line: when something feels slow, wrap it once, note the number, and compare
+after you change something. Session 24 builds its whole speed-up method on
+this function.
+
+:::
+
+::: {.content-visible when-format="revealjs"}
+
+- Read `elapsed`: the seconds you waited. Today, effectively zero.
+- The habit: when a line feels slow, wrap it once and note the number.
+  Session 24 builds on this.
+
+:::
+
+## You try {#you-try}
+
+Five minutes, on the weather frame. Stubs are in the live script.
+
+```{r}
+#| label: weather-load
+#| script: "Bring back the weather frame"
+la <- read.csv("data/la-weather-dec2024-feb2025.csv", skip = 3)
+names(la) <- c("date", "gust", "wind", "tmax", "rh_min", "precip")
+la$date <- as.Date(la$date)
+```
+
+```{r}
+#| label: you-try
+#| exercise: true
+#| script: "You try (5 minutes)"
+#| eval: false
+# 1. The windstorm, top three: chain arrange(), select(), and head() to
+#    print the three biggest gust days with their dates. Session 1 says
+#    which date must come first.
+#
+# 2. Rain days by month: make month a factor with
+#    levels = c("Dec", "Jan", "Feb"), then group_by(month) |>
+#    summarize(days = n(), rain_days = sum(precip > 0)).
+#    Session 3's drought plot says which month must have the most rain.
+#
+# 3. One line: la |> count(precip > 0). Write both numbers down first.
+#    Your table from task 2 already fixes what they must be.
+```
+
+::: {.content-visible when-format="revealjs"}
+::: {.notes}
+Debriefs, one sentence each: (1) Jan 7 at 65.9, then Jan 8 at 50.8, then
+Feb 13 at 49.0, the day of session 3's biggest storm; session 1's "66" was
+this 65.9 rounded. (2) Dec 2, Jan 3, Feb 8: February has the most rain,
+matching the drought's Jan 26 break; without the factor the months print
+Dec, Feb, Jan. (3) 13 wet days and 77 dry, because 2 + 3 + 8 = 13 and the
+frame has 90 rows.
+:::
+:::
+
+## Verify {#verify}
+
+::: {.content-hidden when-format="revealjs"}
+
+Each session so far installed one habit:
+
+| Session | The habit |
+|:--|:--|
+| 1 | Write down what the data should show, then run, then reconcile. |
+| 2 | Run `str()` before you compute. |
+| 3 | Plot the column before you trust the column. |
+| 4 | Predict every count from evidence before you run it. |
+
+:::
+
+> **Write down the count you expect, and where the expectation comes from.
+> Then run, and reconcile.**
+
+::: {.content-hidden when-format="revealjs"}
+
+The expectation always has a source: the calendar, the sampling schedule, a
+plot you already read, a total that must be conserved. Today the habit ran
+four times: 59 rows from the calendar, 4 days from a histogram, six summary
+numbers from a boxplot, and twelve counts that had to sum to 301. When the
+number that returns is not the one you wrote down, stop and resolve the
+difference before moving on. Today the difference was six missing days
+nobody had noticed.
+
+Session 5 depends on this habit: joins silently drop rows and silently
+duplicate them, and the row count you predict before each join is the check
+that catches both.
+
+:::
+
+::: {.content-visible when-format="revealjs"}
+
+The expectation always has a source: the calendar, the sampling schedule, a
+plot you already read, a total that must be conserved. When the returned
+number is not the written-down number, stop and resolve it. Session 5 runs
+on this check.
+
+:::
+
+## Quick reference {#quick-reference}
+
+::: {.content-visible when-format="revealjs"}
+
+On the session page: the verb table with base translations, the pipe and
+its shortcut, the factor recipe, and the things that bite.
+
+:::
+
+::: {.content-hidden when-format="revealjs"}
+
+**The verbs, with the base R you already know**
+
+::: {.tight-cols}
+
+| dplyr | It keeps or makes | Base equivalent |
+|:--|:--|:--|
+| `filter(d, x > 1, g == "a")` | Rows where all conditions hold | `d[d$x > 1 & d$g == "a", ]` |
+| `select(d, date, pm25)` | The named columns; `-name` drops | `d[, c("date", "pm25")]` |
+| `mutate(d, new = expr)` | Adds computed columns | `d$new <- expr` |
+| `arrange(d, desc(x))` | Rows sorted; `desc()` descending | `d[order(-d$x), ]` |
+| `group_by(d, g)` | Declares groups for what follows | new today |
+| `summarize(d, m = mean(x))` | One row per group | new today |
+| `count(d, g)` | Grouped row counts | `table(d$g)` |
+
+:::
+
+**The pipe and the helpers**
+
+The pipe itself: `x |> f() |> g()` passes each left side into the next
+call as its first argument. Read it as "then".
+
+| Code | What it does |
+|:--|:--|
+| `n()` | Rows in the current group; only inside `summarize()` and friends |
+| `desc(x)` | Descending order inside `arrange()` |
+| `head(d, 5)` | Still base R, still works at the end of a chain |
+| `x %in% c("a", "b")` | Is each value one of these; tidier than or-chains of `==` |
+| `factor(x, levels = month.abb)` | Categories in the order you mean, not alphabetical |
+
+**Things that bite**
+
+| Symptom | Cause |
+|:--|:--|
+| "Masked objects" message at `library(dplyr)` | Normal. dplyr's `filter()` and `lag()` stand in front of the base ones |
+| `filter()` errors before `library(dplyr)` | The package is not loaded in this session |
+| `filter(d, x = 1)` errors | `=` assigns; the test is `==` |
+| The chain printed, but nothing changed | You never assigned; put `d <-` in front of the chain |
+| Reinstalls on every run | `install.packages()` is in the script; it belongs in the console |
+| Months print Apr, Aug, Dec, ... | Text sorts alphabetically; make a factor with `levels = month.abb` |
+| `n()` errors on its own | It only counts inside `summarize()` and friends |
+
+**Links**
+
+- Session materials: [slides](04-wrangling-verbs-slides.html) ·
+  [live script](04-wrangling-verbs.R) ·
+  [EPA data](data/epa_pm25_compton_2025.csv) ·
+  [weather data](data/la-weather-dec2024-feb2025.csv) ·
+  [where they came from](data/SOURCE.md)
+- [dplyr documentation](https://dplyr.tidyverse.org) and the [data
+  transformation
+  cheatsheet](https://rstudio.github.io/cheatsheets/html/data-transformation.html)
+- [R for Data Science, ch. 3](https://r4ds.hadley.nz/data-transform.html),
+  the book-length treatment of today
+- [Session 2](02-r-essentials.qmd) (the base subsetting translated today) ·
+  [session 3](03-look-at-data.qmd) (where the hole was found)
+- [Syllabus](../syllabus.qmd) · [full schedule](../index.qmd#schedule)
+
+:::
+
+## After class {#after-class}
+
+**HW2 is out: [What did the fire
+destroy?](../assignments/hw02-fire-damage.qmd)** Due Thursday, September
+10, 8:40 am.
+
+::: {.content-hidden when-format="revealjs"}
+
+The data is CAL FIRE's building-by-building damage inspections from the
+Eaton and Palisades fires (CAL FIRE is California's fire agency): every
+inspected structure, its damage category, its year built. The damage
+column is categorical, so `count()` is the tool for it. The habit from
+session 3 still applies first: plot the columns before you trust them, and
+read each plot in one written sentence.
+
+**Re-run today's script before you start.** Run it line by line and change
+things to see what breaks, the way session 2 asked.
+
+**Tuesday** is Wrangling II: joins. Two tables, matched on a key, and the
+two silent failures that come with that: rows dropped and rows duplicated.
+The row-count habit from today is the defense.
+
+:::
+
+::: {.content-visible when-format="revealjs"}
+
+- Damage categories from the fires: `count()` is the tool. Plot first, as
+  in session 3.
+- Re-run today's script at home. Tuesday: Wrangling II, joins.
+
+:::
+
+```{r}
+#| purl: false
+#| include: false
+# Single-source build: the .R live script is generated from this file every
+# time the page renders, so it cannot fall out of step with the prose.
+source("_purl.R")
+purl_session("04-wrangling-verbs.qmd", "04-wrangling-verbs.R")
+```
