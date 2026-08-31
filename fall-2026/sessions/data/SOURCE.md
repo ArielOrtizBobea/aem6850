@@ -34,7 +34,7 @@ fallback when the network or the API is unavailable.
 
 ---
 
-## `epa_pm25_compton_2025.csv` — session 2
+## `epa_pm25_compton_2025.csv` — sessions 4 and 5
 
 **Source:** U.S. EPA AirData, "Download Daily Data" tool,
 <https://www.epa.gov/outdoor-air-quality-data/download-daily-data>
@@ -89,3 +89,70 @@ EPA publishes air quality data twice: **AirNow** in real time and unvalidated,
 invalidate readings months later. Re-downloading today may give slightly
 different numbers. That is not an error in either copy; it is the archive of
 record being corrected. Work from the shipped file.
+
+---
+
+## `epa_pm25_la_county_2025.csv` — session 3
+
+**Source:** U.S. EPA AirData, "Download Daily Data" tool,
+<https://www.epa.gov/outdoor-air-quality-data/download-daily-data>
+
+**Retrieved:** 2026-08-27. Byte-for-byte what the tool returned.
+
+**The exact selections:**
+
+| Field     | Value                          |
+|-----------|--------------------------------|
+| Pollutant | PM2.5 (codes 88101 and 88502)  |
+| Year      | 2025                           |
+| State     | California                     |
+| County    | Los Angeles                    |
+| Site      | All Sites                      |
+
+Same tool and same selections as the Compton file above, with the Site field
+left on "All Sites". 4,757 data rows + header, the full calendar year.
+MD5 `75436f48b70018aeaa90dcaa8710eb5e`.
+
+### The eleven monitors
+
+| Site ID | Local Site Name | Rows | Rows after the FRM filter |
+|---------|-----------------|-----:|--------------------------:|
+| 060370016 | Glendora | 361 | 0 |
+| 060371103 | Los Angeles-North Main Street | 851 | 333 |
+| 060371201 | Reseda | 470 | 110 |
+| 060371302 | Compton | 662 | 301 |
+| 060371602 | Pico Rivera #2 | 119 | 119 |
+| 060372005 | Pasadena | 115 | 115 |
+| 060374008 | Long Beach-Route 710 Near Road | 682 | 338 |
+| 060374009 | Signal Hill (LBSH) | 414 | 57 |
+| 060374010 | North Hollywood (NOHO) | 360 | 0 |
+| 060376012 | Santa Clarita | 358 | 0 |
+| 060379035 | Lancaster - Fairgrounds | 365 | 365 |
+
+"The FRM filter" is `POC == 1 & AQS.Parameter.Code == 88101`, the regulatory
+series. On this file it leaves 1,738 rows and exactly 1,738 site-days: no
+monitor reports the same day twice.
+
+### Three things in this file that are not mistakes
+
+**The filter deletes three monitors.** Glendora, North Hollywood and Santa
+Clarita run continuous non-regulatory instruments only (88502). Filter first
+and count sites afterwards and the county quietly loses three monitors.
+
+**The monitors do not run on the same calendar.** Lancaster reports all 365
+days; Long Beach, Los Angeles-North Main and Compton report near-daily;
+Pico Rivera, Pasadena and Reseda are on a one-day-in-three schedule; Signal
+Hill's regulatory series is one day in six. Anything that joins these points
+with a straight line is drawing across gaps it cannot see.
+
+**Eight readings are negative,** from −1.2 to −0.1 µg/m³, all at
+Lancaster - Fairgrounds. These are real published values, not a corrupted
+file. The instrument's zero drifts, and EPA publishes what it measured
+rather than rounding up to zero. They are also why `breaks` that start at
+0 will fail on this column.
+
+### A note on revisions
+
+The same caution as the Compton file applies: AQS is revised after state
+quality assurance, so a re-download may not match these numbers. Work from
+the shipped file.

@@ -1,0 +1,1002 @@
+---
+title: "3 · R essentials II"
+subtitle: "Tuesday, September 1, 2026"
+pagetitle: "AEM 6850 · Session 3 · R essentials II"
+execute:
+  echo: true
+format:
+  html:
+    toc: true
+    toc-depth: 2
+  revealjs:
+    output-file: 03-r-essentials-ii-slides.html
+    theme: [default, slides.scss]
+    template-partials:
+      - title-slide.html
+    footer: "AEM 6850 · Session 3"
+    slide-number: c/t
+    incremental: false
+    code-line-numbers: false
+    code-overflow: scroll
+    history: false
+    link-external-newwindow: true
+---
+
+```{r}
+#| purl: false
+#| include: false
+knitr::opts_chunk$set(
+  comment = "#>",
+  collapse = FALSE,
+  fig.width = 8,
+  fig.height = 4,
+  fig.align = "center",
+  dpi = 150
+)
+```
+
+::: {.content-hidden when-format="revealjs"}
+
+[Slides](03-r-essentials-ii-slides.html) · [Live script](03-r-essentials-ii.R) ·
+[Source](https://github.com/ArielOrtizBobea/aem6850/blob/main/fall-2026/sessions/03-r-essentials-ii.qmd)
+
+Everything below is in the live script. Run it line by line at home, as many
+times as it takes.
+
+:::
+
+## Objectives {#objectives}
+
+By the end of this session you can:
+
+- Build and index a matrix, and say what the one-type rule costs you.
+- Build and index a list, and tell `[` from `[[`.
+- Combine pieces: `rbind()` and `cbind()` on matrices, `unlist()` and
+  `do.call()` on lists.
+- Run one function over every row, column, group or file with `apply()`,
+  `lapply()` and `sapply()`.
+- Read a real CSV, protect an identifier column, and convert text dates.
+- Turn a long file into a sites-by-months matrix and summarise both margins.
+
+::: {.content-hidden when-format="revealjs"}
+
+## Before class {#before-class}
+
+The last part uses `data/epa_pm25_la_county_2025.csv`: daily PM2.5 from every
+monitor in Los Angeles County, calendar year 2025, exactly as EPA's "Download
+Daily Data" tool ships it. Download [the
+file](data/epa_pm25_la_county_2025.csv) into a `data/` folder next to your
+script. The [read section](#read) has a fallback that fetches it from R.
+
+:::
+
+## Matrices {#matrices}
+
+A **matrix** is one vector with dimensions.
+
+```{r}
+#| label: matrices
+#| script: "Matrices"
+m <- matrix(1:6, nrow = 2)
+m
+dim(m)
+
+matrix(1:6, nrow = 2, byrow = TRUE)   # filled across instead of down
+```
+
+::: {.content-hidden when-format="revealjs"}
+
+R folds the vector down the columns unless you say `byrow = TRUE`. Get that
+backwards and every value lands in the wrong cell, with no error.
+
+:::
+
+## Indexing a matrix {#matrix-indexing}
+
+```{r}
+#| label: matrix-indexing
+#| script: "Indexing a matrix"
+m[2, 3]     # row 2, column 3
+m[2, ]      # all of row 2
+m[, 3]      # all of column 3
+```
+
+::: {.content-hidden when-format="revealjs"}
+
+Two coordinates, `m[row, column]`, and a blank means all of them. The same
+rule you use on a data frame.
+
+Note that `m[2, ]` came back as a plain vector, not a one-row matrix. R drops
+the dimension when you ask for a single row or column. Add `drop = FALSE`
+when you need the shape kept.
+
+:::
+
+## Names on the margins {#matrix-names}
+
+```{r}
+#| label: matrix-names
+#| script: "Names on the margins"
+temps <- matrix(c(12, 15, 19,
+                  14, 17, 22), nrow = 2, byrow = TRUE)
+rownames(temps) <- c("Compton", "Reseda")
+colnames(temps) <- c("Jan", "Feb", "Mar")
+temps
+
+temps["Reseda", "Feb"]
+rowMeans(temps)
+colMeans(temps)
+```
+
+::: {.content-hidden when-format="revealjs"}
+
+Names make a matrix readable and let you index by label instead of counting
+positions. `rowMeans()`, `colMeans()`, `rowSums()` and `colSums()` are the
+four summaries you reach for most.
+
+:::
+
+## Matrix arithmetic {#matrix-math}
+
+```{r}
+#| label: matrix-math
+#| script: "Matrix arithmetic"
+temps * 9/5 + 32     # every cell at once, Celsius to Fahrenheit
+t(temps)             # flip rows and columns
+```
+
+::: {.content-hidden when-format="revealjs"}
+
+Arithmetic runs cell by cell, exactly as it does on a vector, because
+underneath a matrix is a vector.
+
+This is why images and grids are stored as matrices. A photograph is a
+matrix of pixel values, and making it brighter is one multiplication. A
+weather grid is a matrix of temperatures, and converting the whole grid to
+Fahrenheit is the line above.
+
+:::
+
+## Combining matrices {#matrix-combine}
+
+```{r}
+#| label: matrix-combine
+#| script: "Combining matrices"
+more <- matrix(c(9, 11, 16), nrow = 1,
+               dimnames = list("Pasadena", c("Jan", "Feb", "Mar")))
+
+rbind(temps, more)          # a new row: same columns
+cbind(temps, Apr = c(21, 24))   # a new column: same rows
+```
+
+::: {.content-hidden when-format="revealjs"}
+
+`rbind()` stacks matrices on top of each other and `cbind()` puts them side
+by side. The shared margin has to agree: `rbind()` needs the same number of
+columns, `cbind()` the same number of rows.
+
+R matches columns by **position, not by name**. If the second matrix carries
+the same three months in a different order, `rbind()` will stack them anyway
+and put February's numbers under the January heading, with no warning.
+Check the names agree before you stack, not after.
+
+:::
+
+## One matrix, one type {#matrix-type}
+
+```{r}
+#| label: matrix-type
+#| script: "One matrix, one type"
+rbind(c(1, 2, 3),
+      c("a", "b", "c"))
+```
+
+::: {.content-hidden when-format="revealjs"}
+
+One vector underneath means one class throughout. Add a row of text and
+every number becomes text, silently, with no warning. It is the same
+conversion that turns a numeric column into text when one entry is a word.
+
+A data frame does not do this, because its columns are separate vectors.
+That is the whole reason both containers exist: tables of mixed data are
+data frames, and grids of one measurement are matrices.
+
+:::
+
+## When most of the cells are zero {#sparse}
+
+```{r}
+#| label: sparse
+#| script: "Sparse matrices"
+library(Matrix)
+
+set.seed(1)
+n <- 1000
+d <- matrix(0, n, n)
+d[sample(n * n, n * n * 0.01)] <- 1   # only 1% of cells are not zero
+
+s <- Matrix(d, sparse = TRUE)
+
+format(object.size(d), units = "MB")   # dense: every cell stored
+format(object.size(s), units = "MB")   # sparse: only the non-zeros
+```
+
+::: {.content-hidden when-format="revealjs"}
+
+A dense matrix stores every cell, including all the zeros. A **sparse**
+matrix stores only the non-zero values and the positions they sit in. Same
+numbers, same indexing, about sixty times less memory here.
+
+You meet these the moment a matrix gets large and mostly empty: a
+county-by-county adjacency matrix, a word-by-document count, a design matrix
+of fixed effects with one 1 per row. At `n = 1000` the difference is a
+convenience. At `n = 100,000` it is the difference between fitting in memory
+and not.
+
+`Matrix` ships with R, so there is nothing to install. Its matrices index and
+multiply like ordinary ones; `as.matrix()` converts back when a function
+insists on dense input.
+
+:::
+
+## Lists {#lists}
+
+A **list** holds anything, in any mix, at any length.
+
+```{r}
+#| label: lists
+#| script: "Lists"
+l <- list(site = "Compton", readings = c(53.2, 33.6, 47.0), clean = TRUE)
+str(l)
+length(l)      # three elements...
+lengths(l)     # ...of these lengths
+```
+
+::: {.content-hidden when-format="revealjs"}
+
+Text, a numeric vector, and a logical, side by side in one object. A vector
+could not do this: it would convert everything to text. A matrix could not
+either: one type throughout, and every row the same length.
+
+That freedom is the point. Lists are what R uses whenever the pieces do not
+line up.
+
+:::
+
+## One bracket or two {#brackets}
+
+```{r}
+#| label: brackets
+#| script: "One bracket or two"
+l["readings"]     # a LIST of length one
+l[["readings"]]   # the vector itself
+l$readings        # the same thing, less typing
+
+class(l["readings"])
+class(l[["readings"]])
+```
+
+::: {.content-hidden when-format="revealjs"}
+
+Single brackets keep the container: you asked a list for part of itself, so
+you get a shorter list. Double brackets reach inside and hand you the
+element.
+
+The mistake to expect is arithmetic on a single-bracket result:
+`mean(l["readings"])` fails, because you handed `mean()` a list. `$` and
+`[[ ]]` do the same job; `[[ ]]` is the one that also takes a variable, which
+matters as soon as the name is computed rather than typed.
+
+:::
+
+## Lists inside lists {#nested-lists}
+
+```{r}
+#| label: nested-lists
+#| script: "Lists inside lists"
+monitor <- list(
+  id   = "060371302",
+  site = list(name = "Compton", lat = 33.90, lon = -118.21),
+  pm   = c(53.2, 33.6, 47.0)
+)
+
+monitor$site$name
+monitor[["site"]][["lat"]]
+str(monitor)
+```
+
+::: {.content-hidden when-format="revealjs"}
+
+An element of a list can be another list, to any depth. Chain the operators
+to walk down: `$` after `$`, or `[[ ]]` after `[[ ]]`.
+
+This is exactly the shape of the JSON that web APIs return, which is why the
+lesson pays off well beyond R. `str()` is how you find your way around one
+you did not build.
+
+:::
+
+## Where lists come from {#lists-from-functions}
+
+```{r}
+#| label: lists-from-functions
+#| script: "Where lists come from"
+fit <- lm(c(1, 3, 2, 5) ~ c(1, 2, 3, 4))
+
+class(fit)
+names(fit)          # a list underneath
+fit$coefficients
+```
+
+::: {.content-hidden when-format="revealjs"}
+
+Most functions that return more than one thing return a list, because a list
+is the only container that can hold a number, a vector and a data frame at
+once.
+
+A fitted model is a list with a class on it. `names()` shows you the parts
+and `$` takes one out. Every modelling function you meet this semester
+follows this pattern, so knowing lists means never being stuck at "what did
+this thing give me?"
+
+:::
+
+## Combining list elements {#list-combine}
+
+```{r}
+#| label: list-combine
+#| script: "Combining list elements"
+pieces <- list(a = c(1, 2), b = c(3, 4), c = c(5, 6))
+
+unlist(pieces)              # one flat vector, names kept
+do.call(rbind, pieces)      # one matrix, one row per element
+```
+
+::: {.content-hidden when-format="revealjs"}
+
+`unlist()` flattens a list into a single vector. It is convenient and it is
+lossy: everything becomes one type, and any structure below the top level
+disappears.
+
+`do.call(f, list)` calls `f` with the list's elements as its arguments, so
+`do.call(rbind, pieces)` is `rbind(pieces$a, pieces$b, pieces$c)` without
+your having to know how many there are or what they are called. That is the
+standard way to turn a list of rows into a matrix, or a list of data frames
+into one data frame.
+
+:::
+
+## Exercise 1 {#exercise-1}
+
+::: {.panel-tabset}
+
+### Exercise
+
+```{r}
+#| label: exercise-1
+#| exercise: true
+#| script: "Exercise 1 (5 minutes)"
+#| eval: false
+# 1. Build a 3 x 4 matrix of the numbers 1 to 12, filled ACROSS the rows.
+#    Name the rows A, B, C. What is the mean of row B?
+#
+# 2. Build a list holding your name, the numbers 1 to 5, and TRUE.
+#    Pull the numeric vector out two different ways, then take its mean.
+#
+# 3. What does l["readings"] give you that l[["readings"]] does not?
+#    Answer with class(), not from memory.
+```
+
+### Solution
+
+```{r}
+#| label: exercise-1-solution
+#| purl: false
+mm <- matrix(1:12, nrow = 3, byrow = TRUE)
+rownames(mm) <- c("A", "B", "C")
+mm
+mean(mm["B", ])
+
+l2 <- list(name = "Ariel", nums = 1:5, ok = TRUE)
+mean(l2$nums)
+mean(l2[["nums"]])
+
+# single brackets keep the container, so this is a list of length one
+class(l["readings"])
+class(l[["readings"]])
+```
+
+:::
+
+## `apply()`: once per row, or once per column {#apply}
+
+```{r}
+#| label: apply
+#| script: "apply(): once per row, once per column"
+temps
+apply(temps, 1, mean)    # 1 = rows
+apply(temps, 2, mean)    # 2 = columns
+```
+
+::: {.content-hidden when-format="revealjs"}
+
+`apply(m, MARGIN, f)` runs `f` over one margin of a matrix and collects the
+results.
+
+The margin numbers are the bracket coordinates. You write `m[row, column]`,
+so 1 is rows and 2 is columns. Margin 1 gives you one answer per row; margin
+2 gives you one per column.
+
+`rowMeans()` and `colMeans()` are fast special cases of exactly this.
+
+:::
+
+## Any function, not just `mean` {#apply-any}
+
+```{r}
+#| label: apply-any
+#| script: "Any function, not just mean"
+apply(temps, 2, max)
+apply(temps, 2, range)                       # two numbers per column
+apply(temps, 2, function(x) max(x) - min(x)) # write your own, inline
+```
+
+::: {.content-hidden when-format="revealjs"}
+
+The function is an argument like any other. Pass it by name with no
+parentheses, or write it inline with `function(x)` when it is too small to
+deserve a name. Inside, `x` is one row or one column.
+
+`range` returns two numbers per column, so `apply()` hands back a matrix
+rather than a vector. What you get out depends on what your function
+returns.
+
+:::
+
+## `split()`: one group per element {#split}
+
+```{r}
+#| label: split
+#| script: "split(): one group per element"
+x <- c(12, 15, 19, 14, 17, 22)
+g <- c("Compton", "Compton", "Compton", "Reseda", "Reseda", "Reseda")
+
+split(x, g)
+```
+
+::: {.content-hidden when-format="revealjs"}
+
+`split()` cuts an object into a list, one element per group. Those are the
+same six numbers that went into `temps`, arranged as a list of two vectors
+instead of a two-row matrix.
+
+That is the choice in miniature. A matrix needs every group to be the same
+length; a list does not. Real groups are rarely the same size, which is why
+`split()` returns a list.
+
+:::
+
+## `lapply()`: a list in, a list out {#lapply}
+
+```{r}
+#| label: lapply
+#| script: "lapply(): a list in, a list out"
+by_site <- split(x, g)
+
+lapply(by_site, mean)
+```
+
+::: {.content-hidden when-format="revealjs"}
+
+`lapply(x, f)` runs `f` on every element of `x` and returns a list of the
+same length, with the same names. One call, one result per group, and no
+loop written by hand.
+
+Inside the function, the argument is one element: here, one site's readings.
+You write the code once, for one group, and `lapply()` handles the
+repetition.
+
+:::
+
+## `sapply()`: the same, simplified {#sapply}
+
+```{r}
+#| label: sapply
+#| script: "sapply(): the same, simplified"
+sapply(by_site, mean)      # a named vector, not a list
+sapply(by_site, length)
+sapply(by_site, range)     # two numbers each, so a matrix comes back
+
+apply(temps, 1, mean)      # same answers, from the matrix
+```
+
+::: {.content-hidden when-format="revealjs"}
+
+`sapply()` is `lapply()` plus one step: when every result is a single value,
+it returns a named vector instead of a list. When every result is the same
+longer length, it returns a matrix.
+
+Use `sapply()` when you want something to print or compute with. Use
+`lapply()` when each result is bigger than one value, or when you want the
+shape guaranteed. `sapply()` decides what to return based on what it gets,
+which is convenient at the console and a hazard inside a script.
+
+The last line is the same question asked of the matrix. Two containers, two
+verbs, one answer: `apply()` walks a margin, `sapply()` walks a list.
+
+:::
+
+## Read it in {#read}
+
+```{r}
+#| label: read
+#| script: "Read the file"
+la <- read.csv("data/epa_pm25_la_county_2025.csv")
+dim(la)
+```
+
+```{r}
+#| label: read-fallback
+#| script: "If you do not have the file yet"
+#| eval: false
+# Uncomment and run once. Same file, fetched instead of clicked.
+# dir.create("data", showWarnings = FALSE)
+# download.file(paste0("https://arielortizbobea.github.io/aem6850/",
+#                      "fall-2026/sessions/data/epa_pm25_la_county_2025.csv"),
+#               "data/epa_pm25_la_county_2025.csv")
+```
+
+::: {.content-hidden when-format="revealjs"}
+
+`read.csv()` takes a path relative to the working directory, which `getwd()`
+prints and `list.files()` lets you check. "File not found" is almost always a
+disagreement about where you are, not a missing file.
+
+4,757 rows and 22 columns: every monitor in the county, every day of 2025.
+
+:::
+
+## A data frame is a list of columns {#df-is-a-list}
+
+```{r}
+#| label: df-is-a-list
+#| script: "A data frame is a list of columns"
+is.list(la)                             # a data frame IS a list
+length(la)                              # of 22 columns
+
+sapply(la, class)                       # so sapply walks the columns
+```
+
+::: {.content-hidden when-format="revealjs"}
+
+A data frame is a list of equal-length vectors with a class on top. `$` is
+the list's own operator, which is why the same notation reaches a column of a
+table and an element of a list.
+
+That is why `sapply()` works here with no extra effort: hand it a data frame
+and it walks the columns. On a file with 22 columns this beats scrolling
+through `str()` output, and it puts two problems on screen at once. `Site.ID`
+came in as an integer. `Date` came in as character.
+
+:::
+
+## The identifier trap {#identifiers}
+
+```{r}
+#| label: identifiers
+#| script: "The identifier trap"
+la$Site.ID[1]        # what R holds
+```
+
+::: {.content-hidden when-format="revealjs"}
+
+The file says `060370016`. R says `60370016`.
+
+`read.csv()` looked at a column of digits and decided it was a number, and
+the leading zero of a number is meaningless, so it is gone. The identifier is
+now wrong, silently, and it will fail to match every other file that spells it
+correctly.
+
+This is not an EPA quirk. FIPS codes, ZIP codes, CUSIPs, phone numbers and
+account numbers all lead with zeros that R will strip on the way in.
+
+:::
+
+## Protect them at read time {#identifiers-fix}
+
+```{r}
+#| label: identifiers-fix
+#| script: "Protect identifiers at read time"
+la <- read.csv("data/epa_pm25_la_county_2025.csv",
+               colClasses = c("Site.ID" = "character"))
+
+la$Site.ID[1]
+length(unique(la$Site.ID))    # eleven monitors in the county
+```
+
+::: {.content-hidden when-format="revealjs"}
+
+`colClasses` names the columns you want read a particular way. Everything you
+do not name is guessed as before.
+
+Fix it at read time, not afterwards. Once the zero is gone, `as.character()`
+gives you back `"60370016"`, which is a different string from `"060370016"`
+and matches nothing. The information left the building when the file came in.
+
+:::
+
+## Dates {#dates}
+
+```{r}
+#| label: dates
+#| script: "Dates, one line deep"
+la$Date[1]
+class(la$Date)
+
+la$date <- as.Date(la$Date, format = "%m/%d/%Y")
+class(la$date)
+range(la$date)
+
+la$month <- format(la$date, "%m")   # pull pieces back out of a date
+```
+
+::: {.content-hidden when-format="revealjs"}
+
+`%m/%d/%Y` is a format string describing where the pieces are: two-digit
+month, slash, two-digit day, slash, four-digit year. Get it wrong and you get
+`NA`s rather than an error, so check `range()` afterwards.
+
+Text dates sort character by character, so `"10/01"` lands before `"9/01"`.
+Convert on the way in and the problem never arises.
+
+:::
+
+## One instrument, one method {#one-instrument}
+
+```{r}
+#| label: one-instrument
+#| script: "One instrument, one method"
+frm <- la[la$AQS.Parameter.Code == 88101 & la$POC == 1, ]
+
+nrow(frm)
+length(unique(frm$Local.Site.Name))
+```
+
+::: {.content-hidden when-format="revealjs"}
+
+A site can run several instruments, and the file gives each its own row on
+the same day. Average without filtering and you blend two measurement
+methods, which is a number that describes nothing.
+
+Parameter 88101 is the federal reference method; `POC == 1` keeps the first
+instrument at each site. Eight of the eleven monitors ran one.
+
+:::
+
+## Sites by months {#sites-by-months}
+
+```{r}
+#| label: sites-by-months
+#| script: "Sites by months"
+tb <- tapply(frm$Daily.Mean.PM2.5.Concentration,
+             list(frm$Local.Site.Name, frm$month),
+             mean)
+
+class(tb)
+dim(tb)
+round(tb[, 1:6], 1)
+```
+
+::: {.content-hidden when-format="revealjs"}
+
+`tapply()` splits a vector by one or more grouping vectors and applies a
+function to each cell. Give it two groupings and what comes back is a
+**matrix**: eight sites down, twelve months across, one mean in each cell.
+
+A long file of 4,757 rows is now a grid of 96 numbers you can read. That is
+the move: the data frame is how the file arrives, the matrix is the shape the
+question has.
+
+:::
+
+## Both margins at once {#both-margins}
+
+```{r}
+#| label: both-margins
+#| script: "Both margins at once"
+round(sort(apply(tb, 1, mean), decreasing = TRUE), 1)   # per site, all year
+round(apply(tb, 2, mean), 1)                            # per month, all sites
+```
+
+::: {.content-hidden when-format="revealjs"}
+
+Now the two margins answer two different questions with the same verb.
+
+Down the rows: which monitors sit in the dirtiest air all year. Lancaster, out
+in the desert, reads a third of what the basin sites do.
+
+Across the columns: what the county did month by month. January is the worst
+month at nearly every site at once, which is the signature of something
+county-wide rather than one instrument drifting.
+
+:::
+
+## One line, every file {#lapply-files}
+
+```{r}
+#| label: lapply-files
+#| script: "One line, every file"
+files <- list.files("data", pattern = "\\.csv$")
+files
+
+sapply(files, function(f) nrow(read.csv(file.path("data", f))))
+```
+
+::: {.content-hidden when-format="revealjs"}
+
+`list.files()` gives you the names, and `lapply()` or `sapply()` runs the same
+call on each one.
+
+This is the shape of most real data collection: one file per year, per state
+or per month, and one function that handles any single file. You get it right
+once, then hand the function the list. `do.call(rbind, ...)` on the result
+stacks them into one frame.
+
+:::
+
+## Writing your answer out {#write}
+
+```{r}
+#| label: write
+#| script: "Writing your answer out"
+#| eval: false
+answers <- data.frame(
+  site  = rownames(tb),
+  mean  = round(apply(tb, 1, mean), 1)
+)
+
+write.csv(answers, "results.csv", row.names = FALSE)
+```
+
+::: {.content-hidden when-format="revealjs"}
+
+`write.csv()` is `read.csv()` run backwards. `row.names = FALSE` stops R
+adding a column of row numbers you never asked for, which is the single most
+common complaint about files written from R.
+
+Round before you write, not after. A number carries every decimal it has
+until you cut it, so a mean lands in the file as `19.386666666667` unless you
+say `round(x, 1)` first.
+
+:::
+
+## Verify {#verify}
+
+> **Ask what shape the question has, then put the data in it.**
+
+::: {.content-hidden when-format="revealjs"}
+
+Three containers, three jobs, and the cost of the wrong one:
+
+| Container | Holds | Use it when |
+|:--|:--|:--|
+| Matrix | One type, two dimensions | Every cell is the same measurement |
+| List | Anything, any length | The pieces do not line up |
+| Data frame | A list of equal-length columns | Rows are observations, columns are variables |
+
+The file arrived as a data frame because that is how files arrive. The
+question was about sites and months, so the answer wanted a matrix, and
+`tapply()` was the bridge. Getting that right is most of what separates two
+lines from twenty.
+
+And the check that costs nothing: run `sapply(d, class)` before you compute.
+Today it would have told you the site identifier had become a number and the
+date had not become a date, at a point where each was a one-line repair.
+
+:::
+
+::: {.content-visible when-format="revealjs"}
+
+| Container | Holds | Use it when |
+|:--|:--|:--|
+| Matrix | One type, two dimensions | Every cell is the same measurement |
+| List | Anything, any length | The pieces do not line up |
+| Data frame | A list of columns | Rows are observations |
+
+`sapply(d, class)` before you compute. Every file, every time.
+
+:::
+
+## Practice {#practice}
+
+::: {.content-visible when-format="revealjs"}
+
+Everything below is in the live script, with solutions.
+
+:::
+
+::: {.content-hidden when-format="revealjs"}
+
+::: {.panel-tabset}
+
+### Practice
+
+```{r}
+#| label: practice
+#| exercise: true
+#| script: "Practice"
+#| eval: false
+# Everything below uses la, frm and tb, built earlier in this script.
+
+# Matrices
+#  1. Build a 3 x 4 matrix of the numbers 1 to 12, filled across the rows.
+#  2. Same matrix: what is the sum of each row? Of each column?
+#  3. Same matrix: divide every cell by its own column's total.
+#  4. Add a fourth row of zeros with rbind(). Then add a fifth column.
+#  5. Run rbind(c(1, 2), c("a", "b")). What class is the result, and why?
+
+# Lists
+#  6. Build a list holding your name, the numbers 1 to 5, and TRUE.
+#  7. Same list: pull the numeric vector out two different ways.
+#  8. What class does l["readings"] return? Check with class().
+#  9. Split "2025-01-07" on the dash and get back a vector of three pieces.
+# 10. unlist() the list from question 6. What happened to the numbers?
+
+# apply and friends
+# 11. Which column of la came in as character? (One line, all 22 at once.)
+# 12. How many rows does each site have in la? (One line.)
+# 13. Which month had the highest county-wide mean, and what was it?
+# 14. Which site had the single dirtiest month of 2025?
+# 15. Rebuild tb with median instead of mean. Where do the two disagree
+#     most, and what does that tell you about those days?
+# 16. One line: the number of rows in every CSV in your data folder.
+```
+
+### Solutions
+
+```{r}
+#| label: practice-solutions
+#| purl: false
+#| eval: false
+# 1
+mm <- matrix(1:12, nrow = 3, byrow = TRUE)
+
+# 2
+apply(mm, 1, sum); apply(mm, 2, sum)
+
+# 3
+sweep(mm, 2, colSums(mm), "/")
+
+# 4
+mm <- rbind(mm, 0); mm <- cbind(mm, 0)
+
+# 5  character: one vector underneath, so one type throughout
+class(rbind(c(1, 2), c("a", "b")))
+
+# 6
+l3 <- list(name = "Ariel", nums = 1:5, ok = TRUE)
+
+# 7
+l3$nums; l3[["nums"]]
+
+# 8  a list of length one, not the vector: single brackets stay wrapped
+class(l["readings"])
+
+# 9
+strsplit("2025-01-07", "-")[[1]]
+
+# 10  everything became text: one type, and "TRUE" is now a word
+unlist(l3)
+
+# 11  a data frame is a list of columns, so sapply walks them
+names(which(sapply(la, class) == "character"))
+
+# 12
+table(la$Local.Site.Name)
+
+# 13
+month_means <- apply(tb, 2, mean, na.rm = TRUE)
+month_means[which.max(month_means)]
+
+# 14
+which(tb == max(tb, na.rm = TRUE), arr.ind = TRUE)
+
+# 15  the mean sits above the median wherever a few days ran very high
+tb_med <- tapply(frm$Daily.Mean.PM2.5.Concentration,
+                 list(frm$Local.Site.Name, frm$month), median)
+round(sort(apply(tb - tb_med, 1, mean, na.rm = TRUE), decreasing = TRUE), 2)
+
+# 16
+sapply(list.files("data", pattern = "\\.csv$"),
+       function(f) nrow(read.csv(file.path("data", f))))
+```
+
+:::
+
+:::
+
+## Quick reference {#quick-reference}
+
+::: {.content-hidden when-format="revealjs"}
+
+**Matrices**
+
+| Code | What it does |
+|:--|:--|
+| `matrix(x, nrow =, byrow =)` | Build one; `byrow = TRUE` fills across |
+| `dim(m)`, `t(m)` | Its shape; flip rows and columns |
+| `m[i, j]`, `m[i, ]`, `m[, j]` | Cell, row, column; blank means all |
+| `rownames(m)`, `colnames(m)` | Names on the margins |
+| `rbind(a, b)`, `cbind(a, b)` | Stack; matched by position, not name |
+| `rowMeans(m)`, `colSums(m)` | The fast special cases |
+| `Matrix(m, sparse = TRUE)` | Store only the non-zeros |
+
+**Lists**
+
+| Code | What it does |
+|:--|:--|
+| `list(a = , b = )` | Build one; anything, any length |
+| `l[["a"]]`, `l$a` | The element itself |
+| `l["a"]` | A list of length one |
+| `str(l)`, `lengths(l)` | What is in there; how long each part is |
+| `unlist(l)` | Flatten to one vector, one type |
+| `do.call(rbind, l)` | Stack the elements into a matrix or frame |
+
+**One function, many things**
+
+| Code | What it does |
+|:--|:--|
+| `apply(m, 1, f)` | Once per row; `2` for columns |
+| `split(x, g)` | A list, one element per group |
+| `lapply(l, f)` | A list in, a list of the same length out |
+| `sapply(l, f)` | The same, simplified to a vector or matrix |
+| `tapply(x, list(g1, g2), f)` | A matrix of `f` over two groupings |
+| `sapply(d, class)` | The class of every column at once |
+
+**Files**
+
+| Code | What it does |
+|:--|:--|
+| `read.csv(f)` | Read a CSV, guessing every column's type |
+| `colClasses = c(id = "character")` | Stop it guessing on identifiers |
+| `as.Date(x, format = "%m/%d/%Y")` | Text to a real date |
+| `write.csv(d, f, row.names = FALSE)` | Write one back out |
+| `list.files(dir, pattern =)` | The names, ready for `lapply()` |
+
+:::
+
+::: {.content-visible when-format="revealjs"}
+
+| Code | What it does |
+|:--|:--|
+| `matrix(x, nrow =, byrow =)` | Build one |
+| `m[i, j]` · `rbind()` · `cbind()` | Index; stack; widen |
+| `l[["a"]]` vs `l["a"]` | The element vs a list of one |
+| `unlist(l)` · `do.call(rbind, l)` | Flatten; stack |
+| `apply(m, 1, f)` · `sapply(l, f)` | A margin; a list |
+| `tapply(x, list(g1, g2), f)` | Two groupings, one matrix |
+| `colClasses = c(id = "character")` | Protect identifiers at read time |
+
+:::
+
+## After class {#after-class}
+
+::: {.content-hidden when-format="revealjs"}
+
+Run the live script top to bottom in a fresh session. Then work the practice
+block; the solutions are in the same file, folded below each question.
+
+**Keep this file.** Leave `data/` where it is.
+
+[The file](data/epa_pm25_la_county_2025.csv) ·
+[where it came from](data/SOURCE.md) ·
+[EPA's download tool](https://www.epa.gov/outdoor-air-quality-data/download-daily-data)
+
+:::
+
+```{r}
+#| purl: false
+#| include: false
+source("_purl.R")
+purl_session("03-r-essentials-ii.qmd", "03-r-essentials-ii.R")
+```

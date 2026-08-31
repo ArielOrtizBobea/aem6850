@@ -1,7 +1,7 @@
 ---
-title: "2 · R essentials"
+title: "2 · R essentials I"
 subtitle: "Thursday, August 27, 2026"
-pagetitle: "AEM 6850 · Session 2 · R essentials"
+pagetitle: "AEM 6850 · Session 2 · R essentials I"
 execute:
   echo: true
 format:
@@ -53,10 +53,9 @@ By the end of this session you can:
 - Build vectors and do arithmetic on them.
 - Say what R does when a vector mixes classes, and why that turns a column
   of numbers into text.
-- Read a CSV and check its size, its column classes, and its ranges.
-- Subset rows and columns with logical conditions.
-- Protect an identifier column so R does not turn it into a number.
-- Recognize factors, matrices, and lists, and say what each is for.
+- Handle missing values instead of being surprised by them.
+- Subset a vector or a data frame with a logical condition.
+- Say what a factor is, and repair the trap it sets.
 
 ::: {.content-hidden when-format="revealjs"}
 
@@ -799,8 +798,7 @@ Positions are what you need when the values are one column of a table.
 `order(-x)` reverses it.
 
 This is the third way to subset, after position and condition, and it is the
-one you compute rather than type. It comes back at the end of today, when we
-ask which days were worst.
+one you compute rather than type.
 
 :::
 
@@ -855,445 +853,18 @@ there are real numbers to convert.
 
 :::
 
-## Matrices and lists {#matrices-lists}
-
-You will meet two more containers later. Today you only need their
-names and what each one is for.
-
-```{r}
-#| label: matrices-lists
-#| script: "Matrices and lists"
-m <- matrix(1:6, nrow = 2)   # a vector with dimensions
-m
-m[2, 3]                      # row 2, column 3
-
-l <- list(site = "Compton", readings = c(53.2, 33.6), clean = TRUE)
-str(l)                       # a container of anything
-l$readings
-```
-
-::: {.content-hidden when-format="revealjs"}
-
-A **matrix** is one vector with dimensions: every element has the same
-type, and you address it as `m[row, column]`. A photo is a matrix of pixels,
-and a weather grid is a matrix of temperatures.
-
-A **list** holds anything, including other lists. A data frame is in
-fact a list of column vectors, which is why `d$pm25` and `l$readings`
-look alike. `lapply()` takes a list and returns one when you run a
-function over every file in a folder.
-
-Neither needs practice today. The sessions that use them reintroduce
-them.
-
-:::
-
-## Where am I? {#working-directory}
-
-R always has a working directory. Paths you write are relative to it, and
-"file not found" is almost always a disagreement about where you are.
-
-```{r}
-#| label: working-directory
-#| script: "Where am I"
-#| eval: false
-getwd()
-list.files()
-```
-
-::: {.content-hidden when-format="revealjs"}
-
-In HW1 the data ships inside your repository, so you will write
-`read.csv("data/epa_airdata_pm25_060371103_2025.csv")`, a path relative to
-`getwd()`. If that errors, run `list.files()` and `list.files("data")` before
-you change anything: nine times in ten the file is fine and you are somewhere
-else.
-
-:::
-
-## Read a real file {#read}
-
-Today's file comes from EPA, the US Environmental Protection Agency: daily
-PM2.5 from the **Compton** monitor in Los Angeles County, calendar year 2025,
-exactly as EPA's "Download Daily Data" tool ships it.
-
-Download [the file](data/epa_pm25_compton_2025.csv) into a `data/` folder
-next to your script (the same layout HW1 uses), then:
-
-```{r}
-#| label: read
-#| script: "Read the file"
-pm <- read.csv("data/epa_pm25_compton_2025.csv")
-```
-
-::: {.content-hidden when-format="revealjs"}
-
-```{r}
-#| label: read-fetch
-#| script: "If you do not have the file yet"
-#| eval: false
-# Uncomment and run once. Same file, fetched instead of clicked.
-# dir.create("data", showWarnings = FALSE)
-# download.file(paste0("https://arielortizbobea.github.io/aem6850/",
-#                      "fall-2026/sessions/data/epa_pm25_compton_2025.csv"),
-#               "data/epa_pm25_compton_2025.csv")
-```
-
-If `read.csv()` says it cannot open the connection, you are not in the folder
-you think you are. Run `getwd()` and `list.files()` before changing anything.
-
-:::
-
-::: {.callout-important appearance="simple"}
-**Write down what the data should show.** The Eaton and Palisades fires
-started January 7, 2025. Compton sits about 25 km from the Eaton fire,
-roughly downwind. Which calendar day between January 1 and February 28
-should show the worst air at this monitor? Write the date down.
-:::
-
-## Quick checks {#quick-checks}
-
-Four questions to ask a file the moment you read it, before you compute
-anything from it: how big is it, what class is each column, does row one
-look like data, and is anything impossible? Start with the size and the
-column names.
-
-```{r}
-#| label: quick-checks
-#| script: "Quick checks"
-dim(pm)
-names(pm)
-```
-
-## What `str()` tells you {#str-check}
-
-`Daily.Mean.PM2.5.Concentration` is correct and unbearable to type. Rename it
-first, then look:
-
-```{r}
-#| label: str-check
-#| script: "Rename, then str()"
-names(pm)[names(pm) == "Daily.Mean.PM2.5.Concentration"] <- "pm25"
-
-str(pm[, 1:6])
-summary(pm$pm25)
-```
-
-::: {.content-hidden when-format="revealjs"}
-
-Note what `read.csv()` did to the column names. The file's header says
-`Daily Mean PM2.5 Concentration`; R does not allow spaces in a name, so it
-substituted periods.
-
-:::
-
-## The identifier trap {#identifiers}
-
-Look at what `str()` said about `Site.ID`.
-
-```{r}
-#| label: identifiers
-#| script: "The identifier trap"
-pm$Site.ID[1]
-class(pm$Site.ID)
-pm$State.FIPS.Code[1]
-pm$County.FIPS.Code[1]
-```
-
-::: {.content-hidden when-format="revealjs"}
-
-The file says `"060371302"`, `"06"`, `"037"`. `read.csv()` read the digits as
-numbers and dropped the leading zeros. The site is now `60371302` and
-California is state `6`.
-
-This is not cosmetic. Census tract GEOIDs, FIPS codes, and ZIP codes (three
-US systems for identifying places), CUSIPs (security identifiers), and
-account numbers are **labels that happen to be spelled with digits**. Strip a
-leading zero and the label no longer matches anything you join it to. The
-join will not error; it will silently match fewer rows.
-
-:::
-
-## Protect them at read time {#identifiers-fix}
-
-The fix goes at read time, not after. Once a leading zero is gone, you
-cannot get it back.
-
-```{r}
-#| label: identifiers-fix
-#| script: "Protect identifiers at read time"
-pm <- read.csv("data/epa_pm25_compton_2025.csv",
-               colClasses = c("Site.ID"          = "character",
-                              "State.FIPS.Code"  = "character",
-                              "County.FIPS.Code" = "character"))
-names(pm)[names(pm) == "Daily.Mean.PM2.5.Concentration"] <- "pm25"
-
-pm$Site.ID[1]
-pm$County.FIPS.Code[1]
-class(pm$pm25)     # the concentration is still a number, as it should be
-```
-
-## One site, two instruments {#instruments}
-
-One monitoring site does not mean one row per day.
-
-```{r}
-#| label: instruments
-#| script: "One site, two instruments"
-table(pm$POC, pm$AQS.Parameter.Code)
-```
-
-::: {.content-hidden when-format="revealjs"}
-
-Compton runs two instruments. POC 1 is the regulatory FRM sampler reporting
-parameter 88101. POC 3 is a continuous instrument reporting mostly 88502, a
-non-regulatory series, plus seven stray rows under 88101. Filtering on
-`POC == 1` alone leaves the wrong set; so does filtering on the parameter
-alone. You need both conditions.
-
-:::
-
-## Dates {#dates}
-
-R read the date as text, in the US order: month/day/year. One line converts
-it. Do it immediately: text dates sort wrong, exactly like `"10"` and `"9"`.
-
-```{r}
-#| label: dates
-#| script: "Dates, one line deep"
-pm$Date[1]
-class(pm$Date)
-
-pm$date <- as.Date(pm$Date, format = "%m/%d/%Y")
-class(pm$date)
-range(pm$date)
-
-format(pm$date[1], "%Y-%m")   # pull pieces back out of a date
-```
-
-::: {.content-hidden when-format="revealjs"}
-
-`%m/%d/%Y` is a format string describing where the pieces are: two-digit
-month, slash, two-digit day, slash, four-digit year. Get it wrong and you get
-`NA`s rather than an error, so check `range()` afterwards. Time zones and
-daylight saving bring their own trouble; this one line covers most of what
-you need for now.
-
-:::
-
-## Subset to the window {#subset}
-
-Now use everything at once: keep the rows in the window, from the right
-instrument.
-
-```{r}
-#| label: subset
-#| script: "Subset to the window"
-win <- pm[pm$date <= as.Date("2025-02-28"), ]
-nrow(win)                      # rows...
-length(unique(win$date))       # ...for how many calendar days?
-
-one <- win[win$POC == 1 & win$AQS.Parameter.Code == 88101, ]
-nrow(one)
-nrow(one) == length(unique(one$date))   # one row per day now?
-```
-
-::: {.content-hidden when-format="revealjs"}
-
-118 rows for 59 days: every day was in there twice, once per instrument. Any
-mean you computed before filtering would have been a blend of two different
-measurement methods.
-
-The last line is the check. January 1 to February 28 is 59 calendar days, we
-have 59 rows, and no date appears twice, so this monitor has no gaps in the
-window. The monitor you get in HW1 does have gaps. The same check returns a
-different answer there; that is why you run it rather than assume.
-
-:::
-
-## Predict, then reconcile {#reconcile}
-
-```{r}
-#| label: reconcile
-#| script: "Predict, then reconcile"
-which.max(one$pm25)              # the POSITION of the largest value
-one$date[which.max(one$pm25)]    # ...so this is the date it fell on
-max(one$pm25)
-median(one$pm25)
-
-head(one[order(-one$pm25), c("date", "pm25")], 5)
-```
-
-::: {.content-visible when-format="revealjs"}
-
-The worst day at this monitor is **January 1**, not January 7.
-
-:::
-
-::: {.content-hidden when-format="revealjs"}
-
-The worst air of the winter at this monitor came on **January 1**, a week
-before the fires started.
-
-The fire is unmistakably in there: January 9, 8 and 10 are the next three
-worst days, all far above the median of 15.3. But the single worst day belongs
-to something else, and if your script had simply reported "the peak," you
-would have written a sentence about wildfire smoke that was about New Year's
-Eve fireworks.
-
-:::
-
-## Was it real? {#was-it-real}
-
-A spike on one instrument on one day has three explanations: a real event, an
-instrument problem, or a data-processing artifact. You cannot tell from this
-file alone.
-
-Two checks would settle it:
-
-- **Do other monitors show it?** An instrument fault is local to one machine;
-  a county-wide event is not. Five other Los Angeles monitors also peak on
-  January 1.
-- **Does it repeat?** Fireworks come back every year on the same date. Smoke
-  does not.
-
-::: {.content-hidden when-format="revealjs"}
-
-Nearly every verification this semester has that shape: work out what the
-number implies, then check that implication against a source that could
-contradict it.
-
-:::
-
-## You try {#you-try}
-
-Five minutes. Stubs are in the live script; `one` is the data frame you just
-built.
-
-```{r}
-#| label: you-try
-#| exercise: true
-#| script: "You try (5 minutes)"
-#| eval: false
-# 1. How many days in the window were above 35 ug/m3 -- the EPA 24-hour
-#    standard? (One line. TRUE is 1.)
-#
-# 2. Compare January's mean with February's. format(one$date, "%Y-%m") gives
-#    you "2025-01" and "2025-02" to subset on.
-#
-# 3. The site's OTHER instrument is POC 3, parameter 88502. Pull its rows for
-#    the window and compare its January mean with POC 1's. Two instruments,
-#    one site, same air -- how close do they agree?
-```
-
-## Verify {#verify}
-
-::: {.content-hidden when-format="revealjs"}
-
-One habit goes in front of everything else today:
-
-:::
-
-> **Run `str()` before you compute. Every file, every time.**
-
-::: {.content-hidden when-format="revealjs"}
-
-Today `str()` would have told you, before you did any arithmetic, that the
-site identifier had become a number and the date had not become a date. At
-that point each had a one-line repair. Three joins later, each would have
-been expensive.
-
-Run the four quick checks in this order:
-
-| Check | Question it answers |
-|:--|:--|
-| `dim()` | Did I get the number of rows I expected? |
-| `str()` | Is every column the class it should be? |
-| `head()` | Does row one look like a row of data, or like a stray header? |
-| `summary()` | Is anything impossible, or off by a factor of a thousand? |
-
-:::
-
-::: {.content-visible when-format="revealjs"}
-
-`dim()`: the right number of rows?<br>
-`str()`: is every column the class it should be?<br>
-`head()`: does row one look like data?<br>
-`summary()`: is anything impossible, or off by 1000×?
-
-:::
-
-## Writing your answer out {#write}
-
-```{r}
-#| label: write
-#| script: "Writing your answer out"
-#| eval: false
-answers <- data.frame(
-  quantity = c("peak_pm25", "peak_date"),
-  value    = c(round(max(one$pm25), 1),
-               format(one$date[which.max(one$pm25)], "%Y-%m-%d"))
-)
-answers
-
-write.csv(answers, "results.csv", row.names = FALSE)
-```
-
-::: {.content-hidden when-format="revealjs"}
-
-`write.csv()` is `read.csv()` run backwards. `row.names = FALSE` stops R
-adding a column of row numbers you never asked for, which is the single most
-common complaint about files written from R.
-
-Round before you write, not after. A number carries every decimal it has
-until you cut it, so a mean lands in the file as `19.386666666667` unless you
-say `round(x, 2)` first.
-
-Note what the `value` column became. It holds a number and a date, so R made
-the whole column text, exactly as the silent conversion section said it would.
-That is fine here: the file is the answer, not something you compute from.
-
-:::
-
-## Checking your own work {#stopifnot}
-
-```{r}
-#| label: stopifnot
-#| script: "Checking your own work"
-stopifnot(
-  nrow(one) == 59,
-  !anyNA(one$pm25)
-)
-```
-
-::: {.content-hidden when-format="revealjs"}
-
-`stopifnot()` takes statements that should be `TRUE` and does nothing at all
-when they are. When one is `FALSE` it halts with the failing line quoted back
-at you.
-
-That is the point: a check that costs nothing when the world is as you
-expected, and stops you the moment it is not. Put one after every step where
-you know what the answer has to be, then run the script from the top. Silence
-means every claim you wrote down still holds.
-
-Never edit a check so it passes. A failing check is information; a check bent
-to fit is a lie you told yourself.
-
-:::
-
 ## Practice {#practice}
 
 ::: {.content-visible when-format="revealjs"}
 
-Nineteen more on the session page, with solutions behind a click. One or
+Eighteen more on the session page, with solutions behind a click. One or
 two lines each, in the order we covered them. Work through them this week.
 
 :::
 
 ::: {.content-hidden when-format="revealjs"}
 
-Nineteen exercises, one or two lines each, in the order the session covered
+Eighteen exercises, one or two lines each, in the order the session covered
 them. They are in the live script too. Try each one before you open the
 solutions.
 
@@ -1328,9 +899,6 @@ solutions.
 # 17. f <- factor(c("2019", "2007", "2013")). Put the years in order,
 #     as numbers.
 # 18. Same f: what does as.numeric(f) give instead, and why?
-#
-# Dates
-# 19. How many days are there between 2025-01-07 and 2025-02-28?
 ```
 
 ::: {.callout-tip collapse="true"}
@@ -1382,8 +950,6 @@ sort(as.numeric(as.character(f)))
 # 18  the level codes, not the years: levels sort alphabetically as
 #     "2007" "2013" "2019", so 2019 is code 3, 2007 is 1, 2013 is 2
 as.numeric(f)
-# 19
-as.Date("2025-02-28") - as.Date("2025-01-07")
 ```
 :::
 
@@ -1412,8 +978,6 @@ quick checks and the format strings for dates.
 | `ls()` | What is in the workspace |
 | `?mean` | The help page for a function |
 | `factor(x)`, `levels(f)` | A categorical column and its categories |
-| `matrix(1:6, nrow = 2)`, `m[2, 3]` | A vector with dimensions |
-| `list(a = 1, b = "x")`, `l$a` | A container of anything |
 
 **Types and missingness**
 
@@ -1422,7 +986,6 @@ quick checks and the format strings for dates.
 | `as.numeric(x)`, `as.character(x)` | Convert on purpose |
 | `is.na(x)`, `sum(is.na(x))` | Test for missing; count it |
 | `mean(x, na.rm = TRUE)` | Compute over what is there |
-| `as.Date(x, format = "%m/%d/%Y")` | Text to date; `%Y-%m-%d` for ISO |
 
 **Subsetting**
 
@@ -1436,61 +999,41 @@ quick checks and the format strings for dates.
 | `d[rows, cols]` | Blank means "all of them" |
 | `d[d$col > 40, ]` | The rows where a condition holds |
 
-**Reading files**
-
-| Code | What it does |
-|:--|:--|
-| `getwd()`, `list.files()` | Where am I, what is here |
-| `read.csv(path)` | Path or URL, either one |
-| `read.csv(p, colClasses = c("Site.ID" = "character"))` | Keep the leading zeros on read |
-| `names(d)[names(d) == "old"] <- "new"` | Rename one column |
-| `dim()`, `str()`, `head()`, `summary()` | The quick checks |
-
 **Things that bite**
 
 | Symptom | Cause |
 |:--|:--|
 | A numeric column is `chr` | One stray text value converted the whole thing |
 | `"100"` sorts before `"9"` | It is text; text sorts character by character |
-| An ID lost its leading zero | `read.csv()` read a label as a number |
 | `mean()` returns `NA` | There are `NA`s; use `na.rm = TRUE` |
 | `x == NA` gives `NA` | Use `is.na(x)` |
 | `as.numeric()` on a factor gives codes | `as.character()` first, then `as.numeric()` |
-| More rows than days | More than one instrument, or a bad join later |
-
-**Today's data**
-
-[The file](data/epa_pm25_compton_2025.csv) ·
-[where it came from](data/SOURCE.md) ·
-[EPA's download tool](https://www.epa.gov/outdoor-air-quality-data/download-daily-data)
 
 :::
 
 ## After class {#after-class}
 
 **HW1 is out: "How bad was the air?"** It is due Thursday, September 3, at
-8:40 am. It uses the same tool on a different monitor: downtown Los Angeles,
-December through February, five numbers in a `results.csv`.
+8:40 am. Daily PM2.5 from a monitor in downtown Los Angeles, December
+through February, six numbers in a `results.csv`.
 
 ::: {.content-hidden when-format="revealjs"}
 
-You did everything it asks for at least once today. It ships with the data
-already in the repository, a `results_spec.md` that states the format
-exactly, and CHECK values for three of the answers so you can tell whether
-you are on track without guessing. Hand it in the way you handed in your
-README: edit or drag files onto the repository page, then commit.
+It ships with the data already in the repository, a `results_spec.md` that
+states the format exactly, and CHECK values for three of the answers so you
+can tell whether you are on track without guessing. Hand it in the way you
+handed in your README: edit or drag files onto the repository page, then
+commit.
 
 **Re-run today's script before you start.** Do not just read it; run it,
 line by line, and change things to see what breaks. The session went fast on
 purpose; the script is where you slow down.
 
-**Keep this file.** Leave `data/` where it is.
-
 :::
 
 ::: {.content-visible when-format="revealjs"}
 
-Re-run today's script at home, line by line. Nineteen practice exercises,
+Re-run today's script at home, line by line. Eighteen practice exercises,
 with solutions, are on the session page.
 
 :::

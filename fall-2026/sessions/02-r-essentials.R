@@ -1,7 +1,7 @@
 # = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 # AEM 6850 -- Empirical Methods for Applied Economists
 # Prof. Ariel Ortiz-Bobea
-# Session 2 -- R essentials
+# Session 2 -- R essentials I
 # Thursday, August 27, 2026
 #
 # Run it one line at a time: put the cursor on a line and press Cmd-Return
@@ -192,132 +192,6 @@ as.numeric(f)                      # NOT the numbers -- the level codes
 as.numeric(as.character(f))        # the repair: text first, then number
 
 
-# Matrices and lists ----
-m <- matrix(1:6, nrow = 2)   # a vector with dimensions
-m
-m[2, 3]                      # row 2, column 3
-
-l <- list(site = "Compton", readings = c(53.2, 33.6), clean = TRUE)
-str(l)                       # a container of anything
-l$readings
-
-
-# Where am I ----
-getwd()
-list.files()
-
-
-# Read the file ----
-pm <- read.csv("data/epa_pm25_compton_2025.csv")
-
-
-# If you do not have the file yet ----
-# Uncomment and run once. Same file, fetched instead of clicked.
-# dir.create("data", showWarnings = FALSE)
-# download.file(paste0("https://arielortizbobea.github.io/aem6850/",
-#                      "fall-2026/sessions/data/epa_pm25_compton_2025.csv"),
-#               "data/epa_pm25_compton_2025.csv")
-
-
-# Quick checks ----
-dim(pm)
-names(pm)
-
-
-# Rename, then str() ----
-names(pm)[names(pm) == "Daily.Mean.PM2.5.Concentration"] <- "pm25"
-
-str(pm[, 1:6])
-summary(pm$pm25)
-
-
-# The identifier trap ----
-pm$Site.ID[1]
-class(pm$Site.ID)
-pm$State.FIPS.Code[1]
-pm$County.FIPS.Code[1]
-
-
-# Protect identifiers at read time ----
-pm <- read.csv("data/epa_pm25_compton_2025.csv",
-               colClasses = c("Site.ID"          = "character",
-                              "State.FIPS.Code"  = "character",
-                              "County.FIPS.Code" = "character"))
-names(pm)[names(pm) == "Daily.Mean.PM2.5.Concentration"] <- "pm25"
-
-pm$Site.ID[1]
-pm$County.FIPS.Code[1]
-class(pm$pm25)     # the concentration is still a number, as it should be
-
-
-# One site, two instruments ----
-table(pm$POC, pm$AQS.Parameter.Code)
-
-
-# Dates, one line deep ----
-pm$Date[1]
-class(pm$Date)
-
-pm$date <- as.Date(pm$Date, format = "%m/%d/%Y")
-class(pm$date)
-range(pm$date)
-
-format(pm$date[1], "%Y-%m")   # pull pieces back out of a date
-
-
-# Subset to the window ----
-win <- pm[pm$date <= as.Date("2025-02-28"), ]
-nrow(win)                      # rows...
-length(unique(win$date))       # ...for how many calendar days?
-
-one <- win[win$POC == 1 & win$AQS.Parameter.Code == 88101, ]
-nrow(one)
-nrow(one) == length(unique(one$date))   # one row per day now?
-
-
-# Predict, then reconcile ----
-which.max(one$pm25)              # the POSITION of the largest value
-one$date[which.max(one$pm25)]    # ...so this is the date it fell on
-max(one$pm25)
-median(one$pm25)
-
-head(one[order(-one$pm25), c("date", "pm25")], 5)
-
-
-# = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
-# You try (5 minutes) ----
-# 1. How many days in the window were above 35 ug/m3 -- the EPA 24-hour
-#    standard? (One line. TRUE is 1.)
-#
-# 2. Compare January's mean with February's. format(one$date, "%Y-%m") gives
-#    you "2025-01" and "2025-02" to subset on.
-#
-# 3. The site's OTHER instrument is POC 3, parameter 88502. Pull its rows for
-#    the window and compare its January mean with POC 1's. Two instruments,
-#    one site, same air -- how close do they agree?
-# = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
-
-
-
-
-# Writing your answer out ----
-answers <- data.frame(
-  quantity = c("peak_pm25", "peak_date"),
-  value    = c(round(max(one$pm25), 1),
-               format(one$date[which.max(one$pm25)], "%Y-%m-%d"))
-)
-answers
-
-write.csv(answers, "results.csv", row.names = FALSE)
-
-
-# Checking your own work ----
-stopifnot(
-  nrow(one) == 59,
-  !anyNA(one$pm25)
-)
-
-
 # = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 # Practice: 19 exercises (solutions on the session page) ----
 # Vectors and sequences
@@ -346,9 +220,6 @@ stopifnot(
 # 17. f <- factor(c("2019", "2007", "2013")). Put the years in order,
 #     as numbers.
 # 18. Same f: what does as.numeric(f) give instead, and why?
-#
-# Dates
-# 19. How many days are there between 2025-01-07 and 2025-02-28?
 # = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 
 
