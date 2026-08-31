@@ -8,24 +8,29 @@
 # (Mac) or Ctrl-Enter (Windows).
 # = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 
-# Rebuild session 2's data frame ----
-pm <- read.csv("data/epa_pm25_compton_2025.csv",
-               colClasses = c("Site.ID"          = "character",
-                              "State.FIPS.Code"  = "character",
-                              "County.FIPS.Code" = "character"))
+# Rebuild the table ----
+pm <- read.csv("data/epa_pm25_la_county_2025.csv",
+               colClasses = c("Site.ID" = "character"))
 names(pm)[names(pm) == "Daily.Mean.PM2.5.Concentration"] <- "pm25"
-pm$date <- as.Date(pm$Date, format = "%m/%d/%Y")
+pm$date  <- as.Date(pm$Date, format = "%m/%d/%Y")
+pm$month <- format(pm$date, "%m")
 
-one <- pm[pm$date <= as.Date("2025-02-28") &
-          pm$POC == 1 & pm$AQS.Parameter.Code == 88101, ]
-nrow(one)   # 59 -- one row per day, as established Thursday
+frm <- pm[pm$AQS.Parameter.Code == 88101 & pm$POC == 1, ]   # one instrument per site
+tb  <- tapply(frm$pm25, list(frm$Local.Site.Name, frm$month), mean)
+dim(tb)                                                     # 8 sites, 12 months
+
+
+# One site, one winter ----
+one <- frm[frm$Local.Site.Name == "Compton" &
+           frm$date <= as.Date("2025-02-28"), ]
+nrow(one)   # 59 -- one row per day
 
 
 # If data/ is missing a file ----
 # dir.create("data", showWarnings = FALSE)
 # download.file(paste0("https://arielortizbobea.github.io/aem6850/",
-#                      "fall-2026/sessions/data/epa_pm25_compton_2025.csv"),
-#               "data/epa_pm25_compton_2025.csv")
+#                      "fall-2026/sessions/data/epa_pm25_la_county_2025.csv"),
+#               "data/epa_pm25_la_county_2025.csv")
 # download.file(paste0("https://arielortizbobea.github.io/aem6850/",
 #                      "fall-2026/sessions/data/la-weather-dec2024-feb2025.csv"),
 #               "data/la-weather-dec2024-feb2025.csv")
@@ -63,28 +68,32 @@ plot(one$date, one$pm25, type = "h", col = "grey30",
 abline(v = as.Date("2025-01-07"), col = "#b31b1b", lwd = 2)
 
 
-# Bring back session 1's weather ----
-la <- read.csv("data/la-weather-dec2024-feb2025.csv", skip = 3)
-names(la) <- c("date", "gust", "wind", "tmax", "rh_min", "precip")
-la$date <- as.Date(la$date)
+# The same days, ranked ----
+head(one[order(-one$pm25), c("date", "pm25")], 5)
+
+
+# Load the weather file ----
+wx <- read.csv("data/la-weather-dec2024-feb2025.csv", skip = 3)
+names(wx) <- c("date", "gust", "wind", "tmax", "rh_min", "precip")
+wx$date <- as.Date(wx$date)
 
 
 # Two columns together ----
-plot(la$wind, la$gust,
+plot(wx$wind, wx$gust,
      xlab = "Max sustained wind (km/h)", ylab = "Max gust (km/h)")
 
 
 # The unit error ----
-mixed <- la$wind
-jan   <- format(la$date, "%Y-%m") == "2025-01"
-mixed[jan] <- round(la$wind[jan] / 3.6, 1)   # January delivered in m/s
+mixed <- wx$wind
+jan   <- format(wx$date, "%Y-%m") == "2025-01"
+mixed[jan] <- round(wx$wind[jan] / 3.6, 1)   # January delivered in m/s
 
-summary(la$wind)    # the honest column
+summary(wx$wind)    # the honest column
 summary(mixed)      # the corrupted one
 
 
 # The scatterplot catches it ----
-plot(mixed, la$gust,
+plot(mixed, wx$gust,
      xlab = "Wind speed, as delivered", ylab = "Max gust (km/h)")
 
 
@@ -93,17 +102,27 @@ one$month <- format(one$date, "%Y-%m")
 boxplot(pm25 ~ month, data = one)
 
 
+# Drawing a matrix margin ----
+par(mar = c(4, 14, 1, 1))                      # room for the site names
+barplot(sort(apply(tb, 1, mean)), horiz = TRUE, las = 1, cex.names = 0.85,
+        xlab = "Mean PM2.5, 2025 (ug/m3)")
+par(mar = c(5, 4, 4, 2) + 0.1)                 # put the margins back
+
+
 # Counts of categories: barplot() ----
-year <- pm[pm$POC == 1 & pm$AQS.Parameter.Code == 88101, ]
-barplot(table(format(year$date, "%m")),
-        xlab = "Month of 2025", ylab = "Days with a reading")
+par(mar = c(4, 14, 1, 1))
+barplot(sort(table(frm$Local.Site.Name)), horiz = TRUE, las = 1, cex.names = 0.85,
+        xlab = "Days with a reading, 2025")
+par(mar = c(5, 4, 4, 2) + 0.1)
 
 
 # The missing spring: site or sampler? ----
-table(format(year$date, "%m"))    # the numbers behind the bars
+compton <- frm[frm$Local.Site.Name == "Compton", ]
+table(compton$month)              # the regulatory sampler, month by month
 
-other <- pm[pm$POC == 3 & pm$AQS.Parameter.Code == 88502, ]
-table(format(other$date, "%m"))   # the site's OTHER instrument
+other <- pm[pm$Local.Site.Name == "Compton" &
+            pm$POC == 3 & pm$AQS.Parameter.Code == 88502, ]
+table(other$month)                # the site's OTHER instrument
 
 
 # Same summaries, different data: Anscombe 1973 ----
@@ -125,15 +144,15 @@ cor(anscombe$x4, anscombe$y4)
 
 # = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 # You try (5 minutes) ----
-# 1. hist(la$rh_min) -- each day's LOWEST relative humidity. Read it in one
-#    sentence. Twelve days sit in single digits; la$date[la$rh_min < 10]
+# 1. hist(wx$rh_min) -- each day's LOWEST relative humidity. Read it in one
+#    sentence. Twelve days sit in single digits; wx$date[wx$rh_min < 10]
 #    says when they were. What do those dates line up with?
 #
-# 2. plot(la$date, la$precip, type = "h") -- when did the drought break?
-#    Now run summary(la$precip). Could you have read the break off that?
+# 2. plot(wx$date, wx$precip, type = "h") -- when did the drought break?
+#    Now run summary(wx$precip). Could you have read the break off that?
 #
-# 3. la$month <- format(la$date, "%Y-%m")
-#    boxplot(gust ~ month, data = la)
+# 3. wx$month <- format(wx$date, "%Y-%m")
+#    boxplot(gust ~ month, data = wx)
 #    Which month has the extremes -- and are they a shifted box, or dots
 #    beyond the whisker? Those are different claims about January.
 # = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
