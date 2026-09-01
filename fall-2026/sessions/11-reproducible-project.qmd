@@ -16,16 +16,47 @@ By the end of this session you can:
 - Restore a project's packages with `renv` and explain what the
   lockfile pins.
 - Render a `.qmd` report whose numbers are computed by the document.
+- Publish the same document as a project website.
+- Write a README that meets the standard economics journals now
+  enforce.
+- Say what belongs in a replication package when the data cannot be
+  shared.
 - Pass the fresh-clone test.
 
 ## What we cover {#coverage}
 
 - `renv::restore()` — what a lockfile is and what problem it solves.
+  "It works on my machine" is a bug report, not a defense.
 - Reports in Quarto: `.qmd` → rendered document, no copy-pasted
-  numbers.
-- The fresh-clone drill, run on a neighbor's machine — the project
-  layout from session 7, now proven to travel.
+  numbers. A number that was typed by hand is a number nobody can
+  check.
+- **The same document, published as a site.** One more output format,
+  not a new skill: `quarto publish` turns the report you already
+  render into a project page with a URL. Worth doing for a job-market
+  paper, a data documentation page, or a project other people are
+  supposed to find. This course's own site is built exactly this way.
+- **The standard, and who enforces it.** Economics journals no longer
+  take your word for it. The
+  [AEA Data and Code Availability Policy](https://www.aeaweb.org/journals/data/data-code-policy)
+  requires a deposited replication package, and the
+  [Office of the AEA Data Editor](https://aeadataeditor.github.io/)
+  verifies that it reproduces before the paper is published.
+- **The README is the deliverable most people get wrong.** The
+  [Social Science Data Editors' template README](https://social-science-data-editors.github.io/template_README/)
+  is the one to start from — it has been used to assess the READMEs
+  of more than 500 articles across the AEA journals, *ReStud*, the
+  *EJ* and the *CJE*. What it asks for: where the data came from,
+  whether you are allowed to redistribute it, what has to be
+  installed to run the code, roughly how long it takes, and which
+  script produces which table and figure.
+- **When the data cannot travel.** Licensed or confidential data is
+  the normal case in applied economics, not the exception, and it does
+  not exempt you. The package then carries a citation, access
+  instructions, and the code — enough that someone with their own
+  access can reproduce the result.
+- The fresh-clone drill, run on a neighbor's machine: clone, restore,
+  render, compare. Whatever breaks is what your README was missing.
 - Master scripts in one slide; `targets` as a pointer for later.
 
 **Verification habit.** The fresh-clone test — your project re-runs
-from a clean copy, or it isn't done.
+from a clean copy, on someone else's machine, or it isn't done.
