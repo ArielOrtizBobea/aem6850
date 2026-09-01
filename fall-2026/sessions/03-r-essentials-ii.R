@@ -157,6 +157,24 @@ sapply(by_site, range)     # two numbers each, so a matrix comes back
 apply(temps, 1, mean)      # same answers, from the matrix
 
 
+# = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+# Exercise 2 (5 minutes) ----
+# Everything here uses temps and by_site, built earlier in this script.
+#
+# 1. One line: the highest reading for each city. One line: the highest
+#    for each month. Which margin number did each one need, and why?
+#
+# 2. Build a list of three numeric vectors of DIFFERENT lengths.
+#    One line for how long each one is; one line for the mean of each.
+#    Why could a matrix not hold this?
+#
+# 3. sapply(by_site, range) came back as a matrix, not a vector.
+#    Use dim() to explain why.
+# = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+
+
+
+
 # Read the file ----
 la <- read.csv("data/epa_pm25_la_county_2025.csv")
 dim(la)

@@ -62,6 +62,23 @@ bad[bad == -999] <- NA        # sentinel to honest missing
 mean(bad, na.rm = TRUE)       # back to 17.6
 
 
+# = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+# Exercise 1 (5 minutes) ----
+# 1. hist(frm$pm25) -- every monitor, every day of 2025, not one winter.
+#    How does the shape differ from hist(one$pm25), and would you have
+#    expected that?
+#
+# 2. Your turn to corrupt. Copy one$pm25 and set three days to 0 instead
+#    of -999. Does hist() catch it? Does summary()? Why is 0 the harder
+#    one?
+#
+# 3. tb is a matrix, and hist(tb) works anyway. What is it drawing, and
+#    how many values went into it?
+# = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+
+
+
+
 # A column through time ----
 plot(one$date, one$pm25, type = "h", col = "grey30",
      xlab = "", ylab = "Daily PM2.5 (ug/m3)")
@@ -125,6 +142,19 @@ other <- pm[pm$Local.Site.Name == "Compton" &
 table(other$month)                # the site's OTHER instrument
 
 
+# Two series on one plot ----
+reg <- frm[frm$Local.Site.Name == "Compton", ]
+con <- pm[pm$Local.Site.Name == "Compton" &
+          pm$POC == 3 & pm$AQS.Parameter.Code == 88502, ]
+
+plot(con$date, con$pm25, type = "l", col = "grey60",
+     xlab = "", ylab = "Daily PM2.5 (ug/m3)")
+points(reg$date, reg$pm25, pch = 16, cex = 0.5, col = "#b31b1b")
+legend("topright", c("continuous (POC 3)", "regulatory (POC 1)"),
+       col = c("grey60", "#b31b1b"), lty = c(1, NA), pch = c(NA, 16),
+       bty = "n")
+
+
 # Same summaries, different data: Anscombe 1973 ----
 par(mfrow = c(2, 2), mar = c(4, 4, 1, 1))
 plot(anscombe$x1, anscombe$y1)
@@ -143,7 +173,7 @@ cor(anscombe$x4, anscombe$y4)
 
 
 # = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
-# You try (5 minutes) ----
+# Exercise 2 (5 minutes) ----
 # 1. hist(wx$rh_min) -- each day's LOWEST relative humidity. Read it in one
 #    sentence. Twelve days sit in single digits; wx$date[wx$rh_min < 10]
 #    says when they were. What do those dates line up with?
@@ -155,6 +185,41 @@ cor(anscombe$x4, anscombe$y4)
 #    boxplot(gust ~ month, data = wx)
 #    Which month has the extremes -- and are they a shifted box, or dots
 #    beyond the whisker? Those are different claims about January.
+# = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+
+
+
+
+# = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+# Practice ----
+# Everything below uses pm, frm, tb, one and wx, built earlier in this
+# script. Every plot needs one written sentence that reads it.
+
+# One column
+#  1. hist(wx$tmax). Describe the shape in one sentence.
+#  2. Compton's whole year through time, not just the winter. Add the
+#     35 ug/m3 line. How many days cleared it?
+#  3. Which month is worst covered across ALL monitors? One line.
+
+# Two columns
+#  4. plot(wx$tmax, wx$rh_min). What relationship, and does it make
+#     physical sense?
+#  5. Pick two monitors. Draw one as a line, add the other with
+#     points(), and label them with legend().
+
+# Groups
+#  6. boxplot(pm25 ~ Local.Site.Name, data = frm). Which monitor has the
+#     widest spread, and is that the same as the dirtiest?
+#  7. barplot(apply(tb, 2, mean)) -- the county month by month. Which
+#     month is worst, and does it match what you saw at Compton?
+#  8. table() then barplot() the AQS.Parameter.Code column. What are the
+#     two numbers, and why does the file carry both?
+
+# Panels
+#  9. par(mfrow = c(2, 2)): four monitors, one histogram each. Do they
+#     have the same shape? Reset mfrow when you are done.
+# 10. All four Anscombe correlations are 0.82. Which dataset would that
+#     number mislead you about most, and which instrument shows it?
 # = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 
 

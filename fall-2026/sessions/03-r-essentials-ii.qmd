@@ -526,6 +526,47 @@ verbs, one answer: `apply()` walks a margin, `sapply()` walks a list.
 
 :::
 
+## Exercise 2 {#exercise-2}
+
+::: {.panel-tabset}
+
+### Exercise
+
+```{r}
+#| label: exercise-2
+#| exercise: true
+#| script: "Exercise 2 (5 minutes)"
+#| eval: false
+# Everything here uses temps and by_site, built earlier in this script.
+#
+# 1. One line: the highest reading for each city. One line: the highest
+#    for each month. Which margin number did each one need, and why?
+#
+# 2. Build a list of three numeric vectors of DIFFERENT lengths.
+#    One line for how long each one is; one line for the mean of each.
+#    Why could a matrix not hold this?
+#
+# 3. sapply(by_site, range) came back as a matrix, not a vector.
+#    Use dim() to explain why.
+```
+
+### Solution
+
+```{r}
+#| label: exercise-2-solution
+#| purl: false
+apply(temps, 1, max)   # margin 1 = rows = cities
+apply(temps, 2, max)   # margin 2 = columns = months
+
+ragged <- list(a = 1:3, b = 1:7, c = 1:2)
+lengths(ragged)
+sapply(ragged, mean)   # a matrix needs every group the same length
+
+dim(sapply(by_site, range))   # 2 x 2: two numbers per site, so a matrix
+```
+
+:::
+
 ## Read it in {#read}
 
 ```{r}

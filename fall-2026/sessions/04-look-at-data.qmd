@@ -307,6 +307,55 @@ Never go straight to the computing.
 
 :::
 
+## Exercise 1 {#exercise-1}
+
+::: {.panel-tabset}
+
+### Exercise
+
+```{r}
+#| label: exercise-1
+#| exercise: true
+#| script: "Exercise 1 (5 minutes)"
+#| eval: false
+# 1. hist(frm$pm25) -- every monitor, every day of 2025, not one winter.
+#    How does the shape differ from hist(one$pm25), and would you have
+#    expected that?
+#
+# 2. Your turn to corrupt. Copy one$pm25 and set three days to 0 instead
+#    of -999. Does hist() catch it? Does summary()? Why is 0 the harder
+#    one?
+#
+# 3. tb is a matrix, and hist(tb) works anyway. What is it drawing, and
+#    how many values went into it?
+```
+
+### Solution
+
+```{r}
+#| label: exercise-1-solution
+#| purl: false
+#| eval: false
+# 1  same right skew, longer tail: eight sites and all four seasons
+hist(frm$pm25)
+
+# 2  neither one flags it clearly
+z <- one$pm25
+z[c(10, 20, 30)] <- 0
+hist(z)                 # the bars barely move
+summary(z)              # Min. 0.00 -- legal-looking
+
+min(one$pm25)           # 1.7: the real floor at this monitor
+# -999 is physically impossible and blows up the axis. 0 is a plausible
+# reading, so it hides until you know what this monitor's floor is.
+
+# 3  the matrix read as one vector: 96 monthly means
+hist(tb)
+length(tb)
+```
+
+:::
+
 ## `plot()`: a column through time {#plot-time}
 
 ```{r}
@@ -645,6 +694,62 @@ mean sitting in row "Compton" of `tb`.
 
 :::
 
+## Two series on one plot {#layering}
+
+The counts said the sampler was down. Draw both instruments and you can see
+it.
+
+```{r}
+#| label: layering
+#| script: "Two series on one plot"
+#| fig-alt: "Daily PM2.5 at Compton for all of 2025. A grey line traces the continuous instrument every day of the year. Red dots mark the regulatory sampler, and they disappear entirely through April and May while the grey line continues."
+reg <- frm[frm$Local.Site.Name == "Compton", ]
+con <- pm[pm$Local.Site.Name == "Compton" &
+          pm$POC == 3 & pm$AQS.Parameter.Code == 88502, ]
+
+plot(con$date, con$pm25, type = "l", col = "grey60",
+     xlab = "", ylab = "Daily PM2.5 (ug/m3)")
+points(reg$date, reg$pm25, pch = 16, cex = 0.5, col = "#b31b1b")
+legend("topright", c("continuous (POC 3)", "regulatory (POC 1)"),
+       col = c("grey60", "#b31b1b"), lty = c(1, NA), pch = c(NA, 16),
+       bty = "n")
+```
+
+::: {.content-hidden when-format="revealjs"}
+
+`plot()` opens a window and sets the axes. Everything after it *adds* to
+that window: `points()` for markers, `lines()` for a connecting line,
+`abline()` for a straight reference. They draw on whatever `plot()` already
+scaled, so the first call has to be the one with the widest range, or the
+later ones fall off the edge.
+
+Three arguments do the distinguishing. `pch` picks the point symbol (`16` is
+a filled circle), `cex` scales it, and `col` colors it. `legend()` then says
+which is which: a position, the labels, and the same `col`/`pch`/`lty` you
+drew with, repeated so the key matches the plot. `lty = c(1, NA)` gives the
+first entry a line and no symbol; `pch = c(NA, 16)` does the reverse.
+`bty = "n"` drops the box around the key.
+
+Now read it. The two instruments track each other all year, which is the
+reassuring part: two different measurement methods, same air, same story.
+Then **the red dots stop.** They vanish through April and May and pick back
+up in June, while the grey line runs straight through. That is the gap the
+count plot found, in the form you would actually notice while working.
+
+There is a second thing in here that nobody went looking for: the sharp
+spike in early July, on both instruments. Fireworks again, six months after
+the New Year's one.
+
+:::
+
+::: {.content-visible when-format="revealjs"}
+
+- `plot()` scales the window; `points()`, `lines()` and `abline()` add to it.
+- `pch` symbol, `cex` size, `col` color, and `legend()` says which is which.
+- The red dots **stop** through April and May. The grey line does not.
+
+:::
+
 ## Choosing the instrument {#choosing}
 
 Start from the suspicion, not from the plot type.
@@ -730,14 +835,14 @@ decimal places. Every summary you have met calls them identical.
 
 :::
 
-## You try {#you-try}
+## Exercise 2 {#exercise-2}
 
-Five minutes, on the weather frame `la`. Stubs are in the live script.
+Five minutes, on the weather frame `wx`. Stubs are in the live script.
 
 ```{r}
-#| label: you-try
+#| label: exercise-2
 #| exercise: true
-#| script: "You try (5 minutes)"
+#| script: "Exercise 2 (5 minutes)"
 #| eval: false
 # 1. hist(wx$rh_min) -- each day's LOWEST relative humidity. Read it in one
 #    sentence. Twelve days sit in single digits; wx$date[wx$rh_min < 10]
@@ -809,6 +914,112 @@ The quick checks, now five:<br>
 
 From HW2 on, every diagnostic plot needs one written sentence that reads
 it. HW2 grades the habit.
+
+:::
+
+## Practice {#practice}
+
+::: {.content-visible when-format="revealjs"}
+
+Everything below is in the live script, with solutions.
+
+:::
+
+::: {.content-hidden when-format="revealjs"}
+
+::: {.panel-tabset}
+
+### Practice
+
+```{r}
+#| label: practice
+#| exercise: true
+#| script: "Practice"
+#| eval: false
+# Everything below uses pm, frm, tb, one and wx, built earlier in this
+# script. Every plot needs one written sentence that reads it.
+
+# One column
+#  1. hist(wx$tmax). Describe the shape in one sentence.
+#  2. Compton's whole year through time, not just the winter. Add the
+#     35 ug/m3 line. How many days cleared it?
+#  3. Which month is worst covered across ALL monitors? One line.
+
+# Two columns
+#  4. plot(wx$tmax, wx$rh_min). What relationship, and does it make
+#     physical sense?
+#  5. Pick two monitors. Draw one as a line, add the other with
+#     points(), and label them with legend().
+
+# Groups
+#  6. boxplot(pm25 ~ Local.Site.Name, data = frm). Which monitor has the
+#     widest spread, and is that the same as the dirtiest?
+#  7. barplot(apply(tb, 2, mean)) -- the county month by month. Which
+#     month is worst, and does it match what you saw at Compton?
+#  8. table() then barplot() the AQS.Parameter.Code column. What are the
+#     two numbers, and why does the file carry both?
+
+# Panels
+#  9. par(mfrow = c(2, 2)): four monitors, one histogram each. Do they
+#     have the same shape? Reset mfrow when you are done.
+# 10. All four Anscombe correlations are 0.82. Which dataset would that
+#     number mislead you about most, and which instrument shows it?
+```
+
+### Solutions
+
+```{r}
+#| label: practice-solutions
+#| purl: false
+#| eval: false
+# 1  a rough bell, mildly right-skewed: LA winter highs cluster near 20 C
+hist(wx$tmax)
+
+# 2
+cmp <- frm[frm$Local.Site.Name == "Compton", ]
+plot(cmp$date, cmp$pm25, type = "h", xlab = "", ylab = "PM2.5 (ug/m3)")
+abline(h = 35, col = "#b31b1b", lty = 2)
+sum(cmp$pm25 > 35)            # 10 days
+
+# 3
+table(frm$month)              # 04 and 05, at 124 each
+
+# 4  strong negative: warm air holds more moisture, so minimum RH falls
+plot(wx$tmax, wx$rh_min)
+
+# 5
+a <- frm[frm$Local.Site.Name == "Compton", ]
+b <- frm[frm$Local.Site.Name == "Reseda", ]
+plot(a$date, a$pm25, type = "l", col = "grey60", xlab = "", ylab = "PM2.5")
+points(b$date, b$pm25, pch = 16, cex = 0.5, col = "#b31b1b")
+legend("topright", c("Compton", "Reseda"), col = c("grey60", "#b31b1b"),
+       lty = c(1, NA), pch = c(NA, 16), bty = "n")
+
+# 6  spread and level are different questions: Lancaster is lowest and
+#    also tightest, but the widest box is not the highest one
+par(mar = c(4, 14, 1, 1))
+boxplot(pm25 ~ Local.Site.Name, data = frm, horizontal = TRUE,
+        las = 1, cex.axis = 0.7, xlab = "Daily PM2.5 (ug/m3)", ylab = "")
+par(mar = c(5, 4, 4, 2) + 0.1)
+
+# 7
+barplot(apply(tb, 2, mean), xlab = "Month of 2025", ylab = "County mean")
+
+# 8  88101 is the federal reference method, 88502 the continuous
+#    instrument: two ways of measuring the same pollutant
+barplot(table(pm$AQS.Parameter.Code))
+
+# 9
+par(mfrow = c(2, 2))
+for (s in rownames(tb)[1:4]) hist(frm$pm25[frm$Local.Site.Name == s], main = s)
+par(mfrow = c(1, 1))
+
+# 10  the fourth: ten identical x values and one far point invent the
+#     whole correlation. A scatterplot shows it instantly.
+plot(anscombe$x4, anscombe$y4)
+```
+
+:::
 
 :::
 
