@@ -57,25 +57,74 @@ By the end of this session you can:
 - Split a device into panels, control which panel fills first, and put it back.
 - Write a figure to a file at a resolution someone else can use.
 
-## Plotting versus polishing {#thesis}
+## Why plot {#thesis}
 
-> **Plotting and polishing are two different jobs. Today is plotting: pick
-> the plot that matches the question, get it on screen in one line, and learn
-> the settings once — because the same settings work on all of them.**
+> **Your imagination should be the limit, not the functions you happen to
+> know.**
+
+- Visualizing is one of the most important skills in empirical research.
+- There is as much to learn from looking at the data directly as from the
+  results of the analysis.
+- Learn many tools, not a short menu. The figures you can build decide the
+  questions you can ask.
 
 ::: {.content-hidden when-format="revealjs"}
 
-Polishing is fonts, palettes, colour schemes, and figures built for readers.
-That is its own day. Nothing today needs to be pretty. Everything today needs
-to be fast, because a plot you can produce in one line is a plot you will
-actually make, and a plot that takes twenty minutes is one you will skip.
+Most of what goes wrong in an empirical project is visible in the data long
+before it reaches a regression table, and a plot is the fastest way to see
+it. A summary answers the question you asked; a plot answers questions you
+did not think to ask.
+
+The second half of that matters just as much. Every plotting system hands
+you a menu of ready-made figures, and it is easy to end up asking only the
+questions that menu can answer. Base R does not work that way: a plot is a
+blank device you draw on, so the shape of the figure is your decision rather
+than the package's. That is why this session spends time on the settings and
+the canvas rather than on a catalogue of chart types.
+
+Polishing — fonts, palettes, figures built for a reader — is a different job
+and gets its own lecture, with publication-ready output. Nothing today needs
+to be pretty. Everything today needs to be fast, because a plot you can
+produce in one line is a plot you will actually make, and a plot that takes
+twenty minutes is one you will skip.
+
+:::
+
+## Getting the data {#data}
+
+One file: every PM2.5 monitor in Los Angeles County for 2025. This chunk
+fetches it if you do not already have it, and does nothing if you do.
+
+```{r}
+#| label: get-data
+#| script: "Get the data"
+dir.create("data", showWarnings = FALSE)
+
+f <- "data/epa_pm25_la_county_2025.csv"
+if (!file.exists(f)) {
+  download.file(paste0("https://arielortizbobea.github.io/aem6850/",
+                       "fall-2026/sessions/", f), f)
+}
+
+file.exists(f)
+```
+
+::: {.content-hidden when-format="revealjs"}
+
+`dir.create()` makes a folder and `showWarnings = FALSE` keeps it quiet when
+the folder is already there. `download.file()` fetches a URL to a path. The
+`if (!file.exists(f))` wrapper means you can run this line every time without
+re-downloading, which is the habit worth copying: a script that fetches its
+own inputs runs on anyone's machine, including yours six months from now.
+
+[The data folder's provenance notes](data/SOURCE.md) record where the file
+came from, byte for byte.
 
 :::
 
 ## Building the working table {#build}
 
-The file holds every PM2.5 monitor in Los Angeles County for 2025. We take
-four on a line across the basin.
+We take four monitors on a line across the basin.
 
 ```{r}
 #| label: build
@@ -123,25 +172,6 @@ And the check is not decoration. Lancaster reported all 365 days; Pasadena
 reported 115. Those two monitors are not on the same calendar, and every plot
 below has to survive that.
 
-::: {.callout-tip collapse="true"}
-## If `data/` is missing the file
-
-Run these once and you are caught up. `dir.create()` makes a folder;
-`download.file()` fetches a URL to a path.
-
-```{r}
-#| label: data-fallback
-#| script: "If data/ is missing the file"
-#| eval: false
-# dir.create("data", showWarnings = FALSE)
-# download.file(paste0("https://arielortizbobea.github.io/aem6850/",
-#                      "fall-2026/sessions/data/epa_pm25_la_county_2025.csv"),
-#               "data/epa_pm25_la_county_2025.csv")
-```
-
-[The data folder's provenance notes](data/SOURCE.md) record where the file
-came from, byte for byte.
-:::
 
 :::
 
@@ -158,25 +188,26 @@ has to survive that.
 
 | Plot | Good for | Bad for |
 |:--|:--|:--|
-| `plot(x, y, type = "l")` | one quantity in its natural order | gaps — it invents the days it cannot see |
-| `plot()` + `lines()`, `points()` | a few units on shared axes | more than about six |
-| `hist(x)` | the shape of one column | comparing groups |
-| `boxplot(y ~ g)` | many groups on one screen | groups of two or three rows |
+| `plot(x, y)` | the relationship between two variables | more points than pixels — they pile into a blob |
+| `plot(x, y, type = "l")` | one variable in its natural order, usually time | missing days: the line joins straight across them, so a gap looks like data |
+| `plot()` + `lines()`, `points()` | a few series on shared axes | more than about six |
+| `hist(x)` | the distribution of one variable | comparing groups |
+| `boxplot(y ~ g)` | the distribution of one variable, by group | groups of two or three rows |
+| `barplot(table(g))` | how often each category occurs | anything continuous — bin it, or use `hist()` |
 
 :::
 
 ::: {.content-hidden when-format="revealjs"}
 
-Two more rows the slide leaves out:
-
-| Plot | Good for | Bad for |
-|:--|:--|:--|
-| `plot(x, y)` | the relationship between two columns; one point per row | more points than pixels — they pile into a blob |
-| `barplot(table(g))` | counts of categories: is everything there, as often as it should be | anything continuous — bin it, or use `hist()` |
+On the line plot's weakness: `plot(type = "l")` draws a segment from each
+row to the next, so a month with no readings comes out as one long straight
+stretch rather than as a hole. Nothing warns you. `type = "o"` or
+`type = "p"` shows where the observations actually are, which is why the
+missing-data question is usually asked with points and not with a line.
 
 **Start from the question, not the plot type.** *Did something happen in
-time?* is a line. *Do these two move together?* is a scatter. *Is this column
-shaped the way I think?* is a histogram. *Does this group differ from that
+time?* is a line. *Do these two move together?* is a scatter. *Is this variable
+distributed the way I think?* is a histogram. *Does this group differ from that
 one?* is a box plot. *Is everything here?* is a bar of counts.
 
 :::
@@ -214,10 +245,9 @@ maximum, 56.0 on the 13th. A six-number summary gives you none of that.
 :::
 
 ::: {.content-visible when-format="revealjs"}
-
-Two spikes that are not weather: **Jan 1 at 53.2**, **Jul 4 at 50.7**. A flat
-stretch in April–May. The year's maximum is **56.0, on December 13**.
-
+::: {.notes}
+Two spikes that are not weather: Jan 1 at 53.2, Jul 4 at 50.7. A flat stretch in April–May. The year's maximum is 56.0, on December 13.
+:::
 :::
 
 ## One `plot()` call is one series {#one-call}
@@ -246,15 +276,12 @@ the frame**. It has no idea what a station is, and it will not warn you.
 :::
 
 ::: {.content-visible when-format="revealjs"}
-
-`type = "l"` connects row 1 to row 2 to row 3 **in the order the rows sit in
-the frame**. It has no idea what a station is.
-
-**One `plot(type = "l")` call means one series.**
-
+::: {.notes}
+type = "l" connects row 1 to row 2 to row 3 in the order the rows sit in the frame. It has no idea what a station is. One plot(type = "l") call means one series.
+:::
 :::
 
-## `lines()` and `points()`: several series {#several-series}
+## Cutting to January {#jan}
 
 ```{r}
 #| label: jan
@@ -264,7 +291,11 @@ comp <- jan[jan$site == "Compton", ]
 lb   <- jan[jan$site == "Long Beach-Route 710 Near Road", ]
 lanc <- jan[jan$site == "Lancaster - Fairgrounds", ]
 pas  <- jan[jan$site == "Pasadena", ]
+
+xr   <- as.Date(c("2025-01-01", "2025-01-31"))   # one window for every panel
 ```
+
+## `lines()` and `points()`: several series {#several-series}
 
 ```{r}
 #| label: lines-four-bad
@@ -290,11 +321,13 @@ got. Three separate failures follow from it.
 :::
 
 ::: {.content-visible when-format="revealjs"}
-
-Three failures in one figure: **clipped at the bottom**, **clipped at the
-top** — the axes came from Compton alone — and **invented**, where the line
-drew days that do not exist.
-
+::: {.notes}
+Three failures. Clipped at the BOTTOM: Lancaster spends January between 0.4
+and 5 and falls out of the frame. Clipped at the TOP: Pasadena peaks at 72.5
+and leaves it twice. Both because plot() sized the axes from Compton alone,
+5.7 to 53.2. And INVENTED: Pasadena has 11 observations, so the line draws
+straight diagonals over days it never measured, including across its own peak.
+:::
 :::
 
 ## Setting the window and the key {#repair}
@@ -308,8 +341,7 @@ plot(comp$date, comp$pm25, type = "l", col = "#b31b1b", lwd = 2,
 lines(lb$date,   lb$pm25,   col = "grey30")
 lines(lanc$date, lanc$pm25, col = "#1f6fb4")
 points(pas$date, pas$pm25,  col = "darkorange", pch = 16)
-legend("topright",
-       legend = c("Compton", "Long Beach", "Lancaster", "Pasadena"),
+legend("topright", c("Compton", "Long Beach", "Lancaster", "Pasadena"),
        col = c("#b31b1b", "grey30", "#1f6fb4", "darkorange"),
        lty = c(1, 1, 1, NA), pch = c(NA, NA, NA, 16), bty = "n")
 ```
@@ -336,11 +368,7 @@ legend("topright",
 Pasadena is dots and not a line because Pasadena reports one day in three. A
 line through it would have drawn straight across its own peak.
 
-:::
-
-## Reading the four stations {#read-four}
-
-::: {.content-hidden when-format="revealjs"}
+### Reading it {#read-four}
 
 Pasadena, nearest the Eaton fire, records January's highest reading: **72.5
 on the 10th**, and it was already at **64.1 on the 7th**, the day the fires
@@ -356,21 +384,23 @@ the axis had to be set by hand.
 :::
 
 ::: {.content-visible when-format="revealjs"}
-
-- Pasadena, nearest the Eaton fire: **72.5** on Jan 10, already **64.1** on
-  the 7th.
-- Compton and Long Beach peak a day later and lower — **47.7** and **40.7**,
-  both on the 9th — as smoke reaches the coast.
-- Lancaster stays flat, then spikes on its **own** day, Jan 7, at **24.9**:
-  blowing dust, not smoke.
-
+::: {.notes}
+Read it off the figure. Pasadena, nearest the Eaton fire, is highest: 72.5 on
+the 10th, already 64.1 on the 7th, the day the fires start. Compton and Long
+Beach peak a day earlier and lower, 47.7 and 40.7 on the 9th, as the smoke
+reaches the coast. Lancaster stays flat through the whole episode and spikes
+on its OWN day, Jan 7, at 24.9 -- blowing dust, not smoke. Four monitors,
+four stories, one screen. And Compton's tallest January bar, 53.2, is Jan 1:
+fireworks, six days before any fire. That is why the axis had to be set by
+hand.
+:::
 :::
 
-## `hist()`: the shape of one column {#hist}
+## `hist()`: the distribution of one variable {#hist}
 
 ```{r}
 #| label: hist-breaks
-#| script: "The shape of one column"
+#| script: "The distribution of one variable"
 #| fig-alt: "Histogram of daily PM2.5 across the four stations with forty bins requested. The mass piles up between 0 and 15 with a long thin tail past 70. The leftmost bar sits left of zero, separated from the main mass, and a dashed red vertical line marks zero."
 hist(d$pm25, breaks = 40, col = "grey85",
      main = "", xlab = "Daily mean PM2.5 (ug/m3)")
@@ -464,27 +494,35 @@ separate a bell from two humps from a hard skew.
 :::
 
 ::: {.content-visible when-format="revealjs"}
-
-All four: **mean 20.00, sd 8.00.** Maxima: 49.94, 37.72, **138.53**, 32.97.
-
+::: {.notes}
+All four: mean 20.00, sd 8.00. Maxima: 49.94, 37.72, 138.53, 32.97.
+:::
 :::
 
-## Anscombe's quartet {#anscombe}
+## Anscombe's quartet: four identical summaries {#anscombe-numbers}
+
+```{r}
+#| label: anscombe-numbers
+#| script: "Anscombe's quartet: the summaries"
+round(colMeans(anscombe), 2)
+
+round(c(cor(anscombe$x1, anscombe$y1), cor(anscombe$x2, anscombe$y2),
+        cor(anscombe$x3, anscombe$y3), cor(anscombe$x4, anscombe$y4)), 3)
+```
+
+## Anscombe's quartet: four different pictures {#anscombe}
 
 ```{r}
 #| label: anscombe
-#| script: "Anscombe's quartet"
-#| fig-height: 5
+#| script: "Anscombe's quartet: the pictures"
+#| fig-height: 4.6
 #| fig-alt: "Anscombe's four datasets as four scatterplots: a loose linear cloud, a smooth arch, a tight line with one far outlier, and a vertical stack of identical x values with one point far to the right."
-par(mfrow = c(2, 2), mar = c(4, 4, 1, 1))
+op <- par(mfrow = c(2, 2), mar = c(4, 4, 1, 1))
 plot(anscombe$x1, anscombe$y1)
 plot(anscombe$x2, anscombe$y2)
 plot(anscombe$x3, anscombe$y3)
 plot(anscombe$x4, anscombe$y4)
-par(mfrow = c(1, 1))
-
-round(c(cor(anscombe$x1, anscombe$y1), cor(anscombe$x2, anscombe$y2),
-        cor(anscombe$x3, anscombe$y3), cor(anscombe$x4, anscombe$y4)), 3)
+par(op)
 ```
 
 ::: {.content-hidden when-format="revealjs"}
@@ -504,12 +542,9 @@ throws away structure you needed.
 :::
 
 ::: {.content-visible when-format="revealjs"}
-
-Every x mean 9.0, every y mean 7.5, every correlation **0.816**.
-
-A cloud, an arch, a line with an outlier, and one point inventing a
-correlation.
-
+::: {.notes}
+Every x mean 9.0, every y mean 7.5, every correlation 0.816. A cloud, an arch, a line with an outlier, and one point inventing a correlation.
+:::
 :::
 
 ## `boxplot()`: one column by groups {#boxplot}
@@ -615,10 +650,9 @@ missing labels. Two sections from now it stops being a magic incantation.
 :::
 
 ::: {.content-visible when-format="revealjs"}
-
-Pasadena's **115** is not a broken monitor. It is a one-day-in-three
-schedule — which is why Pasadena had to be dots.
-
+::: {.notes}
+Pasadena's 115 is not a broken monitor. It is a one-day-in-three schedule — which is why Pasadena had to be dots.
+:::
 :::
 
 ## Exercise 1 {#exercise-1}
@@ -674,10 +708,11 @@ zero is the finding, zero is not.
 
 :::
 
+## The same arguments on a histogram {#port-hist-slide}
+
 ```{r}
 #| label: port-hist
 #| script: "The same arguments on a histogram"
-#| fig-height: 3.6
 #| fig-alt: "The four-station histogram with a grey fill, a written title, a labelled x axis, and horizontal y-axis numbers."
 hist(d$pm25, col = "grey85", las = 1,
      main = "Four LA County monitors, 2025",
@@ -785,10 +820,9 @@ has room for them.
 :::
 
 ::: {.content-visible when-format="revealjs"}
-
-`mar` bought the space, `las = 1` turned the text upright, `horizontal = TRUE`
-put the long names on the axis that has room.
-
+::: {.notes}
+mar bought the space, las = 1 turned the text upright, horizontal = TRUE put the long names on the axis that has room.
+:::
 :::
 
 ## `par(mfrow)` and `par(mfcol)`: panels {#fill-order}
@@ -828,17 +862,16 @@ at the top, and do not guess later.
 ```{r}
 #| label: panels-four
 #| script: "Four stations, four panels"
-#| fig-height: 4.1
+#| fig-height: 4.6
 #| fig-alt: "Four panels in a two-by-two grid, all on the same January window and the same 0 to 75 vertical scale, each showing one station, each with a dashed red line on January 7. Pasadena peaks highest at 72.5 on January 10; Compton and Long Beach peak lower and a day earlier; Lancaster is flat except for one spike on January 7. A single title runs across the top of all four."
-xr <- as.Date(c("2025-01-01", "2025-01-31"))   # one window, all four
 op <- par(mfrow = c(2, 2), mar = c(3, 4, 2, 1), oma = c(0, 0, 3, 0))
 invisible(lapply(transect, function(s) {
   x <- jan[jan$site == s, ]
-  plot(x$date, x$pm25, type = "o", ylim = c(0, 75), xlim = xr,
-       xlab = "", ylab = "PM2.5 (ug/m3)", main = s)
+  plot(x$date, x$pm25, type = "o", ylim = c(0, 75), xlim = xr, main = s,
+       xlab = "", ylab = "PM2.5 (ug/m3)")
   abline(v = as.Date("2025-01-07"), col = "#b31b1b", lty = 2)
 }))
-mtext("January 2025, four LA County monitors", outer = TRUE, line = 1, cex = 1.2)
+mtext("January 2025, four LA County monitors", outer = TRUE, line = 1)
 par(op)
 ```
 
@@ -847,8 +880,7 @@ par(op)
 - `mar` belongs to a panel; `oma` belongs to the **device**.
   `oma = c(0, 0, 3, 0)` reserves three lines across the top of the whole
   device, and `mtext(..., outer = TRUE, line = 1)` writes into the second of
-  them. A per-panel `main` could never span four panels. `cex` scales text:
-  `1.2` is twenty per cent bigger than normal.
+  them. A per-panel `main` could never span four panels. 
 - `type = "o"` draws the line **and** the points, so you can still see where
   the real observations are. That is why Pasadena's panel is honest: eleven
   circles, and the line between them is visibly interpolation.
@@ -865,12 +897,9 @@ last line.
 :::
 
 ::: {.content-visible when-format="revealjs"}
-
-- Shared `ylim` **and** `xlim`, or the panels are four plots pretending to be
-  a comparison.
-- `oma` + `mtext(outer = TRUE)` is how one title covers four panels.
-- `par(op)` on the last line, every time.
-
+::: {.notes}
+- Shared ylim and xlim, or the panels are four plots pretending to be a comparison. oma + mtext(outer = TRUE) is how one title covers four panels. par(op) on the last line, every time.
+:::
 :::
 
 ## `png()` and `dev.off()`: writing to disk {#png}
@@ -1248,7 +1277,7 @@ the layers, the canvas, and writing to disk.
 |:--|:--|
 | `plot(x, y)` | two columns against each other, one point per row |
 | `plot(x, y, type = "l")` | one series in its natural order; `"p"` `"b"` `"o"` are the other marks |
-| `hist(x, breaks = 40)` | the shape of one column; `breaks` is a suggestion |
+| `hist(x, breaks = 40)` | the distribution of one variable; `breaks` is a suggestion |
 | `boxplot(y ~ g, data = d)` | `y` split by the groups in `g`; read `~` as "by" |
 | `barplot(table(g))` | how often each category shows up |
 

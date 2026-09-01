@@ -8,6 +8,18 @@
 # (Mac) or Ctrl-Enter (Windows).
 # = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 
+# Get the data ----
+dir.create("data", showWarnings = FALSE)
+
+f <- "data/epa_pm25_la_county_2025.csv"
+if (!file.exists(f)) {
+  download.file(paste0("https://arielortizbobea.github.io/aem6850/",
+                       "fall-2026/sessions/", f), f)
+}
+
+file.exists(f)
+
+
 # Build the working table ----
 pm <- read.csv("data/epa_pm25_la_county_2025.csv",
                colClasses = c("Site.ID" = "character"))
@@ -25,13 +37,6 @@ d <- pm[pm$site %in% transect &
         pm$POC == 1 & pm$AQS.Parameter.Code == 88101, ]
 
 table(d$site)
-
-
-# If data/ is missing the file ----
-# dir.create("data", showWarnings = FALSE)
-# download.file(paste0("https://arielortizbobea.github.io/aem6850/",
-#                      "fall-2026/sessions/data/epa_pm25_la_county_2025.csv"),
-#               "data/epa_pm25_la_county_2025.csv")
 
 
 # One series through time ----
@@ -54,6 +59,8 @@ lb   <- jan[jan$site == "Long Beach-Route 710 Near Road", ]
 lanc <- jan[jan$site == "Lancaster - Fairgrounds", ]
 pas  <- jan[jan$site == "Pasadena", ]
 
+xr   <- as.Date(c("2025-01-01", "2025-01-31"))   # one window for every panel
+
 
 # Four stations, first attempt ----
 plot(comp$date, comp$pm25, type = "l", col = "#b31b1b",
@@ -69,13 +76,12 @@ plot(comp$date, comp$pm25, type = "l", col = "#b31b1b", lwd = 2,
 lines(lb$date,   lb$pm25,   col = "grey30")
 lines(lanc$date, lanc$pm25, col = "#1f6fb4")
 points(pas$date, pas$pm25,  col = "darkorange", pch = 16)
-legend("topright",
-       legend = c("Compton", "Long Beach", "Lancaster", "Pasadena"),
+legend("topright", c("Compton", "Long Beach", "Lancaster", "Pasadena"),
        col = c("#b31b1b", "grey30", "#1f6fb4", "darkorange"),
        lty = c(1, 1, 1, NA), pch = c(NA, NA, NA, 16), bty = "n")
 
 
-# The shape of one column ----
+# The distribution of one variable ----
 hist(d$pm25, breaks = 40, col = "grey85",
      main = "", xlab = "Daily mean PM2.5 (ug/m3)")
 abline(v = 0, col = "#b31b1b", lty = 2)
@@ -106,16 +112,20 @@ invisible(lapply(names(q), function(nm) {
 par(op)
 
 
-# Anscombe's quartet ----
-par(mfrow = c(2, 2), mar = c(4, 4, 1, 1))
+# Anscombe's quartet: the summaries ----
+round(colMeans(anscombe), 2)
+
+round(c(cor(anscombe$x1, anscombe$y1), cor(anscombe$x2, anscombe$y2),
+        cor(anscombe$x3, anscombe$y3), cor(anscombe$x4, anscombe$y4)), 3)
+
+
+# Anscombe's quartet: the pictures ----
+op <- par(mfrow = c(2, 2), mar = c(4, 4, 1, 1))
 plot(anscombe$x1, anscombe$y1)
 plot(anscombe$x2, anscombe$y2)
 plot(anscombe$x3, anscombe$y3)
 plot(anscombe$x4, anscombe$y4)
-par(mfrow = c(1, 1))
-
-round(c(cor(anscombe$x1, anscombe$y1), cor(anscombe$x2, anscombe$y2),
-        cor(anscombe$x3, anscombe$y3), cor(anscombe$x4, anscombe$y4)), 3)
+par(op)
 
 
 # Many distributions at once ----
@@ -164,15 +174,14 @@ par(op)
 
 
 # Four stations, four panels ----
-xr <- as.Date(c("2025-01-01", "2025-01-31"))   # one window, all four
 op <- par(mfrow = c(2, 2), mar = c(3, 4, 2, 1), oma = c(0, 0, 3, 0))
 invisible(lapply(transect, function(s) {
   x <- jan[jan$site == s, ]
-  plot(x$date, x$pm25, type = "o", ylim = c(0, 75), xlim = xr,
-       xlab = "", ylab = "PM2.5 (ug/m3)", main = s)
+  plot(x$date, x$pm25, type = "o", ylim = c(0, 75), xlim = xr, main = s,
+       xlab = "", ylab = "PM2.5 (ug/m3)")
   abline(v = as.Date("2025-01-07"), col = "#b31b1b", lty = 2)
 }))
-mtext("January 2025, four LA County monitors", outer = TRUE, line = 1, cex = 1.2)
+mtext("January 2025, four LA County monitors", outer = TRUE, line = 1)
 par(op)
 
 
