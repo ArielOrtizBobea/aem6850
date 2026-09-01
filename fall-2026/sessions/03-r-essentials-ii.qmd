@@ -848,8 +848,10 @@ Before averaging anything, find out what one row is.
 ```{r}
 #| label: one-instrument
 #| script: "One row per what?"
-nrow(la)                                    # rows
-nrow(unique(la[, c("Site.ID", "date")]))    # distinct site-days
+key <- la[, c("Site.ID", "date")]
+
+anyDuplicated(key)     # 0 means none; otherwise the first repeated row
+sum(duplicated(key))   # how many rows repeat a site-day
 ```
 
 ```{r}
@@ -857,13 +859,18 @@ nrow(unique(la[, c("Site.ID", "date")]))    # distinct site-days
 #| script: "Keep one instrument per site"
 frm <- la[la$AQS.Parameter.Code == 88101 & la$POC == 1, ]
 
-nrow(frm) == nrow(unique(frm[, c("Site.ID", "date")]))   # one row per site-day?
+anyDuplicated(frm[, c("Site.ID", "date")])   # 0: one row per site-day now
 ```
 
 ::: {.content-hidden when-format="revealjs"}
 
-**The two numbers disagree.** There are more rows than there are site-days,
-so some site-day appears more than once. Nothing warned you: the file is
+`duplicated()` returns `TRUE` for every row that repeats an earlier one, so
+`sum()` counts them. `anyDuplicated()` is the fast version: it stops at the
+first repeat and returns its position, or `0` if the rows are unique. Use
+`anyDuplicated()` when you want a yes or no, and `duplicated()` when you
+want to see the offenders: `key[duplicated(key), ]`.
+
+**There are 1,270 repeated site-days here.** Nothing warned you: the file is
 correct, it just is not one row per thing you think you are counting.
 
 The reason is that a site can run several instruments, and the file gives
@@ -889,27 +896,39 @@ duplicated keys, and it is the same check a join needs later.
 
 ## tapply(): a matrix from two groupings {#sites-by-months}
 
+Numbers to summarise, what to group them by, a function to run on each
+group. Two groupings give one value per combination.
+
 ```{r}
 #| label: sites-by-months
 #| script: "Sites by months"
 tb <- tapply(frm$Daily.Mean.PM2.5.Concentration,
-             list(frm$Local.Site.Name, frm$month),
-             mean)
+             list(frm$Local.Site.Name, frm$month), mean)
 
-class(tb)
 dim(tb)
 round(tb[, 1:6], 1)
 ```
 
 ::: {.content-hidden when-format="revealjs"}
 
-`tapply()` splits a vector by one or more grouping vectors and applies a
-function to each cell. Give it two groupings and what comes back is a
-**matrix**: eight sites down, twelve months across, one mean in each cell.
+Read the call left to right. The first argument is the column you want
+summarised, here the concentration. The second says how to cut it up:
+`list(site, month)` means group by site *and* by month, so every
+site-and-month pair is its own group. The third is what to compute on each
+group, here `mean`.
 
-A long file of 4,757 rows is now a grid of 96 numbers you can read. That is
-the move: the data frame is how the file arrives, the matrix is the shape the
-question has.
+`tapply()` then does three things. It splits the vector into those groups,
+runs the function on each one, and arranges the answers by the groupings it
+was given. One grouping gives a named vector. Two give a **matrix**, with
+the first grouping down the rows and the second across the columns: eight
+sites by twelve months, one mean in each of the 96 cells.
+
+Cells with no rows come back `NA` rather than zero, which is the honest
+answer. A month a site never reported is missing, not clean air.
+
+A long file of 4,757 rows is now a grid you can read at a glance. That is
+the move worth taking away: the data frame is how the file arrives, and the
+matrix is the shape the question has.
 
 :::
 
@@ -1269,6 +1288,7 @@ sapply(list.files("data", pattern = "\\.csv$"),
 | `t(m)`, `m %*% v` | Transpose; matrix multiplication |
 | `diag(m)` | Pull out the diagonal |
 | `diag(3)`, `diag(c(4, 5, 6))` | Build an identity matrix; build a diagonal one |
+| `Matrix::bdiag(a, b)` | Blocks down the diagonal, zeros elsewhere |
 | `rbind(a, b)`, `cbind(a, b)` | Stack; widen. Matched by position, not by name |
 | `head(m, 3)`, `tail(m)` | First or last rows; works on frames too |
 | `rowSums(m)`, `rowMeans(m)` | One number per row, fast |
@@ -1289,6 +1309,7 @@ sapply(list.files("data", pattern = "\\.csv$"),
 | `unlist(l)` | Flatten to one vector, one type |
 | `do.call(rbind, l)` | Stack the elements into a matrix or frame |
 | `lm(y ~ x)`, `fitted(fit)` | A fitted model is a list; the values on the line |
+| `plot(x, y)`, `abline(fit)`, `segments()` | Draw the points, the fitted line, the residuals |
 
 **One function, many things**
 
@@ -1320,12 +1341,19 @@ sapply(list.files("data", pattern = "\\.csv$"),
 | Code | What it does |
 |:--|:--|
 | `unique(x)` | Drop repeats; `length(unique(x))` counts distinct values |
+| `duplicated(d)` | `TRUE` for each row that repeats an earlier one |
+| `anyDuplicated(d)` | Position of the first repeat, or `0` if there are none |
 | `which.max(x)`, `which.min(x)` | The *position* of the extreme value |
 | `x[which.max(x)]` | ...so this is the value itself |
 | `max(x)`, `min(x)`, `range(x)` | The extremes |
 | `sort(x)`, `order(x)` | Sorted values; the positions that would sort them |
 | `strsplit(x, "-")` | Split text; returns a list, so `[[1]]` to get the pieces |
 | `set.seed(1)`, `sample(x, n)` | A reproducible random draw |
+| `rnorm(n)` | `n` draws from a standard normal |
+| `sum(x)`, `mean(x)`, `median(x)` | The obvious ones; `sum()` of a logical counts `TRUE`s |
+| `round(x, 1)` | Cut decimals before you write, not after |
+| `data.frame(a = , b = )` | Build one from columns |
+| `paste0("a", "b")` | Glue text with no separator; `paste()` adds a space |
 
 **Files**
 
@@ -1340,6 +1368,8 @@ sapply(list.files("data", pattern = "\\.csv$"),
 | `arrow::write_parquet(d, f)` | Large tables, typed and fast |
 | `list.files(dir, pattern =)` | The names, ready for `lapply()` |
 | `file.path("data", f)` | Build a path that works on any machine |
+| `dir.create("data")` | Make a folder from the script, not by hand |
+| `download.file(url, dest)` | Fetch a file so the script is self-contained |
 | `merge(a, b, by = "id")` | Glue two tables on a shared key |
 | `merge(a, b, by =, all.x = TRUE)` | Keep every row of `a`; fill the rest with `NA` |
 

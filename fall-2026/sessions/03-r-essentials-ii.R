@@ -254,22 +254,22 @@ seq(as.Date("2025-01-01"), as.Date("2025-12-01"), by = "month")
 
 
 # One row per what? ----
-nrow(la)                                    # rows
-nrow(unique(la[, c("Site.ID", "date")]))    # distinct site-days
+key <- la[, c("Site.ID", "date")]
+
+anyDuplicated(key)     # 0 means none; otherwise the first repeated row
+sum(duplicated(key))   # how many rows repeat a site-day
 
 
 # Keep one instrument per site ----
 frm <- la[la$AQS.Parameter.Code == 88101 & la$POC == 1, ]
 
-nrow(frm) == nrow(unique(frm[, c("Site.ID", "date")]))   # one row per site-day?
+anyDuplicated(frm[, c("Site.ID", "date")])   # 0: one row per site-day now
 
 
 # Sites by months ----
 tb <- tapply(frm$Daily.Mean.PM2.5.Concentration,
-             list(frm$Local.Site.Name, frm$month),
-             mean)
+             list(frm$Local.Site.Name, frm$month), mean)
 
-class(tb)
 dim(tb)
 round(tb[, 1:6], 1)
 
