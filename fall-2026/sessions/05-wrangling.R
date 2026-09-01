@@ -73,8 +73,7 @@ pm |> filter(POC == 1) |> nrow()   # piped: read left to right
 # base R:  head(one[order(-one$pm25), c("date", "pm25")], 5)
 
 pm |>
-  filter(date <= as.Date("2025-02-28"),
-         POC == 1, AQS.Parameter.Code == 88101) |>
+  filter(date <= as.Date("2025-02-28"), POC == 1, AQS.Parameter.Code == 88101) |>
   arrange(desc(pm25)) |>
   select(date, pm25) |>
   head(5)
@@ -130,28 +129,6 @@ other |>
 
 # system.time(): the one-line stopwatch ----
 system.time(read.csv("data/epa_pm25_compton_2025.csv"))
-
-
-# Bring back the weather frame ----
-la <- read.csv("data/la-weather-dec2024-feb2025.csv", skip = 3)
-names(la) <- c("date", "gust", "wind", "tmax", "rh_min", "precip")
-la$date <- as.Date(la$date)
-
-
-# = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
-# You try (5 minutes) ----
-# 1. The windstorm, top three: chain arrange(), select(), and head() to
-#    print the three biggest gust days with their dates. Write down which
-#    date must come first.
-#
-# 2. Rain days by month: make month a factor with
-#    levels = c("Dec", "Jan", "Feb"), then group_by(month) |>
-#    summarize(days = n(), rain_days = sum(precip > 0)).
-#    Write down which month must have the most rain before you run it.
-#
-# 3. One line: la |> count(precip > 0). Write both numbers down first.
-#    Your table from task 2 already fixes what they must be.
-# = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 
 
 # The end

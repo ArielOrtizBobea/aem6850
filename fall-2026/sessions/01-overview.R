@@ -51,16 +51,4 @@ max(la$gust) / median(la$gust)              # 2. how unusual it was
 sum(la$precip[format(la$date, "%Y-%m") == "2024-12"])  # 3. December rain, in mm
 
 
-# = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
-# You try (5 minutes) ----
-# 1. Pick a place you care about. Look up its latitude and longitude, put them
-#    into the URL above, and re-run everything from the top.
-#
-# 2. Plot `tmax` instead of `gust`. What units is it in? (If you are not sure,
-#    look at line 4 of the raw file -- open the URL in a browser.)
-#
-# 3. Add one comment saying, in a sentence, what your plot shows.
-# = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
-
-
 # The end

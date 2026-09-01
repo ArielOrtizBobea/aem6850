@@ -11,11 +11,10 @@
 # Matrices ----
 m <- matrix(1:6, nrow = 2)
 m
-dim(m); nrow(m); ncol(m)
+c(dim(m), nrow(m), ncol(m))
 
-matrix(1:6, nrow = 2, byrow = TRUE)   # filled across instead of down
-
-matrix(1:4, nrow = 4, ncol = 4)       # too few values: R recycles them
+matrix(1:6, nrow = 2, byrow = TRUE)   # filled across, not down
+matrix(1:2, nrow = 2, ncol = 3)       # too few values: R recycles them
 
 
 # Indexing a matrix ----
@@ -26,6 +25,8 @@ m[, 3]      # all of column 3
 class(m[, 3])                # a plain vector: the dimension was dropped
 class(m[, 3, drop = FALSE])  # still a matrix
 
+head(m, 1)                   # first rows; tail() for the last
+
 
 # Three ways to pick: position, name, logical ----
 temps <- matrix(c(12, 15, 19,
@@ -34,10 +35,9 @@ rownames(temps) <- c("Compton", "Reseda")
 colnames(temps) <- c("Jan", "Feb", "Mar")
 temps
 
-temps[2, 2]                    # by position
-temps["Reseda", "Feb"]         # by name
-temps[, c("Jan", "Feb")]       # by name, several at once
-temps[temps > 15]              # by logical: every cell that passes
+temps["Reseda", "Feb"]     # by name, not position
+temps[, c("Jan", "Feb")]   # several at once
+temps[temps > 15]          # by logical: returns a vector
 
 
 # The diagonal ----
@@ -58,8 +58,10 @@ t(temps)             # flip rows and columns
 more <- matrix(c(9, 11, 16), nrow = 1,
                dimnames = list("Pasadena", c("Jan", "Feb", "Mar")))
 
-rbind(temps, more)          # a new row: same columns
+rbind(temps, more)              # a new row: same columns
 cbind(temps, Apr = c(21, 24))   # a new column: same rows
+
+Matrix::bdiag(diag(2), matrix(1, 2, 2))   # blocks down the diagonal
 
 
 # One matrix, one type ----
@@ -69,19 +71,15 @@ rbind(c(1, 2, 3),
 
 # Sparse matrices ----
 library(Matrix)
+set.seed(1); n <- 2000
+d <- matrix(0, n, n); d[sample(n * n, n * n * 0.01)] <- 1   # 1% non-zero
+s <- Matrix(d, sparse = TRUE); v <- rnorm(n)
 
-set.seed(1)
-n <- 2000
-d <- matrix(0, n, n)
-d[sample(n * n, n * n * 0.01)] <- 1   # only 1% of cells are not zero
-s <- Matrix(d, sparse = TRUE)
+c(dense = format(object.size(d), units = "MB"),
+  sparse = format(object.size(s), units = "MB"))
 
-format(object.size(d), units = "MB")   # dense: every cell stored
-format(object.size(s), units = "MB")   # sparse: only the non-zeros
-
-v <- rnorm(n)
-system.time(for (i in 1:20) d %*% v)   # the same product, dense
-system.time(for (i in 1:20) s %*% v)   # ...and sparse
+c(dense  = system.time(for (i in 1:20) d %*% v)[["elapsed"]],
+  sparse = system.time(for (i in 1:20) s %*% v)[["elapsed"]])
 
 
 # Lists ----
@@ -150,12 +148,11 @@ do.call(rbind, pieces)      # one matrix, one row per element
 
 
 # apply(): once per row, once per column ----
-temps
-apply(temps, 1, mean)    # 1 = rows
-apply(temps, 2, mean)    # 2 = columns
+apply(temps, 1, mean)              # 1 = rows
+apply(temps, 2, mean)              # 2 = columns
 
-rowMeans(temps)          # the same thing, named and faster
-colMeans(temps)
+rowMeans(temps); colMeans(temps)   # same answers, named and faster
+rowSums(temps)
 
 
 # Any function, not just mean ----
@@ -211,10 +208,9 @@ dim(la)
 
 
 # A data frame is a list of columns ----
-is.list(la)                             # a data frame IS a list
-length(la)                              # of 22 columns
-
-sapply(la, class)                       # so sapply walks the columns
+is.list(la)             # a data frame IS a list
+length(la)              # of 22 columns
+head(sapply(la, class)) # so sapply walks the columns
 
 
 # The identifier trap ----
@@ -243,33 +239,29 @@ range(la$date)
 # Pulling pieces back out of a date ----
 d <- as.Date("2025-01-07")
 
-format(d, "%m")       # month
-format(d, "%b")       # short month name
-format(d, "%Y")       # year
-weekdays(d)           # which day of the week it fell on
-format(d, "%j")       # day of the year, 1 to 365
-months(d)
+c(month = format(d, "%m"), name = format(d, "%b"),
+  year = format(d, "%Y"), doy = format(d, "%j"),
+  day = weekdays(d))
 
 la$month <- format(la$date, "%m")
 
 
 # Dates are numbers, so they do arithmetic ----
-d + 30                                        # thirty days later
-as.Date("2025-03-01") - d                     # how far apart
-seq(d, by = "week", length.out = 4)           # every week
+d + 30                                # thirty days later
+as.Date("2025-03-01") - d             # how far apart
+seq(d, by = "week", length.out = 4)   # a sequence of dates
 seq(as.Date("2025-01-01"), as.Date("2025-12-01"), by = "month")
 
 
 # One row per what? ----
-nrow(la)                                       # rows in the file
-nrow(unique(la[, c("Site.ID", "date")]))       # distinct site-days
+nrow(la)                                    # rows
+nrow(unique(la[, c("Site.ID", "date")]))    # distinct site-days
 
 
 # Keep one instrument per site ----
 frm <- la[la$AQS.Parameter.Code == 88101 & la$POC == 1, ]
 
-nrow(frm)
-nrow(frm) == nrow(unique(frm[, c("Site.ID", "date")]))   # one row per site-day now?
+nrow(frm) == nrow(unique(frm[, c("Site.ID", "date")]))   # one row per site-day?
 
 
 # Sites by months ----
@@ -280,6 +272,22 @@ tb <- tapply(frm$Daily.Mean.PM2.5.Concentration,
 class(tb)
 dim(tb)
 round(tb[, 1:6], 1)
+
+
+# reshape(): long to wide and back ----
+long <- data.frame(site  = c("A", "A", "B", "B"),
+                   month = c("01", "02", "01", "02"),
+                   pm25  = c(21.3, 13.4, 11.6, 7.2))
+long
+
+wide <- reshape(long, direction = "wide",
+                idvar = "site", timevar = "month", v.names = "pm25")
+wide
+
+
+# reshape(): wide back to long ----
+reshape(wide, direction = "long", idvar = "site",
+        varying = list(2:3), v.names = "pm25", times = c("01", "02"))
 
 
 # Both margins at once ----

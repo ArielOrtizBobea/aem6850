@@ -687,8 +687,7 @@ mean sitting in row "Compton" of `tb`.
 
 ## Two series on one plot {#layering}
 
-The counts said the sampler was down. Draw both instruments and you can see
-it.
+Draw both instruments and the gap is visible.
 
 ```{r}
 #| label: layering
@@ -701,9 +700,8 @@ con <- pm[pm$Local.Site.Name == "Compton" &
 plot(con$date, con$pm25, type = "l", col = "grey60",
      xlab = "", ylab = "Daily PM2.5 (ug/m3)")
 points(reg$date, reg$pm25, pch = 16, cex = 0.5, col = "#b31b1b")
-legend("topright", c("continuous (POC 3)", "regulatory (POC 1)"),
-       col = c("grey60", "#b31b1b"), lty = c(1, NA), pch = c(NA, 16),
-       bty = "n")
+legend("topright", c("continuous", "regulatory"), bty = "n",
+       col = c("grey60", "#b31b1b"), lty = c(1, NA), pch = c(NA, 16))
 ```
 
 ::: {.content-hidden when-format="revealjs"}
@@ -904,54 +902,6 @@ extremes are dots (Jan 7 at 66, far beyond the whisker) while its median
 (22.7) barely beats February's (21.6): extreme days, not a windier month
 throughout.
 :::
-:::
-
-## Verify {#verify}
-
-::: {.content-hidden when-format="revealjs"}
-
-The quick checks so far have all been numeric: the right number of rows,
-the right classes, nothing impossible in the summary. This one is not:
-
-:::
-
-> **Plot the column before you trust the column.**
-
-::: {.content-hidden when-format="revealjs"}
-
-Plot every column that feeds a number you will report, once, before you
-believe anything computed from it. The habit costs ten seconds per column.
-It is the only check in the kit that works when every value is plausible
-and only the shape is wrong.
-
-**This habit is graded.** Homeworks ask for diagnostic plots, and each plot
-needs one written sentence that reads it, the way this page read each plot
-above. An unread plot checks nothing.
-
-The quick checks, now five:
-
-| Check | Question it answers |
-|:--|:--|
-| `dim()` | Did I get the number of rows I expected? |
-| `str()` | Is every column the class it should be? |
-| `head()` | Does row one look like a row of data? |
-| `summary()` | Is anything impossible, or off by a factor of a thousand? |
-| `hist()` / `plot()` | Is anything wrong that no single number can show? |
-
-:::
-
-::: {.content-visible when-format="revealjs"}
-
-The quick checks, now five:<br>
-`dim()`: the rows I expected?<br>
-`str()`: the classes I expected?<br>
-`head()`: does row one look like data?<br>
-`summary()`: anything impossible?<br>
-`hist()` / `plot()`: anything wrong that **no single number can show?**
-
-Every diagnostic plot needs one written sentence that reads it. That
-sentence is graded.
-
 :::
 
 ## Practice {#practice}

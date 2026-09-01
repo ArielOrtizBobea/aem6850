@@ -150,9 +150,8 @@ con <- pm[pm$Local.Site.Name == "Compton" &
 plot(con$date, con$pm25, type = "l", col = "grey60",
      xlab = "", ylab = "Daily PM2.5 (ug/m3)")
 points(reg$date, reg$pm25, pch = 16, cex = 0.5, col = "#b31b1b")
-legend("topright", c("continuous (POC 3)", "regulatory (POC 1)"),
-       col = c("grey60", "#b31b1b"), lty = c(1, NA), pch = c(NA, 16),
-       bty = "n")
+legend("topright", c("continuous", "regulatory"), bty = "n",
+       col = c("grey60", "#b31b1b"), lty = c(1, NA), pch = c(NA, 16))
 
 
 # When the default axis is wrong ----

@@ -357,8 +357,7 @@ Read it the same way; write `|>`.
 # base R:  head(one[order(-one$pm25), c("date", "pm25")], 5)
 
 pm |>
-  filter(date <= as.Date("2025-02-28"),
-         POC == 1, AQS.Parameter.Code == 88101) |>
+  filter(date <= as.Date("2025-02-28"), POC == 1, AQS.Parameter.Code == 88101) |>
   arrange(desc(pm25)) |>
   select(date, pm25) |>
   head(5)
@@ -547,10 +546,10 @@ year |> count(month)
 
 ::: {.content-visible when-format="revealjs"}
 
-- April 2 and May 1, exactly as the bars showed.
-- The counts sum to 301. A complete year has 365 days: 64 are missing.
-- The part the bars could not show: March logged 30 of 31 days, June 28 of
-  30, September 27 of 30.
+- April 2 and May 1, as the bars showed. The counts sum to 301, so 64 days
+  are missing from a 365-day year.
+- What the bars could not show: March 30 of 31, June 28 of 30, September 27
+  of 30.
 
 :::
 
@@ -646,89 +645,6 @@ after you change something.
 
 - Read `elapsed`: the seconds you waited. Today, effectively zero.
 - The habit: when a line feels slow, wrap it once and note the number.
-
-:::
-
-## You try {#you-try}
-
-Five minutes, on the weather frame. Stubs are in the live script.
-
-```{r}
-#| label: weather-load
-#| script: "Bring back the weather frame"
-la <- read.csv("data/la-weather-dec2024-feb2025.csv", skip = 3)
-names(la) <- c("date", "gust", "wind", "tmax", "rh_min", "precip")
-la$date <- as.Date(la$date)
-```
-
-```{r}
-#| label: you-try
-#| exercise: true
-#| script: "You try (5 minutes)"
-#| eval: false
-# 1. The windstorm, top three: chain arrange(), select(), and head() to
-#    print the three biggest gust days with their dates. Write down which
-#    date must come first.
-#
-# 2. Rain days by month: make month a factor with
-#    levels = c("Dec", "Jan", "Feb"), then group_by(month) |>
-#    summarize(days = n(), rain_days = sum(precip > 0)).
-#    Write down which month must have the most rain before you run it.
-#
-# 3. One line: la |> count(precip > 0). Write both numbers down first.
-#    Your table from task 2 already fixes what they must be.
-```
-
-::: {.content-visible when-format="revealjs"}
-::: {.notes}
-Debriefs, one sentence each: (1) Jan 7 at 65.9, then Jan 8 at 50.8, then
-Feb 13 at 49.0, the day of session 4's biggest storm; session 1's "66" was
-this 65.9 rounded. (2) Dec 2, Jan 3, Feb 8: February has the most rain,
-matching the drought's Jan 26 break; without the factor the months print
-Dec, Feb, Jan. (3) 13 wet days and 77 dry, because 2 + 3 + 8 = 13 and the
-frame has 90 rows.
-:::
-:::
-
-## Verify {#verify}
-
-::: {.content-hidden when-format="revealjs"}
-
-Each session so far installed one habit:
-
-| Session | The habit |
-|:--|:--|
-| 1 | Write down what the data should show, then run, then reconcile. |
-| 2 | Run `str()` before you compute. |
-| 3 | Plot the column before you trust the column. |
-| 4 | Predict every count from evidence before you run it. |
-
-:::
-
-> **Write down the count you expect, and where the expectation comes from.
-> Then run, and reconcile.**
-
-::: {.content-hidden when-format="revealjs"}
-
-The expectation always has a source: the calendar, the sampling schedule, a
-plot you already read, a total that must be conserved. Today the habit ran
-four times: 59 rows from the calendar, 4 days from a histogram, six summary
-numbers from a boxplot, and twelve counts that had to sum to 301. When the
-number that returns is not the one you wrote down, stop and resolve the
-difference before moving on. Today the difference was six missing days
-nobody had noticed.
-
-Joins need this habit most: they silently drop rows and silently duplicate
-them, and the row count you write down before each join is the check that
-catches both.
-
-:::
-
-::: {.content-visible when-format="revealjs"}
-
-The expectation always has a source: the calendar, the sampling schedule, a
-plot you already read, a total that must be conserved. When the returned
-number is not the written-down number, stop and resolve it.
 
 :::
 
