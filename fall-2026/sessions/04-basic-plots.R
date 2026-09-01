@@ -1,7 +1,7 @@
 # = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 # AEM 6850 -- Empirical Methods for Applied Economists
 # Prof. Ariel Ortiz-Bobea
-# Session 4 -- Basic plots I & II
+# Session 4 -- Basic plots I
 # Thursday, September 3, 2026
 #
 # Run it one line at a time: put the cursor on a line and press Cmd-Return
@@ -231,129 +231,6 @@ plot(d$pm25, d$Daily.AQI.Value,
 
 # The correlation that hides the kinks ----
 round(cor(d$pm25, d$Daily.AQI.Value), 3)
-
-
-# A layout matrix ----
-matrix(c(1, 1, 2, 3), nrow = 2, byrow = TRUE)
-
-
-# What that matrix makes ----
-layout(matrix(c(1, 1, 2, 3), nrow = 2, byrow = TRUE), heights = c(2, 1))
-layout.show(3)
-layout(1)
-
-
-# A layout in use ----
-op <- par(mar = c(3, 4, 2, 1))
-layout(matrix(c(1, 1, 2, 3), nrow = 2, byrow = TRUE), heights = c(2, 1))
-
-plot(comp$date, comp$pm25, type = "o", xlim = xr,
-     xlab = "", ylab = "PM2.5 (ug/m3)", main = "Compton, January 2025")
-hist(d$pm25[d$site == "Compton"], breaks = seq(-5, 60, by = 5),
-     main = "Compton, all year", xlab = "")
-hist(d$pm25[d$site == "Lancaster - Fairgrounds"], breaks = seq(-5, 60, by = 5),
-     main = "Lancaster, all year", xlab = "")
-
-layout(1)
-par(op)
-
-
-# Shaded areas: rect() ----
-plot(comp_y$date, comp_y$pm25, type = "l", col = "grey30",
-     xlab = "", ylab = "PM2.5 (ug/m3)")
-rect(xleft = as.Date("2025-01-01"), xright = as.Date("2025-01-21"),
-     ybottom = -5, ytop = 80,
-     col = adjustcolor("#b31b1b", alpha.f = 0.15), border = NA)
-
-
-# Confidence bands: polygon() ----
-set.seed(2)
-x <- runif(200, 0, 10)
-y <- 20 + 3*x - 1.5*x^2 + 0.11*x^3 + 5*rnorm(200)
-fit  <- lm(y ~ x + I(x^2) + I(x^3))
-X    <- cbind(1, x, x^2, x^3)
-se   <- sqrt(diag(X %*% vcov(fit) %*% t(X)))
-i    <- order(x)
-
-plot(x, y, pch = 21, col = "grey40", bg = "grey85", xlab = "x", ylab = "y")
-polygon(c(x[i], rev(x[i])),
-        c(fitted(fit)[i] + 1.96*se[i], rev(fitted(fit)[i] - 1.96*se[i])),
-        col = adjustcolor("#b31b1b", alpha.f = 0.25), border = NA)
-lines(x[i], fitted(fit)[i], col = "#b31b1b", lwd = 2)
-
-
-# Colour scales ----
-library(RColorBrewer)
-cols <- colorRampPalette(brewer.pal(11, "Spectral"))(100)
-v    <- runif(200, 0, 100)
-plot(v, seq_along(v), pch = 16, col = cols[findInterval(v, seq(0, 100, length.out = 100))],
-     xlab = "value", ylab = "")
-
-
-# Custom axes ----
-op <- par(mar = c(3, 4, 1, 1))
-plot(comp_y$date, comp_y$pm25, type = "l", col = "grey30",
-     axes = FALSE, xlab = "", ylab = "")
-firsts <- as.Date(paste0("2025-", sprintf("%02d", 1:12), "-01"))
-axis(1, at = firsts, labels = month.abb)
-axis(1, at = firsts + 15, tck = -0.01, lwd = 0, lwd.tick = 1, labels = FALSE)
-axis(2, las = 2)
-box()
-mtext("PM2.5 (ug/m3)", side = 2, line = 2.5)
-par(op)
-
-
-# Fills, shapes and options ----
-op <- par(mfrow = c(2, 2), mar = c(3, 3, 2, 1))
-hist(d$pm25, breaks = 30, col = "#b31b1b", density = 25, angle = 45,
-     border = "#b31b1b", main = "density = / angle =", xlab = "")
-
-m <- table(format(d$date, "%m"), d$site)[1:4, ]
-barplot(m, col = grey.colors(4), main = "stacked", las = 2, cex.names = 0.5)
-barplot(m, col = grey.colors(4), beside = TRUE, space = c(0, 2),
-        main = "beside = TRUE", las = 2, cex.names = 0.5)
-
-boxplot(pm25 ~ site, data = d, notch = TRUE, boxwex = 0.5,
-        main = "notch = / boxwex =", xlab = "", ylab = "", names = rep("", 4))
-par(op)
-
-
-# Heat maps with image() ----
-mm <- tapply(d$pm25, list(d$site, format(d$date, "%m")), mean)
-op <- par(mar = c(3, 12, 2, 1))
-image(t(mm), col = colorRampPalette(c("white", "#b31b1b"))(20), axes = FALSE)
-axis(1, at = seq(0, 1, length.out = 12), labels = month.abb, tick = FALSE)
-mtext(rownames(mm), side = 2, at = seq(0, 1, length.out = 4), las = 2,
-      cex = 0.7, line = 0.5)
-box()
-par(op)
-
-
-# Maps ----
-library(maps)
-library(mapproj)
-op <- par(mfrow = c(1, 2), mar = c(0, 0, 2, 0))
-map("state"); title("map(\"state\")")
-map("world", proj = "orthographic", orientation = c(15, 260, 0))
-map("state", proj = "orthographic", orientation = c(15, 260, 0), add = TRUE)
-title("orthographic")
-par(op)
-
-
-# Animation ----
-# A GIF is just a folder of PNGs shown in order. Write the frames, then
-# stitch them. Needs the magick package, or ImageMagick on the command line.
-
-# invisible(lapply(200:300, function(angle) {
-#   png(sprintf("frame_%04d.png", angle), width = 600, height = 600)
-#   par(mar = c(0, 0, 0, 0))
-#   map("world", proj = "orthographic", orientation = c(15, angle, 0))
-#   dev.off()
-# }))
-
-# magick::image_write(magick::image_animate(
-#   magick::image_read(list.files(pattern = "^frame_.*png$")), fps = 10),
-#   "globe.gif")
 
 
 # = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
