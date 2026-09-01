@@ -11,9 +11,11 @@
 # Matrices ----
 m <- matrix(1:6, nrow = 2)
 m
-dim(m)
+dim(m); nrow(m); ncol(m)
 
 matrix(1:6, nrow = 2, byrow = TRUE)   # filled across instead of down
+
+matrix(1:4, nrow = 4, ncol = 4)       # too few values: R recycles them
 
 
 # Indexing a matrix ----
@@ -21,17 +23,30 @@ m[2, 3]     # row 2, column 3
 m[2, ]      # all of row 2
 m[, 3]      # all of column 3
 
+class(m[, 3])                # a plain vector: the dimension was dropped
+class(m[, 3, drop = FALSE])  # still a matrix
 
-# Names on the margins ----
+
+# Three ways to pick: position, name, logical ----
 temps <- matrix(c(12, 15, 19,
                   14, 17, 22), nrow = 2, byrow = TRUE)
 rownames(temps) <- c("Compton", "Reseda")
 colnames(temps) <- c("Jan", "Feb", "Mar")
 temps
 
-temps["Reseda", "Feb"]
-rowMeans(temps)
-colMeans(temps)
+temps[2, 2]                    # by position
+temps["Reseda", "Feb"]         # by name
+temps[, c("Jan", "Feb")]       # by name, several at once
+temps[temps > 15]              # by logical: every cell that passes
+
+
+# The diagonal ----
+sq <- matrix(1:9, nrow = 3)
+sq
+
+diag(sq)          # pull the diagonal out
+diag(3)           # build a 3 x 3 identity matrix
+diag(c(4, 5, 6))  # build a diagonal matrix from a vector
 
 
 # Matrix arithmetic ----
@@ -56,14 +71,17 @@ rbind(c(1, 2, 3),
 library(Matrix)
 
 set.seed(1)
-n <- 1000
+n <- 2000
 d <- matrix(0, n, n)
 d[sample(n * n, n * n * 0.01)] <- 1   # only 1% of cells are not zero
-
 s <- Matrix(d, sparse = TRUE)
 
 format(object.size(d), units = "MB")   # dense: every cell stored
 format(object.size(s), units = "MB")   # sparse: only the non-zeros
+
+v <- rnorm(n)
+system.time(for (i in 1:20) d %*% v)   # the same product, dense
+system.time(for (i in 1:20) s %*% v)   # ...and sparse
 
 
 # Lists ----
@@ -95,11 +113,19 @@ str(monitor)
 
 
 # Where lists come from ----
-fit <- lm(c(1, 3, 2, 5) ~ c(1, 2, 3, 4))
+x <- c(1, 2, 3, 4)
+y <- c(1, 3, 2, 5)
+fit <- lm(y ~ x)
 
 class(fit)
 names(fit)          # a list underneath
 fit$coefficients
+
+
+# What the fitted list is describing ----
+plot(x, y, pch = 16, xlab = "x", ylab = "y")
+abline(fit, col = "#b31b1b", lwd = 2)
+segments(x, y, x, fitted(fit), lty = 2, col = "grey55")   # the residuals
 
 
 # Combining list elements ----
@@ -111,14 +137,13 @@ do.call(rbind, pieces)      # one matrix, one row per element
 
 # = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 # Exercise 1 (5 minutes) ----
-# 1. Build a 3 x 4 matrix of the numbers 1 to 12, filled ACROSS the rows.
-#    Name the rows A, B, C. What is the mean of row B?
+# 1. Build a diagonal matrix with the numbers 1 to 5 down the middle.
 #
-# 2. Build a list holding your name, the numbers 1 to 5, and TRUE.
-#    Pull the numeric vector out two different ways, then take its mean.
+# 2. From m (the 2 x 3 matrix), pull the second column two ways: once
+#    as a vector, once still a matrix.
 #
-# 3. What does l["readings"] give you that l[["readings"]] does not?
-#    Answer with class(), not from memory.
+# 3. l["readings"] and l[["readings"]]: which one can you take a mean of?
+#    Find out with class(), not from memory.
 # = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 
 
@@ -128,6 +153,9 @@ do.call(rbind, pieces)      # one matrix, one row per element
 temps
 apply(temps, 1, mean)    # 1 = rows
 apply(temps, 2, mean)    # 2 = columns
+
+rowMeans(temps)          # the same thing, named and faster
+colMeans(temps)
 
 
 # Any function, not just mean ----
@@ -159,17 +187,11 @@ apply(temps, 1, mean)      # same answers, from the matrix
 
 # = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 # Exercise 2 (5 minutes) ----
-# Everything here uses temps and by_site, built earlier in this script.
+# 1. One line: the highest reading in each city. One line: the highest
+#    in each month.
 #
-# 1. One line: the highest reading for each city. One line: the highest
-#    for each month. Which margin number did each one need, and why?
-#
-# 2. Build a list of three numeric vectors of DIFFERENT lengths.
-#    One line for how long each one is; one line for the mean of each.
-#    Why could a matrix not hold this?
-#
-# 3. sapply(by_site, range) came back as a matrix, not a vector.
-#    Use dim() to explain why.
+# 2. One line: the range of each site in by_site. Why does that come
+#    back as a matrix?
 # = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 
 
@@ -204,7 +226,9 @@ la <- read.csv("data/epa_pm25_la_county_2025.csv",
                colClasses = c("Site.ID" = "character"))
 
 la$Site.ID[1]
-length(unique(la$Site.ID))    # eleven monitors in the county
+
+unique(la$Site.ID)            # unique() drops repeats
+length(unique(la$Site.ID))    # ...so this counts monitors: eleven
 
 
 # Dates, one line deep ----
@@ -215,14 +239,37 @@ la$date <- as.Date(la$Date, format = "%m/%d/%Y")
 class(la$date)
 range(la$date)
 
-la$month <- format(la$date, "%m")   # pull pieces back out of a date
+
+# Pulling pieces back out of a date ----
+d <- as.Date("2025-01-07")
+
+format(d, "%m")       # month
+format(d, "%b")       # short month name
+format(d, "%Y")       # year
+weekdays(d)           # which day of the week it fell on
+format(d, "%j")       # day of the year, 1 to 365
+months(d)
+
+la$month <- format(la$date, "%m")
 
 
-# One instrument, one method ----
+# Dates are numbers, so they do arithmetic ----
+d + 30                                        # thirty days later
+as.Date("2025-03-01") - d                     # how far apart
+seq(d, by = "week", length.out = 4)           # every week
+seq(as.Date("2025-01-01"), as.Date("2025-12-01"), by = "month")
+
+
+# One row per what? ----
+nrow(la)                                       # rows in the file
+nrow(unique(la[, c("Site.ID", "date")]))       # distinct site-days
+
+
+# Keep one instrument per site ----
 frm <- la[la$AQS.Parameter.Code == 88101 & la$POC == 1, ]
 
 nrow(frm)
-length(unique(frm$Local.Site.Name))
+nrow(frm) == nrow(unique(frm[, c("Site.ID", "date")]))   # one row per site-day now?
 
 
 # Sites by months ----
@@ -243,14 +290,20 @@ round(apply(tb, 2, mean), 1)                            # per month, all sites
 # Two tables, one key ----
 means <- data.frame(site = rownames(tb),
                     pm25 = round(apply(tb, 1, mean), 1))
-
 coords <- unique(frm[, c("Local.Site.Name", "Site.Latitude", "Site.Longitude")])
 names(coords) <- c("site", "lat", "lon")
 
-nrow(means); nrow(coords)          # count BEFORE
+
+# Merge setup shown ----
+means  <- data.frame(site = rownames(tb), pm25 = round(apply(tb, 1, mean), 1))
+coords <- unique(frm[, c("Local.Site.Name", "Site.Latitude", "Site.Longitude")])
+names(coords) <- c("site", "lat", "lon")
+
+
+# Merge, counting rows before and after ----
+nrow(means); nrow(coords)                    # count BEFORE
 sites <- merge(means, coords, by = "site")
-nrow(sites)                        # and after
-head(sites, 3)
+nrow(sites)                                  # and after
 
 
 # What a join does silently ----
@@ -267,13 +320,13 @@ files
 sapply(files, function(f) nrow(read.csv(file.path("data", f))))
 
 
-# Writing your answer out ----
-answers <- data.frame(
-  site  = rownames(tb),
-  mean  = round(apply(tb, 1, mean), 1)
-)
+# Writing files to disk ----
+answers <- data.frame(site = rownames(tb),
+                      mean = round(apply(tb, 1, mean), 1))
 
-write.csv(answers, "results.csv", row.names = FALSE)
+write.csv(answers, "results.csv", row.names = FALSE)   # text, anything reads it
+saveRDS(answers, "results.rds")                        # R's own format
+readRDS("results.rds")
 
 
 # = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
