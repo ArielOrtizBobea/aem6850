@@ -1,7 +1,7 @@
 ---
-title: "4 · Basic plots"
+title: "4 · Basic plots I & II"
 subtitle: "Thursday, September 3, 2026"
-pagetitle: "AEM 6850 · Session 4 · Basic plots"
+pagetitle: "AEM 6850 · Session 4 · Basic plots I & II"
 execute:
   echo: true
 format:
@@ -40,9 +40,8 @@ knitr::opts_chunk$set(
 [Slides](04-basic-plots-slides.html) · [Live script](04-basic-plots.R) ·
 [Source](https://github.com/ArielOrtizBobea/aem6850/blob/main/fall-2026/sessions/04-basic-plots.qmd)
 
-This session adds the checks `str()` and `summary()` cannot do: four
-base-R plots, one line each, used as instruments rather than
-illustrations.
+Four plots, the settings that work on all of them, panels, and how to get a
+figure out of R and onto disk.
 
 :::
 
@@ -50,251 +49,575 @@ illustrations.
 
 By the end of this session you can:
 
-- Produce one-line diagnostic plots with base R.
-- Choose the plot that matches a suspicion about a column.
-- Read a distribution for skew, outliers, and impossible values.
-- Say what a plot shows that a summary table cannot.
+- Name the plot that matches a question, and say what each one is bad at.
+- Draw one series through time, and several series on shared axes.
+- Read a distribution with `hist()`, and say when a box plot answers better.
+- Move the same argument — `col`, `main`, `las`, `ylim` — between `plot()`,
+  `hist()`, `boxplot()` and `barplot()`.
+- Split a device into panels, control which panel fills first, and put it back.
+- Write a figure to a file at a resolution someone else can use.
 
-## What a plot is for {#thesis}
+## Plotting versus polishing {#thesis}
 
-> **A summary answers the question you asked. A plot answers questions you
-> did not think to ask.**
+> **Plotting and polishing are two different jobs. Today is plotting: pick
+> the plot that matches the question, get it on screen in one line, and learn
+> the settings once — because the same settings work on all of them.**
 
-Four instruments, one line each, over the data frames you already know.
+::: {.content-hidden when-format="revealjs"}
 
-## Rebuild the table {#rebuild}
+Polishing is fonts, palettes, colour schemes, and figures built for readers.
+That is its own day. Nothing today needs to be pretty. Everything today needs
+to be fast, because a plot you can produce in one line is a plot you will
+actually make, and a plot that takes twenty minutes is one you will skip.
 
-Every monitor in the county, all of 2025.
+:::
+
+## Building the working table {#build}
+
+The file holds every PM2.5 monitor in Los Angeles County for 2025. We take
+four on a line across the basin.
 
 ```{r}
-#| label: rebuild
-#| script: "Rebuild the table"
+#| label: build
+#| script: "Build the working table"
 pm <- read.csv("data/epa_pm25_la_county_2025.csv",
                colClasses = c("Site.ID" = "character"))
-names(pm)[names(pm) == "Daily.Mean.PM2.5.Concentration"] <- "pm25"
-pm$date  <- as.Date(pm$Date, format = "%m/%d/%Y")
-pm$month <- format(pm$date, "%m")
 
-frm <- pm[pm$AQS.Parameter.Code == 88101 & pm$POC == 1, ]   # one instrument per site
-tb  <- tapply(frm$pm25, list(frm$Local.Site.Name, frm$month), mean)
-dim(tb)                                                     # 8 sites, 12 months
+names(pm)[names(pm) == "Daily.Mean.PM2.5.Concentration"] <- "pm25"
+names(pm)[names(pm) == "Local.Site.Name"]                <- "site"
+pm$date <- as.Date(pm$Date, format = "%m/%d/%Y")
 ```
 
-And one site's winter, which most of today's instruments read:
+## Four stations on a transect {#transect}
 
 ```{r}
-#| label: rebuild-one
-#| script: "One site, one winter"
-one <- frm[frm$Local.Site.Name == "Compton" &
-           frm$date <= as.Date("2025-02-28"), ]
-nrow(one)   # 59 -- one row per day
+#| label: build-transect
+#| script: "Cut to four stations"
+transect <- c("Pasadena", "Compton",
+              "Long Beach-Route 710 Near Road", "Lancaster - Fairgrounds")
+
+d <- pm[pm$site %in% transect &
+        pm$POC == 1 & pm$AQS.Parameter.Code == 88101, ]
+
+table(d$site)
 ```
 
 ::: {.content-hidden when-format="revealjs"}
 
-The read protects the identifier column, renames the long one, converts the
-date, and pulls the month out. `frm` keeps the federal reference method and
-the first instrument at each site, so a site contributes one number a day.
-`tb` is a matrix: eight sites down, twelve months across.
+*Pasadena* sits in the foothills, *Compton* and *Long Beach* down toward the
+coast, *Lancaster* out over the mountains in the high desert. Four places,
+one air basin, one year, and a reader can check why those four.
 
-`one` narrows that to a single monitor over January and February, which is
-small enough to see every day at once. Today draws both.
+Three things in that chunk are new:
+
+- `pm$site %in% transect` asks, for every row, *is this site one of these
+  four*. It saves writing four `==` tests joined by `or`.
+- A subset can sit on the **left** of the arrow.
+  `names(pm)[names(pm) == "old"] <- "new"` writes into the one position that
+  matches, and `pm$date <- ...` names a column that does not exist yet, so it
+  creates it.
+- `table()` counts how often each value appears. Four names, four counts —
+  that is the check.
+
+And the check is not decoration. Lancaster reported all 365 days; Pasadena
+reported 115. Those two monitors are not on the same calendar, and every plot
+below has to survive that.
 
 ::: {.callout-tip collapse="true"}
-## If `data/` is missing a file
+## If `data/` is missing the file
 
-Run these once and you are caught up. They fetch the same snapshots these
-pages use:
+Run these once and you are caught up. `dir.create()` makes a folder;
+`download.file()` fetches a URL to a path.
 
 ```{r}
 #| label: data-fallback
-#| script: "If data/ is missing a file"
+#| script: "If data/ is missing the file"
 #| eval: false
 # dir.create("data", showWarnings = FALSE)
 # download.file(paste0("https://arielortizbobea.github.io/aem6850/",
 #                      "fall-2026/sessions/data/epa_pm25_la_county_2025.csv"),
 #               "data/epa_pm25_la_county_2025.csv")
-# download.file(paste0("https://arielortizbobea.github.io/aem6850/",
-#                      "fall-2026/sessions/data/la-weather-dec2024-feb2025.csv"),
-#               "data/la-weather-dec2024-feb2025.csv")
 ```
 
-[The data folder's provenance notes](data/SOURCE.md) document where both
-files came from, byte for byte.
+[The data folder's provenance notes](data/SOURCE.md) record where the file
+came from, byte for byte.
 :::
-
-:::
-
-## Four instruments {#instruments}
-
-::: {.tight-cols}
-
-| The instrument | What it draws |
-|:--|:--|
-| `hist(x)` | The shape of one numeric column |
-| `plot(x, y)` | Two columns against each other, or one through time |
-| `boxplot(y ~ g)` | One column, split by the groups in another |
-| `barplot(table(g))` | How often each category shows up |
-
-:::
-
-::: {.content-hidden when-format="revealjs"}
-
-Call them instruments, not figures. A figure serves readers and takes an
-hour to polish. An instrument serves you. It takes one line and ten
-seconds, it can stay ugly, and it never leaves your screen. You make dozens
-of them on a normal working day.
-
-Nothing new sits underneath: every one of these takes ordinary vectors and
-data-frame columns. The only new notation is the `~` in `boxplot()`. We
-will read it aloud when we get there. Later we add three that build *on* a
-plot rather than making one: `points()`, `legend()` and `axis()`.
 
 :::
 
 ::: {.content-visible when-format="revealjs"}
 
-These are instruments for you, not figures for readers. Each takes one line
-and ten seconds, and it never leaves your screen.
+Lancaster reported **365** days. Pasadena reported **115**. Every plot below
+has to survive that.
+
+:::
+
+## Choosing a plot: good for / bad for {#menu}
+
+::: {.tight-cols}
+
+| Plot | Good for | Bad for |
+|:--|:--|:--|
+| `plot(x, y, type = "l")` | one quantity in its natural order | gaps — it invents the days it cannot see |
+| `plot()` + `lines()`, `points()` | a few units on shared axes | more than about six |
+| `hist(x)` | the shape of one column | comparing groups |
+| `boxplot(y ~ g)` | many groups on one screen | groups of two or three rows |
+
+:::
+
+::: {.content-hidden when-format="revealjs"}
+
+Two more rows the slide leaves out:
+
+| Plot | Good for | Bad for |
+|:--|:--|:--|
+| `plot(x, y)` | the relationship between two columns; one point per row | more points than pixels — they pile into a blob |
+| `barplot(table(g))` | counts of categories: is everything there, as often as it should be | anything continuous — bin it, or use `hist()` |
+
+**Start from the question, not the plot type.** *Did something happen in
+time?* is a line. *Do these two move together?* is a scatter. *Is this column
+shaped the way I think?* is a histogram. *Does this group differ from that
+one?* is a box plot. *Is everything here?* is a bar of counts.
+
+:::
+
+## `plot()`: one series through time {#one-series}
+
+```{r}
+#| label: line-one
+#| script: "One series through time"
+#| fig-alt: "Daily PM2.5 at Compton across all of 2025 as a single line. A tall cluster in early January, a sharp isolated spike in early July, a flat gap in April and May, and a high ragged run through December."
+comp_y <- d[d$site == "Compton", ]
+plot(comp_y$date, comp_y$pm25, type = "l",
+     xlab = "", ylab = "Daily PM2.5 (ug/m3)")
+
+comp_y$date[which.max(comp_y$pm25)]
+```
+
+::: {.content-hidden when-format="revealjs"}
+
+Three new things:
+
+- `type` picks how the points are drawn: `"p"` marks only, `"l"` a line only,
+  `"b"` both with a gap at each mark, `"o"` both, overlaid. `"l"` is the one
+  you want for a series in time.
+- `xlab` and `ylab` are the axis labels. The y label is where the units go,
+  every time; a number with no unit is not a reading.
+- `which.max(x)` hands back the **position** of the largest value, not the
+  value — which is what you want when the question is *which day*.
+
+Now read it. 301 days in one glance. Two isolated spikes that are not
+weather — January 1 at 53.2 and July 4 at 50.7 — a flat stretch through April
+and May, and a high ragged run through December that holds the year's
+maximum, 56.0 on the 13th. A six-number summary gives you none of that.
+
+:::
+
+::: {.content-visible when-format="revealjs"}
+
+Two spikes that are not weather: **Jan 1 at 53.2**, **Jul 4 at 50.7**. A flat
+stretch in April–May. The year's maximum is **56.0, on December 13**.
+
+:::
+
+## One `plot()` call is one series {#one-call}
+
+The same call on the whole four-station frame draws three long diagonal
+strokes.
+
+```{r}
+#| label: line-all-four
+#| script: "The same call on the whole frame"
+#| fig-alt: "The whole four-station frame drawn as one line: a dense band of daily variation crossed by three long diagonal strokes running from the right edge back to the left."
+plot(d$date, d$pm25, type = "l",
+     xlab = "", ylab = "Daily PM2.5 (ug/m3)")
+```
+
+::: {.content-hidden when-format="revealjs"}
+
+`d` is stored station by station — Compton, then Pasadena, then Long Beach,
+then Lancaster. So the line runs Compton January to December, snaps back to
+January for Pasadena, and again twice more. Each snap-back is one of those
+diagonals.
+
+`type = "l"` connects row 1 to row 2 to row 3 **in the order the rows sit in
+the frame**. It has no idea what a station is, and it will not warn you.
+
+:::
+
+::: {.content-visible when-format="revealjs"}
+
+`type = "l"` connects row 1 to row 2 to row 3 **in the order the rows sit in
+the frame**. It has no idea what a station is.
+
+**One `plot(type = "l")` call means one series.**
+
+:::
+
+## `lines()` and `points()`: several series {#several-series}
+
+```{r}
+#| label: jan
+#| script: "Cut to January"
+jan  <- d[d$date < as.Date("2025-02-01"), ]
+comp <- jan[jan$site == "Compton", ]
+lb   <- jan[jan$site == "Long Beach-Route 710 Near Road", ]
+lanc <- jan[jan$site == "Lancaster - Fairgrounds", ]
+pas  <- jan[jan$site == "Pasadena", ]
+```
+
+```{r}
+#| label: lines-four-bad
+#| script: "Four stations, first attempt"
+#| fig-alt: "January PM2.5 at four stations. Compton in red and Long Beach in grey track each other. The blue Lancaster line is cut off below the bottom of the frame for most of the month. The orange Pasadena line leaves the top of the frame twice and runs as long straight diagonals between its few observations."
+plot(comp$date, comp$pm25, type = "l", col = "#b31b1b",
+     xlab = "", ylab = "Daily PM2.5 (ug/m3)")
+lines(lb$date,   lb$pm25,   col = "grey30")
+lines(lanc$date, lanc$pm25, col = "#1f6fb4")
+lines(pas$date,  pas$pm25,  col = "darkorange")
+```
+
+::: {.content-hidden when-format="revealjs"}
+
+`lines()` draws onto the plot that is already there. It never makes a new
+one, and it never resizes anything. `plot()` sized both axes from the
+**first** series and everything after obeys them — anything outside is simply
+not drawn. No error, no warning.
+
+Compton's January runs 5.7 to 53.2, so that is the window all four series
+got. Three separate failures follow from it.
+
+:::
+
+::: {.content-visible when-format="revealjs"}
+
+Three failures in one figure: **clipped at the bottom**, **clipped at the
+top** — the axes came from Compton alone — and **invented**, where the line
+drew days that do not exist.
+
+:::
+
+## Setting the window and the key {#repair}
+
+```{r}
+#| label: lines-four-good
+#| script: "The repair"
+#| fig-alt: "The corrected figure. The y axis runs 0 to 75 so every series fits. Compton is a thick red line, Long Beach grey, Lancaster blue, and Pasadena appears as eleven orange dots, the highest at 72.5 on January 10. A key with no box sits in the top right."
+plot(comp$date, comp$pm25, type = "l", col = "#b31b1b", lwd = 2,
+     ylim = c(0, 75), xlab = "", ylab = "Daily PM2.5 (ug/m3)")
+lines(lb$date,   lb$pm25,   col = "grey30")
+lines(lanc$date, lanc$pm25, col = "#1f6fb4")
+points(pas$date, pas$pm25,  col = "darkorange", pch = 16)
+legend("topright",
+       legend = c("Compton", "Long Beach", "Lancaster", "Pasadena"),
+       col = c("#b31b1b", "grey30", "#1f6fb4", "darkorange"),
+       lty = c(1, 1, 1, NA), pch = c(NA, NA, NA, 16), bty = "n")
+```
+
+::: {.content-hidden when-format="revealjs"}
+
+- `col` sets the colour of the marks. R takes an English name
+  (`"darkorange"`), a grey with a number (`"grey30"` dark, `"grey85"` light),
+  or a hex code (`"#b31b1b"`); `colors()` prints all 657 names. And `c()`
+  glues values into one vector — nearly every setting today wants one.
+- `ylim = c(0, 75)` fixes the vertical window. Set it on the **first** call,
+  from everything you intend to draw, because nothing after that call resizes
+  the axes. `xlim` does the same horizontally.
+- `points()` adds marks without joining them — the right answer when the gaps
+  between observations are real. `pch` picks the mark: `16` is a filled
+  circle, `1` the open one `plot()` draws by default. `lwd` is line width, and
+  `lwd = 2` is how you say *this is the series I want you to look at*.
+- `legend()` puts a key at a named corner. `lty` is line type — `1` solid, `2`
+  dashed — and it means the same thing in `plot()`, `lines()`, `abline()` and
+  in the key. `bty = "n"` drops the box. `NA` inside the `lty` or `pch` vector
+  means *no sample for this entry*: that is how Pasadena gets a dot and no
+  line.
+
+Pasadena is dots and not a line because Pasadena reports one day in three. A
+line through it would have drawn straight across its own peak.
+
+:::
+
+## Reading the four stations {#read-four}
+
+::: {.content-hidden when-format="revealjs"}
+
+Pasadena, nearest the Eaton fire, records January's highest reading: **72.5
+on the 10th**, and it was already at **64.1 on the 7th**, the day the fires
+started. Compton and Long Beach peak a day earlier and lower — **47.7 and
+40.7, both on the 9th** — as the smoke reaches the coast. Lancaster, over the
+mountains in the high desert, stays flat through the whole episode and spikes
+on its **own** day, January 7, at **24.9**: blowing dust, not smoke.
+
+Four monitors, four stories, one screen. And Compton's tallest January bar,
+53.2, is January 1 — fireworks, six days before any fire. That reading is why
+the axis had to be set by hand.
+
+:::
+
+::: {.content-visible when-format="revealjs"}
+
+- Pasadena, nearest the Eaton fire: **72.5** on Jan 10, already **64.1** on
+  the 7th.
+- Compton and Long Beach peak a day later and lower — **47.7** and **40.7**,
+  both on the 9th — as smoke reaches the coast.
+- Lancaster stays flat, then spikes on its **own** day, Jan 7, at **24.9**:
+  blowing dust, not smoke.
 
 :::
 
 ## `hist()`: the shape of one column {#hist}
 
 ```{r}
-#| label: hist-default
-#| script: "The first instrument: hist()"
-#| fig-alt: "Histogram of daily PM2.5 at Compton for January and February 2025, drawn with default settings. Most days fall between 5 and 25 micrograms per cubic meter, and a long right tail stretches past 50."
-hist(one$pm25)
-```
-
-::: {.content-hidden when-format="revealjs"}
-
-The call takes one line, default title and all. R chops the column into
-bins and draws how many days fell in each. You now see all fifty-nine days
-at once, where `summary()` would compress them into six numbers.
-
-Do not clean this plot up. It is an instrument reading, and it can stay
-ugly. The moment you polish, you are making a figure. The cost jumps from
-seconds to minutes, and you will stop making these plots.
-
-:::
-
-## Reading the shape {#hist-read}
-
-```{r}
 #| label: hist-breaks
-#| script: "Turning up the resolution"
-#| fig-alt: "The same histogram with twenty bins and a dashed red line at 35 micrograms per cubic meter. The bulk of days sits between 5 and 25, and a separated island of four days lies beyond 40."
-hist(one$pm25, breaks = 20,
-     main = "", xlab = "Daily PM2.5 (ug/m3)")
-abline(v = 35, col = "#b31b1b", lty = 2)   # the EPA 24-hour standard
+#| script: "The shape of one column"
+#| fig-alt: "Histogram of daily PM2.5 across the four stations with forty bins requested. The mass piles up between 0 and 15 with a long thin tail past 70. The leftmost bar sits left of zero, separated from the main mass, and a dashed red vertical line marks zero."
+hist(d$pm25, breaks = 40, col = "grey85",
+     main = "", xlab = "Daily mean PM2.5 (ug/m3)")
+abline(v = 0, col = "#b31b1b", lty = 2)
 ```
 
 ::: {.content-hidden when-format="revealjs"}
 
-`breaks = 20` asks for more bins, which means more resolution on the same
-column. Read three things off this plot, in this order:
+- `hist()` chops one numeric column into bins and draws how many rows fell in
+  each. One column, one call.
+- `breaks = 40` is a **suggestion** for how many bins; R picks round numbers
+  near it. Ask for 40 here and you get 38.
+- `main` is the title above the plot; `main = ""` removes the one R writes
+  for you.
+- On `plot()` and `lines()`, `col` colours the marks. On `hist()`,
+  `barplot()` and `boxplot()` it **fills** them.
+- `seq(-5, 80, by = 5)` builds −5, 0, 5 … 80: every bin edge written out by
+  hand instead of guessed at. That is how you take control of `breaks` when
+  the suggestion is not good enough.
 
-- **Where the mass sits.** Most winter days at Compton land between 5 and 25
-  µg/m³. That is what ordinary air looks like at this monitor.
-- **The long right tail.** The distribution is *right-skewed*: the column
-  cannot go below zero, so it piles up low and stretches right. Skew is why
-  the mean (17.6) sits above the median (15.3). A few bad days pull the
-  average up.
-- **The island.** Four separated days sit past the red line, the US EPA's
-  24-hour standard of 35 µg/m³: January 1, and January 8, 9, 10. A gap
-  between the mass and a clump of stragglers signals *events*, distinct
-  from the ordinary process that made the rest.
+:::
+
+## What the histogram says {#hist-read}
+
+```{r}
+#| label: hist-summary
+#| script: "The same column as six numbers"
+summary(d$pm25)
+```
+
+::: {.content-hidden when-format="revealjs"}
+
+Right-skewed: the mean, 9.947, sits above the median, 8.400. That is what
+skew looks like in numbers — a few large values dragging the average up past
+the middle.
+
+And there is a bar left of zero. Nobody asked for that, and no summary line
+above draws attention to it except the minimum, which you have to notice.
 
 :::
 
 ::: {.content-visible when-format="revealjs"}
 
-- **The mass:** ordinary days, 5–25 µg/m³.
-- **The tail:** right skew; mean 17.6 sits above median 15.3.
-- **The island past 35:** four days. January 1, then 8, 9, 10.
+Right-skewed: **mean 9.947 above median 8.400**.
+
+And there is a bar **left of zero**. Nobody asked for that.
 
 :::
 
-## The sentinel {#sentinel}
-
-::: {.content-hidden when-format="revealjs"}
-
-Our file comes from AQS, EPA's air-quality archive, and it marks a missing
-day by *absence*: the row is not there. Plenty of files instead put a number
-where the gap is: `-999`, `9999`, `0`. That number is called a **sentinel**.
-EPA's own real-time feed, AirNow, ships `-999` to this day. Sooner or later
-you will open a file with sentinels in it.
-
-::: {.column-margin}
-**Why −999?** Old data formats could not leave a field blank. Every cell had
-to hold a number, so agencies picked one no real measurement could produce.
-The formats died; the convention did not.
-:::
-
-This file is clean, so we corrupt a copy ourselves and watch the failure
-happen before it costs you anything:
-
-:::
+## Four columns with the same mean and sd {#quartet}
 
 ```{r}
-#| label: sentinel
-#| script: "The sentinel"
-bad <- one$pm25
-bad[c(40, 45, 50, 55)] <- -999   # four missing days, the AirNow way
-mean(bad)
-summary(bad)
+#| label: quartet
+#| script: "Four columns with the same mean and the same sd"
+set.seed(1)
+std <- function(x, m = 20, s = 8) (x - mean(x)) / sd(x) * s + m
+q   <- list("Normal"       = std(rnorm(500)),
+            "Two humps"    = std(c(rnorm(250, -2), rnorm(250, 2))),
+            "Right-skewed" = std(rlnorm(500, 0, 1)),
+            "Flat"         = std(runif(500)))
+
+round(sapply(q, function(x) c(mean = mean(x), sd = sd(x), max = max(x))), 2)
+```
+
+## The same four columns as histograms {#quartet-plot}
+
+```{r}
+#| label: quartet-plot
+#| script: "The same four columns as histograms"
+#| fig-height: 4.4
+#| fig-alt: "Four histograms in a two-by-two grid: a bell, two separated humps, a hard right skew with a long thin tail, and a flat block. A red vertical line marks the mean in each, at the same place."
+op <- par(mfrow = c(2, 2), mar = c(4, 4, 2.5, 1))
+invisible(lapply(names(q), function(nm) {
+  hist(q[[nm]], breaks = 30, xlim = c(-10, 55), col = "grey80",
+       border = "white", main = nm, xlab = "", ylab = "")
+  abline(v = mean(q[[nm]]), col = "#b31b1b", lwd = 2)
+}))
+par(op)
 ```
 
 ::: {.content-hidden when-format="revealjs"}
 
-A stray `"n/a"` in a numeric column at least produces an `NA` and a
-warning. This produced nothing. `-999` is a legitimate number, so R raises no error and no warning.
-`mean()` ran clean and returned garbage. If −51 went into a difference or
-a ratio instead of onto your screen, nothing downstream would flag it.
+All four columns have a mean of 20.00 and a standard deviation of 8.00, to
+two decimal places. You have just computed a mean and an sd on a real column;
+here are four columns that agree on both and share almost nothing else.
 
-`summary()` does show the damage: `Min. -999`. But only if you read all six
-numbers, and only if you know the physical floor is zero.
+The maxima give the game away — 49.94, 37.72, **138.53**, 32.97 — but only
+because you went looking. The two numbers you actually reported cannot
+separate a bell from two humps from a hard skew.
 
 :::
 
 ::: {.content-visible when-format="revealjs"}
 
-- No error, no warning, no `NA`. It ran clean and it is wrong.
-- `summary()` shows it, if you read all six numbers and know the floor is
-  zero.
+All four: **mean 20.00, sd 8.00.** Maxima: 49.94, 37.72, **138.53**, 32.97.
 
 :::
 
-## The histogram catches it {#sentinel-hist}
+## Anscombe's quartet {#anscombe}
 
 ```{r}
-#| label: sentinel-hist
-#| script: "The histogram catches it"
-#| fig-alt: "Histogram of the corrupted column: a lone short bar at minus 1000, a wide empty gap, and all the real data crushed into a single tall bar near zero."
-hist(bad, main = "", xlab = "Daily PM2.5 (ug/m3)")
-```
+#| label: anscombe
+#| script: "Anscombe's quartet"
+#| fig-height: 5
+#| fig-alt: "Anscombe's four datasets as four scatterplots: a loose linear cloud, a smooth arch, a tight line with one far outlier, and a vertical stack of identical x values with one point far to the right."
+par(mfrow = c(2, 2), mar = c(4, 4, 1, 1))
+plot(anscombe$x1, anscombe$y1)
+plot(anscombe$x2, anscombe$y2)
+plot(anscombe$x3, anscombe$y3)
+plot(anscombe$x4, anscombe$y4)
+par(mfrow = c(1, 1))
 
-```{r}
-#| label: sentinel-repair
-#| script: "The repair"
-bad[bad == -999] <- NA        # sentinel to honest missing
-mean(bad, na.rm = TRUE)       # back to 17.6
+round(c(cor(anscombe$x1, anscombe$y1), cor(anscombe$x2, anscombe$y2),
+        cor(anscombe$x3, anscombe$y3), cor(anscombe$x4, anscombe$y4)), 3)
 ```
 
 ::: {.content-hidden when-format="revealjs"}
 
-You do not need to know what PM2.5 is to see that something is wrong here.
-One bar sits a thousand units from everything else. The axis stretched to
-fit the garbage and crushed the real data into a single tower.
-**A ruined histogram is itself a reading.** When everything you care about
-collapses into one bin, the axis made room for a value that should not
-exist. Go find that value.
+Francis Anscombe built these four datasets in 1973 to make exactly this
+point, and they ship inside R as `anscombe`. Every x mean is 9.0, every y
+mean is 7.5, and every correlation is 0.816 or 0.817.
 
-The repair is one line of logical subsetting, and the mean returns to
-17.6. The order matters: *look, then repair, then compute*.
-Never go straight to the computing.
+The pictures are a loose linear cloud; a smooth arch with nothing linear
+about it; a straight line plus one outlier that drags the fit; and ten
+identical x values with one far point that invents the entire correlation.
+
+The previous slide made the point about **shapes**. This one makes it about
+**relationships**. Same lesson: a summary is a compression, and compression
+throws away structure you needed.
+
+:::
+
+::: {.content-visible when-format="revealjs"}
+
+Every x mean 9.0, every y mean 7.5, every correlation **0.816**.
+
+A cloud, an arch, a line with an outlier, and one point inventing a
+correlation.
+
+:::
+
+## `boxplot()`: one column by groups {#boxplot}
+
+```{r}
+#| label: box-site
+#| script: "Many distributions at once"
+#| fig-alt: "Box plots of daily PM2.5 for four stations in alphabetical order: Compton, Lancaster, Long Beach, Pasadena. Lancaster's box, second from the left, is much lower and tighter than the other three, which carry long clouds of outlier dots above them. Only two of the four labels are drawn."
+boxplot(pm25 ~ site, data = d)
+```
+
+::: {.content-hidden when-format="revealjs"}
+
+- Read `pm25 ~ site` aloud as "pm25 **by** site". The tilde is R's word for
+  "split by".
+- `data = d` says which frame those two bare, unquoted names live in.
+- The heavy line is the median; the box holds the middle half; the whiskers
+  reach the ordinary range; anything past them is drawn as its own dot. A dot
+  is a candidate for a look, not a verdict.
+- `boxplot()` and `table()` put the groups in **alphabetical** order — not the
+  order you named them, and not the order of the values. Read the labels, not
+  the positions.
+
+Medians, in the order the boxes appear: Compton 10.70, Lancaster 4.20, Long
+Beach 10.65, Pasadena 9.30. The three basin stations agree to within a
+twentieth of a microgram. Lancaster sits at less than half. Whisker tops run
+26.9, 11.9, 21.9, 21.6, and the outlier counts are 28, 8, 28, 10.
+
+The box plot answers a question the histogram cannot: not *what shape is this
+column* but *does this group differ from that one*. A histogram holds one
+column, so four columns would be four histograms.
+
+And a box built from three rows looks exactly as confident as a box built
+from three hundred. Count first.
+
+:::
+
+::: {.content-visible when-format="revealjs"}
+
+Medians, left to right: **10.70 · 4.20 · 10.65 · 9.30**. Three basin stations
+agree to within a twentieth of a microgram; Lancaster sits at less than half.
+
+:::
+
+## Labels R drops without warning {#dropped-labels}
+
+::: {.content-hidden when-format="revealjs"}
+
+Look again at the axis on that figure. R drew **two** labels and silently
+dropped the other two. Nothing warned you.
+
+The mechanism: the plot region is 6.76 inches wide, so each of the four slots
+gets 1.69 inches. `"Lancaster - Fairgrounds"` needs 1.77 inches and
+`"Long Beach-Route 710 Near Road"` needs 2.57. When labels do not fit, R
+falls back to drawing every second one rather than overlapping them.
+
+This is not a `boxplot()` problem, and no argument to `boxplot()` fixes it.
+It is a problem with the canvas the plot was drawn on, and we repair it two
+sections from here.
+
+:::
+
+::: {.content-visible when-format="revealjs"}
+
+R drew **two** labels and silently dropped two. Each slot is 1.69 in;
+`"Long Beach-Route 710 Near Road"` needs **2.57 in**.
+
+Not a `boxplot()` problem. A **canvas** problem.
+
+:::
+
+## `barplot(table())`: counts of categories {#barplot}
+
+```{r}
+#| label: port-bar
+#| script: "Counts of categories"
+#| fig-height: 4.5
+#| fig-alt: "Horizontal bar chart of days reported in 2025, one bar per station in alphabetical order from the bottom: Compton 301, Lancaster 365, Long Beach 338, Pasadena 115. All four station names are legible on the left."
+op <- par(mar = c(4, 15, 1, 1))
+barplot(table(d$site), horiz = TRUE, las = 1, col = "grey85",
+        xlab = "Days with a reading in 2025")
+par(op)
+```
+
+::: {.content-hidden when-format="revealjs"}
+
+- `barplot()` draws a count table as bars. `table()` counts, `barplot()`
+  draws — that pair is how you ask *is everything here?*
+- `horiz = TRUE` lays the bars sideways, which is what you do when the
+  category names are long. On `boxplot()` the same idea is spelled
+  `horizontal = TRUE`.
+- `las` turns the axis text. `0` is R's default, parallel to its axis; `1`
+  makes everything horizontal and readable; `2` turns it perpendicular, which
+  is how long category names fit.
+
+365, 338, 301, 115, alphabetical from the bottom. Pasadena's 115 is not a gap
+in a working monitor — it is a one-day-in-three sampling schedule, and it is
+why Pasadena had to be drawn as dots.
+
+That `par(mar = ...)` line is doing the work that fixes the box plot's
+missing labels. Two sections from now it stops being a magic incantation.
+
+:::
+
+::: {.content-visible when-format="revealjs"}
+
+Pasadena's **115** is not a broken monitor. It is a one-day-in-three
+schedule — which is why Pasadena had to be dots.
 
 :::
 
@@ -307,18 +630,15 @@ Never go straight to the computing.
 ```{r}
 #| label: exercise-1
 #| exercise: true
-#| script: "Exercise 1 (5 minutes)"
+#| script: "Exercise 1 (3 minutes)"
 #| eval: false
-# 1. hist(frm$pm25) -- every monitor, every day of 2025, not one winter.
-#    How does the shape differ from hist(one$pm25), and would you have
-#    expected that?
+# Three minutes. The histogram had a bar left of zero.
 #
-# 2. Your turn to corrupt. Copy one$pm25 and set three days to 0 instead
-#    of -999. Does hist() catch it? Does summary()? Why is 0 the harder
-#    one?
+# 1. Print the readings below zero.
+# 2. Print which station filed them.
+# 3. One sentence: keep them or delete them?
 #
-# 3. tb is a matrix, and hist(tb) works anyway. What is it drawing, and
-#    how many values went into it?
+# Two answers to compare with the room: a count, and one station name.
 ```
 
 ### Solution
@@ -326,589 +646,700 @@ Never go straight to the computing.
 ```{r}
 #| label: exercise-1-solution
 #| purl: false
-#| eval: false
-# 1  same right skew, longer tail: eight sites and all four seasons
-hist(frm$pm25)
-
-# 2  neither one flags it clearly
-z <- one$pm25
-z[c(10, 20, 30)] <- 0
-hist(z)                 # the bars barely move
-summary(z)              # Min. 0.00 -- legal-looking
-
-min(one$pm25)           # 1.7: the real floor at this monitor
-# -999 is physically impossible and blows up the axis. 0 is a plausible
-# reading, so it hides until you know what this monitor's floor is.
-
-# 3  the matrix read as one vector: 96 monthly means
-hist(tb)
-length(tb)
+d$pm25[d$pm25 < 0]
+unique(d$site[d$pm25 < 0])
 ```
 
-:::
-
-## `plot()`: a column through time {#plot-time}
-
-```{r}
-#| label: plot-time
-#| script: "A column through time"
-#| fig-alt: "Daily PM2.5 at Compton drawn as vertical spikes from January through February 2025. The tallest spike stands alone on January 1. A red vertical line marks January 7, followed immediately by a three-day cluster of high readings. February is much calmer."
-plot(one$date, one$pm25, type = "h", col = "grey30",
-     xlab = "", ylab = "Daily PM2.5 (ug/m3)")
-abline(v = as.Date("2025-01-07"), col = "#b31b1b", lwd = 2)
-```
-
-::: {.content-hidden when-format="revealjs"}
-
-`type = "h"` draws one spike per day. When a column has a natural order,
-usually time, plot it in that order. The whole winter then shows in one
-glance: a lone spike on January 1, the red line at January 7, a broad
-three-day shoulder as the fires burn, then a February back to normal.
-
-Now rank the same days instead of drawing them:
-
-```{r}
-#| label: plot-time-sorted
-#| script: "The same days, ranked"
-head(one[order(-one$pm25), c("date", "pm25")], 5)
-```
-
-The ranking puts January 9, 8 and 10 at places two, three and four: three
-separate rows, with the order destroyed. The plot shows what they actually
-are: **one event**, three days wide, starting the day after ignition. It
-also shows January 1 the way a ranking never could. That spike stands
-*alone*, with quiet days on either side. Fireworks last one night; fires
-last days.
+Eight readings, one station. **Keep them.** They are real published values:
+the instrument's zero drifts a little and EPA publishes what it measured
+rather than rounding up. Lancaster's median is 4.2, so noise around a
+near-zero true value lands below zero, and deleting them would bias the mean
+up. Three more days read exactly 0.0, which is a legal measurement — *below*
+zero is the finding, zero is not.
 
 :::
 
-::: {.content-visible when-format="revealjs"}
-
-- The sort gave ranks 1, 2, 3, 4. The plot shows a one-day spike, then a
-  **three-day event** starting the day after ignition.
-- Fireworks last one night; fires last days.
-
-:::
-
-## `plot()`: two columns together {#plot-scatter}
-
-A Los Angeles weather file, ninety winter days, saved alongside these
-pages.
-
-```{r}
-#| label: weather-load
-#| script: "Load the weather file"
-wx <- read.csv("data/la-weather-dec2024-feb2025.csv", skip = 3)
-names(wx) <- c("date", "gust", "wind", "tmax", "rh_min", "precip")
-wx$date <- as.Date(wx$date)
-```
-
-```{r}
-#| label: plot-scatter
-#| script: "Two columns together"
-#| fig-alt: "Scatterplot of daily maximum gust against daily maximum sustained wind for ninety winter days in Los Angeles. The points form one tight upward ray. The windiest days sit far up the ray but on it."
-plot(wx$wind, wx$gust,
-     xlab = "Max sustained wind (km/h)", ylab = "Max gust (km/h)")
-```
-
-::: {.content-hidden when-format="revealjs"}
-
-A scatterplot draws a *relationship*, and these two columns must have one.
-A gust is a burst on top of the sustained wind, so gusts should run above
-wind speed by a believable factor. They do: one tight ray, with gusts at
-roughly two to four times the sustained speed, every day of the winter.
-
-Look at where January 7 and 8 sit: far up the ray, *and on it*. Both columns
-are extreme; the relationship is ordinary. A real windstorm looks like this.
-**Extreme is not the same as wrong.** The point to worry about is never the
-one far along the ray. It is the one *off* the ray.
-
-:::
-
-::: {.content-visible when-format="revealjs"}
-::: {.notes}
-Read it live: one ray, gusts at 2–4× the sustained wind, every day. Point
-at Jan 7–8, far up the ray and ON it: extreme, but consistent. The point to
-worry about is never far along the ray; it is off it. That sentence sets up
-the next slide.
-:::
-:::
-
-## The unit error {#unit-error}
-
-::: {.content-hidden when-format="revealjs"}
-
-This instrument exists to catch one classic failure. Weather feeds serve
-wind in km/h, m/s, mph, or knots, and the choice sits in a header field or
-a query parameter; Open-Meteo names its parameter `wind_speed_unit`. Stitch
-together files pulled with different settings and you get one column with
-two units inside. Again we corrupt a copy ourselves, to watch it happen:
-
-:::
-
-```{r}
-#| label: unit-error
-#| script: "The unit error"
-mixed <- wx$wind
-jan   <- format(wx$date, "%Y-%m") == "2025-01"
-mixed[jan] <- round(wx$wind[jan] / 3.6, 1)   # January delivered in m/s
-
-summary(wx$wind)    # the honest column
-summary(mixed)      # the corrupted one
-```
-
-::: {.content-hidden when-format="revealjs"}
-
-Read the corrupted summary and try to reject it. The minimum, 0.9, reads as
-a calm day. The maximum, 21.8, reads as a windy one. The mean, 6.5, runs
-low for winter, and you would need LA wind climatology in your head
-to doubt it. **Every number in it is a plausible wind speed in km/h.**
-There is no sentinel to spot and no impossible value to catch. The
-corruption lives in how thirty-one values relate to the rest, and single
-numbers cannot show a relationship.
-
-:::
-
-::: {.content-visible when-format="revealjs"}
-
-Min 0.9, max 21.8, mean 6.5: **every number is a plausible wind speed.**
-Nothing is impossible; the corruption lives in the *relationships*.
-
-:::
-
-## The scatterplot catches it {#unit-error-plot}
-
-```{r}
-#| label: unit-error-plot
-#| script: "The scatterplot catches it"
-#| fig-alt: "The same gust-versus-wind scatterplot after January's wind speeds are converted to meters per second: the single ray splits into two distinct rays with clearly different slopes."
-plot(mixed, wx$gust,
-     xlab = "Wind speed, as delivered", ylab = "Max gust (km/h)")
-```
-
-::: {.content-hidden when-format="revealjs"}
-
-The plot shows two rays. The right-hand ray is December and February, with
-gusts at two to four times the wind, as before. The steep left-hand ray is
-January: the same relationship, times 3.6, because its x-values shrank by
-exactly the km/h-to-m/s factor. Thirty-one points do not land on a second
-straight line by accident. **A ray that splits in two means two regimes in
-one column**, and a clean split at a constant factor means units.
-
-This is the strongest version of today's claim. `summary()` showed the
-sentinel, barely. It never showed the unit error. No single number was
-wrong, so no list of single numbers could catch it. Only the picture of the
-*relationship* could.
-
-:::
-
-::: {.content-visible when-format="revealjs"}
-
-- Two rays mean two regimes in one column. A clean constant factor means
-  units.
-- `summary()` had nothing to show: no individual number was wrong.
-- Only the picture of the relationship could catch it.
-
-:::
-
-## `boxplot()`: a column by groups {#boxplot}
-
-```{r}
-#| label: boxplot-month
-#| script: "A column by groups: boxplot()"
-#| fig-alt: "Box plots of daily PM2.5 for January and February 2025. January's box sits higher and stretches wider, with a single outlier dot far above its whisker. February's box is lower and tighter, with no outliers."
-one$month <- format(one$date, "%Y-%m")
-boxplot(pm25 ~ month, data = one)
-```
-
-::: {.content-hidden when-format="revealjs"}
-
-Read `pm25 ~ month` aloud as "pm25, *by* month". The `~` is R's word for
-"split by," and `data = one` says which data frame the two names live in.
-(Use `"%Y-%m"` rather than `"%m"` so the labels sort in time order when a
-window crosses New Year. The weather file's December would otherwise sort
-after February.)
-
-One box per group, five readings per box: the heavy line marks the median;
-the box holds the middle half of the days; the whiskers cover the ordinary
-range; the plot draws anything beyond them as its own dot. A dot is a
-candidate for a closer look, not automatically an error.
-
-Now read this plot against the histogram, because the two instruments
-disagree in an instructive way. The histogram showed an island of four days.
-Here only one of them survives as a dot: January 1. The three fire days sit
-at the top of January's whisker, *inside* the ordinary range. A boxplot
-judges "beyond" against each group's own spread, and January's spread is
-enormous, so three bad days read as the high end of normal. Neither
-instrument is wrong. They answer different questions: "extreme for this
-data?" versus "extreme for this group?"
-
-The medians hold the quieter finding: 16.9 in January against 12.6 in
-February. Take out the four event days and January's median still reads
-14.5 to February's 12.6. The baseline shifted, not just a few days. The
-plot does not say why. Lingering smoke from a fire month? Stronger winter
-inversions? The plot raises the question and leaves it open. You knew about
-the events. You probably did not know about the shifted baseline. That
-second kind of finding is why you make these plots.
-
-:::
-
-::: {.content-visible when-format="revealjs"}
-
-- `pm25 ~ month` reads "pm25, **by** month."
-- One dot survives: Jan 1. The fire days land *inside* January's whisker,
-  because a boxplot judges "extreme" against each group's own spread.
-- The quieter finding: January's *median* (16.9) sits above February's (12.6).
-  The baseline shifted, not just the events.
-
-:::
-
-## `barplot()`: drawing what you computed {#barplot}
-
-`tb` is a matrix of means. One margin of it is already a named vector, which
-is exactly what `barplot()` wants.
-
-```{r}
-#| label: barplot-margin
-#| script: "Drawing a matrix margin"
-#| fig-height: 4.5
-#| fig-alt: "Horizontal bar chart of mean PM2.5 for eight Los Angeles County monitors in 2025. Lancaster is much the lowest at about 4.5 micrograms per cubic meter; the seven basin monitors cluster between 9 and 13, with Compton highest."
-par(mar = c(4, 14, 1, 1))                      # room for the site names
-barplot(sort(apply(tb, 1, mean)), horiz = TRUE, las = 1, cex.names = 0.85,
-        xlab = "Mean PM2.5, 2025 (ug/m3)")
-par(mar = c(5, 4, 4, 2) + 0.1)                 # put the margins back
-```
-
-::: {.content-hidden when-format="revealjs"}
-
-`apply(tb, 1, mean)` gives one number per site, carrying the row names with
-it, and `barplot()` draws named vectors directly. `horiz = TRUE` with
-`las = 1` turns the labels upright so you can read them; `par(mar = ...)`
-widens the left margin to fit them, and the last line puts it back. Widen
-too little and R silently clips the longest name, so look at the plot.
-
-Lancaster, out in the high desert past the mountains, reads about a third of
-what the basin monitors do. The other seven sit within a few micrograms of
-each other. The county is not one airshed, and the map is doing the work:
-geography sets the level, and the basin traps what is emitted into it.
-
-:::
-
-::: {.content-visible when-format="revealjs"}
-
-Lancaster, out in the desert, reads a third of the basin monitors. Seven
-basin sites sit within a few µg/m³ of each other.
-
-:::
-
-## How many days is each bar? {#coverage}
-
-Every cell of `tb` is filled. None of them says how many days went into it.
-
-```{r}
-#| label: barplot-coverage
-#| script: "Counts of categories: barplot()"
-#| fig-height: 4.5
-#| fig-alt: "Horizontal bar chart of the number of days with a reading per monitor in 2025. Signal Hill has 57 and Lancaster has 365, a more than sixfold range across the eight monitors."
-par(mar = c(4, 14, 1, 1))
-barplot(sort(table(frm$Local.Site.Name)), horiz = TRUE, las = 1, cex.names = 0.85,
-        xlab = "Days with a reading, 2025")
-par(mar = c(5, 4, 4, 2) + 0.1)
-```
-
-::: {.content-hidden when-format="revealjs"}
-
-`table()` counts and `barplot()` draws the counts. Any categorical column
-goes through that pair and comes out as a picture of coverage.
-
-Signal Hill reported 57 days. Lancaster reported 365. Both produced a
-complete row of twelve monthly means, and **the matrix cannot tell you
-which is which.** A mean built from four days looks exactly like a mean
-built from thirty-one.
-
-And the bars fall into two clumps with a gap between them: four monitors
-near a full year, four near a third of it. Two clumps mean two populations,
-the same reading you would take off a histogram. Filter-based samplers run
-one day in six by design; continuous monitors run daily.
-
-That is not an error in the file. It is a fact about the data that only the
-count plot shows, and it decides how much weight each of the bars above can
-carry.
-
-:::
-
-::: {.content-visible when-format="revealjs"}
-
-- Signal Hill: **57 days**. Lancaster: **365**. Both gave a full row of
-  monthly means.
-- A mean from four days looks exactly like a mean from thirty-one.
-
-:::
-
-## The missing spring {#missing-spring}
-
-```{r}
-#| label: missing-spring
-#| script: "The missing spring: site or sampler?"
-compton <- frm[frm$Local.Site.Name == "Compton", ]
-table(compton$month)              # the regulatory sampler, month by month
-
-other <- pm[pm$Local.Site.Name == "Compton" &
-            pm$POC == 3 & pm$AQS.Parameter.Code == 88502, ]
-table(other$month)                # the site's OTHER instrument
-```
-
-::: {.content-hidden when-format="revealjs"}
-
-Compton is one of the well-covered sites, at 301 days. Ask where they fell
-and the answer has a hole in it: **April has two days. May has one.**
-
-So check against an independent measurement. The site carries one. The
-continuous instrument, POC 3, reported 30 days in April and 31 in May. The
-*site* was fine; the *regulatory sampler* was down for two months. (AQS
-validation can also invalidate readings after the fact. Either way, the
-regulatory series has no spring.)
-
-Here is what the gap costs. Compute "Compton's 2025 annual mean" from the
-regulatory series and nothing errors, nothing warns. The number silently
-skips almost all of spring, a mild and cleaner season, so it lands biased.
-Every mean is a mean *of the days that are there*, and that includes the
-mean sitting in row "Compton" of `tb`.
-
-:::
-
-::: {.content-visible when-format="revealjs"}
-
-- Compton has 301 days — but **April: 2. May: 1.**
-- POC 3 ran 30 and 31 those months: the **sampler** was down, not the site.
-- Every mean is a mean *of the days that are there.*
-
-:::
-
-## Two series on one plot {#layering}
-
-Draw both instruments and the gap is visible.
-
-```{r}
-#| label: layering
-#| script: "Two series on one plot"
-#| fig-alt: "Daily PM2.5 at Compton for all of 2025. A grey line traces the continuous instrument every day of the year. Red dots mark the regulatory sampler, and they disappear entirely through April and May while the grey line continues."
-reg <- frm[frm$Local.Site.Name == "Compton", ]
-con <- pm[pm$Local.Site.Name == "Compton" &
-          pm$POC == 3 & pm$AQS.Parameter.Code == 88502, ]
-
-plot(con$date, con$pm25, type = "l", col = "grey60",
-     xlab = "", ylab = "Daily PM2.5 (ug/m3)")
-points(reg$date, reg$pm25, pch = 16, cex = 0.5, col = "#b31b1b")
-legend("topright", c("continuous", "regulatory"), bty = "n",
-       col = c("grey60", "#b31b1b"), lty = c(1, NA), pch = c(NA, 16))
-```
-
-::: {.content-hidden when-format="revealjs"}
-
-`plot()` opens a window and sets the axes. Everything after it *adds* to
-that window: `points()` for markers, `lines()` for a connecting line,
-`abline()` for a straight reference. They draw on whatever `plot()` already
-scaled, so the first call has to be the one with the widest range, or the
-later ones fall off the edge.
-
-Three arguments do the distinguishing. `pch` picks the point symbol (`16` is
-a filled circle), `cex` scales it, and `col` colors it. `legend()` then says
-which is which: a position, the labels, and the same `col`/`pch`/`lty` you
-drew with, repeated so the key matches the plot. `lty = c(1, NA)` gives the
-first entry a line and no symbol; `pch = c(NA, 16)` does the reverse.
-`bty = "n"` drops the box around the key.
-
-Now read it. The two instruments track each other all year, which is the
-reassuring part: two different measurement methods, same air, same story.
-Then **the red dots stop.** They vanish through April and May and pick back
-up in June, while the grey line runs straight through. That is the gap the
-count plot found, in the form you would actually notice while working.
-
-There is a second thing in here that nobody went looking for: the sharp
-spike in early July, on both instruments. Fireworks again, six months after
-the New Year's one.
-
-:::
-
-::: {.content-visible when-format="revealjs"}
-
-- `plot()` scales the window; `points()`, `lines()` and `abline()` add to it.
-- `pch` symbol, `cex` size, `col` color, and `legend()` says which is which.
-- The red dots **stop** through April and May. The grey line does not.
-
-:::
-
-## When the default axis is wrong {#axis}
-
-You could see the gap. You could not say which months it covered, because R
-labelled the axis by quarter.
-
-```{r}
-#| label: axis
-#| script: "When the default axis is wrong"
-#| fig-alt: "The same two-instrument plot of Compton 2025, now with a tick and an abbreviated month name at the first of every month. The gap in the red regulatory dots is now readable as April and May."
-plot(con$date, con$pm25, type = "l", col = "grey60",
-     xaxt = "n",                     # draw no x-axis: we will do it
-     xlab = "", ylab = "Daily PM2.5 (ug/m3)")
-points(reg$date, reg$pm25, pch = 16, cex = 0.5, col = "#b31b1b")
-
-firsts <- as.Date(paste0("2025-", sprintf("%02d", 1:12), "-01"))
-axis(1, at = firsts, labels = month.abb)
-```
-
-::: {.content-hidden when-format="revealjs"}
-
-`xaxt = "n"` tells `plot()` to skip the x-axis, and `axis()` then draws the
-one you want. Its first argument is the side, numbered clockwise from the
-bottom: 1 bottom, 2 left, 3 top, 4 right. `at` says where the ticks go and
-`labels` says what to write on them; the two have to be the same length.
-`month.abb` is a vector R ships with, the twelve abbreviated month names.
-
-Read the gap now. A couple of red dots in early April, then nothing at all
-until June. That is April and May, which is what the counts said, and now
-you can say it off the picture instead of trusting a table.
-
-This is the one piece of axis work worth doing on an instrument. Not because
-it is prettier, but because the default was **unreadable for the question**:
-quarterly ticks cannot resolve a two-month gap. Reach for `axis()` when the
-default hides what you are looking at, and leave it alone otherwise. Add
-`las = 2` to turn the labels sideways when they collide.
-
-:::
-
-::: {.content-visible when-format="revealjs"}
-
-- `xaxt = "n"` suppresses the axis; `axis(1, at =, labels =)` draws yours.
-- Sides are numbered from the bottom, clockwise: 1, 2, 3, 4.
-- Now the gap is nameable: **April and May.**
-
-:::
-
-## Choosing the instrument {#choosing}
-
-Start from the suspicion, not from the plot type.
+## Arguments that work on every plot {#port-args}
 
 ::: {.tight-cols}
 
-| The instrument | The suspicion it answers |
+| Argument | Means the same in `plot()`, `hist()`, `boxplot()`, `barplot()` |
 |:--|:--|
-| `hist(x)` | Anything impossible in here? Skew? A gap? A second hump? |
-| `plot(d$date, y, type = "h")` | Did something happen in time: a spike, a break, a dead stretch? |
-| `plot(x, y)` | Do these two columns relate the way they are supposed to? |
-| `boxplot(y ~ g, data = d)` | Does one group differ in a way the pooled column averages away? |
-| `barplot(table(g))` | Is every category, month, or site there, as often as it should be? |
+| `main =` | title above the plot |
+| `xlab =`, `ylab =` | axis labels; units go in `ylab` |
+| `col =` | colour of the marks, or the fill |
+| `las =` | rotation of the axis numbers and labels |
+| `xlim =`, `ylim =` | the window on each axis |
+| `lwd =`, `lty =` | line width, line type |
+
+:::
+
+```{r}
+#| label: port-hist
+#| script: "The same arguments on a histogram"
+#| fig-height: 3.6
+#| fig-alt: "The four-station histogram with a grey fill, a written title, a labelled x axis, and horizontal y-axis numbers."
+hist(d$pm25, col = "grey85", las = 1,
+     main = "Four LA County monitors, 2025",
+     xlab = "Daily mean PM2.5 (ug/m3)")
+```
+
+::: {.content-hidden when-format="revealjs"}
+
+The bar chart two sections back used `col`, `las` and `xlab` on a different
+function with a different data shape. Same words, same meaning. That is the
+whole point of learning them once.
+
+:::
+
+## Layers: what draws on top {#port-layers}
+
+> A plot is a **stack**. `plot()`, `hist()`, `boxplot()` and `barplot()` each
+> start a new one. Everything else draws **on top of what is already there**,
+> in the order you call it — so the last call wins where they overlap.
+
+::: {.tight-cols}
+
+| Layer | What it adds |
+|:--|:--|
+| `points(x, y)` | marks |
+| `lines(x, y)` | a joined line |
+| `abline(h =, v =)` | a horizontal or vertical reference line |
+| `text(x, y, "label")` | a label at data coordinates |
+| `legend("topright", ...)` | the key |
+| `axis(side, at =, labels =)` | an axis you write yourself |
+| `mtext("...", side =)` | text out in the margin, outside the frame |
 
 :::
 
 ::: {.content-hidden when-format="revealjs"}
 
-Suspicions come from three places. `str()` and `summary()` supply some: a
-character column that should be numeric, a minimum that grazes an
-impossible value. The data's own documentation supplies more, like the
-two-instrument structure in the POC column. The rest come from the world:
-you knew when the fires started before you opened the file, and that
-knowledge made the January 1 spike worth chasing. The instruments do not
-replace knowing things. They test the file against what you know.
+- `text(x, y, "label")` writes at **data** coordinates: a position in the
+  units of the plot, not in inches, not in pixels.
+- `axis()` draws an axis where R's default was wrong. Sides are numbered from
+  the bottom, clockwise: 1 bottom, 2 left, 3 top, 4 right. Suppress the
+  default first with `xaxt = "n"` or `yaxt = "n"`, then draw yours with `at`
+  and `labels`, which must be the same length.
+- `mtext()` writes into the margin instead of into the plot; `side = 3` is the
+  top.
+
+Call a layer before any plot exists and R says
+`Error in plot.xy(...) : plot.new has not been called yet`. A layer needs
+something to land on.
 
 :::
 
-## Same summaries, different data {#anscombe}
+## `par()`: the device, not the plot {#par}
 
 ```{r}
-#| label: anscombe
-#| script: "Same summaries, different data: Anscombe 1973"
-#| fig-height: 5
-#| fig-alt: "Anscombe's four datasets as four scatterplots: a loose linear cloud, a smooth arch, a tight line with one far outlier, and a vertical stack of identical x values with one point far to the right."
-par(mfrow = c(2, 2), mar = c(4, 4, 1, 1))
-plot(anscombe$x1, anscombe$y1)
-plot(anscombe$x2, anscombe$y2)
-plot(anscombe$x3, anscombe$y3)
-plot(anscombe$x4, anscombe$y4)
-par(mfrow = c(1, 1))
+#| label: par-sticky
+#| script: "par() is sticky"
+par("mar")                       # 5.1 4.1 4.1 2.1 -- R's default
+op <- par(mar = c(3, 3, 1, 1))   # set it, and keep the old value in op
+par("mar")                       # 3 3 1 1 -- still, and for every plot after
+par(op)                          # put it back
 ```
 
 ::: {.content-hidden when-format="revealjs"}
 
-In 1973 the statistician Francis Anscombe built four small datasets to make
-today's point, and they ship inside R as `anscombe`. All four pairs have
-the same x mean, the same y mean, the same variances, and the same
-correlation of 0.82. Every summary statistic you have met says these four
-are the same data.
-
-The plots disagree. The first is a loose linear cloud. The second is a
-smooth curve with nothing linear about it. The third is a perfect line plus
-one outlier that wrecks the fit. The fourth stacks ten identical x values,
-and one far point creates the whole correlation. Fifty years on, this
-is still the clearest demonstration that **a summary is a compression, and
-compression discards structure you needed to see.**
-
-(`par(mfrow = c(2, 2))` splits the plot window into panels, and the setting
-sticks until you set it back. The last line resets it. `cor()` here is one
-more summary that cannot tell these apart.)
-
-::: {.callout-tip collapse="true"}
-## Check the claim
-
-```{r}
-#| label: anscombe-check
-#| script: "Anscombe: check the claim"
-colMeans(anscombe)
-cor(anscombe$x1, anscombe$y1)
-cor(anscombe$x2, anscombe$y2)
-cor(anscombe$x3, anscombe$y3)
-cor(anscombe$x4, anscombe$y4)
-```
-:::
+- `par("mar")`, with a name in quotes, **reads** a setting.
+  `par(mar = c(...))`, with an `=`, **writes** it — and hands you back the old
+  value.
+- The idiom is `op <- par(...)` then `par(op)` at the end. Type the second
+  line before you type the plot. Every mysterious plot you will ever draw is
+  a `par()` somebody forgot to put back.
+- `mar` is the margin around **this** panel: bottom, left, top, right,
+  measured in lines of text. The default is `c(5.1, 4.1, 4.1, 2.1)`.
 
 :::
 
 ::: {.content-visible when-format="revealjs"}
 
-Four datasets share the same means, variances, and correlation, to two
-decimal places. Every summary you have met calls them identical.
+`par()` does not change *this* plot. It changes **the device**, and it stays
+changed until you change it back.
+
+:::
+
+## `par(mar)`: giving labels room {#mar}
+
+```{r}
+#| label: box-fixed
+#| script: "Give the labels room"
+#| fig-height: 4.5
+#| fig-alt: "The four-station box plots turned on their side. All four station names, including Long Beach-Route 710 Near Road, are fully legible along the left. Lancaster's box is visibly lower and tighter than the other three."
+op <- par(mar = c(4, 15, 1, 1))
+boxplot(pm25 ~ site, data = d, horizontal = TRUE, las = 1,
+        xlab = "Daily mean PM2.5 (ug/m3)", ylab = "", col = "grey85")
+par(op)
+```
+
+::: {.content-hidden when-format="revealjs"}
+
+One margin line is `par("csi")` = 0.2 inches, and the longest label is 2.567
+inches wide — just under 13 lines. Fifteen leaves room for the gap.
+
+Three settings did three jobs: `mar` bought the space, `las = 1` turned the
+text upright, and `horizontal = TRUE` moved the long names onto the axis that
+has room for them.
+
+:::
+
+::: {.content-visible when-format="revealjs"}
+
+`mar` bought the space, `las = 1` turned the text upright, `horizontal = TRUE`
+put the long names on the axis that has room.
+
+:::
+
+## `par(mfrow)` and `par(mfcol)`: panels {#fill-order}
+
+> **`mfrow` fills across the rows. `mfcol` fills down the columns.** Same
+> grid, same size, different order — so the fourth plot you draw lands
+> somewhere else.
+
+::: {.content-hidden when-format="revealjs"}
+
+`par(mfrow = c(2, 3))` and `par(mfcol = c(2, 3))` split the device into
+exactly the same six boxes. The only difference is the order R walks them,
+and that order is the order your `plot()` calls land in.
+
+|  | `mfrow = c(2, 3)` | `mfcol = c(2, 3)` |
+|:--|:--|:--|
+| top row | 1 · 2 · 3 | 1 · 3 · 5 |
+| bottom row | 4 · 5 · 6 | 2 · 4 · 6 |
+
+`par("mfrow")` and `par("mfcol")` both report `2 3` whichever one you set.
+The grid is readable back out of `par()`; the fill order is not. Set it once,
+at the top, and do not guess later.
+
+:::
+
+::: {.content-visible when-format="revealjs"}
+
+|  | `mfrow = c(2, 3)` | `mfcol = c(2, 3)` |
+|:--|:--|:--|
+| top row | 1 · 2 · 3 | 1 · 3 · 5 |
+| bottom row | 4 · 5 · 6 | 2 · 4 · 6 |
+
+:::
+
+## Four stations, four panels {#panels}
+
+```{r}
+#| label: panels-four
+#| script: "Four stations, four panels"
+#| fig-height: 4.1
+#| fig-alt: "Four panels in a two-by-two grid, all on the same January window and the same 0 to 75 vertical scale, each showing one station, each with a dashed red line on January 7. Pasadena peaks highest at 72.5 on January 10; Compton and Long Beach peak lower and a day earlier; Lancaster is flat except for one spike on January 7. A single title runs across the top of all four."
+xr <- as.Date(c("2025-01-01", "2025-01-31"))   # one window, all four
+op <- par(mfrow = c(2, 2), mar = c(3, 4, 2, 1), oma = c(0, 0, 3, 0))
+invisible(lapply(transect, function(s) {
+  x <- jan[jan$site == s, ]
+  plot(x$date, x$pm25, type = "o", ylim = c(0, 75), xlim = xr,
+       xlab = "", ylab = "PM2.5 (ug/m3)", main = s)
+  abline(v = as.Date("2025-01-07"), col = "#b31b1b", lty = 2)
+}))
+mtext("January 2025, four LA County monitors", outer = TRUE, line = 1, cex = 1.2)
+par(op)
+```
+
+::: {.content-hidden when-format="revealjs"}
+
+- `mar` belongs to a panel; `oma` belongs to the **device**.
+  `oma = c(0, 0, 3, 0)` reserves three lines across the top of the whole
+  device, and `mtext(..., outer = TRUE, line = 1)` writes into the second of
+  them. A per-panel `main` could never span four panels. `cex` scales text:
+  `1.2` is twenty per cent bigger than normal.
+- `type = "o"` draws the line **and** the points, so you can still see where
+  the real observations are. That is why Pasadena's panel is honest: eleven
+  circles, and the line between them is visibly interpolation.
+
+`xlim = xr` is load-bearing. Long Beach's January starts on the 4th, so
+without it the January 7 rule would sit at a different horizontal position in
+that panel than in the other three, and the four panels would stop being
+comparable.
+
+Three things to check on any panel figure: every panel on the same `ylim` and
+`xlim`, one outer title rather than four inner ones, and `par(op)` on the
+last line.
+
+:::
+
+::: {.content-visible when-format="revealjs"}
+
+- Shared `ylim` **and** `xlim`, or the panels are four plots pretending to be
+  a comparison.
+- `oma` + `mtext(outer = TRUE)` is how one title covers four panels.
+- `par(op)` on the last line, every time.
+
+:::
+
+## `png()` and `dev.off()`: writing to disk {#png}
+
+```{r}
+#| label: png-write
+#| script: "Writing a figure to disk"
+png("compton.png", width = 1600, height = 900, pointsize = 26)
+
+plot(comp_y$date, comp_y$pm25, type = "l", col = "grey30",
+     xlab = "", ylab = "Daily PM2.5 (ug/m3)")
+abline(h = 35, col = "#b31b1b", lty = 2)
+
+dev.off()                    # without this the file is unusable
+
+file.exists("compton.png")
+```
+
+::: {.content-hidden when-format="revealjs"}
+
+`png()` opens a **file** as the drawing device. From that line on, nothing
+appears on screen — every plotting call goes into the file instead.
+`dev.off()` closes it and writes it out.
+
+**You must call `dev.off()`.** Forget it and the file is truncated or empty,
+and every plot you draw afterwards keeps going into it while your screen
+stays blank. If your plots have mysteriously stopped appearing, you have an
+open device: call `dev.off()` until R says `null device`.
+
+`width` and `height` are in pixels here. `pointsize` is the base text size,
+and it is the setting people forget: enlarge a figure without enlarging the
+type and the labels come out unreadably small.
+
+:::
+
+::: {.content-visible when-format="revealjs"}
+
+`png()` opens a **file** as the device. Nothing appears on screen until
+`dev.off()` closes it.
+
+Forget `dev.off()` and the file is unusable — and your plots keep vanishing
+into it.
+
+:::
+
+## Resolution, bitmap, and vector {#formats}
+
+```{r}
+#| label: png-formats
+#| script: "Resolution, bitmap and vector"
+#| eval: false
+# Same figure, three ways.
+
+png("fig-draft.png", width = 800,  height = 600)              # screen draft
+plot(comp$date, comp$pm25, type = "l"); dev.off()
+
+png("fig-print.png", width = 2400, height = 1800, res = 300)  # print quality
+plot(comp$date, comp$pm25, type = "l"); dev.off()
+
+cairo_pdf("fig-final.pdf", width = 7, height = 5)             # vector, in inches
+plot(comp$date, comp$pm25, type = "l"); dev.off()
+```
+
+::: {.content-hidden when-format="revealjs"}
+
+**Bitmap** formats — `png()`, `jpeg()`, `tiff()` — store a grid of pixels.
+`res` sets how many pixels make an inch. At the default 72 the figure looks
+fine on screen and blurry the moment it is printed or enlarged, which is why
+a plot that looked sharp in RStudio turns soft in Word. Raising `res` without
+raising `width` and `height` shrinks the figure; raise all three together.
+
+**Vector** formats — `cairo_pdf()`, `cairo_ps()` — store the lines and shapes
+themselves, so there is no resolution to get wrong and no pixellation at any
+size. Their width and height are in **inches**, not pixels. Journals normally
+want vector for anything that is not a photograph.
+
+Decide early. Converting a folder of bitmaps to vector after a paper is
+accepted means redrawing every figure.
+
+:::
+
+::: {.content-visible when-format="revealjs"}
+
+- **Bitmap** (`png`, `jpeg`): pixels. `res` is pixels per inch; the default 72
+  is why figures go soft in Word. Raise `width`, `height` and `res` together.
+- **Vector** (`cairo_pdf`): lines, no resolution, no pixellation. Sized in
+  **inches**. What journals ask for.
 
 :::
 
 ## Exercise 2 {#exercise-2}
 
-Five minutes, on the weather frame `wx`. Stubs are in the live script.
+::: {.panel-tabset}
+
+### Exercise
 
 ```{r}
 #| label: exercise-2
 #| exercise: true
-#| script: "Exercise 2 (5 minutes)"
+#| script: "Exercise 2 (4 minutes)"
 #| eval: false
-# 1. hist(wx$rh_min) -- each day's LOWEST relative humidity. Read it in one
-#    sentence. Twelve days sit in single digits; wx$date[wx$rh_min < 10]
-#    says when they were. What do those dates line up with?
+# Four minutes.
 #
-# 2. plot(wx$date, wx$precip, type = "h") -- when did the drought break?
-#    Now run summary(wx$precip). Could you have read the break off that?
+# 1. Add ONE line above the four plot() calls so they fill a 2 x 2 grid.
+# 2. Run it. Which station landed in the BOTTOM-LEFT panel?
+# 3. Change ONE word in your line so that Pasadena lands TOP-RIGHT.
 #
-# 3. wx$month <- format(wx$date, "%Y-%m")
-#    boxplot(gust ~ month, data = wx)
-#    Which month has the extremes -- and are they a shifted box, or dots
-#    beyond the whisker? Those are different claims about January.
+# Two answers to compare with the room: a station name, and one word.
+
+# your line goes here
+
+plot(comp$date, comp$pm25, type="l", lwd=2, ylim=c(0,75), xlim=xr, main="Compton")
+plot(lb$date,   lb$pm25,   type="l", lwd=2, ylim=c(0,75), xlim=xr, main="Long Beach")
+plot(pas$date,  pas$pm25,  type="l", lwd=2, ylim=c(0,75), xlim=xr, main="Pasadena")
+plot(lanc$date, lanc$pm25, type="l", lwd=2, ylim=c(0,75), xlim=xr, main="Lancaster")
+
+# put the device back
 ```
 
+### Solution
+
+```{r}
+#| label: exercise-2-solution
+#| purl: false
+#| eval: false
+op <- par(mfrow = c(2, 2), mar = c(3, 4, 3, 1))
+# ... the four plot() calls ...
+par(op)
+```
+
+|  | `mfrow = c(2,2)` | `mfcol = c(2,2)` |
+|:--|:--|:--|
+| top-left | Compton | Compton |
+| top-right | Long Beach | **Pasadena** |
+| bottom-left | **Pasadena** | Long Beach |
+| bottom-right | Lancaster | Lancaster |
+
+Bottom-left is **Pasadena**. The one word is **`mfrow` → `mfcol`**.
+
+:::
+
+::: {.content-hidden when-format="revealjs"}
+
+## `plot(x, y)`: two columns against each other {#scatter}
+
+```{r}
+#| label: scatter
+#| script: "Two columns against each other"
+#| fig-alt: "Scatterplot of daily AQI against daily mean PM2.5 for the four stations. The points lie on a single bent curve: steep to about 9 micrograms, shallower to about 35, shallower again beyond."
+plot(d$pm25, d$Daily.AQI.Value,
+     xlab = "Daily mean PM2.5 (ug/m3)", ylab = "Daily AQI", col = "grey40")
+```
+
+1,119 points on one bent curve, with visible knees near 9 and near 35. The
+AQI-to-PM2.5 ratio falls from about 5.6 at the low end to 3.55 at 20 and 2.25
+at 72.5. AQI is not PM2.5 times a constant — it is a piecewise-linear lookup,
+and the scatter draws the breakpoints without anyone telling it they exist.
+
+```{r}
+#| label: scatter-cor
+#| script: "The correlation that hides the kinks"
+round(cor(d$pm25, d$Daily.AQI.Value), 3)
+```
+
+A correlation of 0.947 says "these move together" and hides the kinks
+completely. **The scatter is the only plot here that shows a shape of
+relationship rather than a level.** Its bad-for: 1,119 points read fine;
+100,000 would be a solid blob.
+
+:::
+
+## Basic plots II {#plots-ii}
+
+> **A session that does not exist yet.**
+>
+> Everything from here is written, runnable, and **not lectured today**. It
+> is roughly another seventy minutes: the half of base graphics that turns
+> an instrument into a figure.
+
+::: {.content-hidden when-format="revealjs"}
+
+Today's session stops at the point where a plot is good enough to read. What
+follows is the rest of the toolkit — shading, colour scales, hand-built axes,
+unequal panels, heat maps, maps, and animation. It is here in full because
+the material does not get easier by being withheld, and because a course
+that finds seventy spare minutes should be able to teach it off this page
+without anyone rebuilding it first.
+
+Every block below runs against the same `d` you built at the top, and every
+one purls into the live script. The colour and map blocks want
+`RColorBrewer` and `maps`; install those once with `install.packages()`.
+
+:::
+
+## Basic plots II: what it would cover {#plots-ii-map}
+
+::: {.tight-cols}
+
+| Section | The commands it turns on | Min |
+|:--|:--|--:|
+| Unequal panels | `layout()`, `layout.show()` | 9 |
+| Shaded areas | `rect()`, `adjustcolor()` | 6 |
+| Confidence bands | `polygon()` | 10 |
+| Colour scales | `brewer.pal`, `colorRampPalette`, `findInterval` | 10 |
+| Custom axes | `axes = FALSE`, `axis()`, `box()`, `mtext()` | 9 |
+| Fills, shapes, options | `density=`, `beside=`, `notch=` | 6 |
+| Heat maps | `image()` | 7 |
+| Maps | `map()`, projections | 8 |
+| Animation | the `png()`-in-a-loop recipe | 5 |
+
+:::
+
 ::: {.content-visible when-format="revealjs"}
-::: {.notes}
-Debriefs, one sentence each: (1) the single-digit days run Dec 10-Jan 24:
-Santa Ana air, the fire weather itself; (2) Jan 26 breaks the drought with
-17 mm after seven dry weeks, and the biggest storm is Feb 13 at 38 mm;
-summary() shows a median of 0 and a max, never *when*; (3) January's
-extremes are dots (Jan 7 at 66, far beyond the whisker) while its median
-(22.7) barely beats February's (21.6): extreme days, not a windier month
-throughout.
+
+Nine sections, about seventy minutes. Everything is on the page and in the
+live script.
+
 :::
-:::
+
+## `layout()`: panels that are not the same size {#layout}
+
+`mfrow` gives you equal boxes. When you want one wide panel over two small
+ones, hand `layout()` a **matrix of panel numbers**:
+
+```{r}
+#| label: layout-matrix
+#| script: "A layout matrix"
+matrix(c(1, 1, 2, 3), nrow = 2, byrow = TRUE)
+```
+
+The number is the **order the panel is filled**. Repeat a number and that
+panel spans those cells; use `0` to leave a cell empty.
+
+## `layout()`: the five things to know {#layout-rules}
+
+- `matrix()` fills **down the first column** unless you say otherwise.
+  `byrow = TRUE` says otherwise.
+- `layout()` does what `mfrow` does, except the panels need not be the same
+  size.
+- `heights =` and `widths =` are ratios, not units: `heights = c(2, 1)` makes
+  the top row twice as tall.
+- `layout.show(n)` draws the empty numbered regions so you can check a layout
+  before spending any plots on it.
+- `layout(1)` is the reset. **`par(op)` does not undo a `layout()`.**
+
+## `layout.show()`: checking a layout {#layout-show}
+
+```{r}
+#| label: layout-show
+#| script: "What that matrix makes"
+#| fig-height: 4
+#| fig-alt: "Three empty numbered regions: one wide panel across the top labelled 1, and two equal panels beneath labelled 2 and 3, the top row twice as tall as the bottom."
+layout(matrix(c(1, 1, 2, 3), nrow = 2, byrow = TRUE), heights = c(2, 1))
+layout.show(3)
+layout(1)
+```
+
+## A layout in use {#layout-real}
+
+```{r}
+#| label: layout-real
+#| script: "A layout in use"
+#| fig-height: 5.5
+#| fig-alt: "One wide panel across the top showing Compton's January as a line with circles at each day, over two smaller panels holding histograms of Compton's and Lancaster's full-year readings on identical bins. Compton's tail runs past 55; Lancaster's mass sits three bars to the left."
+op <- par(mar = c(3, 4, 2, 1))
+layout(matrix(c(1, 1, 2, 3), nrow = 2, byrow = TRUE), heights = c(2, 1))
+
+plot(comp$date, comp$pm25, type = "o", xlim = xr,
+     xlab = "", ylab = "PM2.5 (ug/m3)", main = "Compton, January 2025")
+hist(d$pm25[d$site == "Compton"], breaks = seq(-5, 60, by = 5),
+     main = "Compton, all year", xlab = "")
+hist(d$pm25[d$site == "Lancaster - Fairgrounds"], breaks = seq(-5, 60, by = 5),
+     main = "Lancaster, all year", xlab = "")
+
+layout(1)
+par(op)
+```
+
+Two settings were changed, so two get put back — `layout(1)` first, then
+`par(op)`. The two histograms share `breaks = seq(-5, 60, by = 5)`, which
+spans both stations and keeps them comparable.
+
+## Shaded areas: `rect()` {#rect}
+
+```{r}
+#| label: gf-rect
+#| script: "Shaded areas: rect()"
+#| fig-alt: "Compton's 2025 series as a line with a translucent grey band covering the first three weeks of January."
+plot(comp_y$date, comp_y$pm25, type = "l", col = "grey30",
+     xlab = "", ylab = "PM2.5 (ug/m3)")
+rect(xleft = as.Date("2025-01-01"), xright = as.Date("2025-01-21"),
+     ybottom = -5, ytop = 80,
+     col = adjustcolor("#b31b1b", alpha.f = 0.15), border = NA)
+```
+
+`rect()` takes the four edges, and `adjustcolor(col, alpha.f = )` makes any
+colour translucent so the data still shows through. All four edge arguments
+are vectorised, so one call can shade many windows.
+
+## Confidence bands: `polygon()` {#polygon}
+
+```{r}
+#| label: gf-polygon
+#| script: "Confidence bands: polygon()"
+#| fig-alt: "A scatter of simulated points with a red fitted cubic curve through them and a translucent red band around the curve widening at both ends."
+set.seed(2)
+x <- runif(200, 0, 10)
+y <- 20 + 3*x - 1.5*x^2 + 0.11*x^3 + 5*rnorm(200)
+fit  <- lm(y ~ x + I(x^2) + I(x^3))
+X    <- cbind(1, x, x^2, x^3)
+se   <- sqrt(diag(X %*% vcov(fit) %*% t(X)))
+i    <- order(x)
+
+plot(x, y, pch = 21, col = "grey40", bg = "grey85", xlab = "x", ylab = "y")
+polygon(c(x[i], rev(x[i])),
+        c(fitted(fit)[i] + 1.96*se[i], rev(fitted(fit)[i] - 1.96*se[i])),
+        col = adjustcolor("#b31b1b", alpha.f = 0.25), border = NA)
+lines(x[i], fitted(fit)[i], col = "#b31b1b", lwd = 2)
+```
+
+`polygon()` takes one closed ring of coordinates. The idiom is *x forwards
+then x backwards*, *upper forwards then lower backwards* — that traces the
+band's outline in one loop. Every confidence band, event-study plot and
+dose-response figure you will ever draw is this shape.
+
+## Colour scales {#colours}
+
+```{r}
+#| label: gf-colors
+#| script: "Colour scales"
+#| fig-height: 3.6
+#| fig-alt: "A strip of 200 points coloured along a red-to-blue spectral ramp from left to right."
+library(RColorBrewer)
+cols <- colorRampPalette(brewer.pal(11, "Spectral"))(100)
+v    <- runif(200, 0, 100)
+plot(v, seq_along(v), pch = 16, col = cols[findInterval(v, seq(0, 100, length.out = 100))],
+     xlab = "value", ylab = "")
+```
+
+`brewer.pal(n, name)` gives a designed palette (`display.brewer.all()` shows
+them all), `colorRampPalette()` interpolates it to any length, and
+`findInterval()` turns a numeric column into positions in that palette. Those
+three lines are how every choropleth and heat map gets its colours.
+
+## Custom axes {#axes}
+
+```{r}
+#| label: gf-axes
+#| script: "Custom axes"
+#| fig-alt: "Compton's 2025 series with no default axes: month abbreviations along the bottom, minor ticks between them, horizontal y numbers, a box around the plot, and a margin label reading PM2.5."
+op <- par(mar = c(3, 4, 1, 1))
+plot(comp_y$date, comp_y$pm25, type = "l", col = "grey30",
+     axes = FALSE, xlab = "", ylab = "")
+firsts <- as.Date(paste0("2025-", sprintf("%02d", 1:12), "-01"))
+axis(1, at = firsts, labels = month.abb)
+axis(1, at = firsts + 15, tck = -0.01, lwd = 0, lwd.tick = 1, labels = FALSE)
+axis(2, las = 2)
+box()
+mtext("PM2.5 (ug/m3)", side = 2, line = 2.5)
+par(op)
+```
+
+`axes = FALSE` suppresses both axes so you can draw your own. A second
+`axis()` call on the same side with `labels = FALSE` and a small `tck` gives
+minor ticks. `box()` puts the frame back.
+
+## Fills, shapes, and options {#variants}
+
+```{r}
+#| label: gf-variants
+#| script: "Fills, shapes and options"
+#| fig-height: 5
+#| fig-alt: "Four panels: a hatched histogram, a stacked bar chart, a side-by-side bar chart, and notched box plots."
+op <- par(mfrow = c(2, 2), mar = c(3, 3, 2, 1))
+hist(d$pm25, breaks = 30, col = "#b31b1b", density = 25, angle = 45,
+     border = "#b31b1b", main = "density = / angle =", xlab = "")
+
+m <- table(format(d$date, "%m"), d$site)[1:4, ]
+barplot(m, col = grey.colors(4), main = "stacked", las = 2, cex.names = 0.5)
+barplot(m, col = grey.colors(4), beside = TRUE, space = c(0, 2),
+        main = "beside = TRUE", las = 2, cex.names = 0.5)
+
+boxplot(pm25 ~ site, data = d, notch = TRUE, boxwex = 0.5,
+        main = "notch = / boxwex =", xlab = "", ylab = "", names = rep("", 4))
+par(op)
+```
+
+A matrix handed to `barplot()` stacks by default and sits side by side with
+`beside = TRUE`. `notch = TRUE` cuts a wedge around the median whose width is
+a rough confidence interval: non-overlapping notches are a hint the medians
+differ. `hist()` also **returns** what it drew — `h <- hist(x, plot = FALSE)`
+gives you `h$breaks` and `h$counts` as ordinary vectors.
+
+## Heat maps: `image()` {#image}
+
+```{r}
+#| label: gf-image
+#| script: "Heat maps with image()"
+#| fig-height: 3.6
+#| fig-alt: "A four-row heat map, one row per station and one column per month, with Lancaster's row consistently pale and the basin rows darker in January and December."
+mm <- tapply(d$pm25, list(d$site, format(d$date, "%m")), mean)
+op <- par(mar = c(3, 12, 2, 1))
+image(t(mm), col = colorRampPalette(c("white", "#b31b1b"))(20), axes = FALSE)
+axis(1, at = seq(0, 1, length.out = 12), labels = month.abb, tick = FALSE)
+mtext(rownames(mm), side = 2, at = seq(0, 1, length.out = 4), las = 2,
+      cex = 0.7, line = 0.5)
+box()
+par(op)
+```
+
+`image()` draws a matrix as a grid of coloured cells. Note the `t()`: `image()`
+puts the **first** matrix dimension on the x axis, so a rows-are-sites matrix
+has to be transposed to get sites down the side.
+
+## Maps {#maps}
+
+```{r}
+#| label: gf-maps
+#| script: "Maps"
+#| fig-height: 4
+#| fig-alt: "Two panels: an outline map of the lower 48 US states, and an orthographic globe centred on North America with state outlines drawn on it."
+library(maps)
+library(mapproj)
+op <- par(mfrow = c(1, 2), mar = c(0, 0, 2, 0))
+map("state"); title("map(\"state\")")
+map("world", proj = "orthographic", orientation = c(15, 260, 0))
+map("state", proj = "orthographic", orientation = c(15, 260, 0), add = TRUE)
+title("orthographic")
+par(op)
+```
+
+`maps` ships outlines for `"world"`, `"usa"`, `"state"` and `"county"`.
+`fill = TRUE` with a vector of colours in the same order as the map's own
+region names gives you a choropleth; `add = TRUE` layers one map onto
+another, exactly like `lines()` onto a plot.
+
+The orthographic call warns `projection failed for some data`. That is the
+projection saying it cannot draw the half of the globe facing away from you,
+which is the correct answer. Nothing is broken.
+
+## Animation {#animation}
+
+```{r}
+#| label: gf-animation
+#| script: "Animation"
+#| eval: false
+# A GIF is just a folder of PNGs shown in order. Write the frames, then
+# stitch them. Needs the magick package, or ImageMagick on the command line.
+
+# invisible(lapply(200:300, function(angle) {
+#   png(sprintf("frame_%04d.png", angle), width = 600, height = 600)
+#   par(mar = c(0, 0, 0, 0))
+#   map("world", proj = "orthographic", orientation = c(15, angle, 0))
+#   dev.off()
+# }))
+
+# magick::image_write(magick::image_animate(
+#   magick::image_read(list.files(pattern = "^frame_.*png$")), fps = 10),
+#   "globe.gif")
+```
+
+Everything in that loop is `png()` and `dev.off()` from the session, plus a
+counter. Any figure you can draw once you can animate.
 
 ## Practice {#practice}
 
 ::: {.content-visible when-format="revealjs"}
 
-Everything below is in the live script, with solutions.
+Fourteen exercises with solutions on the session page and in the live script.
 
 :::
 
@@ -923,34 +1354,59 @@ Everything below is in the live script, with solutions.
 #| exercise: true
 #| script: "Practice"
 #| eval: false
-# Everything below uses pm, frm, tb, one and wx, built earlier in this
-# script. Every plot needs one written sentence that reads it.
+# Everything below uses d, comp_y, jan, comp, lb, lanc, pas and xr, all
+# built earlier in this script. Every plot needs one written sentence that
+# reads it.
 
-# One column
-#  1. hist(wx$tmax). Describe the shape in one sentence.
-#  2. Compton's whole year through time, not just the winter. Add the
-#     35 ug/m3 line. How many days cleared it?
-#  3. Which month is worst covered across ALL monitors? One line.
+# Choosing the plot
+#  1. Name the function you would reach for, one word each:
+#     (a) How did PM2.5 at Compton move through 2025?
+#     (b) How does the spread of daily readings compare across the four?
+#     (c) What does the distribution of every reading look like?
+#     (d) How many days did each station report?
 
-# Two columns
-#  4. plot(wx$tmax, wx$rh_min). What relationship, and does it make
-#     physical sense?
-#  5. Pick two monitors. Draw one as a line, add the other with
-#     points(), and label them with legend().
+# One series
+#  2. Draw Lancaster's whole year as a line. What is its highest reading,
+#     and on what day?
+#  3. Draw Compton's December only, as a line. Add a dashed horizontal
+#     reference line at 35 ug/m3. How many December days cleared it?
 
-# Groups
-#  6. boxplot(pm25 ~ Local.Site.Name, data = frm). Which monitor has the
-#     widest spread, and is that the same as the dirtiest?
-#  7. barplot(apply(tb, 2, mean)) -- the county month by month. Which
-#     month is worst, and does it match what you saw at Compton?
-#  8. table() then barplot() the AQS.Parameter.Code column. What are the
-#     two numbers, and why does the file carry both?
+# Distributions
+#  4. Histogram of d$pm25 with default bins. How many bins did you get,
+#     and where does the first one start?
+#  5. Draw it again with breaks = 5, then breaks = 40. Which one changes
+#     the shape you would report, and which only the resolution?
+#  6. Histogram of Lancaster's readings only, with breaks = seq(-5, 30, 2.5).
+#     One sentence on how its shape differs from the pooled column.
 
-# Panels
-#  9. par(mfrow = c(2, 2)): four monitors, one histogram each. Do they
-#     have the same shape? Reset mfrow when you are done.
-# 10. All four Anscombe correlations are 0.82. Which dataset would that
-#     number mislead you about most, and which instrument shows it?
+# Groups and counts
+#  7. Box plots of pm25 by station, on their side, all four names legible.
+#     Which station has the widest box, and is that the same as the highest?
+#  8. Box plots of Compton's pm25 by month. Two months look strange --
+#     count the days in each month and say why.
+#  9. Bar chart of how many days each station reported, sorted from most to
+#     fewest. (Hint: sort() works on a table.)
+
+# Several series
+# 10. Replicate this figure. January 2025, one panel: Compton in red, Long
+#     Beach in grey, Lancaster in blue, all lwd = 2, y from 0 to 60, a
+#     dashed horizontal line at 35, and a legend with no box in the top
+#     right. Title: "January 2025, three stations". Then say what Lancaster
+#     does that the other two do not.
+# 11. Compton's whole year twice, stacked in two panels: once type = "l",
+#     once type = "p". The line tells one lie the points do not. Find it.
+
+# Panels and the canvas
+# 12. Four histograms, one per station, in a 2 x 2 grid, all on the same
+#     breaks and the same x range. Put the device back when you are done.
+# 13. Take exercise 10's figure and give it a left margin of 6 lines, a
+#     y-axis label written with mtext(), and horizontal axis numbers.
+
+# To disk
+# 14. Write exercise 12's figure to "stations.png" at 2000 x 1500 pixels
+#     with pointsize = 30. Open the file. Then write the same figure to
+#     "stations.pdf" with cairo_pdf() at 8 x 6 inches, and open that.
+#     Zoom both to 400%. Which one still has clean edges?
 ```
 
 ### Solutions
@@ -959,51 +1415,109 @@ Everything below is in the live script, with solutions.
 #| label: practice-solutions
 #| purl: false
 #| eval: false
-# 1  a rough bell, mildly right-skewed: LA winter highs cluster near 20 C
-hist(wx$tmax)
+# 1  (a) plot   (b) boxplot   (c) hist   (d) barplot
 
-# 2
-cmp <- frm[frm$Local.Site.Name == "Compton", ]
-plot(cmp$date, cmp$pm25, type = "h", xlab = "", ylab = "PM2.5 (ug/m3)")
+# 2  the year's high is 24.9, on 2025-01-07 -- the windstorm day itself.
+#    Lancaster's worst day of the whole year is blowing dust, not smoke
+lan_y <- d[d$site == "Lancaster - Fairgrounds", ]
+plot(lan_y$date, lan_y$pm25, type = "l", xlab = "", ylab = "PM2.5 (ug/m3)")
+max(lan_y$pm25); lan_y$date[which.max(lan_y$pm25)]
+
+# 3  five days clear 35; December is the year's worst month at this monitor
+dec <- comp_y[comp_y$date >= as.Date("2025-12-01"), ]
+plot(dec$date, dec$pm25, type = "l", xlab = "", ylab = "PM2.5 (ug/m3)")
 abline(h = 35, col = "#b31b1b", lty = 2)
-sum(cmp$pm25 > 35)            # 10 days
+sum(dec$pm25 > 35)
 
-# 3
-table(frm$month)              # 04 and 05, at 124 each
+# 4  16 bins, first break at -5: the negatives hide inside a bar that looks
+#    like it starts at zero
+h <- hist(d$pm25)
+length(h$counts); h$breaks[1]
 
-# 4  strong negative: warm air holds more moisture, so minimum RH falls
-plot(wx$tmax, wx$rh_min)
+# 5  breaks = 5 gives five bins twenty units wide: everything above 20
+#    collapses into three near-empty bars and the skew stops being
+#    readable. breaks = 40 gives 38 bins two units wide -- more
+#    resolution on the same shape, not a different shape
+hist(d$pm25, breaks = 5)
+hist(d$pm25, breaks = 40)
 
-# 5
-a <- frm[frm$Local.Site.Name == "Compton", ]
-b <- frm[frm$Local.Site.Name == "Reseda", ]
-plot(a$date, a$pm25, type = "l", col = "grey60", xlab = "", ylab = "PM2.5")
-points(b$date, b$pm25, pch = 16, cex = 0.5, col = "#b31b1b")
-legend("topright", c("Compton", "Reseda"), col = c("grey60", "#b31b1b"),
-       lty = c(1, NA), pch = c(NA, 16), bty = "n")
+# 6  a much tighter, less skewed column: Lancaster's mass sits under 8 with
+#    a short tail, where the pooled column runs past 70
+hist(d$pm25[d$site == "Lancaster - Fairgrounds"], breaks = seq(-5, 30, 2.5),
+     main = "", xlab = "PM2.5 (ug/m3)")
 
-# 6  spread and level are different questions: Lancaster is lowest and
-#    also tightest, but the widest box is not the highest one
-par(mar = c(4, 14, 1, 1))
-boxplot(pm25 ~ Local.Site.Name, data = frm, horizontal = TRUE,
-        las = 1, cex.axis = 0.7, xlab = "Daily PM2.5 (ug/m3)", ylab = "")
-par(mar = c(5, 4, 4, 2) + 0.1)
+# 7  Compton has the widest box (7.9 to 15.5) and also the highest median,
+#    but Long Beach is within a twentieth of it -- spread and level are
+#    different questions
+op <- par(mar = c(4, 15, 1, 1))
+boxplot(pm25 ~ site, data = d, horizontal = TRUE, las = 1,
+        xlab = "PM2.5 (ug/m3)", ylab = "")
+par(op)
 
-# 7
-barplot(apply(tb, 2, mean), xlab = "Month of 2025", ylab = "County mean")
-
-# 8  88101 is the federal reference method, 88502 the continuous
-#    instrument: two ways of measuring the same pollutant
-barplot(table(pm$AQS.Parameter.Code))
+# 8  April and May: the regulatory sampler was down, so those boxes are
+#    built from 2 and 1 readings and mean nothing
+comp_y$month <- format(comp_y$date, "%m")
+boxplot(pm25 ~ month, data = comp_y)
+table(comp_y$month)
 
 # 9
-par(mfrow = c(2, 2))
-for (s in rownames(tb)[1:4]) hist(frm$pm25[frm$Local.Site.Name == s], main = s)
-par(mfrow = c(1, 1))
+op <- par(mar = c(4, 15, 1, 1))
+barplot(sort(table(d$site)), horiz = TRUE, las = 1,
+        xlab = "Days with a reading in 2025")
+par(op)
 
-# 10  the fourth: ten identical x values and one far point invent the
-#     whole correlation. A scatterplot shows it instantly.
-plot(anscombe$x4, anscombe$y4)
+# 10  Lancaster stays flat through the fire week and spikes on Jan 7 itself
+plot(comp$date, comp$pm25, type = "l", col = "#b31b1b", lwd = 2,
+     ylim = c(0, 60), xlab = "", ylab = "PM2.5 (ug/m3)",
+     main = "January 2025, three stations")
+lines(lb$date,   lb$pm25,   col = "grey30",  lwd = 2)
+lines(lanc$date, lanc$pm25, col = "#1f6fb4", lwd = 2)
+abline(h = 35, lty = 2)
+legend("topright", c("Compton", "Long Beach", "Lancaster"),
+       col = c("#b31b1b", "grey30", "#1f6fb4"), lwd = 2, bty = "n")
+
+# 11  the line draws straight across April and May, where there are almost
+#     no readings; the points show the gap for what it is
+op <- par(mfrow = c(2, 1), mar = c(3, 4, 2, 1))
+plot(comp_y$date, comp_y$pm25, type = "l", xlab = "", ylab = "PM2.5", main = "type = l")
+plot(comp_y$date, comp_y$pm25, type = "p", xlab = "", ylab = "PM2.5", main = "type = p")
+par(op)
+
+# 12  same skew everywhere, but Lancaster's is compressed against zero
+op <- par(mfrow = c(2, 2), mar = c(4, 4, 2, 1))
+invisible(lapply(sort(unique(d$site)), function(s)
+  hist(d$pm25[d$site == s], breaks = seq(-5, 75, 2.5), xlim = c(-5, 75),
+       main = s, xlab = "", cex.main = 0.8)))
+par(op)
+
+# 13
+op <- par(mar = c(4, 6, 2, 1), las = 1)
+plot(comp$date, comp$pm25, type = "l", col = "#b31b1b", lwd = 2,
+     ylim = c(0, 60), xlab = "", ylab = "",
+     main = "January 2025, three stations")
+lines(lb$date,   lb$pm25,   col = "grey30",  lwd = 2)
+lines(lanc$date, lanc$pm25, col = "#1f6fb4", lwd = 2)
+abline(h = 35, lty = 2)
+mtext("Daily PM2.5 (ug/m3)", side = 2, line = 4, las = 0)
+par(op)
+
+# 14  the PDF. A bitmap has a fixed pixel grid, so zooming shows the grid;
+#     a vector file stores the lines themselves and redraws them at any size
+png("stations.png", width = 2000, height = 1500, pointsize = 30)
+op <- par(mfrow = c(2, 2), mar = c(4, 4, 2, 1))
+invisible(lapply(sort(unique(d$site)), function(s)
+  hist(d$pm25[d$site == s], breaks = seq(-5, 75, 2.5), xlim = c(-5, 75),
+       main = s, xlab = "")))
+par(op)
+dev.off()
+
+cairo_pdf("stations.pdf", width = 8, height = 6)
+op <- par(mfrow = c(2, 2), mar = c(4, 4, 2, 1))
+invisible(lapply(sort(unique(d$site)), function(s)
+  hist(d$pm25[d$site == s], breaks = seq(-5, 75, 2.5), xlim = c(-5, 75),
+       main = s, xlab = "")))
+par(op)
+dev.off()
 ```
 
 :::
@@ -1014,61 +1528,74 @@ plot(anscombe$x4, anscombe$y4)
 
 ::: {.content-visible when-format="revealjs"}
 
-On the session page: the four instruments with their options, a
-what-shapes-mean table, and every command from today.
+On the session page: the four plots, the arguments that port between them,
+the layers, the canvas, and writing to disk.
 
 :::
 
 ::: {.content-hidden when-format="revealjs"}
 
-**The four instruments**
+**The four plots**
 
 | Code | What it draws |
 |:--|:--|
-| `hist(x)` | The shape of one numeric column |
-| `hist(x, breaks = 20)` | Same, with more resolution |
-| `plot(d$date, y, type = "h")` | A column through time, one spike per day |
-| `plot(x, y)` | Two columns against each other |
+| `plot(x, y)` | two columns against each other, one point per row |
+| `plot(x, y, type = "l")` | one series in its natural order; `"p"` `"b"` `"o"` are the other marks |
+| `hist(x, breaks = 40)` | the shape of one column; `breaks` is a suggestion |
 | `boxplot(y ~ g, data = d)` | `y` split by the groups in `g`; read `~` as "by" |
-| `barplot(table(g))` | How often each category shows up |
+| `barplot(table(g))` | how often each category shows up |
 
-**Dressing an instrument (rarely needed)**
+**Arguments that mean the same thing everywhere**
 
 | Code | What it does |
 |:--|:--|
-| `main = "", xlab = "", ylab = ""` | Title and axis labels |
-| `abline(v = 35)`, `abline(h = 10)` | A vertical or horizontal reference line |
-| `col =`, `lty =`, `lwd =` | Color, line type, line width |
-| `points(x, y, pch = 16, cex = 0.5)` | Add markers to an open plot; `pch` symbol, `cex` size |
-| `lines(x, y)` | Add a connecting line to an open plot |
-| `legend("topright", labels, col =, pch =, lty =)` | Say which series is which; `bty = "n"` drops the box |
-| `xaxt = "n"` then `axis(1, at =, labels =)` | Replace an axis R got wrong; sides 1–4 from the bottom, clockwise |
-| `par(mfrow = c(2, 2))` | Panels in one window; reset with `c(1, 1)` |
-| `par(mar = c(4, 14, 1, 1))` | Widen a margin for long labels; too narrow clips silently |
+| `main =`, `xlab =`, `ylab =` | title and axis labels; units go in `ylab` |
+| `col =` | colour of the marks, or the fill on `hist`/`bar`/`box` |
+| `xlim =`, `ylim =` | the window; set on the **first** call |
+| `lwd =`, `lty =` | line width; line type, `1` solid `2` dashed |
+| `pch =` | point symbol; `16` filled circle, `1` open |
+| `las =` | axis text: `0` parallel, `1` horizontal, `2` perpendicular |
+| `horiz =` / `horizontal =` | sideways; `barplot` spells it `horiz`, `boxplot` `horizontal` |
 
-**What a shape is telling you**
+**Layers on top of an open plot**
 
-::: {.tight-cols}
-
-| You see | It usually means |
+| Code | What it adds |
 |:--|:--|
-| A bar far from the mass | A sentinel or impossible value; go look at those rows |
-| Everything crushed into one bin | The axis stretched to fit a bad value; go find it |
-| Two humps | Two populations in one column: units, instruments, or groups |
-| A long right tail | Skew; mean and median will disagree, and the mean is the fragile one |
-| A ray that splits in two | Two regimes; a clean constant factor means units |
-| Dots beyond the whiskers | Outliers to inspect: candidates, not confirmed errors |
-| A short bar in a count plot | A coverage gap: days or categories missing |
+| `points(x, y)`, `lines(x, y)` | marks, a joined line |
+| `abline(h =, v =)` | a horizontal or vertical reference line |
+| `text(x, y, "label")` | a label at data coordinates |
+| `legend("topright", labels, col =, lty =, pch =, bty = "n")` | the key; `NA` means no sample for that entry |
+| `axis(1, at =, labels =)` | your own axis; suppress R's with `xaxt = "n"` |
+| `mtext("x", side = 2, line = 3)` | text in the margin; sides 1–4 from the bottom, clockwise |
 
-:::
+**The canvas**
+
+| Code | What it does |
+|:--|:--|
+| `par("mar")` | **read** a setting |
+| `op <- par(mar = c(4, 15, 1, 1))` | **write** it and keep the old value; bottom, left, top, right, in lines |
+| `par(op)` | put it back — type this line before you type the plot |
+| `par(mfrow = c(2, 2))` | panels, filled across the rows |
+| `par(mfcol = c(2, 2))` | same grid, filled down the columns |
+| `par(oma = c(0, 0, 3, 0))` | outer margin, around **all** the panels |
+| `mtext("title", outer = TRUE, line = 1)` | one title across every panel |
+| `layout(m, heights =, widths =)` | panels of unequal size; reset with `layout(1)` |
+
+**Writing to disk**
+
+| Code | What it does |
+|:--|:--|
+| `png("f.png", width =, height =, pointsize =)` | open a bitmap file as the device; pixels |
+| `png(..., res = 300)` | pixels per inch; the default 72 is why figures go soft in print |
+| `cairo_pdf("f.pdf", width = 7, height = 5)` | vector; no resolution, sized in **inches** |
+| `dev.off()` | close the device and write the file — **required** |
 
 **Links**
 
 - Session materials: [slides](04-basic-plots-slides.html) ·
   [live script](04-basic-plots.R) ·
   [EPA data](data/epa_pm25_la_county_2025.csv) ·
-  [weather data](data/la-weather-dec2024-feb2025.csv) ·
-  [where they came from](data/SOURCE.md)
+  [where it came from](data/SOURCE.md)
 - [Syllabus](../syllabus.qmd) · [full schedule](../index.qmd#schedule)
 
 :::
