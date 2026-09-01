@@ -57,6 +57,7 @@ By the end of this session you can:
   `lapply()` and `sapply()`.
 - Read a real CSV, protect an identifier column, and convert text dates.
 - Turn a long file into a sites-by-months matrix and summarise both margins.
+- Join two tables on a shared key, and check the row count before and after.
 
 ::: {.content-hidden when-format="revealjs"}
 
@@ -762,6 +763,76 @@ county-wide rather than one instrument drifting.
 
 :::
 
+## Two tables, one key {#merge}
+
+Results in one table, the thing you want to attach in another. `merge()`
+matches them on a shared column.
+
+```{r}
+#| label: merge
+#| script: "Two tables, one key"
+means <- data.frame(site = rownames(tb),
+                    pm25 = round(apply(tb, 1, mean), 1))
+
+coords <- unique(frm[, c("Local.Site.Name", "Site.Latitude", "Site.Longitude")])
+names(coords) <- c("site", "lat", "lon")
+
+nrow(means); nrow(coords)          # count BEFORE
+sites <- merge(means, coords, by = "site")
+nrow(sites)                        # and after
+head(sites, 3)
+```
+
+::: {.content-hidden when-format="revealjs"}
+
+`by` names the column the two tables share. Rows whose keys match are glued
+side by side; the result carries the columns of both.
+
+Eight rows in, eight rows out, so nothing was lost. **That check is the whole
+discipline of joining.** Write down the row count you expect before you run
+it, and compare. A join has two silent failure modes and neither one errors.
+
+:::
+
+## What a join does silently {#merge-hazards}
+
+```{r}
+#| label: merge-hazards
+#| script: "What a join does silently"
+partial <- coords[coords$site != "Compton", ]   # pretend one site is missing
+
+nrow(merge(means, partial, by = "site"))                # dropped
+nrow(merge(means, partial, by = "site", all.x = TRUE))  # kept, with NA
+```
+
+::: {.content-hidden when-format="revealjs"}
+
+**Rows can disappear.** By default `merge()` keeps only keys present in
+both tables, so a site missing from the lookup takes its result with it.
+Seven rows came back where you asked about eight, with no error and no
+warning. `all.x = TRUE` keeps every row of the first table and fills the
+missing side with `NA`, which is almost always what you want: an `NA` you
+can see beats a row you cannot.
+
+**Rows can also multiply.** If the second table has two rows for one site,
+every matching row of the first is repeated to pair with each. Ask for eight
+and get twelve. That is why `unique()` is in the line that built `coords`.
+
+Keys have to be the same type, too. A site id read as a number will not
+match the same id read as text, and that failure looks exactly like "no
+matching rows".
+
+:::
+
+::: {.content-visible when-format="revealjs"}
+
+- Default keeps only keys in **both** tables: rows vanish, silently.
+- `all.x = TRUE` keeps the left table and fills with `NA`.
+- A duplicated key on the right **multiplies** rows instead.
+- Count rows before and after. Every time.
+
+:::
+
 ## One line, every file {#lapply-files}
 
 ```{r}
@@ -1003,6 +1074,8 @@ sapply(list.files("data", pattern = "\\.csv$"),
 | `as.Date(x, format = "%m/%d/%Y")` | Text to a real date |
 | `write.csv(d, f, row.names = FALSE)` | Write one back out |
 | `list.files(dir, pattern =)` | The names, ready for `lapply()` |
+| `merge(a, b, by = "id")` | Glue two tables on a shared key |
+| `merge(a, b, by =, all.x = TRUE)` | Keep every row of `a`; fill the rest with `NA` |
 
 :::
 

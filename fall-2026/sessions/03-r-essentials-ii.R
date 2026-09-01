@@ -240,6 +240,26 @@ round(sort(apply(tb, 1, mean), decreasing = TRUE), 1)   # per site, all year
 round(apply(tb, 2, mean), 1)                            # per month, all sites
 
 
+# Two tables, one key ----
+means <- data.frame(site = rownames(tb),
+                    pm25 = round(apply(tb, 1, mean), 1))
+
+coords <- unique(frm[, c("Local.Site.Name", "Site.Latitude", "Site.Longitude")])
+names(coords) <- c("site", "lat", "lon")
+
+nrow(means); nrow(coords)          # count BEFORE
+sites <- merge(means, coords, by = "site")
+nrow(sites)                        # and after
+head(sites, 3)
+
+
+# What a join does silently ----
+partial <- coords[coords$site != "Compton", ]   # pretend one site is missing
+
+nrow(merge(means, partial, by = "site"))                # dropped
+nrow(merge(means, partial, by = "site", all.x = TRUE))  # kept, with NA
+
+
 # One line, every file ----
 files <- list.files("data", pattern = "\\.csv$")
 files
