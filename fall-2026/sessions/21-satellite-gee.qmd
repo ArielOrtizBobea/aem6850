@@ -1,0 +1,54 @@
+---
+title: "21 · Satellite II: Earth Engine"
+subtitle: "Thursday, Nov 5, 2026"
+pagetitle: "AEM 6850 · Session 21 · Satellite II — Earth Engine"
+---
+
+::: {.callout-note appearance="simple"}
+Materials for this session are not published yet. They appear here
+before class.
+:::
+
+## Objectives {#objectives}
+
+By the end of this session you can:
+
+- Say when to move the computation to the data instead of the data to
+  your machine.
+- Find a dataset in the catalog and read its documentation.
+- Filter an image collection by date, place, and cloud cover.
+- Reduce a collection over your own polygons and export a table.
+- Bring that table back into R and treat it as any other data frame.
+- Say when Earth Engine is the wrong tool.
+
+## What we cover {#coverage}
+
+- **The inversion.** Every session so far has fetched data and computed
+  locally. Some questions make that impossible: a decade of a continent
+  is more pixels than your disk holds. You send the computation instead,
+  and only the answer comes back. The same idea runs BigQuery and
+  cloud-hosted archives, so it outlives this one tool.
+- The catalog: Landsat, Sentinel, MODIS, and the derived products
+  (land cover, night lights, gridded weather). What each documentation
+  page tells you, and what it does not.
+- Filtering a collection: date range, bounding box, cloud cover. How
+  many images survive, which is the count check.
+- Server-side thinking, and the mistake everyone makes first. A loop
+  that works in R hangs in Earth Engine, because the work happens on
+  Google's machines and only what you ask for comes back. Map and
+  reduce instead of iterate.
+- **The payoff: `reduceRegions()`.** Zonal statistics over your own
+  polygons, at continental scale. Mean rainfall per county, night
+  lights per district, greenness per field boundary. This is the shape
+  most economics questions actually want.
+- Export to a table, load it in R, and the rest of the semester's
+  workflow applies unchanged.
+- **When not to use it.** Small areas, one scene, or anything you need
+  byte-reproducible: the archive is versioned but the service is not
+  yours, so a result you cannot re-run is a result you cannot defend.
+  Cache the exported table and commit it.
+- Access is free for research, and the account setup takes a few days,
+  so we start it in the session before.
+
+**Verification habit.** Reduce one polygon you can check by hand, and
+compare it with the same polygon computed locally.
