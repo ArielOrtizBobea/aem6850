@@ -685,12 +685,36 @@ d$pm25[d$pm25 < 0]
 unique(d$site[d$pm25 < 0])
 ```
 
-Eight readings, one station. **Keep them.** They are real published values:
-the instrument's zero drifts a little and EPA publishes what it measured
-rather than rounding up. Lancaster's median is 4.2, so noise around a
-near-zero true value lands below zero, and deleting them would bias the mean
-up. Three more days read exactly 0.0, which is a legal measurement — *below*
-zero is the finding, zero is not.
+Eight readings, all Lancaster. **Keep them.** They are real published
+measurements, and the file says why if you ask it two more questions:
+
+```{r}
+#| label: exercise-1-why
+#| purl: false
+unique(d$Method.Description[d$pm25 < 0])       # which instrument
+round(tapply(d$pm25, d$site, mean), 2)         # how clean the air is there
+```
+
+Two conditions have to hold at once, and Lancaster is the only site where
+both do. **It is the one monitor on a different instrument.** A BAM measures
+mass by firing beta particles through an hour's worth of dust on a filter
+tape and reading how much got absorbed; that is a difference between two
+noisy counts, so near the detection limit it can come out below zero. The
+other seven sites weigh a filter instead, and every one of them has a
+positive minimum. **And it is the cleanest site**, at 4.48 µg/m³ against
+11–13 elsewhere — the only place where the true concentration sits close
+enough to zero for the noise to cross it.
+
+EPA publishes the negative on purpose. AQS accepts values down to the
+negative of the method detection limit and asks submitters *not* to
+substitute zero, because
+[zero-substitution biases every average computed from the data](https://www.epa.gov/sites/default/files/2017-02/documents/negative_values_reporting_to_aqs_10_6_16.pdf).
+Deleting these eight would do the same thing to yours. Note that
+`Daily.AQI.Value` reads 0 on those days: the *index* is floored at zero, the
+*measurement* is not.
+
+Three more days read exactly 0.0, which is a legal reading — *below* zero is
+the finding, zero is not.
 
 :::
 
