@@ -15,10 +15,15 @@ By the end of this session you can:
 
 - Write and call your own functions.
 - Run a function over a list of files with `lapply()`.
+- Say how research code differs from software, and which software
+  engineering practices are worth borrowing anyway.
 - Structure a script so a stranger can read it: sections, names,
   comments that say why.
 - Avoid duplicated code and unexplained constants.
-- Localize a defect by bisection.
+- Write code that is easy to check — and explain why that is a
+  property of the code, not of the checker.
+- Localize a defect by bisection, and pick the right tool for the
+  kind of failure you have.
 - Document a diagnosis: the line, the mechanism, the fix, and the
   proof.
 
@@ -27,19 +32,41 @@ By the end of this session you can:
 - Writing functions; `for` loops at reading depth.
 - `lapply()` and `sapply()` for real: apply a function to every
   element of a list — every file in a folder, every group in a
-  split — the pattern half of Part II runs on. Lists, from session
-  2, are what they eat and return.
+  split — the pattern most of the applied work runs on. Lists are
+  what they eat and what they return.
+- **Research code is not software.** Software has users, ships, and
+  is maintained for years; a research script has one author, runs a
+  handful of times, and has to produce a number someone can defend.
+  So the engineering practices divide in three: the ones that pay off
+  immediately here (naming, structure, no duplication, version
+  control, small tested pieces), the ones that pay off selectively
+  (unit tests, code review, refactoring), and the ones that are
+  overhead at this scale (APIs, design patterns, coverage targets,
+  CI). Borrow deliberately rather than by reputation.
 - Coding practices: naming things, `# section ----` structure,
   comments that explain why rather than what, named constants instead
   of magic numbers, not repeating yourself — you are writing code
   for others, and that includes yourself in six months.
+- **Write code that is easy to check.** Checkability is a property of
+  how the code is built, not of how hard you look at it afterwards:
+  small pieces with one job, intermediate values you can print,
+  no step that changes three things at once, and results that come
+  out where an assertion can reach them. Code you cannot check is
+  code you cannot defend, whatever it computed.
 - Test small before you run big; re-run the whole script, not just
   the piece you changed.
 - A personal style sheet: eleven dimensions of how *you* write code —
-  kept, and paid off in session 9.
-- The debugging toolkit: `traceback()`, `browser()`, print debugging.
+  kept, and paid off later in the semester.
+- **Debugging as a strategy, not a toolbox.** Read the error before
+  you change anything; reproduce it on the smallest input that still
+  fails; form one hypothesis at a time and test it; change one thing
+  per run. Then the tools, matched to the failure: `traceback()` for
+  where it died, `browser()` for what the state was, print debugging
+  for how a value evolved, and bisection for a wrong number that
+  never errored at all.
 - Bisection — comment out half, re-run, repeat until the defect has
-  nowhere to hide.
+  nowhere to hide. It is the only one of the four that works when
+  nothing crashed.
 - The in-class bug hunt: a short script that runs clean and reports a
   plausible wrong number. Find it — no AI, in the room.
 
