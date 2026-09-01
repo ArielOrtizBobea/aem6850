@@ -1386,15 +1386,23 @@ sapply(list.files("data", pattern = "\\.csv$"),
 
 ::: {.content-visible when-format="revealjs"}
 
+Selected commands from today. The session page has all of them, grouped by
+topic.
+
 | Code | What it does |
 |:--|:--|
-| `matrix(x, nrow =, byrow =)` | Build one |
-| `m[i, j]` · `rbind()` · `cbind()` | Index; stack; widen |
+| `matrix(x, nrow =, byrow =)` · `diag()` | Build one; the diagonal |
+| `m[i, j]` · `m[, j, drop = FALSE]` | Index; keep it a matrix |
+| `rbind()` · `cbind()` | Stack; widen |
 | `l[["a"]]` vs `l["a"]` | The element vs a list of one |
 | `unlist(l)` · `do.call(rbind, l)` | Flatten; stack |
-| `apply(m, 1, f)` · `sapply(l, f)` | A margin; a list |
-| `tapply(x, list(g1, g2), f)` | Two groupings, one matrix |
+| `apply(m, 1, f)` · `lapply()` · `sapply()` | A margin; a list; simplified |
+| `split(x, g)` · `tapply(x, list(g1, g2), f)` | Groups; two groupings, one matrix |
+| `as.Date(x, format =)` · `seq(d, by =)` | Text to date; a run of dates |
+| `anyDuplicated(d)` · `unique(x)` | Any repeats; drop them |
+| `merge(a, b, by =, all.x =)` | Join, keeping every row of `a` |
 | `colClasses = c(id = "character")` | Protect identifiers at read time |
+| `saveRDS()` · `readRDS()` | An R object, saved exactly as it was |
 
 :::
 
