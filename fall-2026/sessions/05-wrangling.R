@@ -16,7 +16,7 @@
 library(dplyr)
 
 
-# Rebuild session 2's data frame ----
+# Rebuild the frame ----
 pm <- read.csv("data/epa_pm25_compton_2025.csv",
                colClasses = c("Site.ID"          = "character",
                               "State.FIPS.Code"  = "character",
@@ -28,7 +28,7 @@ nrow(pm)   # the whole year, both instruments: 662 rows
 
 
 # filter(): keep rows ----
-# session 2:  pm[pm$date <= as.Date("2025-02-28") &
+# base R:  pm[pm$date <= as.Date("2025-02-28") &
 #                pm$POC == 1 & pm$AQS.Parameter.Code == 88101, ]
 
 one <- filter(pm,
@@ -36,28 +36,28 @@ one <- filter(pm,
               POC == 1,
               AQS.Parameter.Code == 88101)
 
-nrow(one)   # session 2 says this must be 59
+nrow(one)   # must be 59: one row per calendar day
 
 
 # select(): keep columns ----
-# session 2:  one[, c("date", "pm25")]
+# base R:  one[, c("date", "pm25")]
 
 head(select(one, date, pm25), 3)
 
 
 # mutate(): add columns ----
-# session 2:  one$above35 <- one$pm25 > 35
+# base R:  one$above35 <- one$pm25 > 35
 
 one <- mutate(one,
               above35 = pm25 > 35,
               month   = format(date, "%b"))
 
 head(select(one, date, pm25, above35, month), 3)
-sum(one$above35)   # session 3's histogram says this must be 4
+sum(one$above35)   # must be 4
 
 
 # arrange(): sort rows ----
-# session 2:  head(one[order(-one$pm25), c("date", "pm25")], 5)
+# base R:  head(one[order(-one$pm25), c("date", "pm25")], 5)
 
 worst <- arrange(one, desc(pm25))
 head(select(worst, date, pm25), 3)
@@ -70,7 +70,7 @@ pm |> filter(POC == 1) |> nrow()   # piped: read left to right
 
 
 # The chain, end to end ----
-# session 2:  head(one[order(-one$pm25), c("date", "pm25")], 5)
+# base R:  head(one[order(-one$pm25), c("date", "pm25")], 5)
 
 pm |>
   filter(date <= as.Date("2025-02-28"),
@@ -99,7 +99,7 @@ one |>
 
 
 # count(): the counting shorthand ----
-# session 2:  table(pm$POC, pm$AQS.Parameter.Code)
+# base R:  table(pm$POC, pm$AQS.Parameter.Code)
 
 pm |> count(POC, AQS.Parameter.Code)
 
@@ -141,13 +141,13 @@ la$date <- as.Date(la$date)
 # = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 # You try (5 minutes) ----
 # 1. The windstorm, top three: chain arrange(), select(), and head() to
-#    print the three biggest gust days with their dates. Session 1 says
-#    which date must come first.
+#    print the three biggest gust days with their dates. Write down which
+#    date must come first.
 #
 # 2. Rain days by month: make month a factor with
 #    levels = c("Dec", "Jan", "Feb"), then group_by(month) |>
 #    summarize(days = n(), rain_days = sum(precip > 0)).
-#    Session 3's drought plot says which month must have the most rain.
+#    Write down which month must have the most rain before you run it.
 #
 # 3. One line: la |> count(precip > 0). Write both numbers down first.
 #    Your table from task 2 already fixes what they must be.

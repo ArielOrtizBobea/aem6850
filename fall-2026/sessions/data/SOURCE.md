@@ -7,7 +7,7 @@ reformatted.
 
 ---
 
-## `la-weather-dec2024-feb2025.csv` — session 1
+## `la-weather-dec2024-feb2025.csv` — sessions 1, 4 and 5
 
 **Source:** Open-Meteo historical weather archive (ERA5 reanalysis),
 <https://open-meteo.com>. No account or key required.
@@ -34,7 +34,7 @@ fallback when the network or the API is unavailable.
 
 ---
 
-## `epa_pm25_compton_2025.csv` — sessions 4 and 5
+## `epa_pm25_compton_2025.csv` — session 5
 
 **Source:** U.S. EPA AirData, "Download Daily Data" tool,
 <https://www.epa.gov/outdoor-air-quality-data/download-daily-data>
@@ -92,7 +92,7 @@ record being corrected. Work from the shipped file.
 
 ---
 
-## `epa_pm25_la_county_2025.csv` — session 3
+## `epa_pm25_la_county_2025.csv` — sessions 3 and 4
 
 **Source:** U.S. EPA AirData, "Download Daily Data" tool,
 <https://www.epa.gov/outdoor-air-quality-data/download-daily-data>

@@ -80,7 +80,7 @@ this course needs.
 
 ::: {.column-margin}
 dplyr belongs to a coordinated family of packages called the tidyverse.
-The course adds members as it needs them; ggplot2 comes in session 12.
+The course adds members as it needs them.
 :::
 
 One command fetches it from [CRAN](https://cran.r-project.org), the archive
@@ -169,12 +169,11 @@ and every script opens with its `library()` lines.
 
 ## Rebuild the frame {#rebuild}
 
-Reading stays base R: the same read, repairs, and checks as before
-and 3.
+Reading stays base R: the same read, the same repairs, the same checks.
 
 ```{r}
 #| label: rebuild
-#| script: "Rebuild session 2's data frame"
+#| script: "Rebuild the frame"
 pm <- read.csv("data/epa_pm25_compton_2025.csv",
                colClasses = c("Site.ID"          = "character",
                               "State.FIPS.Code"  = "character",
@@ -188,22 +187,21 @@ nrow(pm)   # the whole year, both instruments: 662 rows
 ::: {.content-hidden when-format="revealjs"}
 
 dplyr changes nothing about reading a file. `read.csv()`, the identifier
-protection, the rename, the date conversion, and the quick checks stay
-exactly as session 2 built them. What dplyr replaces is everything session
-2 did after this point with brackets and `$`. If `data/` is missing a file,
-[the rebuild section](04-basic-plots.qmd#rebuild) has a
-thirty-second download fallback.
+protection, the rename, the date conversion, and the quick checks are
+unchanged. What dplyr replaces is everything that came after this point
+with brackets and `$`. If `data/` is missing the file, the
+[data folder](data/) has it, alongside the provenance notes.
 
 :::
 
 ## `filter()`: keep rows {#filter}
 
-Session 2 cut the winter window with brackets. Same subset, first verb:
+Base R cuts the winter window with brackets. Same subset, first verb:
 
 ```{r}
 #| label: filter
 #| script: "filter(): keep rows"
-# session 2:  pm[pm$date <= as.Date("2025-02-28") &
+# base R:  pm[pm$date <= as.Date("2025-02-28") &
 #                pm$POC == 1 & pm$AQS.Parameter.Code == 88101, ]
 
 one <- filter(pm,
@@ -211,7 +209,7 @@ one <- filter(pm,
               POC == 1,
               AQS.Parameter.Code == 88101)
 
-nrow(one)   # session 2 says this must be 59
+nrow(one)   # must be 59: one row per calendar day
 ```
 
 ::: {.content-hidden when-format="revealjs"}
@@ -221,7 +219,7 @@ from the base line. The data frame comes first, then the conditions. Column
 names stand bare, because `filter()` looks them up inside `pm`, so no `pm$`
 and no brackets. Commas join conditions the way `&` did; `|` still spells
 or, inside a single condition. The answer did not change: 59 rows, one per
-calendar day of the window, as session 2 verified.
+calendar day of the window.
 
 :::
 
@@ -229,7 +227,7 @@ calendar day of the window, as session 2 verified.
 
 - Data frame first, then conditions. Bare column names: no `pm$`.
 - Commas mean and. `|` still spells or, inside one condition.
-- Same rows out: 59, one per day, as verified in session 2.
+- Same rows out: 59, one per day.
 
 :::
 
@@ -241,7 +239,7 @@ in the order you want them:
 ```{r}
 #| label: select
 #| script: "select(): keep columns"
-# session 2:  one[, c("date", "pm25")]
+# base R:  one[, c("date", "pm25")]
 
 head(select(one, date, pm25), 3)
 ```
@@ -260,9 +258,8 @@ why `head()` works on it unchanged.
 
 `mutate()` adds columns computed from existing ones. Two at once here, and
 both get used today. Before running it, set the expectation:
-session 3's histogram put four days past the red line at 35 µg/m³, the
-24-hour standard set by EPA (the US environmental agency). Those days were
-January 1, 8, 9, and 10. So a TRUE/FALSE column for `pm25 > 35` must sum
+four days in this window clear 35 µg/m³, the 24-hour standard set by EPA
+(the US environmental agency) — January 1, 8, 9, and 10. So a TRUE/FALSE column for `pm25 > 35` must sum
 to 4.
 
 :::
@@ -270,30 +267,29 @@ to 4.
 ```{r}
 #| label: mutate
 #| script: "mutate(): add columns"
-# session 2:  one$above35 <- one$pm25 > 35
+# base R:  one$above35 <- one$pm25 > 35
 
 one <- mutate(one,
               above35 = pm25 > 35,
               month   = format(date, "%b"))
 
 head(select(one, date, pm25, above35, month), 3)
-sum(one$above35)   # session 3's histogram says this must be 4
+sum(one$above35)   # must be 4
 ```
 
 ::: {.content-hidden when-format="revealjs"}
 
 Each new column is `name = expression`, computed inside the data frame, so
 `pm25` and `date` stand bare. `format(date, "%b")` pulls the short month
-name, `"Jan"`, out of a date: session 2's format strings, run in reverse.
-The sum confirms the histogram, with `TRUE` counting as 1 exactly as in
-session 2.
+name, `"Jan"`, out of a date: the same format strings, run in reverse.
+The sum confirms the count, with `TRUE` counting as 1.
 
 :::
 
 ::: {.content-visible when-format="revealjs"}
 
 - `name = expression`, computed inside the frame: bare column names again.
-- `"%b"` is the short month name. Session 2's format strings, in reverse.
+- `"%b"` is the short month name: format strings, in reverse.
 
 :::
 
@@ -304,7 +300,7 @@ session 2.
 ```{r}
 #| label: arrange
 #| script: "arrange(): sort rows"
-# session 2:  head(one[order(-one$pm25), c("date", "pm25")], 5)
+# base R:  head(one[order(-one$pm25), c("date", "pm25")], 5)
 
 worst <- arrange(one, desc(pm25))
 head(select(worst, date, pm25), 3)
@@ -312,9 +308,9 @@ head(select(worst, date, pm25), 3)
 
 ::: {.content-hidden when-format="revealjs"}
 
-January 1 is back on top at 53.2, exactly where session 2's base sort put
-it. Notice the cost of working verb by verb: `worst` is a stored
-intermediate that nothing else will ever use. Session 2's base line avoided
+January 1 is back on top at 53.2, exactly where the base sort put it.
+Notice the cost of working verb by verb: `worst` is a stored
+intermediate that nothing else will ever use. The base line avoided
 the intermediate by nesting the subset inside `head()`, and paid in
 readability. The pipe removes that trade-off.
 
@@ -322,7 +318,7 @@ readability. The pipe removes that trade-off.
 
 ::: {.content-visible when-format="revealjs"}
 
-- January 1 on top at 53.2, as session 2 found by base sorting.
+- January 1 on top at 53.2, the same answer base sorting gave.
 - The cost so far: throwaway objects like `worst`, or nested calls you
   read inside out. The pipe fixes this.
 
@@ -371,7 +367,7 @@ Read it the same way; write `|>`.
 ```{r}
 #| label: chain
 #| script: "The chain, end to end"
-# session 2:  head(one[order(-one$pm25), c("date", "pm25")], 5)
+# base R:  head(one[order(-one$pm25), c("date", "pm25")], 5)
 
 pm |>
   filter(date <= as.Date("2025-02-28"),
@@ -385,8 +381,8 @@ pm |>
 
 Read it aloud: take the year, keep the winter window from the regulatory
 sampler, sort worst first, keep the date and the reading, show five. That is
-the sentence session 3 pointed to. The five rows match session 2's
-base sort to the decimal: 53.2, 47.7, 44.6, 42.2, 33.6.
+one sentence. The five rows match the base sort to the decimal: 53.2,
+47.7, 44.6, 42.2, 33.6.
 
 The chain also changes how you edit. Each verb sits on its own line, so
 adding a step later means inserting a line, not rebuilding a bracket
@@ -398,8 +394,8 @@ expression from the inside out.
 
 - Aloud: take the year, keep the winter window, sort worst first, keep two
   columns, show five.
-- Same five rows as session 2's sort: 53.2, 47.7, 44.6, 42.2, 33.6.
-- The sentence session 3 pointed to. One verb per line.
+- Same five rows as the base sort: 53.2, 47.7, 44.6, 42.2, 33.6.
+- The whole thing reads as one sentence, one verb per line.
 
 :::
 
@@ -410,11 +406,10 @@ expression from the inside out.
 `group_by()` declares groups; every `summarize()` after it computes once
 per group. Before running the block below, write down the six numbers it
 should print. You already have the evidence. Days: the window has no
-gaps (session 2 checked), so January contributes 31 rows and February 28.
-Medians: session 3's boxplot put January at 16.9 and February at 12.6.
-Means: all four days above the standard belong to January, and in a
-right-skewed month the mean sits above the median (session 3), so January's
-mean should clear 16.9 with room. Write your six down, then run.
+gaps, so January contributes 31 rows and February 28. Medians: 16.9 for
+January and 12.6 for February. Means: all four days above the standard
+belong to January, and in a right-skewed month the mean sits above the
+median, so January's mean should clear 16.9 with room. Write your six down, then run.
 
 :::
 
@@ -442,8 +437,8 @@ one |>
 
 Reconcile line by line. The days column reads 31 and 28: `n()` takes no
 arguments and counts the rows of whatever group it stands in, and it only
-works inside `summarize()` and friends. The medians reproduce session 3's
-boxplot as numbers, 16.9 and 12.6. January's mean, 21.3, sits far above its
+works inside `summarize()` and friends. The medians come back at 16.9 and
+12.6, as written down. January's mean, 21.3, sits far above its
 own median because the four event days pull it up; February's, 13.4, barely
 moves off its median. (`summarise()` with an s does the same thing; both
 spellings work.)
@@ -454,7 +449,7 @@ types attached. Grouped summaries come back as tibbles.
 
 And one thing nobody predicted: February printed before January. That is
 not a dplyr bug. `month` is text, and text sorts alphabetically. It is
-session 2's `"10"` before `"9"`, back again.
+`"10"` before `"9"`, back again.
 
 :::
 
@@ -487,13 +482,12 @@ one |>
 
 ::: {.content-hidden when-format="revealjs"}
 
-Session 2 defined a factor as a categorical column with a level table.
-Today the level table does real work: `levels = month.abb` stores the
+A factor is a categorical column with a level table. Here the level table does real work: `levels = month.abb` stores the
 categories in calendar order, and every grouped result now follows that
 order. This is what factors are for. Categories usually have an order that
 is not alphabetical: months, damage classes, education levels, income
 brackets. Set the levels once and every table downstream prints in the
-order you meant. (Session 2's warning stands: `as.numeric()` on a factor
+order you meant. (The standing warning: `as.numeric()` on a factor
 returns level codes, not the labels.)
 
 :::
@@ -511,7 +505,7 @@ returns level codes, not the labels.)
 ```{r}
 #| label: count
 #| script: "count(): the counting shorthand"
-# session 2:  table(pm$POC, pm$AQS.Parameter.Code)
+# base R:  table(pm$POC, pm$AQS.Parameter.Code)
 
 pm |> count(POC, AQS.Parameter.Code)
 ```
@@ -519,9 +513,9 @@ pm |> count(POC, AQS.Parameter.Code)
 ::: {.content-hidden when-format="revealjs"}
 
 `count(x)` is `group_by(x)` plus `summarize(n = n())` in one verb. Give it
-two columns and it counts every combination that occurs. Session 2 answered
+two columns and it counts every combination that occurs. Base R answers
 this question with `table()`; `count()` answers with a data frame, so the
-answer itself can go through more verbs. The numbers match session 2:
+answer itself can go through more verbs. The numbers match it:
 301 regulatory days, 7 stray rows under the wrong code, 354 days from the
 continuous instrument. They sum to 662, every row in the file.
 
@@ -530,7 +524,7 @@ continuous instrument. They sum to 662, every row in the file.
 ::: {.content-visible when-format="revealjs"}
 
 - `count(x)` = `group_by(x)` + `summarize(n = n())`.
-- Same three cells as session 2's `table()`: 301, 7, 354. Sum: 662, the
+- Same three cells as `table()`: 301, 7, 354. Sum: 662, the
   whole file.
 - The difference: the answer is a data frame, so it can go through more
   verbs.
@@ -539,14 +533,13 @@ continuous instrument. They sum to 662, every row in the file.
 
 ## The missing spring, measured {#missing-spring}
 
-Session 3 found the hole with a bar chart. Measuring it takes a chain you
-can now read:
+A bar chart finds the hole. Measuring it takes a chain you can now read:
 
 ::: {.callout-important appearance="simple"}
 **Write down the twelve counts this should print.** The evidence: the
 `count()` above says the regulatory series has 301 rows. A full month has
-28 to 31 days. Session 3's bar chart showed ten tall bars, April near two
-days, May near one. Your twelve numbers must sum to 301.
+28 to 31 days. A count plot of this series shows ten tall bars, April near
+two days, May near one. Your twelve numbers must sum to 301.
 :::
 
 ```{r}
@@ -578,8 +571,8 @@ year |> count(month)
 
 ::: {.content-hidden when-format="revealjs"}
 
-Reconcile against your prediction. April and May land exactly where
-session 3's bars put them: 2 days and 1. The counts sum to 301, and a
+Reconcile against your prediction. April and May land at 2 days and 1, exactly
+where a count plot puts them. The counts sum to 301, and a
 complete year has 365 days, so the regulatory series is missing 64. Of
 those, 58 are the spring outage: April is short 28 days and May 30.
 
@@ -618,8 +611,7 @@ The continuous instrument averages 12.3 over its year and 10.1 over April
 and May. The two instruments measure by different methods, so the levels
 are not exactly comparable. The direction is: the regulatory series is
 missing precisely the months that would have pulled its average down, so
-its 13.4 leans high. Session 3 said every mean is a mean of the days that
-are there. Today you can put numbers on what that costs.
+its 13.4 leans high. Every mean is a mean of the days that are there. Today you can put numbers on what that costs.
 
 :::
 
@@ -636,7 +628,7 @@ are there. Today you can put numbers on what that costs.
 ::: {.content-visible when-format="revealjs"}
 ::: {.notes}
 If someone asks why the sampler was down: this file does not say, and AQS
-validation can also remove readings after the fact (session 3's page). The
+validation can also remove readings after the fact (session 4's page). The
 point stands either way: the series has no spring.
 :::
 :::
@@ -659,8 +651,7 @@ the answer is effectively zero, and it will be for everything in Part I.
 Part II changes that. Satellite rasters, statewide parcel tables, and
 folders of hourly files make single lines take minutes. The habit costs one
 line: when something feels slow, wrap it once, note the number, and compare
-after you change something. Session 24 builds its whole speed-up method on
-this function.
+after you change something.
 
 :::
 
@@ -668,7 +659,6 @@ this function.
 
 - Read `elapsed`: the seconds you waited. Today, effectively zero.
 - The habit: when a line feels slow, wrap it once and note the number.
-  Session 24 builds on this.
 
 :::
 
@@ -690,13 +680,13 @@ la$date <- as.Date(la$date)
 #| script: "You try (5 minutes)"
 #| eval: false
 # 1. The windstorm, top three: chain arrange(), select(), and head() to
-#    print the three biggest gust days with their dates. Session 1 says
-#    which date must come first.
+#    print the three biggest gust days with their dates. Write down which
+#    date must come first.
 #
 # 2. Rain days by month: make month a factor with
 #    levels = c("Dec", "Jan", "Feb"), then group_by(month) |>
 #    summarize(days = n(), rain_days = sum(precip > 0)).
-#    Session 3's drought plot says which month must have the most rain.
+#    Write down which month must have the most rain before you run it.
 #
 # 3. One line: la |> count(precip > 0). Write both numbers down first.
 #    Your table from task 2 already fixes what they must be.
@@ -705,7 +695,7 @@ la$date <- as.Date(la$date)
 ::: {.content-visible when-format="revealjs"}
 ::: {.notes}
 Debriefs, one sentence each: (1) Jan 7 at 65.9, then Jan 8 at 50.8, then
-Feb 13 at 49.0, the day of session 3's biggest storm; session 1's "66" was
+Feb 13 at 49.0, the day of session 4's biggest storm; session 1's "66" was
 this 65.9 rounded. (2) Dec 2, Jan 3, Feb 8: February has the most rain,
 matching the drought's Jan 26 break; without the factor the months print
 Dec, Feb, Jan. (3) 13 wet days and 77 dry, because 2 + 3 + 8 = 13 and the
@@ -751,8 +741,7 @@ catches both.
 
 The expectation always has a source: the calendar, the sampling schedule, a
 plot you already read, a total that must be conserved. When the returned
-number is not the written-down number, stop and resolve it. Session 5 runs
-on this check.
+number is not the written-down number, stop and resolve it.
 
 :::
 
@@ -820,8 +809,6 @@ call as its first argument. Read it as "then".
   cheatsheet](https://rstudio.github.io/cheatsheets/html/data-transformation.html)
 - [R for Data Science, ch. 3](https://r4ds.hadley.nz/data-transform.html),
   the book-length treatment of today
-- [Session 2](02-r-essentials.qmd) (the base subsetting translated today) ·
-  [session 4](04-basic-plots.qmd) (where the hole was found)
 - [Syllabus](../syllabus.qmd) · [full schedule](../index.qmd#schedule)
 
 :::
@@ -837,12 +824,11 @@ destroy?** Due Thursday, September
 The data is CAL FIRE's building-by-building damage inspections from the
 Eaton and Palisades fires (CAL FIRE is California's fire agency): every
 inspected structure, its damage category, its year built. The damage
-column is categorical, so `count()` is the tool for it. The habit from
-session 3 still applies first: plot the columns before you trust them, and
-read each plot in one written sentence.
+column is categorical, so `count()` is the tool for it. Plot the columns
+before you trust them, and read each plot in one written sentence.
 
 **Re-run today's script before you start.** Run it line by line and change
-things to see what breaks, the way session 2 asked.
+things to see what breaks.
 
 Re-run today's script at home, top to bottom, in a fresh session.
 
