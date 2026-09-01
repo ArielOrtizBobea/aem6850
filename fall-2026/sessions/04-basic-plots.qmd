@@ -1,7 +1,7 @@
 ---
-title: "4 · Look at your data"
+title: "4 · Basic plots"
 subtitle: "Thursday, September 3, 2026"
-pagetitle: "AEM 6850 · Session 4 · Look at your data"
+pagetitle: "AEM 6850 · Session 4 · Basic plots"
 execute:
   echo: true
 format:
@@ -9,7 +9,7 @@ format:
     toc: true
     toc-depth: 2
   revealjs:
-    output-file: 04-look-at-data-slides.html
+    output-file: 04-basic-plots-slides.html
     theme: [default, slides.scss]
     template-partials:
       - title-slide.html
@@ -37,8 +37,8 @@ knitr::opts_chunk$set(
 
 ::: {.content-hidden when-format="revealjs"}
 
-[Slides](04-look-at-data-slides.html) · [Live script](04-look-at-data.R) ·
-[Source](https://github.com/ArielOrtizBobea/aem6850/blob/main/fall-2026/sessions/04-look-at-data.qmd)
+[Slides](04-basic-plots-slides.html) · [Live script](04-basic-plots.R) ·
+[Source](https://github.com/ArielOrtizBobea/aem6850/blob/main/fall-2026/sessions/04-basic-plots.qmd)
 
 This session adds the checks `str()` and `summary()` cannot do: four
 base-R plots, one line each, used as instruments rather than
@@ -157,7 +157,8 @@ of them on a normal working day.
 
 Nothing new sits underneath: every one of these takes ordinary vectors and
 data-frame columns. The only new notation is the `~` in `boxplot()`. We
-will read it aloud when we get there.
+will read it aloud when we get there. Later we add three that build *on* a
+plot rather than making one: `points()`, `legend()` and `axis()`.
 
 :::
 
@@ -750,6 +751,52 @@ the New Year's one.
 
 :::
 
+## When the default axis is wrong {#axis}
+
+You could see the gap. You could not say which months it covered, because R
+labelled the axis by quarter.
+
+```{r}
+#| label: axis
+#| script: "When the default axis is wrong"
+#| fig-alt: "The same two-instrument plot of Compton 2025, now with a tick and an abbreviated month name at the first of every month. The gap in the red regulatory dots is now readable as April and May."
+plot(con$date, con$pm25, type = "l", col = "grey60",
+     xaxt = "n",                     # draw no x-axis: we will do it
+     xlab = "", ylab = "Daily PM2.5 (ug/m3)")
+points(reg$date, reg$pm25, pch = 16, cex = 0.5, col = "#b31b1b")
+
+firsts <- as.Date(paste0("2025-", sprintf("%02d", 1:12), "-01"))
+axis(1, at = firsts, labels = month.abb)
+```
+
+::: {.content-hidden when-format="revealjs"}
+
+`xaxt = "n"` tells `plot()` to skip the x-axis, and `axis()` then draws the
+one you want. Its first argument is the side, numbered clockwise from the
+bottom: 1 bottom, 2 left, 3 top, 4 right. `at` says where the ticks go and
+`labels` says what to write on them; the two have to be the same length.
+`month.abb` is a vector R ships with, the twelve abbreviated month names.
+
+Read the gap now. A couple of red dots in early April, then nothing at all
+until June. That is April and May, which is what the counts said, and now
+you can say it off the picture instead of trusting a table.
+
+This is the one piece of axis work worth doing on an instrument. Not because
+it is prettier, but because the default was **unreadable for the question**:
+quarterly ticks cannot resolve a two-month gap. Reach for `axis()` when the
+default hides what you are looking at, and leave it alone otherwise. Add
+`las = 2` to turn the labels sideways when they collide.
+
+:::
+
+::: {.content-visible when-format="revealjs"}
+
+- `xaxt = "n"` suppresses the axis; `axis(1, at =, labels =)` draws yours.
+- Sides are numbered from the bottom, clockwise: 1, 2, 3, 4.
+- Now the gap is nameable: **April and May.**
+
+:::
+
 ## Choosing the instrument {#choosing}
 
 Start from the suspicion, not from the plot type.
@@ -1052,7 +1099,12 @@ what-shapes-mean table, and every command from today.
 | `main = "", xlab = "", ylab = ""` | Title and axis labels |
 | `abline(v = 35)`, `abline(h = 10)` | A vertical or horizontal reference line |
 | `col =`, `lty =`, `lwd =` | Color, line type, line width |
+| `points(x, y, pch = 16, cex = 0.5)` | Add markers to an open plot; `pch` symbol, `cex` size |
+| `lines(x, y)` | Add a connecting line to an open plot |
+| `legend("topright", labels, col =, pch =, lty =)` | Say which series is which; `bty = "n"` drops the box |
+| `xaxt = "n"` then `axis(1, at =, labels =)` | Replace an axis R got wrong; sides 1–4 from the bottom, clockwise |
 | `par(mfrow = c(2, 2))` | Panels in one window; reset with `c(1, 1)` |
+| `par(mar = c(4, 14, 1, 1))` | Widen a margin for long labels; too narrow clips silently |
 
 **What a shape is telling you**
 
@@ -1072,8 +1124,8 @@ what-shapes-mean table, and every command from today.
 
 **Links**
 
-- Session materials: [slides](04-look-at-data-slides.html) ·
-  [live script](04-look-at-data.R) ·
+- Session materials: [slides](04-basic-plots-slides.html) ·
+  [live script](04-basic-plots.R) ·
   [EPA data](data/epa_pm25_la_county_2025.csv) ·
   [weather data](data/la-weather-dec2024-feb2025.csv) ·
   [where they came from](data/SOURCE.md)
@@ -1114,5 +1166,5 @@ surprise in it that `summary()` will not show you. Plot first.
 # Single-source build: the .R live script is generated from this file every
 # time the page renders, so it cannot fall out of step with the prose.
 source("_purl.R")
-purl_session("04-look-at-data.qmd", "04-look-at-data.R")
+purl_session("04-basic-plots.qmd", "04-basic-plots.R")
 ```

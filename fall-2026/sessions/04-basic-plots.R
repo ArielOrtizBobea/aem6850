@@ -1,7 +1,7 @@
 # = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 # AEM 6850 -- Empirical Methods for Applied Economists
 # Prof. Ariel Ortiz-Bobea
-# Session 4 -- Look at your data
+# Session 4 -- Basic plots
 # Thursday, September 3, 2026
 #
 # Run it one line at a time: put the cursor on a line and press Cmd-Return
@@ -153,6 +153,16 @@ points(reg$date, reg$pm25, pch = 16, cex = 0.5, col = "#b31b1b")
 legend("topright", c("continuous (POC 3)", "regulatory (POC 1)"),
        col = c("grey60", "#b31b1b"), lty = c(1, NA), pch = c(NA, 16),
        bty = "n")
+
+
+# When the default axis is wrong ----
+plot(con$date, con$pm25, type = "l", col = "grey60",
+     xaxt = "n",                     # draw no x-axis: we will do it
+     xlab = "", ylab = "Daily PM2.5 (ug/m3)")
+points(reg$date, reg$pm25, pch = 16, cex = 0.5, col = "#b31b1b")
+
+firsts <- as.Date(paste0("2025-", sprintf("%02d", 1:12), "-01"))
+axis(1, at = firsts, labels = month.abb)
 
 
 # Same summaries, different data: Anscombe 1973 ----
