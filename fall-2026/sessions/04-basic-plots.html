@@ -1,0 +1,2047 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.37">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>4 · Basic plots I</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-7f8f88aac4f3542376d5c11b86a4c14d.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-9e1fa279bf766a6aa9044cbdb2ba542d.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="../../styles.css">
+</head>
+
+<body class="nav-sidebar docked quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../fall-2026/sessions/01-overview.html">Part I — Foundations</a></li><li class="breadcrumb-item"><a href="../../fall-2026/sessions/04-basic-plots.html"> 4 Basic plots I</a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="../../">AEM 6850</a> 
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Home</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/syllabus.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Syllabus</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">Part I — Foundations</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/01-overview.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"> 1 Overview</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/02-r-essentials.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"> 2 R essentials I</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/03-r-essentials-ii.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"> 3 R essentials II</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/04-basic-plots.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"> 4 Basic plots I</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/04b-basic-plots-ii.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">   Basic plots II</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/05-wrangling.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"> 5 Wrangling: dplyr</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/06-functions-debugging.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"> 6 How to code</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/07-git.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"> 7 Projects &amp; git</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/08-ai-chat.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"> 8 AI I: chatbots</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/09-ai-code.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"> 9 AI II: the coding loop</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/10-verification.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">10 Verification</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/11-reproducible-project.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">11 Reproducible projects</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/12-ggplot.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">12 Publication graphics</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
+ <span class="menu-text">Part II — Applications</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/13-landscape.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">13 The data landscape</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/14-apis.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">14 Channels I: APIs</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/15-scraping.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">15 Channels II: scraping</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/16-text-regex.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">16 Text I: regex</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/17-text-llms.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">17 Text II: LLMs</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/18-documents.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">18 Documents &amp; scans</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/19-images-photos.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">19 Images: photographs</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/20-satellite-local.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">20 Satellite I: local</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/21-satellite-gee.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">21 Satellite II: Earth Engine</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/22-audio.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">22 Audio</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/23-time.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">23 Time &amp; time zones</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/24-spatial-vector.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">24 Spatial I: vector</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/25-spatial-rasters.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">25 Spatial II: rasters</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/26-spatial-exposures.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">26 Spatial III: exposures</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/27-ai-ethics.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">27 AI ethics</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/28-moving-forward.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">28 Moving forward</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../../fall-2026/resources.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Resources</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/resources.html#stata" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Coming from Stata</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/resources.html#r" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Learning R</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/resources.html#economists" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Coding guides</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/resources.html#unstuck" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Getting unstuck</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul class="collapse">
+  <li><a href="#objectives" id="toc-objectives" class="nav-link active" data-scroll-target="#objectives">Objectives</a></li>
+  <li><a href="#thesis" id="toc-thesis" class="nav-link" data-scroll-target="#thesis">Why plot</a></li>
+  <li><a href="#thesis-2" id="toc-thesis-2" class="nav-link" data-scroll-target="#thesis-2">Visualization and the questions you ask</a></li>
+  <li><a href="#data" id="toc-data" class="nav-link" data-scroll-target="#data">Getting the data</a></li>
+  <li><a href="#build" id="toc-build" class="nav-link" data-scroll-target="#build">Building the working table</a></li>
+  <li><a href="#transect" id="toc-transect" class="nav-link" data-scroll-target="#transect">Four stations on a transect</a></li>
+  <li><a href="#menu" id="toc-menu" class="nav-link" data-scroll-target="#menu">Choosing a plot: good for / bad for</a></li>
+  <li><a href="#one-series" id="toc-one-series" class="nav-link" data-scroll-target="#one-series"><code>plot()</code>: one series through time</a></li>
+  <li><a href="#one-call" id="toc-one-call" class="nav-link" data-scroll-target="#one-call">One <code>plot()</code> call is one series</a></li>
+  <li><a href="#jan" id="toc-jan" class="nav-link" data-scroll-target="#jan">Cutting to January</a></li>
+  <li><a href="#several-series" id="toc-several-series" class="nav-link" data-scroll-target="#several-series"><code>lines()</code> and <code>points()</code>: several series</a></li>
+  <li><a href="#repair" id="toc-repair" class="nav-link" data-scroll-target="#repair">Setting the window and the key</a></li>
+  <li><a href="#hist" id="toc-hist" class="nav-link" data-scroll-target="#hist"><code>hist()</code>: the distribution of one variable</a></li>
+  <li><a href="#hist-read" id="toc-hist-read" class="nav-link" data-scroll-target="#hist-read">What the histogram says</a></li>
+  <li><a href="#quartet" id="toc-quartet" class="nav-link" data-scroll-target="#quartet">Four columns with the same mean and sd</a></li>
+  <li><a href="#quartet-plot" id="toc-quartet-plot" class="nav-link" data-scroll-target="#quartet-plot">The same four columns as histograms</a></li>
+  <li><a href="#anscombe-numbers" id="toc-anscombe-numbers" class="nav-link" data-scroll-target="#anscombe-numbers">Anscombe’s quartet: four identical summaries</a></li>
+  <li><a href="#anscombe" id="toc-anscombe" class="nav-link" data-scroll-target="#anscombe">Anscombe’s quartet: four different pictures</a></li>
+  <li><a href="#boxplot" id="toc-boxplot" class="nav-link" data-scroll-target="#boxplot"><code>boxplot()</code>: one column by groups</a></li>
+  <li><a href="#dropped-labels" id="toc-dropped-labels" class="nav-link" data-scroll-target="#dropped-labels">Labels R drops without warning</a></li>
+  <li><a href="#barplot" id="toc-barplot" class="nav-link" data-scroll-target="#barplot"><code>barplot(table())</code>: counts of categories</a></li>
+  <li><a href="#exercise-1" id="toc-exercise-1" class="nav-link" data-scroll-target="#exercise-1">Exercise 1</a></li>
+  <li><a href="#port-args" id="toc-port-args" class="nav-link" data-scroll-target="#port-args">Arguments that work on every plot</a></li>
+  <li><a href="#port-hist-slide" id="toc-port-hist-slide" class="nav-link" data-scroll-target="#port-hist-slide">The same arguments on a histogram</a></li>
+  <li><a href="#port-layers" id="toc-port-layers" class="nav-link" data-scroll-target="#port-layers">Layers: what draws on top</a></li>
+  <li><a href="#par" id="toc-par" class="nav-link" data-scroll-target="#par"><code>par()</code>: the device, not the plot</a></li>
+  <li><a href="#mar" id="toc-mar" class="nav-link" data-scroll-target="#mar"><code>par(mar)</code>: giving labels room</a></li>
+  <li><a href="#fill-order" id="toc-fill-order" class="nav-link" data-scroll-target="#fill-order"><code>par(mfrow)</code> and <code>par(mfcol)</code>: panels</a></li>
+  <li><a href="#panels" id="toc-panels" class="nav-link" data-scroll-target="#panels">Four stations, four panels</a></li>
+  <li><a href="#png" id="toc-png" class="nav-link" data-scroll-target="#png"><code>png()</code> and <code>dev.off()</code>: writing to disk</a></li>
+  <li><a href="#formats" id="toc-formats" class="nav-link" data-scroll-target="#formats">Resolution, bitmap, and vector</a></li>
+  <li><a href="#exercise-2" id="toc-exercise-2" class="nav-link" data-scroll-target="#exercise-2">Exercise 2</a></li>
+  <li><a href="#scatter" id="toc-scatter" class="nav-link" data-scroll-target="#scatter"><code>plot(x, y)</code>: two columns against each other</a></li>
+  <li><a href="#practice" id="toc-practice" class="nav-link" data-scroll-target="#practice">Practice</a></li>
+  <li><a href="#quick-reference" id="toc-quick-reference" class="nav-link" data-scroll-target="#quick-reference">Quick reference</a></li>
+  </ul>
+<div class="quarto-alternate-formats"><h2>Other Formats</h2><ul><li><a href="04-basic-plots-slides.html"><i class="bi bi-file-slides"></i>RevealJS</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../fall-2026/sessions/01-overview.html">Part I — Foundations</a></li><li class="breadcrumb-item"><a href="../../fall-2026/sessions/04-basic-plots.html"> 4 Basic plots I</a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title">4 · Basic plots I</h1>
+<p class="subtitle lead">Thursday, September 3, 2026</p>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p><a href="04-basic-plots-slides.html">Slides</a> · <a href="04-basic-plots.R">Live script</a> · <a href="https://github.com/ArielOrtizBobea/aem6850/blob/main/fall-2026/sessions/04-basic-plots.qmd">Source</a></p>
+<p>Four plots, the settings that work on all of them, panels, and how to get a figure out of R and onto disk.</p>
+<section id="objectives" class="level2">
+<h2 class="anchored" data-anchor-id="objectives">Objectives</h2>
+<p>By the end of this session you can:</p>
+<ul>
+<li>Name the plot that matches a question, and say what each one is bad at.</li>
+<li>Draw one series through time, and several series on shared axes.</li>
+<li>Read a distribution with <code>hist()</code>, and say when a box plot answers better.</li>
+<li>Move the same argument — <code>col</code>, <code>main</code>, <code>las</code>, <code>ylim</code> — between <code>plot()</code>, <code>hist()</code>, <code>boxplot()</code> and <code>barplot()</code>.</li>
+<li>Split a device into panels, control which panel fills first, and put it back.</li>
+<li>Write a figure to a file at a resolution someone else can use.</li>
+</ul>
+</section>
+<section id="thesis" class="level2">
+<h2 class="anchored" data-anchor-id="thesis">Why plot</h2>
+<blockquote class="blockquote">
+<p><strong>Let your imagination be the limit to what you can ask and explore, not the tools you happen to know.</strong></p>
+</blockquote>
+<ul>
+<li>Humans are visual animals. Vision is a fundamental way we interact with the world.</li>
+<li>Seeing a physical representation of numbers is often more impactful and easier to understand than the numbers themselves.</li>
+<li>As a result, visualization is one of the most important skills in research (conducting it and communicating its results)</li>
+</ul>
+</section>
+<section id="thesis-2" class="level2">
+<h2 class="anchored" data-anchor-id="thesis-2">Visualization and the questions you ask</h2>
+<ul>
+<li>There is often more to learn from staring at the data than looking at numeric summaries of such data.</li>
+<li>My invitation is that you cultivate a visual way to interact with data so that you can think “outside the menu” of visualization tools at your disposal.</li>
+<li>The figures you can build can influence the hypothesis you come up with. They empower your curiosity.</li>
+</ul>
+<p>Most of what goes wrong in an empirical project is visible in the data long before it reaches a regression table, and a plot is the fastest way to see it. A summary answers the question you asked; a plot answers questions you did not think to ask.</p>
+<p>The second half of that matters just as much. Every plotting system hands you a menu of ready-made figures, and it is easy to end up asking only the questions that menu can answer. Base R does not work that way: a plot is a blank device you draw on, so the shape of the figure is your decision rather than the package’s. That is why this session spends time on the settings and the canvas rather than on a catalogue of chart types.</p>
+<p>Polishing — fonts, palettes, figures built for a reader — is a different job and gets its own lecture, with publication-ready output. Nothing today needs to be pretty. Everything today needs to be fast, because a plot you can produce in one line is a plot you will actually make, and a plot that takes twenty minutes is one you will skip.</p>
+</section>
+<section id="data" class="level2">
+<h2 class="anchored" data-anchor-id="data">Getting the data</h2>
+<p>One file: every PM2.5 monitor in Los Angeles County for 2025. This chunk fetches it if you do not already have it, and does nothing if you do.</p>
+<div class="cell" data-layout-align="center" data-script="Get the data">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">dir.create</span>(<span class="st">"data"</span>, <span class="at">showWarnings =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>f <span class="ot">&lt;-</span> <span class="st">"data/epa_pm25_la_county_2025.csv"</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="sc">!</span><span class="fu">file.exists</span>(f)) {</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">download.file</span>(<span class="fu">paste0</span>(<span class="st">"https://arielortizbobea.github.io/aem6850/"</span>,</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>                       <span class="st">"fall-2026/sessions/"</span>, f), f)</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="fu">file.exists</span>(f)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; [1] TRUE</code></pre>
+</div>
+</div>
+<p><code>dir.create()</code> makes a folder and <code>showWarnings = FALSE</code> keeps it quiet when the folder is already there. <code>download.file()</code> fetches a URL to a path. The <code>if (!file.exists(f))</code> wrapper means you can run this line every time without re-downloading, which is the habit worth copying: a script that fetches its own inputs runs on anyone’s machine, including yours six months from now.</p>
+<p><a href="data/SOURCE.md">The data folder’s provenance notes</a> record where the file came from, byte for byte.</p>
+</section>
+<section id="build" class="level2">
+<h2 class="anchored" data-anchor-id="build">Building the working table</h2>
+<p>We take four monitors on a line across the basin.</p>
+<div class="cell" data-layout-align="center" data-script="Build the working table">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>pm <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"data/epa_pm25_la_county_2025.csv"</span>,</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>               <span class="at">colClasses =</span> <span class="fu">c</span>(<span class="st">"Site.ID"</span> <span class="ot">=</span> <span class="st">"character"</span>))</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(pm)[<span class="fu">names</span>(pm) <span class="sc">==</span> <span class="st">"Daily.Mean.PM2.5.Concentration"</span>] <span class="ot">&lt;-</span> <span class="st">"pm25"</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(pm)[<span class="fu">names</span>(pm) <span class="sc">==</span> <span class="st">"Local.Site.Name"</span>]                <span class="ot">&lt;-</span> <span class="st">"site"</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>pm<span class="sc">$</span>date <span class="ot">&lt;-</span> <span class="fu">as.Date</span>(pm<span class="sc">$</span>Date, <span class="at">format =</span> <span class="st">"%m/%d/%Y"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="transect" class="level2">
+<h2 class="anchored" data-anchor-id="transect">Four stations on a transect</h2>
+<div class="cell" data-layout-align="center" data-script="Cut to four stations">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>transect <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Pasadena"</span>, <span class="st">"Compton"</span>,</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>              <span class="st">"Long Beach-Route 710 Near Road"</span>, <span class="st">"Lancaster - Fairgrounds"</span>)</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> pm[pm<span class="sc">$</span>site <span class="sc">%in%</span> transect <span class="sc">&amp;</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>        pm<span class="sc">$</span>POC <span class="sc">==</span> <span class="dv">1</span> <span class="sc">&amp;</span> pm<span class="sc">$</span>AQS.Parameter.Code <span class="sc">==</span> <span class="dv">88101</span>, ]</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(d<span class="sc">$</span>site)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; 
+#&gt;                        Compton        Lancaster - Fairgrounds 
+#&gt;                            301                            365 
+#&gt; Long Beach-Route 710 Near Road                       Pasadena 
+#&gt;                            338                            115</code></pre>
+</div>
+</div>
+<p><em>Pasadena</em> sits in the foothills, <em>Compton</em> and <em>Long Beach</em> down toward the coast, <em>Lancaster</em> out over the mountains in the high desert. Four places, one air basin, one year, and a reader can check why those four.</p>
+<p>Three things in that chunk are new:</p>
+<ul>
+<li><code>pm$site %in% transect</code> asks, for every row, <em>is this site one of these four</em>. It saves writing four <code>==</code> tests joined by <code>or</code>.</li>
+<li>A subset can sit on the <strong>left</strong> of the arrow. <code>names(pm)[names(pm) == "old"] &lt;- "new"</code> writes into the one position that matches, and <code>pm$date &lt;- ...</code> names a column that does not exist yet, so it creates it.</li>
+<li><code>table()</code> counts how often each value appears. Four names, four counts — that is the check.</li>
+</ul>
+<p>And the check is not decoration. Lancaster reported all 365 days; Pasadena reported 115. Those two monitors are not on the same calendar, and every plot below has to survive that.</p>
+</section>
+<section id="menu" class="level2">
+<h2 class="anchored" data-anchor-id="menu">Choosing a plot: good for / bad for</h2>
+<div class="tight-cols">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Plot</th>
+<th style="text-align: left;">Good for</th>
+<th style="text-align: left;">Bad for</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><code>plot(x, y)</code></td>
+<td style="text-align: left;">the relationship between two variables</td>
+<td style="text-align: left;">more points than pixels — they pile into a blob</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>plot(x, y, type = "l")</code></td>
+<td style="text-align: left;">one variable in its natural order, usually time</td>
+<td style="text-align: left;">missing days: the line joins straight across them, so a gap looks like data</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>plot()</code> + <code>lines()</code>, <code>points()</code></td>
+<td style="text-align: left;">a few series on shared axes</td>
+<td style="text-align: left;">more than about six</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>hist(x)</code></td>
+<td style="text-align: left;">the distribution of one variable</td>
+<td style="text-align: left;">comparing groups</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>boxplot(y ~ g)</code></td>
+<td style="text-align: left;">the distribution of one variable, by group</td>
+<td style="text-align: left;">groups of two or three rows</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>barplot(table(g))</code></td>
+<td style="text-align: left;">how often each category occurs</td>
+<td style="text-align: left;">anything continuous — bin it, or use <code>hist()</code></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>On the line plot’s weakness: <code>plot(type = "l")</code> draws a segment from each row to the next, so a month with no readings comes out as one long straight stretch rather than as a hole. Nothing warns you. <code>type = "o"</code> or <code>type = "p"</code> shows where the observations actually are, which is why the missing-data question is usually asked with points and not with a line.</p>
+<p><strong>Start from the question, not the plot type.</strong> <em>Did something happen in time?</em> is a line. <em>Do these two move together?</em> is a scatter. <em>Is this variable distributed the way I think?</em> is a histogram. <em>Does this group differ from that one?</em> is a box plot. <em>Is everything here?</em> is a bar of counts.</p>
+</section>
+<section id="one-series" class="level2">
+<h2 class="anchored" data-anchor-id="one-series"><code>plot()</code>: one series through time</h2>
+<div class="cell" data-layout-align="center" data-script="One series through time">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>comp_y <span class="ot">&lt;-</span> d[d<span class="sc">$</span>site <span class="sc">==</span> <span class="st">"Compton"</span>, ]</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(comp_y<span class="sc">$</span>date, comp_y<span class="sc">$</span>pm25, <span class="at">type =</span> <span class="st">"l"</span>,</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">""</span>, <span class="at">ylab =</span> <span class="st">"Daily PM2.5 (ug/m3)"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="04-basic-plots_files/figure-html/line-one-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" alt="Daily PM2.5 at Compton across all of 2025 as a single line. A tall cluster in early January, a sharp isolated spike in early July, a flat gap in April and May, and a high ragged run through December." width="1200"></p>
+</figure>
+</div>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>comp_y<span class="sc">$</span>date[<span class="fu">which.max</span>(comp_y<span class="sc">$</span>pm25)]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; [1] "2025-12-13"</code></pre>
+</div>
+</div>
+<p>Three new things:</p>
+<ul>
+<li><code>type</code> picks how the points are drawn: <code>"p"</code> marks only, <code>"l"</code> a line only, <code>"b"</code> both with a gap at each mark, <code>"o"</code> both, overlaid. <code>"l"</code> is the one you want for a series in time.</li>
+<li><code>xlab</code> and <code>ylab</code> are the axis labels. The y label is where the units go, every time; a number with no unit is not a reading.</li>
+<li><code>which.max(x)</code> hands back the <strong>position</strong> of the largest value, not the value — which is what you want when the question is <em>which day</em>.</li>
+</ul>
+<p>Now read it. 301 days in one glance. Two isolated spikes that are not weather — January 1 at 53.2 and July 4 at 50.7 — a flat stretch through April and May, and a high ragged run through December that holds the year’s maximum, 56.0 on the 13th. A six-number summary gives you none of that.</p>
+</section>
+<section id="one-call" class="level2">
+<h2 class="anchored" data-anchor-id="one-call">One <code>plot()</code> call is one series</h2>
+<p>The same call on the whole four-station frame draws three long diagonal strokes.</p>
+<div class="cell" data-layout-align="center" data-script="The same call on the whole frame">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(d<span class="sc">$</span>date, d<span class="sc">$</span>pm25, <span class="at">type =</span> <span class="st">"l"</span>,</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">""</span>, <span class="at">ylab =</span> <span class="st">"Daily PM2.5 (ug/m3)"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="04-basic-plots_files/figure-html/line-all-four-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" alt="The whole four-station frame drawn as one line: a dense band of daily variation crossed by three long diagonal strokes running from the right edge back to the left." width="1200"></p>
+</figure>
+</div>
+</div>
+</div>
+<p><code>d</code> is stored station by station — Compton, then Pasadena, then Long Beach, then Lancaster. So the line runs Compton January to December, snaps back to January for Pasadena, and again twice more. Each snap-back is one of those diagonals.</p>
+<p><code>type = "l"</code> connects row 1 to row 2 to row 3 <strong>in the order the rows sit in the frame</strong>. It has no idea what a station is, and it will not warn you.</p>
+</section>
+<section id="jan" class="level2">
+<h2 class="anchored" data-anchor-id="jan">Cutting to January</h2>
+<div class="cell" data-layout-align="center" data-script="Cut to January">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>jan  <span class="ot">&lt;-</span> d[d<span class="sc">$</span>date <span class="sc">&lt;</span> <span class="fu">as.Date</span>(<span class="st">"2025-02-01"</span>), ]</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>comp <span class="ot">&lt;-</span> jan[jan<span class="sc">$</span>site <span class="sc">==</span> <span class="st">"Compton"</span>, ]</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>lb   <span class="ot">&lt;-</span> jan[jan<span class="sc">$</span>site <span class="sc">==</span> <span class="st">"Long Beach-Route 710 Near Road"</span>, ]</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>lanc <span class="ot">&lt;-</span> jan[jan<span class="sc">$</span>site <span class="sc">==</span> <span class="st">"Lancaster - Fairgrounds"</span>, ]</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>pas  <span class="ot">&lt;-</span> jan[jan<span class="sc">$</span>site <span class="sc">==</span> <span class="st">"Pasadena"</span>, ]</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>xr   <span class="ot">&lt;-</span> <span class="fu">as.Date</span>(<span class="fu">c</span>(<span class="st">"2025-01-01"</span>, <span class="st">"2025-01-31"</span>))   <span class="co"># one window for every panel</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="several-series" class="level2">
+<h2 class="anchored" data-anchor-id="several-series"><code>lines()</code> and <code>points()</code>: several series</h2>
+<div class="cell" data-layout-align="center" data-script="Four stations, first attempt">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(comp<span class="sc">$</span>date, comp<span class="sc">$</span>pm25, <span class="at">type =</span> <span class="st">"l"</span>, <span class="at">col =</span> <span class="st">"#b31b1b"</span>,</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">""</span>, <span class="at">ylab =</span> <span class="st">"Daily PM2.5 (ug/m3)"</span>)</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(lb<span class="sc">$</span>date,   lb<span class="sc">$</span>pm25,   <span class="at">col =</span> <span class="st">"grey30"</span>)</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(lanc<span class="sc">$</span>date, lanc<span class="sc">$</span>pm25, <span class="at">col =</span> <span class="st">"#1f6fb4"</span>)</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(pas<span class="sc">$</span>date,  pas<span class="sc">$</span>pm25,  <span class="at">col =</span> <span class="st">"darkorange"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="04-basic-plots_files/figure-html/lines-four-bad-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" alt="January PM2.5 at four stations. Compton in red and Long Beach in grey track each other. The blue Lancaster line is cut off below the bottom of the frame for most of the month. The orange Pasadena line leaves the top of the frame twice and runs as long straight diagonals between its few observations." width="1200"></p>
+</figure>
+</div>
+</div>
+</div>
+<p><code>lines()</code> draws onto the plot that is already there. It never makes a new one, and it never resizes anything. <code>plot()</code> sized both axes from the <strong>first</strong> series and everything after obeys them — anything outside is simply not drawn. No error, no warning.</p>
+<p>Compton’s January runs 5.7 to 53.2, so that is the window all four series got. Three separate failures follow from it.</p>
+</section>
+<section id="repair" class="level2">
+<h2 class="anchored" data-anchor-id="repair">Setting the window and the key</h2>
+<div class="cell" data-layout-align="center" data-script="The repair">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(comp<span class="sc">$</span>date, comp<span class="sc">$</span>pm25, <span class="at">type =</span> <span class="st">"l"</span>, <span class="at">col =</span> <span class="st">"#b31b1b"</span>, <span class="at">lwd =</span> <span class="dv">2</span>,</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>     <span class="at">ylim =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">75</span>), <span class="at">xlab =</span> <span class="st">""</span>, <span class="at">ylab =</span> <span class="st">"Daily PM2.5 (ug/m3)"</span>)</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(lb<span class="sc">$</span>date,   lb<span class="sc">$</span>pm25,   <span class="at">col =</span> <span class="st">"grey30"</span>)</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(lanc<span class="sc">$</span>date, lanc<span class="sc">$</span>pm25, <span class="at">col =</span> <span class="st">"#1f6fb4"</span>)</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a><span class="fu">points</span>(pas<span class="sc">$</span>date, pas<span class="sc">$</span>pm25,  <span class="at">col =</span> <span class="st">"darkorange"</span>, <span class="at">pch =</span> <span class="dv">16</span>)</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">"topright"</span>, <span class="fu">c</span>(<span class="st">"Compton"</span>, <span class="st">"Long Beach"</span>, <span class="st">"Lancaster"</span>, <span class="st">"Pasadena"</span>),</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>       <span class="at">col =</span> <span class="fu">c</span>(<span class="st">"#b31b1b"</span>, <span class="st">"grey30"</span>, <span class="st">"#1f6fb4"</span>, <span class="st">"darkorange"</span>),</span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>       <span class="at">lty =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>, <span class="cn">NA</span>), <span class="at">pch =</span> <span class="fu">c</span>(<span class="cn">NA</span>, <span class="cn">NA</span>, <span class="cn">NA</span>, <span class="dv">16</span>), <span class="at">bty =</span> <span class="st">"n"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="04-basic-plots_files/figure-html/lines-four-good-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" alt="The corrected figure. The y axis runs 0 to 75 so every series fits. Compton is a thick red line, Long Beach grey, Lancaster blue, and Pasadena appears as eleven orange dots, the highest at 72.5 on January 10. A key with no box sits in the top right." width="1200"></p>
+</figure>
+</div>
+</div>
+</div>
+<ul>
+<li><code>col</code> sets the colour of the marks. R takes an English name (<code>"darkorange"</code>), a grey with a number (<code>"grey30"</code> dark, <code>"grey85"</code> light), or a hex code (<code>"#b31b1b"</code>); <code>colors()</code> prints all 657 names. And <code>c()</code> glues values into one vector — nearly every setting today wants one.</li>
+<li><code>ylim = c(0, 75)</code> fixes the vertical window. Set it on the <strong>first</strong> call, from everything you intend to draw, because nothing after that call resizes the axes. <code>xlim</code> does the same horizontally.</li>
+<li><code>points()</code> adds marks without joining them — the right answer when the gaps between observations are real. <code>pch</code> picks the mark: <code>16</code> is a filled circle, <code>1</code> the open one <code>plot()</code> draws by default. <code>lwd</code> is line width, and <code>lwd = 2</code> is how you say <em>this is the series I want you to look at</em>.</li>
+<li><code>legend()</code> puts a key at a named corner. <code>lty</code> is line type — <code>1</code> solid, <code>2</code> dashed — and it means the same thing in <code>plot()</code>, <code>lines()</code>, <code>abline()</code> and in the key. <code>bty = "n"</code> drops the box. <code>NA</code> inside the <code>lty</code> or <code>pch</code> vector means <em>no sample for this entry</em>: that is how Pasadena gets a dot and no line.</li>
+</ul>
+<p>Pasadena is dots and not a line because Pasadena reports one day in three. A line through it would have drawn straight across its own peak.</p>
+<section id="read-four" class="level3">
+<h3 class="anchored" data-anchor-id="read-four">Reading it</h3>
+<p>Pasadena, nearest the Eaton fire, records January’s highest reading: <strong>72.5 on the 10th</strong>, and it was already at <strong>64.1 on the 7th</strong>, the day the fires started. Compton and Long Beach peak a day earlier and lower — <strong>47.7 and 40.7, both on the 9th</strong> — as the smoke reaches the coast. Lancaster, over the mountains in the high desert, stays flat through the whole episode and spikes on its <strong>own</strong> day, January 7, at <strong>24.9</strong>: blowing dust, not smoke.</p>
+<p>Four monitors, four stories, one screen. And Compton’s tallest January bar, 53.2, is January 1 — fireworks, six days before any fire. That reading is why the axis had to be set by hand.</p>
+</section>
+</section>
+<section id="hist" class="level2">
+<h2 class="anchored" data-anchor-id="hist"><code>hist()</code>: the distribution of one variable</h2>
+<div class="cell" data-layout-align="center" data-script="The distribution of one variable">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(d<span class="sc">$</span>pm25, <span class="at">breaks =</span> <span class="dv">40</span>, <span class="at">col =</span> <span class="st">"grey85"</span>,</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>     <span class="at">main =</span> <span class="st">""</span>, <span class="at">xlab =</span> <span class="st">"Daily mean PM2.5 (ug/m3)"</span>)</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">v =</span> <span class="dv">0</span>, <span class="at">col =</span> <span class="st">"#b31b1b"</span>, <span class="at">lty =</span> <span class="dv">2</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="04-basic-plots_files/figure-html/hist-breaks-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" alt="Histogram of daily PM2.5 across the four stations with forty bins requested. The mass piles up between 0 and 15 with a long thin tail past 70. The leftmost bar sits left of zero, separated from the main mass, and a dashed red vertical line marks zero." width="1200"></p>
+</figure>
+</div>
+</div>
+</div>
+<ul>
+<li><code>hist()</code> chops one numeric column into bins and draws how many rows fell in each. One column, one call.</li>
+<li><code>breaks = 40</code> is a <strong>suggestion</strong> for how many bins; R picks round numbers near it. Ask for 40 here and you get 38.</li>
+<li><code>main</code> is the title above the plot; <code>main = ""</code> removes the one R writes for you.</li>
+<li>On <code>plot()</code> and <code>lines()</code>, <code>col</code> colours the marks. On <code>hist()</code>, <code>barplot()</code> and <code>boxplot()</code> it <strong>fills</strong> them.</li>
+<li><code>seq(-5, 80, by = 5)</code> builds −5, 0, 5 … 80: every bin edge written out by hand instead of guessed at. That is how you take control of <code>breaks</code> when the suggestion is not good enough.</li>
+</ul>
+</section>
+<section id="hist-read" class="level2">
+<h2 class="anchored" data-anchor-id="hist-read">What the histogram says</h2>
+<div class="cell" data-layout-align="center" data-script="The same column as six numbers">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(d<span class="sc">$</span>pm25)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt;    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+#&gt;  -1.200   4.900   8.400   9.947  12.100  72.500</code></pre>
+</div>
+</div>
+<p>Right-skewed: the mean, 9.947, sits above the median, 8.400. That is what skew looks like in numbers — a few large values dragging the average up past the middle.</p>
+<p>And there is a bar left of zero. Nobody asked for that, and no summary line above draws attention to it except the minimum, which you have to notice.</p>
+</section>
+<section id="quartet" class="level2">
+<h2 class="anchored" data-anchor-id="quartet">Four columns with the same mean and sd</h2>
+<div class="cell" data-layout-align="center" data-script="Four columns with the same mean and the same sd">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1</span>)</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>std <span class="ot">&lt;-</span> <span class="cf">function</span>(x, <span class="at">m =</span> <span class="dv">20</span>, <span class="at">s =</span> <span class="dv">8</span>) (x <span class="sc">-</span> <span class="fu">mean</span>(x)) <span class="sc">/</span> <span class="fu">sd</span>(x) <span class="sc">*</span> s <span class="sc">+</span> m</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>q   <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="st">"Normal"</span>       <span class="ot">=</span> <span class="fu">std</span>(<span class="fu">rnorm</span>(<span class="dv">500</span>)),</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>            <span class="st">"Two humps"</span>    <span class="ot">=</span> <span class="fu">std</span>(<span class="fu">c</span>(<span class="fu">rnorm</span>(<span class="dv">250</span>, <span class="sc">-</span><span class="dv">2</span>), <span class="fu">rnorm</span>(<span class="dv">250</span>, <span class="dv">2</span>))),</span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>            <span class="st">"Right-skewed"</span> <span class="ot">=</span> <span class="fu">std</span>(<span class="fu">rlnorm</span>(<span class="dv">500</span>, <span class="dv">0</span>, <span class="dv">1</span>)),</span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>            <span class="st">"Flat"</span>         <span class="ot">=</span> <span class="fu">std</span>(<span class="fu">runif</span>(<span class="dv">500</span>)))</span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">sapply</span>(q, <span class="cf">function</span>(x) <span class="fu">c</span>(<span class="at">mean =</span> <span class="fu">mean</span>(x), <span class="at">sd =</span> <span class="fu">sd</span>(x), <span class="at">max =</span> <span class="fu">max</span>(x))), <span class="dv">2</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt;      Normal Two humps Right-skewed  Flat
+#&gt; mean  20.00     20.00        20.00 20.00
+#&gt; sd     8.00      8.00         8.00  8.00
+#&gt; max   49.94     37.72       138.53 32.97</code></pre>
+</div>
+</div>
+</section>
+<section id="quartet-plot" class="level2">
+<h2 class="anchored" data-anchor-id="quartet-plot">The same four columns as histograms</h2>
+<div class="cell" data-layout-align="center" data-script="The same four columns as histograms">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>op <span class="ot">&lt;-</span> <span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">2</span>), <span class="at">mar =</span> <span class="fu">c</span>(<span class="dv">4</span>, <span class="dv">4</span>, <span class="fl">2.5</span>, <span class="dv">1</span>))</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="fu">invisible</span>(<span class="fu">lapply</span>(<span class="fu">names</span>(q), <span class="cf">function</span>(nm) {</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">hist</span>(q[[nm]], <span class="at">breaks =</span> <span class="dv">30</span>, <span class="at">xlim =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">10</span>, <span class="dv">55</span>), <span class="at">col =</span> <span class="st">"grey80"</span>,</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>       <span class="at">border =</span> <span class="st">"white"</span>, <span class="at">main =</span> nm, <span class="at">xlab =</span> <span class="st">""</span>, <span class="at">ylab =</span> <span class="st">""</span>)</span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">abline</span>(<span class="at">v =</span> <span class="fu">mean</span>(q[[nm]]), <span class="at">col =</span> <span class="st">"#b31b1b"</span>, <span class="at">lwd =</span> <span class="dv">2</span>)</span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>}))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="04-basic-plots_files/figure-html/quartet-plot-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" alt="Four histograms in a two-by-two grid: a bell, two separated humps, a hard right skew with a long thin tail, and a flat block. A red vertical line marks the mean in each, at the same place." width="1200"></p>
+</figure>
+</div>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(op)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>All four columns have a mean of 20.00 and a standard deviation of 8.00, to two decimal places. You have just computed a mean and an sd on a real column; here are four columns that agree on both and share almost nothing else.</p>
+<p>The maxima give the game away — 49.94, 37.72, <strong>138.53</strong>, 32.97 — but only because you went looking. The two numbers you actually reported cannot separate a bell from two humps from a hard skew.</p>
+</section>
+<section id="anscombe-numbers" class="level2">
+<h2 class="anchored" data-anchor-id="anscombe-numbers">Anscombe’s quartet: four identical summaries</h2>
+<div class="cell" data-layout-align="center" data-script="Anscombe's quartet: the summaries">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">colMeans</span>(anscombe), <span class="dv">2</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt;  x1  x2  x3  x4  y1  y2  y3  y4 
+#&gt; 9.0 9.0 9.0 9.0 7.5 7.5 7.5 7.5</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">c</span>(<span class="fu">cor</span>(anscombe<span class="sc">$</span>x1, anscombe<span class="sc">$</span>y1), <span class="fu">cor</span>(anscombe<span class="sc">$</span>x2, anscombe<span class="sc">$</span>y2),</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>        <span class="fu">cor</span>(anscombe<span class="sc">$</span>x3, anscombe<span class="sc">$</span>y3), <span class="fu">cor</span>(anscombe<span class="sc">$</span>x4, anscombe<span class="sc">$</span>y4)), <span class="dv">3</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; [1] 0.816 0.816 0.816 0.817</code></pre>
+</div>
+</div>
+</section>
+<section id="anscombe" class="level2">
+<h2 class="anchored" data-anchor-id="anscombe">Anscombe’s quartet: four different pictures</h2>
+<div class="cell" data-layout-align="center" data-script="Anscombe's quartet: the pictures">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>op <span class="ot">&lt;-</span> <span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">2</span>), <span class="at">mar =</span> <span class="fu">c</span>(<span class="dv">4</span>, <span class="dv">4</span>, <span class="dv">1</span>, <span class="dv">1</span>))</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(anscombe<span class="sc">$</span>x1, anscombe<span class="sc">$</span>y1)</span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(anscombe<span class="sc">$</span>x2, anscombe<span class="sc">$</span>y2)</span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(anscombe<span class="sc">$</span>x3, anscombe<span class="sc">$</span>y3)</span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(anscombe<span class="sc">$</span>x4, anscombe<span class="sc">$</span>y4)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="04-basic-plots_files/figure-html/anscombe-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" alt="Anscombe's four datasets as four scatterplots: a loose linear cloud, a smooth arch, a tight line with one far outlier, and a vertical stack of identical x values with one point far to the right." width="1200"></p>
+</figure>
+</div>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(op)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Francis Anscombe built these four datasets in 1973 to make exactly this point, and they ship inside R as <code>anscombe</code>. Every x mean is 9.0, every y mean is 7.5, and every correlation is 0.816 or 0.817.</p>
+<p>The pictures are a loose linear cloud; a smooth arch with nothing linear about it; a straight line plus one outlier that drags the fit; and ten identical x values with one far point that invents the entire correlation.</p>
+<p>The previous slide made the point about <strong>shapes</strong>. This one makes it about <strong>relationships</strong>. Same lesson: a summary is a compression, and compression throws away structure you needed.</p>
+</section>
+<section id="boxplot" class="level2">
+<h2 class="anchored" data-anchor-id="boxplot"><code>boxplot()</code>: one column by groups</h2>
+<div class="cell" data-layout-align="center" data-script="Many distributions at once">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">boxplot</span>(pm25 <span class="sc">~</span> site, <span class="at">data =</span> d)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="04-basic-plots_files/figure-html/box-site-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" alt="Box plots of daily PM2.5 for four stations in alphabetical order: Compton, Lancaster, Long Beach, Pasadena. Lancaster's box, second from the left, is much lower and tighter than the other three, which carry long clouds of outlier dots above them. Only two of the four labels are drawn." width="1200"></p>
+</figure>
+</div>
+</div>
+</div>
+<ul>
+<li>Read <code>pm25 ~ site</code> aloud as “pm25 <strong>by</strong> site”. The tilde is R’s word for “split by”.</li>
+<li><code>data = d</code> says which frame those two bare, unquoted names live in.</li>
+<li>The heavy line is the median; the box holds the middle half; the whiskers reach the ordinary range; anything past them is drawn as its own dot. A dot is a candidate for a look, not a verdict.</li>
+<li><code>boxplot()</code> and <code>table()</code> put the groups in <strong>alphabetical</strong> order — not the order you named them, and not the order of the values. Read the labels, not the positions.</li>
+</ul>
+<p>Medians, in the order the boxes appear: Compton 10.70, Lancaster 4.20, Long Beach 10.65, Pasadena 9.30. The three basin stations agree to within a twentieth of a microgram. Lancaster sits at less than half. Whisker tops run 26.9, 11.9, 21.9, 21.6, and the outlier counts are 28, 8, 28, 10.</p>
+<p>The box plot answers a question the histogram cannot: not <em>what shape is this column</em> but <em>does this group differ from that one</em>. A histogram holds one column, so four columns would be four histograms.</p>
+<p>And a box built from three rows looks exactly as confident as a box built from three hundred. Count first.</p>
+</section>
+<section id="dropped-labels" class="level2">
+<h2 class="anchored" data-anchor-id="dropped-labels">Labels R drops without warning</h2>
+<p>Look again at the axis on that figure. R drew <strong>two</strong> labels and silently dropped the other two. Nothing warned you.</p>
+<p>The mechanism: the plot region is 6.76 inches wide, so each of the four slots gets 1.69 inches. <code>"Lancaster - Fairgrounds"</code> needs 1.77 inches and <code>"Long Beach-Route 710 Near Road"</code> needs 2.57. When labels do not fit, R falls back to drawing every second one rather than overlapping them.</p>
+<p>This is not a <code>boxplot()</code> problem, and no argument to <code>boxplot()</code> fixes it. It is a problem with the canvas the plot was drawn on, and we repair it two sections from here.</p>
+</section>
+<section id="barplot" class="level2">
+<h2 class="anchored" data-anchor-id="barplot"><code>barplot(table())</code>: counts of categories</h2>
+<div class="cell" data-layout-align="center" data-script="Counts of categories">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>op <span class="ot">&lt;-</span> <span class="fu">par</span>(<span class="at">mar =</span> <span class="fu">c</span>(<span class="dv">4</span>, <span class="dv">15</span>, <span class="dv">1</span>, <span class="dv">1</span>))</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="fu">barplot</span>(<span class="fu">table</span>(d<span class="sc">$</span>site), <span class="at">horiz =</span> <span class="cn">TRUE</span>, <span class="at">las =</span> <span class="dv">1</span>, <span class="at">col =</span> <span class="st">"grey85"</span>,</span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>        <span class="at">xlab =</span> <span class="st">"Days with a reading in 2025"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="04-basic-plots_files/figure-html/port-bar-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" alt="Horizontal bar chart of days reported in 2025, one bar per station in alphabetical order from the bottom: Compton 301, Lancaster 365, Long Beach 338, Pasadena 115. All four station names are legible on the left." width="1200"></p>
+</figure>
+</div>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(op)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<ul>
+<li><code>barplot()</code> draws a count table as bars. <code>table()</code> counts, <code>barplot()</code> draws — that pair is how you ask <em>is everything here?</em></li>
+<li><code>horiz = TRUE</code> lays the bars sideways, which is what you do when the category names are long. On <code>boxplot()</code> the same idea is spelled <code>horizontal = TRUE</code>.</li>
+<li><code>las</code> turns the axis text. <code>0</code> is R’s default, parallel to its axis; <code>1</code> makes everything horizontal and readable; <code>2</code> turns it perpendicular, which is how long category names fit.</li>
+</ul>
+<p>365, 338, 301, 115, alphabetical from the bottom. Pasadena’s 115 is not a gap in a working monitor — it is a one-day-in-three sampling schedule, and it is why Pasadena had to be drawn as dots.</p>
+<p>That <code>par(mar = ...)</code> line is doing the work that fixes the box plot’s missing labels. Two sections from now it stops being a magic incantation.</p>
+</section>
+<section id="exercise-1" class="level2">
+<h2 class="anchored" data-anchor-id="exercise-1">Exercise 1</h2>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true" href="">Exercise</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false" href="">Solution</a></li></ul>
+<div class="tab-content">
+<div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
+<div class="cell" data-layout-align="center" data-exercise="true" data-script="Exercise 1 (3 minutes)">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Three minutes. The histogram had a bar left of zero.</span></span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a><span class="co">#</span></span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a><span class="co"># 1. Print the readings below zero.</span></span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a><span class="co"># 2. Print which station filed them.</span></span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a><span class="co"># 3. One sentence: keep them or delete them?</span></span>
+<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a><span class="co">#</span></span>
+<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Two answers to compare with the room: a count, and one station name.</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+<div id="tabset-1-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-2-tab">
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>d<span class="sc">$</span>pm25[d<span class="sc">$</span>pm25 <span class="sc">&lt;</span> <span class="dv">0</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; [1] -1.2 -0.1 -0.8 -0.9 -0.1 -0.1 -0.4 -0.2</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="fu">unique</span>(d<span class="sc">$</span>site[d<span class="sc">$</span>pm25 <span class="sc">&lt;</span> <span class="dv">0</span>])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; [1] "Lancaster - Fairgrounds"</code></pre>
+</div>
+</div>
+<p>Eight readings, all Lancaster. <strong>Keep them.</strong> They are real published measurements, and the file says why if you ask it two more questions:</p>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="fu">unique</span>(d<span class="sc">$</span>Method.Description[d<span class="sc">$</span>pm25 <span class="sc">&lt;</span> <span class="dv">0</span>])       <span class="co"># which instrument</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; [1] "Met One BAM-1020 Mass Monitor w/VSCC"</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">tapply</span>(d<span class="sc">$</span>pm25, d<span class="sc">$</span>site, mean), <span class="dv">2</span>)         <span class="co"># how clean the air is there</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt;                        Compton        Lancaster - Fairgrounds 
+#&gt;                          13.38                           4.48 
+#&gt; Long Beach-Route 710 Near Road                       Pasadena 
+#&gt;                          12.21                          11.67</code></pre>
+</div>
+</div>
+<p>Two conditions have to hold at once, and Lancaster is the only site where both do. <strong>It is the one monitor on a different instrument.</strong> A BAM measures mass by firing beta particles through an hour’s worth of dust on a filter tape and reading how much got absorbed; that is a difference between two noisy counts, so near the detection limit it can come out below zero. The other seven sites weigh a filter instead, and every one of them has a positive minimum. <strong>And it is the cleanest site</strong>, at 4.48 µg/m³ against 11–13 elsewhere — the only place where the true concentration sits close enough to zero for the noise to cross it.</p>
+<p>EPA publishes the negative on purpose. AQS accepts values down to the negative of the method detection limit and asks submitters <em>not</em> to substitute zero, because <a href="https://www.epa.gov/sites/default/files/2017-02/documents/negative_values_reporting_to_aqs_10_6_16.pdf">zero-substitution biases every average computed from the data</a>. Deleting these eight would do the same thing to yours. Note that <code>Daily.AQI.Value</code> reads 0 on those days: the <em>index</em> is floored at zero, the <em>measurement</em> is not.</p>
+<p>Three more days read exactly 0.0, which is a legal reading — <em>below</em> zero is the finding, zero is not.</p>
+</div>
+</div>
+</div>
+</section>
+<section id="port-args" class="level2">
+<h2 class="anchored" data-anchor-id="port-args">Arguments that work on every plot</h2>
+<div class="tight-cols">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Argument</th>
+<th style="text-align: left;">Means the same in <code>plot()</code>, <code>hist()</code>, <code>boxplot()</code>, <code>barplot()</code></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><code>main =</code></td>
+<td style="text-align: left;">title above the plot</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>xlab =</code>, <code>ylab =</code></td>
+<td style="text-align: left;">axis labels; units go in <code>ylab</code></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>col =</code></td>
+<td style="text-align: left;">colour of the marks, or the fill</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>las =</code></td>
+<td style="text-align: left;">rotation of the axis numbers and labels</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>xlim =</code>, <code>ylim =</code></td>
+<td style="text-align: left;">the window on each axis</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>lwd =</code>, <code>lty =</code></td>
+<td style="text-align: left;">line width, line type</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="port-hist-slide" class="level2">
+<h2 class="anchored" data-anchor-id="port-hist-slide">The same arguments on a histogram</h2>
+<div class="cell" data-layout-align="center" data-script="The same arguments on a histogram">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(d<span class="sc">$</span>pm25, <span class="at">col =</span> <span class="st">"grey85"</span>, <span class="at">las =</span> <span class="dv">1</span>,</span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>     <span class="at">main =</span> <span class="st">"Four LA County monitors, 2025"</span>,</span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">"Daily mean PM2.5 (ug/m3)"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="04-basic-plots_files/figure-html/port-hist-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" alt="The four-station histogram with a grey fill, a written title, a labelled x axis, and horizontal y-axis numbers." width="1200"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>The bar chart two sections back used <code>col</code>, <code>las</code> and <code>xlab</code> on a different function with a different data shape. Same words, same meaning. That is the whole point of learning them once.</p>
+</section>
+<section id="port-layers" class="level2">
+<h2 class="anchored" data-anchor-id="port-layers">Layers: what draws on top</h2>
+<blockquote class="blockquote">
+<p>A plot is a <strong>stack</strong>. <code>plot()</code>, <code>hist()</code>, <code>boxplot()</code> and <code>barplot()</code> each start a new one. Everything else draws <strong>on top of what is already there</strong>, in the order you call it — so the last call wins where they overlap.</p>
+</blockquote>
+<div class="tight-cols">
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th style="text-align: left;">Layer</th>
+<th style="text-align: left;">What it adds</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><code>points(x, y)</code></td>
+<td style="text-align: left;">marks</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>lines(x, y)</code></td>
+<td style="text-align: left;">a joined line</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>abline(h =, v =)</code></td>
+<td style="text-align: left;">a horizontal or vertical reference line</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>text(x, y, "label")</code></td>
+<td style="text-align: left;">a label at data coordinates</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>legend("topright", ...)</code></td>
+<td style="text-align: left;">the key</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>axis(side, at =, labels =)</code></td>
+<td style="text-align: left;">an axis you write yourself</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>mtext("...", side =)</code></td>
+<td style="text-align: left;">text out in the margin, outside the frame</td>
+</tr>
+</tbody>
+</table>
+</div>
+<ul>
+<li><code>text(x, y, "label")</code> writes at <strong>data</strong> coordinates: a position in the units of the plot, not in inches, not in pixels.</li>
+<li><code>axis()</code> draws an axis where R’s default was wrong. Sides are numbered from the bottom, clockwise: 1 bottom, 2 left, 3 top, 4 right. Suppress the default first with <code>xaxt = "n"</code> or <code>yaxt = "n"</code>, then draw yours with <code>at</code> and <code>labels</code>, which must be the same length.</li>
+<li><code>mtext()</code> writes into the margin instead of into the plot; <code>side = 3</code> is the top.</li>
+</ul>
+<p>Call a layer before any plot exists and R says <code>Error in plot.xy(...) : plot.new has not been called yet</code>. A layer needs something to land on.</p>
+</section>
+<section id="par" class="level2">
+<h2 class="anchored" data-anchor-id="par"><code>par()</code>: the device, not the plot</h2>
+<div class="cell" data-layout-align="center" data-script="par() is sticky">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="st">"mar"</span>)                       <span class="co"># 5.1 4.1 4.1 2.1 -- R's default</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; [1] 5.1 4.1 4.1 2.1</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>op <span class="ot">&lt;-</span> <span class="fu">par</span>(<span class="at">mar =</span> <span class="fu">c</span>(<span class="dv">3</span>, <span class="dv">3</span>, <span class="dv">1</span>, <span class="dv">1</span>))   <span class="co"># set it, and keep the old value in op</span></span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="st">"mar"</span>)                       <span class="co"># 3 3 1 1 -- still, and for every plot after</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; [1] 3 3 1 1</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(op)                          <span class="co"># put it back</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<ul>
+<li><code>par("mar")</code>, with a name in quotes, <strong>reads</strong> a setting. <code>par(mar = c(...))</code>, with an <code>=</code>, <strong>writes</strong> it — and hands you back the old value.</li>
+<li>The idiom is <code>op &lt;- par(...)</code> then <code>par(op)</code> at the end. Type the second line before you type the plot. Every mysterious plot you will ever draw is a <code>par()</code> somebody forgot to put back.</li>
+<li><code>mar</code> is the margin around <strong>this</strong> panel: bottom, left, top, right, measured in lines of text. The default is <code>c(5.1, 4.1, 4.1, 2.1)</code>.</li>
+</ul>
+</section>
+<section id="mar" class="level2">
+<h2 class="anchored" data-anchor-id="mar"><code>par(mar)</code>: giving labels room</h2>
+<div class="cell" data-layout-align="center" data-script="Give the labels room">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>op <span class="ot">&lt;-</span> <span class="fu">par</span>(<span class="at">mar =</span> <span class="fu">c</span>(<span class="dv">4</span>, <span class="dv">15</span>, <span class="dv">1</span>, <span class="dv">1</span>))</span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a><span class="fu">boxplot</span>(pm25 <span class="sc">~</span> site, <span class="at">data =</span> d, <span class="at">horizontal =</span> <span class="cn">TRUE</span>, <span class="at">las =</span> <span class="dv">1</span>,</span>
+<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a>        <span class="at">xlab =</span> <span class="st">"Daily mean PM2.5 (ug/m3)"</span>, <span class="at">ylab =</span> <span class="st">""</span>, <span class="at">col =</span> <span class="st">"grey85"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="04-basic-plots_files/figure-html/box-fixed-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" alt="The four-station box plots turned on their side. All four station names, including Long Beach-Route 710 Near Road, are fully legible along the left. Lancaster's box is visibly lower and tighter than the other three." width="1200"></p>
+</figure>
+</div>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(op)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>One margin line is <code>par("csi")</code> = 0.2 inches, and the longest label is 2.567 inches wide — just under 13 lines. Fifteen leaves room for the gap.</p>
+<p>Three settings did three jobs: <code>mar</code> bought the space, <code>las = 1</code> turned the text upright, and <code>horizontal = TRUE</code> moved the long names onto the axis that has room for them.</p>
+</section>
+<section id="fill-order" class="level2">
+<h2 class="anchored" data-anchor-id="fill-order"><code>par(mfrow)</code> and <code>par(mfcol)</code>: panels</h2>
+<blockquote class="blockquote">
+<p><strong><code>mfrow</code> fills across the rows. <code>mfcol</code> fills down the columns.</strong> Same grid, same size, different order — so the fourth plot you draw lands somewhere else.</p>
+</blockquote>
+<p><code>par(mfrow = c(2, 3))</code> and <code>par(mfcol = c(2, 3))</code> split the device into exactly the same six boxes. The only difference is the order R walks them, and that order is the order your <code>plot()</code> calls land in.</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th style="text-align: left;"></th>
+<th style="text-align: left;"><code>mfrow = c(2, 3)</code></th>
+<th style="text-align: left;"><code>mfcol = c(2, 3)</code></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">top row</td>
+<td style="text-align: left;">1 · 2 · 3</td>
+<td style="text-align: left;">1 · 3 · 5</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">bottom row</td>
+<td style="text-align: left;">4 · 5 · 6</td>
+<td style="text-align: left;">2 · 4 · 6</td>
+</tr>
+</tbody>
+</table>
+<p><code>par("mfrow")</code> and <code>par("mfcol")</code> both report <code>2 3</code> whichever one you set. The grid is readable back out of <code>par()</code>; the fill order is not. Set it once, at the top, and do not guess later.</p>
+</section>
+<section id="panels" class="level2">
+<h2 class="anchored" data-anchor-id="panels">Four stations, four panels</h2>
+<div class="cell" data-layout-align="center" data-script="Four stations, four panels">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a>op <span class="ot">&lt;-</span> <span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">2</span>), <span class="at">mar =</span> <span class="fu">c</span>(<span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">2</span>, <span class="dv">1</span>), <span class="at">oma =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">3</span>, <span class="dv">0</span>))</span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a><span class="fu">invisible</span>(<span class="fu">lapply</span>(transect, <span class="cf">function</span>(s) {</span>
+<span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a>  x <span class="ot">&lt;-</span> jan[jan<span class="sc">$</span>site <span class="sc">==</span> s, ]</span>
+<span id="cb46-4"><a href="#cb46-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot</span>(x<span class="sc">$</span>date, x<span class="sc">$</span>pm25, <span class="at">type =</span> <span class="st">"o"</span>, <span class="at">ylim =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">75</span>), <span class="at">xlim =</span> xr, <span class="at">main =</span> s,</span>
+<span id="cb46-5"><a href="#cb46-5" aria-hidden="true" tabindex="-1"></a>       <span class="at">xlab =</span> <span class="st">""</span>, <span class="at">ylab =</span> <span class="st">"PM2.5 (ug/m3)"</span>)</span>
+<span id="cb46-6"><a href="#cb46-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">abline</span>(<span class="at">v =</span> <span class="fu">as.Date</span>(<span class="st">"2025-01-07"</span>), <span class="at">col =</span> <span class="st">"#b31b1b"</span>, <span class="at">lty =</span> <span class="dv">2</span>)</span>
+<span id="cb46-7"><a href="#cb46-7" aria-hidden="true" tabindex="-1"></a>}))</span>
+<span id="cb46-8"><a href="#cb46-8" aria-hidden="true" tabindex="-1"></a><span class="fu">mtext</span>(<span class="st">"January 2025, four LA County monitors"</span>, <span class="at">outer =</span> <span class="cn">TRUE</span>, <span class="at">line =</span> <span class="dv">1</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="04-basic-plots_files/figure-html/panels-four-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" alt="Four panels in a two-by-two grid, all on the same January window and the same 0 to 75 vertical scale, each showing one station, each with a dashed red line on January 7. Pasadena peaks highest at 72.5 on January 10; Compton and Long Beach peak lower and a day earlier; Lancaster is flat except for one spike on January 7. A single title runs across the top of all four." width="1200"></p>
+</figure>
+</div>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(op)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<ul>
+<li><code>mar</code> belongs to a panel; <code>oma</code> belongs to the <strong>device</strong>. <code>oma = c(0, 0, 3, 0)</code> reserves three lines across the top of the whole device, and <code>mtext(..., outer = TRUE, line = 1)</code> writes into the second of them. A per-panel <code>main</code> could never span four panels.</li>
+<li><code>type = "o"</code> draws the line <strong>and</strong> the points, so you can still see where the real observations are. That is why Pasadena’s panel is honest: eleven circles, and the line between them is visibly interpolation.</li>
+</ul>
+<p><code>xlim = xr</code> is load-bearing. Long Beach’s January starts on the 4th, so without it the January 7 rule would sit at a different horizontal position in that panel than in the other three, and the four panels would stop being comparable.</p>
+<p>Three things to check on any panel figure: every panel on the same <code>ylim</code> and <code>xlim</code>, one outer title rather than four inner ones, and <code>par(op)</code> on the last line.</p>
+</section>
+<section id="png" class="level2">
+<h2 class="anchored" data-anchor-id="png"><code>png()</code> and <code>dev.off()</code>: writing to disk</h2>
+<div class="cell" data-layout-align="center" data-script="Writing a figure to disk">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="fu">png</span>(<span class="st">"compton.png"</span>, <span class="at">width =</span> <span class="dv">1600</span>, <span class="at">height =</span> <span class="dv">900</span>, <span class="at">pointsize =</span> <span class="dv">26</span>)</span>
+<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(comp_y<span class="sc">$</span>date, comp_y<span class="sc">$</span>pm25, <span class="at">type =</span> <span class="st">"l"</span>, <span class="at">col =</span> <span class="st">"grey30"</span>,</span>
+<span id="cb48-4"><a href="#cb48-4" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">""</span>, <span class="at">ylab =</span> <span class="st">"Daily PM2.5 (ug/m3)"</span>)</span>
+<span id="cb48-5"><a href="#cb48-5" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">h =</span> <span class="dv">35</span>, <span class="at">col =</span> <span class="st">"#b31b1b"</span>, <span class="at">lty =</span> <span class="dv">2</span>)</span>
+<span id="cb48-6"><a href="#cb48-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb48-7"><a href="#cb48-7" aria-hidden="true" tabindex="-1"></a><span class="fu">dev.off</span>()                    <span class="co"># without this the file is unusable</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; quartz_off_screen 
+#&gt;                 2</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="fu">file.exists</span>(<span class="st">"compton.png"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; [1] TRUE</code></pre>
+</div>
+</div>
+<p><code>png()</code> opens a <strong>file</strong> as the drawing device. From that line on, nothing appears on screen — every plotting call goes into the file instead. <code>dev.off()</code> closes it and writes it out.</p>
+<p><strong>You must call <code>dev.off()</code>.</strong> Forget it and the file is truncated or empty, and every plot you draw afterwards keeps going into it while your screen stays blank. If your plots have mysteriously stopped appearing, you have an open device: call <code>dev.off()</code> until R says <code>null device</code>.</p>
+<p><code>width</code> and <code>height</code> are in pixels here. <code>pointsize</code> is the base text size, and it is the setting people forget: enlarge a figure without enlarging the type and the labels come out unreadably small.</p>
+</section>
+<section id="formats" class="level2">
+<h2 class="anchored" data-anchor-id="formats">Resolution, bitmap, and vector</h2>
+<div class="cell" data-layout-align="center" data-script="Resolution, bitmap and vector">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Same figure, three ways.</span></span>
+<span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb52-3"><a href="#cb52-3" aria-hidden="true" tabindex="-1"></a><span class="fu">png</span>(<span class="st">"fig-draft.png"</span>, <span class="at">width =</span> <span class="dv">800</span>,  <span class="at">height =</span> <span class="dv">600</span>)              <span class="co"># screen draft</span></span>
+<span id="cb52-4"><a href="#cb52-4" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(comp<span class="sc">$</span>date, comp<span class="sc">$</span>pm25, <span class="at">type =</span> <span class="st">"l"</span>); <span class="fu">dev.off</span>()</span>
+<span id="cb52-5"><a href="#cb52-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb52-6"><a href="#cb52-6" aria-hidden="true" tabindex="-1"></a><span class="fu">png</span>(<span class="st">"fig-print.png"</span>, <span class="at">width =</span> <span class="dv">2400</span>, <span class="at">height =</span> <span class="dv">1800</span>, <span class="at">res =</span> <span class="dv">300</span>)  <span class="co"># print quality</span></span>
+<span id="cb52-7"><a href="#cb52-7" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(comp<span class="sc">$</span>date, comp<span class="sc">$</span>pm25, <span class="at">type =</span> <span class="st">"l"</span>); <span class="fu">dev.off</span>()</span>
+<span id="cb52-8"><a href="#cb52-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb52-9"><a href="#cb52-9" aria-hidden="true" tabindex="-1"></a><span class="fu">cairo_pdf</span>(<span class="st">"fig-final.pdf"</span>, <span class="at">width =</span> <span class="dv">7</span>, <span class="at">height =</span> <span class="dv">5</span>)             <span class="co"># vector, in inches</span></span>
+<span id="cb52-10"><a href="#cb52-10" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(comp<span class="sc">$</span>date, comp<span class="sc">$</span>pm25, <span class="at">type =</span> <span class="st">"l"</span>); <span class="fu">dev.off</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p><strong>Bitmap</strong> formats — <code>png()</code>, <code>jpeg()</code>, <code>tiff()</code> — store a grid of pixels. <code>res</code> sets how many pixels make an inch. At the default 72 the figure looks fine on screen and blurry the moment it is printed or enlarged, which is why a plot that looked sharp in RStudio turns soft in Word. Raising <code>res</code> without raising <code>width</code> and <code>height</code> shrinks the figure; raise all three together.</p>
+<p><strong>Vector</strong> formats — <code>cairo_pdf()</code>, <code>cairo_ps()</code> — store the lines and shapes themselves, so there is no resolution to get wrong and no pixellation at any size. Their width and height are in <strong>inches</strong>, not pixels. Journals normally want vector for anything that is not a photograph.</p>
+<p>Decide early. Converting a folder of bitmaps to vector after a paper is accepted means redrawing every figure.</p>
+</section>
+<section id="exercise-2" class="level2">
+<h2 class="anchored" data-anchor-id="exercise-2">Exercise 2</h2>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-2-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-1" role="tab" aria-controls="tabset-2-1" aria-selected="true" href="">Exercise</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-2" role="tab" aria-controls="tabset-2-2" aria-selected="false" href="">Solution</a></li></ul>
+<div class="tab-content">
+<div id="tabset-2-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-2-1-tab">
+<div class="cell" data-layout-align="center" data-exercise="true" data-script="Exercise 2 (4 minutes)">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Four minutes.</span></span>
+<span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a><span class="co">#</span></span>
+<span id="cb53-3"><a href="#cb53-3" aria-hidden="true" tabindex="-1"></a><span class="co"># 1. Add ONE line above the four plot() calls so they fill a 2 x 2 grid.</span></span>
+<span id="cb53-4"><a href="#cb53-4" aria-hidden="true" tabindex="-1"></a><span class="co"># 2. Run it. Which station landed in the BOTTOM-LEFT panel?</span></span>
+<span id="cb53-5"><a href="#cb53-5" aria-hidden="true" tabindex="-1"></a><span class="co"># 3. Change ONE word in your line so that Pasadena lands TOP-RIGHT.</span></span>
+<span id="cb53-6"><a href="#cb53-6" aria-hidden="true" tabindex="-1"></a><span class="co">#</span></span>
+<span id="cb53-7"><a href="#cb53-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Two answers to compare with the room: a station name, and one word.</span></span>
+<span id="cb53-8"><a href="#cb53-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb53-9"><a href="#cb53-9" aria-hidden="true" tabindex="-1"></a><span class="co"># your line goes here</span></span>
+<span id="cb53-10"><a href="#cb53-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb53-11"><a href="#cb53-11" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(comp<span class="sc">$</span>date, comp<span class="sc">$</span>pm25, <span class="at">type=</span><span class="st">"l"</span>, <span class="at">lwd=</span><span class="dv">2</span>, <span class="at">ylim=</span><span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">75</span>), <span class="at">xlim=</span>xr, <span class="at">main=</span><span class="st">"Compton"</span>)</span>
+<span id="cb53-12"><a href="#cb53-12" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(lb<span class="sc">$</span>date,   lb<span class="sc">$</span>pm25,   <span class="at">type=</span><span class="st">"l"</span>, <span class="at">lwd=</span><span class="dv">2</span>, <span class="at">ylim=</span><span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">75</span>), <span class="at">xlim=</span>xr, <span class="at">main=</span><span class="st">"Long Beach"</span>)</span>
+<span id="cb53-13"><a href="#cb53-13" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(pas<span class="sc">$</span>date,  pas<span class="sc">$</span>pm25,  <span class="at">type=</span><span class="st">"l"</span>, <span class="at">lwd=</span><span class="dv">2</span>, <span class="at">ylim=</span><span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">75</span>), <span class="at">xlim=</span>xr, <span class="at">main=</span><span class="st">"Pasadena"</span>)</span>
+<span id="cb53-14"><a href="#cb53-14" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(lanc<span class="sc">$</span>date, lanc<span class="sc">$</span>pm25, <span class="at">type=</span><span class="st">"l"</span>, <span class="at">lwd=</span><span class="dv">2</span>, <span class="at">ylim=</span><span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">75</span>), <span class="at">xlim=</span>xr, <span class="at">main=</span><span class="st">"Lancaster"</span>)</span>
+<span id="cb53-15"><a href="#cb53-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb53-16"><a href="#cb53-16" aria-hidden="true" tabindex="-1"></a><span class="co"># put the device back</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+<div id="tabset-2-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-2-2-tab">
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a>op <span class="ot">&lt;-</span> <span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">2</span>), <span class="at">mar =</span> <span class="fu">c</span>(<span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">3</span>, <span class="dv">1</span>))</span>
+<span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a><span class="co"># ... the four plot() calls ...</span></span>
+<span id="cb54-3"><a href="#cb54-3" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(op)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th style="text-align: left;"></th>
+<th style="text-align: left;"><code>mfrow = c(2,2)</code></th>
+<th style="text-align: left;"><code>mfcol = c(2,2)</code></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">top-left</td>
+<td style="text-align: left;">Compton</td>
+<td style="text-align: left;">Compton</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">top-right</td>
+<td style="text-align: left;">Long Beach</td>
+<td style="text-align: left;"><strong>Pasadena</strong></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">bottom-left</td>
+<td style="text-align: left;"><strong>Pasadena</strong></td>
+<td style="text-align: left;">Long Beach</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">bottom-right</td>
+<td style="text-align: left;">Lancaster</td>
+<td style="text-align: left;">Lancaster</td>
+</tr>
+</tbody>
+</table>
+<p>Bottom-left is <strong>Pasadena</strong>. The one word is <strong><code>mfrow</code> → <code>mfcol</code></strong>.</p>
+</div>
+</div>
+</div>
+</section>
+<section id="scatter" class="level2">
+<h2 class="anchored" data-anchor-id="scatter"><code>plot(x, y)</code>: two columns against each other</h2>
+<div class="cell" data-layout-align="center" data-script="Two columns against each other">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(d<span class="sc">$</span>pm25, d<span class="sc">$</span>Daily.AQI.Value,</span>
+<span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">"Daily mean PM2.5 (ug/m3)"</span>, <span class="at">ylab =</span> <span class="st">"Daily AQI"</span>, <span class="at">col =</span> <span class="st">"grey40"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="04-basic-plots_files/figure-html/scatter-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" alt="Scatterplot of daily AQI against daily mean PM2.5 for the four stations. The points lie on a single bent curve: steep to about 9 micrograms, shallower to about 35, shallower again beyond." width="1200"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>1,119 points on one bent curve, with visible knees near 9 and near 35. The AQI-to-PM2.5 ratio falls from about 5.6 at the low end to 3.55 at 20 and 2.25 at 72.5. AQI is not PM2.5 times a constant — it is a piecewise-linear lookup, and the scatter draws the breakpoints without anyone telling it they exist.</p>
+<div class="cell" data-layout-align="center" data-script="The correlation that hides the kinks">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb56"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">cor</span>(d<span class="sc">$</span>pm25, d<span class="sc">$</span>Daily.AQI.Value), <span class="dv">3</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; [1] 0.947</code></pre>
+</div>
+</div>
+<p>A correlation of 0.947 says “these move together” and hides the kinks completely. <strong>The scatter is the only plot here that shows a shape of relationship rather than a level.</strong> Its bad-for: 1,119 points read fine; 100,000 would be a solid blob.</p>
+</section>
+<section id="practice" class="level2">
+<h2 class="anchored" data-anchor-id="practice">Practice</h2>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-3-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-1" role="tab" aria-controls="tabset-3-1" aria-selected="true" href="">Practice</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-3-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-2" role="tab" aria-controls="tabset-3-2" aria-selected="false" href="">Solutions</a></li></ul>
+<div class="tab-content">
+<div id="tabset-3-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-3-1-tab">
+<div class="cell" data-layout-align="center" data-exercise="true" data-script="Practice">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb58"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Everything below uses d, comp_y, jan, comp, lb, lanc, pas and xr, all</span></span>
+<span id="cb58-2"><a href="#cb58-2" aria-hidden="true" tabindex="-1"></a><span class="co"># built earlier in this script. Every plot needs one written sentence that</span></span>
+<span id="cb58-3"><a href="#cb58-3" aria-hidden="true" tabindex="-1"></a><span class="co"># reads it.</span></span>
+<span id="cb58-4"><a href="#cb58-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-5"><a href="#cb58-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Choosing the plot</span></span>
+<span id="cb58-6"><a href="#cb58-6" aria-hidden="true" tabindex="-1"></a><span class="co">#  1. Name the function you would reach for, one word each:</span></span>
+<span id="cb58-7"><a href="#cb58-7" aria-hidden="true" tabindex="-1"></a><span class="co">#     (a) How did PM2.5 at Compton move through 2025?</span></span>
+<span id="cb58-8"><a href="#cb58-8" aria-hidden="true" tabindex="-1"></a><span class="co">#     (b) How does the spread of daily readings compare across the four?</span></span>
+<span id="cb58-9"><a href="#cb58-9" aria-hidden="true" tabindex="-1"></a><span class="co">#     (c) What does the distribution of every reading look like?</span></span>
+<span id="cb58-10"><a href="#cb58-10" aria-hidden="true" tabindex="-1"></a><span class="co">#     (d) How many days did each station report?</span></span>
+<span id="cb58-11"><a href="#cb58-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-12"><a href="#cb58-12" aria-hidden="true" tabindex="-1"></a><span class="co"># One series</span></span>
+<span id="cb58-13"><a href="#cb58-13" aria-hidden="true" tabindex="-1"></a><span class="co">#  2. Draw Lancaster's whole year as a line. What is its highest reading,</span></span>
+<span id="cb58-14"><a href="#cb58-14" aria-hidden="true" tabindex="-1"></a><span class="co">#     and on what day?</span></span>
+<span id="cb58-15"><a href="#cb58-15" aria-hidden="true" tabindex="-1"></a><span class="co">#  3. Draw Compton's December only, as a line. Add a dashed horizontal</span></span>
+<span id="cb58-16"><a href="#cb58-16" aria-hidden="true" tabindex="-1"></a><span class="co">#     reference line at 35 ug/m3. How many December days cleared it?</span></span>
+<span id="cb58-17"><a href="#cb58-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-18"><a href="#cb58-18" aria-hidden="true" tabindex="-1"></a><span class="co"># Distributions</span></span>
+<span id="cb58-19"><a href="#cb58-19" aria-hidden="true" tabindex="-1"></a><span class="co">#  4. Histogram of d$pm25 with default bins. How many bins did you get,</span></span>
+<span id="cb58-20"><a href="#cb58-20" aria-hidden="true" tabindex="-1"></a><span class="co">#     and where does the first one start?</span></span>
+<span id="cb58-21"><a href="#cb58-21" aria-hidden="true" tabindex="-1"></a><span class="co">#  5. Draw it again with breaks = 5, then breaks = 40. Which one changes</span></span>
+<span id="cb58-22"><a href="#cb58-22" aria-hidden="true" tabindex="-1"></a><span class="co">#     the shape you would report, and which only the resolution?</span></span>
+<span id="cb58-23"><a href="#cb58-23" aria-hidden="true" tabindex="-1"></a><span class="co">#  6. Histogram of Lancaster's readings only, with breaks = seq(-5, 30, 2.5).</span></span>
+<span id="cb58-24"><a href="#cb58-24" aria-hidden="true" tabindex="-1"></a><span class="co">#     One sentence on how its shape differs from the pooled column.</span></span>
+<span id="cb58-25"><a href="#cb58-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-26"><a href="#cb58-26" aria-hidden="true" tabindex="-1"></a><span class="co"># Groups and counts</span></span>
+<span id="cb58-27"><a href="#cb58-27" aria-hidden="true" tabindex="-1"></a><span class="co">#  7. Box plots of pm25 by station, on their side, all four names legible.</span></span>
+<span id="cb58-28"><a href="#cb58-28" aria-hidden="true" tabindex="-1"></a><span class="co">#     Which station has the widest box, and is that the same as the highest?</span></span>
+<span id="cb58-29"><a href="#cb58-29" aria-hidden="true" tabindex="-1"></a><span class="co">#  8. Box plots of Compton's pm25 by month. Two months look strange --</span></span>
+<span id="cb58-30"><a href="#cb58-30" aria-hidden="true" tabindex="-1"></a><span class="co">#     count the days in each month and say why.</span></span>
+<span id="cb58-31"><a href="#cb58-31" aria-hidden="true" tabindex="-1"></a><span class="co">#  9. Bar chart of how many days each station reported, sorted from most to</span></span>
+<span id="cb58-32"><a href="#cb58-32" aria-hidden="true" tabindex="-1"></a><span class="co">#     fewest. (Hint: sort() works on a table.)</span></span>
+<span id="cb58-33"><a href="#cb58-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-34"><a href="#cb58-34" aria-hidden="true" tabindex="-1"></a><span class="co"># Several series</span></span>
+<span id="cb58-35"><a href="#cb58-35" aria-hidden="true" tabindex="-1"></a><span class="co"># 10. Replicate this figure. January 2025, one panel: Compton in red, Long</span></span>
+<span id="cb58-36"><a href="#cb58-36" aria-hidden="true" tabindex="-1"></a><span class="co">#     Beach in grey, Lancaster in blue, all lwd = 2, y from 0 to 60, a</span></span>
+<span id="cb58-37"><a href="#cb58-37" aria-hidden="true" tabindex="-1"></a><span class="co">#     dashed horizontal line at 35, and a legend with no box in the top</span></span>
+<span id="cb58-38"><a href="#cb58-38" aria-hidden="true" tabindex="-1"></a><span class="co">#     right. Title: "January 2025, three stations". Then say what Lancaster</span></span>
+<span id="cb58-39"><a href="#cb58-39" aria-hidden="true" tabindex="-1"></a><span class="co">#     does that the other two do not.</span></span>
+<span id="cb58-40"><a href="#cb58-40" aria-hidden="true" tabindex="-1"></a><span class="co"># 11. Compton's whole year twice, stacked in two panels: once type = "l",</span></span>
+<span id="cb58-41"><a href="#cb58-41" aria-hidden="true" tabindex="-1"></a><span class="co">#     once type = "p". The line tells one lie the points do not. Find it.</span></span>
+<span id="cb58-42"><a href="#cb58-42" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-43"><a href="#cb58-43" aria-hidden="true" tabindex="-1"></a><span class="co"># Panels and the canvas</span></span>
+<span id="cb58-44"><a href="#cb58-44" aria-hidden="true" tabindex="-1"></a><span class="co"># 12. Four histograms, one per station, in a 2 x 2 grid, all on the same</span></span>
+<span id="cb58-45"><a href="#cb58-45" aria-hidden="true" tabindex="-1"></a><span class="co">#     breaks and the same x range. Put the device back when you are done.</span></span>
+<span id="cb58-46"><a href="#cb58-46" aria-hidden="true" tabindex="-1"></a><span class="co"># 13. Take exercise 10's figure and give it a left margin of 6 lines, a</span></span>
+<span id="cb58-47"><a href="#cb58-47" aria-hidden="true" tabindex="-1"></a><span class="co">#     y-axis label written with mtext(), and horizontal axis numbers.</span></span>
+<span id="cb58-48"><a href="#cb58-48" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-49"><a href="#cb58-49" aria-hidden="true" tabindex="-1"></a><span class="co"># To disk</span></span>
+<span id="cb58-50"><a href="#cb58-50" aria-hidden="true" tabindex="-1"></a><span class="co"># 14. Write exercise 12's figure to "stations.png" at 2000 x 1500 pixels</span></span>
+<span id="cb58-51"><a href="#cb58-51" aria-hidden="true" tabindex="-1"></a><span class="co">#     with pointsize = 30. Open the file. Then write the same figure to</span></span>
+<span id="cb58-52"><a href="#cb58-52" aria-hidden="true" tabindex="-1"></a><span class="co">#     "stations.pdf" with cairo_pdf() at 8 x 6 inches, and open that.</span></span>
+<span id="cb58-53"><a href="#cb58-53" aria-hidden="true" tabindex="-1"></a><span class="co">#     Zoom both to 400%. Which one still has clean edges?</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+<div id="tabset-3-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-3-2-tab">
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb59"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 1  (a) plot   (b) boxplot   (c) hist   (d) barplot</span></span>
+<span id="cb59-2"><a href="#cb59-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-3"><a href="#cb59-3" aria-hidden="true" tabindex="-1"></a><span class="co"># 2  the year's high is 24.9, on 2025-01-07 -- the windstorm day itself.</span></span>
+<span id="cb59-4"><a href="#cb59-4" aria-hidden="true" tabindex="-1"></a><span class="co">#    Lancaster's worst day of the whole year is blowing dust, not smoke</span></span>
+<span id="cb59-5"><a href="#cb59-5" aria-hidden="true" tabindex="-1"></a>lan_y <span class="ot">&lt;-</span> d[d<span class="sc">$</span>site <span class="sc">==</span> <span class="st">"Lancaster - Fairgrounds"</span>, ]</span>
+<span id="cb59-6"><a href="#cb59-6" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(lan_y<span class="sc">$</span>date, lan_y<span class="sc">$</span>pm25, <span class="at">type =</span> <span class="st">"l"</span>, <span class="at">xlab =</span> <span class="st">""</span>, <span class="at">ylab =</span> <span class="st">"PM2.5 (ug/m3)"</span>)</span>
+<span id="cb59-7"><a href="#cb59-7" aria-hidden="true" tabindex="-1"></a><span class="fu">max</span>(lan_y<span class="sc">$</span>pm25); lan_y<span class="sc">$</span>date[<span class="fu">which.max</span>(lan_y<span class="sc">$</span>pm25)]</span>
+<span id="cb59-8"><a href="#cb59-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-9"><a href="#cb59-9" aria-hidden="true" tabindex="-1"></a><span class="co"># 3  five days clear 35; December is the year's worst month at this monitor</span></span>
+<span id="cb59-10"><a href="#cb59-10" aria-hidden="true" tabindex="-1"></a>dec <span class="ot">&lt;-</span> comp_y[comp_y<span class="sc">$</span>date <span class="sc">&gt;=</span> <span class="fu">as.Date</span>(<span class="st">"2025-12-01"</span>), ]</span>
+<span id="cb59-11"><a href="#cb59-11" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(dec<span class="sc">$</span>date, dec<span class="sc">$</span>pm25, <span class="at">type =</span> <span class="st">"l"</span>, <span class="at">xlab =</span> <span class="st">""</span>, <span class="at">ylab =</span> <span class="st">"PM2.5 (ug/m3)"</span>)</span>
+<span id="cb59-12"><a href="#cb59-12" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">h =</span> <span class="dv">35</span>, <span class="at">col =</span> <span class="st">"#b31b1b"</span>, <span class="at">lty =</span> <span class="dv">2</span>)</span>
+<span id="cb59-13"><a href="#cb59-13" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(dec<span class="sc">$</span>pm25 <span class="sc">&gt;</span> <span class="dv">35</span>)</span>
+<span id="cb59-14"><a href="#cb59-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-15"><a href="#cb59-15" aria-hidden="true" tabindex="-1"></a><span class="co"># 4  16 bins, first break at -5: the negatives hide inside a bar that looks</span></span>
+<span id="cb59-16"><a href="#cb59-16" aria-hidden="true" tabindex="-1"></a><span class="co">#    like it starts at zero</span></span>
+<span id="cb59-17"><a href="#cb59-17" aria-hidden="true" tabindex="-1"></a>h <span class="ot">&lt;-</span> <span class="fu">hist</span>(d<span class="sc">$</span>pm25)</span>
+<span id="cb59-18"><a href="#cb59-18" aria-hidden="true" tabindex="-1"></a><span class="fu">length</span>(h<span class="sc">$</span>counts); h<span class="sc">$</span>breaks[<span class="dv">1</span>]</span>
+<span id="cb59-19"><a href="#cb59-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-20"><a href="#cb59-20" aria-hidden="true" tabindex="-1"></a><span class="co"># 5  breaks = 5 gives five bins twenty units wide: everything above 20</span></span>
+<span id="cb59-21"><a href="#cb59-21" aria-hidden="true" tabindex="-1"></a><span class="co">#    collapses into three near-empty bars and the skew stops being</span></span>
+<span id="cb59-22"><a href="#cb59-22" aria-hidden="true" tabindex="-1"></a><span class="co">#    readable. breaks = 40 gives 38 bins two units wide -- more</span></span>
+<span id="cb59-23"><a href="#cb59-23" aria-hidden="true" tabindex="-1"></a><span class="co">#    resolution on the same shape, not a different shape</span></span>
+<span id="cb59-24"><a href="#cb59-24" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(d<span class="sc">$</span>pm25, <span class="at">breaks =</span> <span class="dv">5</span>)</span>
+<span id="cb59-25"><a href="#cb59-25" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(d<span class="sc">$</span>pm25, <span class="at">breaks =</span> <span class="dv">40</span>)</span>
+<span id="cb59-26"><a href="#cb59-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-27"><a href="#cb59-27" aria-hidden="true" tabindex="-1"></a><span class="co"># 6  a much tighter, less skewed column: Lancaster's mass sits under 8 with</span></span>
+<span id="cb59-28"><a href="#cb59-28" aria-hidden="true" tabindex="-1"></a><span class="co">#    a short tail, where the pooled column runs past 70</span></span>
+<span id="cb59-29"><a href="#cb59-29" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(d<span class="sc">$</span>pm25[d<span class="sc">$</span>site <span class="sc">==</span> <span class="st">"Lancaster - Fairgrounds"</span>], <span class="at">breaks =</span> <span class="fu">seq</span>(<span class="sc">-</span><span class="dv">5</span>, <span class="dv">30</span>, <span class="fl">2.5</span>),</span>
+<span id="cb59-30"><a href="#cb59-30" aria-hidden="true" tabindex="-1"></a>     <span class="at">main =</span> <span class="st">""</span>, <span class="at">xlab =</span> <span class="st">"PM2.5 (ug/m3)"</span>)</span>
+<span id="cb59-31"><a href="#cb59-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-32"><a href="#cb59-32" aria-hidden="true" tabindex="-1"></a><span class="co"># 7  Compton has the widest box (7.9 to 15.5) and also the highest median,</span></span>
+<span id="cb59-33"><a href="#cb59-33" aria-hidden="true" tabindex="-1"></a><span class="co">#    but Long Beach is within a twentieth of it -- spread and level are</span></span>
+<span id="cb59-34"><a href="#cb59-34" aria-hidden="true" tabindex="-1"></a><span class="co">#    different questions</span></span>
+<span id="cb59-35"><a href="#cb59-35" aria-hidden="true" tabindex="-1"></a>op <span class="ot">&lt;-</span> <span class="fu">par</span>(<span class="at">mar =</span> <span class="fu">c</span>(<span class="dv">4</span>, <span class="dv">15</span>, <span class="dv">1</span>, <span class="dv">1</span>))</span>
+<span id="cb59-36"><a href="#cb59-36" aria-hidden="true" tabindex="-1"></a><span class="fu">boxplot</span>(pm25 <span class="sc">~</span> site, <span class="at">data =</span> d, <span class="at">horizontal =</span> <span class="cn">TRUE</span>, <span class="at">las =</span> <span class="dv">1</span>,</span>
+<span id="cb59-37"><a href="#cb59-37" aria-hidden="true" tabindex="-1"></a>        <span class="at">xlab =</span> <span class="st">"PM2.5 (ug/m3)"</span>, <span class="at">ylab =</span> <span class="st">""</span>)</span>
+<span id="cb59-38"><a href="#cb59-38" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(op)</span>
+<span id="cb59-39"><a href="#cb59-39" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-40"><a href="#cb59-40" aria-hidden="true" tabindex="-1"></a><span class="co"># 8  April and May: the regulatory sampler was down, so those boxes are</span></span>
+<span id="cb59-41"><a href="#cb59-41" aria-hidden="true" tabindex="-1"></a><span class="co">#    built from 2 and 1 readings and mean nothing</span></span>
+<span id="cb59-42"><a href="#cb59-42" aria-hidden="true" tabindex="-1"></a>comp_y<span class="sc">$</span>month <span class="ot">&lt;-</span> <span class="fu">format</span>(comp_y<span class="sc">$</span>date, <span class="st">"%m"</span>)</span>
+<span id="cb59-43"><a href="#cb59-43" aria-hidden="true" tabindex="-1"></a><span class="fu">boxplot</span>(pm25 <span class="sc">~</span> month, <span class="at">data =</span> comp_y)</span>
+<span id="cb59-44"><a href="#cb59-44" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(comp_y<span class="sc">$</span>month)</span>
+<span id="cb59-45"><a href="#cb59-45" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-46"><a href="#cb59-46" aria-hidden="true" tabindex="-1"></a><span class="co"># 9</span></span>
+<span id="cb59-47"><a href="#cb59-47" aria-hidden="true" tabindex="-1"></a>op <span class="ot">&lt;-</span> <span class="fu">par</span>(<span class="at">mar =</span> <span class="fu">c</span>(<span class="dv">4</span>, <span class="dv">15</span>, <span class="dv">1</span>, <span class="dv">1</span>))</span>
+<span id="cb59-48"><a href="#cb59-48" aria-hidden="true" tabindex="-1"></a><span class="fu">barplot</span>(<span class="fu">sort</span>(<span class="fu">table</span>(d<span class="sc">$</span>site)), <span class="at">horiz =</span> <span class="cn">TRUE</span>, <span class="at">las =</span> <span class="dv">1</span>,</span>
+<span id="cb59-49"><a href="#cb59-49" aria-hidden="true" tabindex="-1"></a>        <span class="at">xlab =</span> <span class="st">"Days with a reading in 2025"</span>)</span>
+<span id="cb59-50"><a href="#cb59-50" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(op)</span>
+<span id="cb59-51"><a href="#cb59-51" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-52"><a href="#cb59-52" aria-hidden="true" tabindex="-1"></a><span class="co"># 10  Lancaster stays flat through the fire week and spikes on Jan 7 itself</span></span>
+<span id="cb59-53"><a href="#cb59-53" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(comp<span class="sc">$</span>date, comp<span class="sc">$</span>pm25, <span class="at">type =</span> <span class="st">"l"</span>, <span class="at">col =</span> <span class="st">"#b31b1b"</span>, <span class="at">lwd =</span> <span class="dv">2</span>,</span>
+<span id="cb59-54"><a href="#cb59-54" aria-hidden="true" tabindex="-1"></a>     <span class="at">ylim =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">60</span>), <span class="at">xlab =</span> <span class="st">""</span>, <span class="at">ylab =</span> <span class="st">"PM2.5 (ug/m3)"</span>,</span>
+<span id="cb59-55"><a href="#cb59-55" aria-hidden="true" tabindex="-1"></a>     <span class="at">main =</span> <span class="st">"January 2025, three stations"</span>)</span>
+<span id="cb59-56"><a href="#cb59-56" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(lb<span class="sc">$</span>date,   lb<span class="sc">$</span>pm25,   <span class="at">col =</span> <span class="st">"grey30"</span>,  <span class="at">lwd =</span> <span class="dv">2</span>)</span>
+<span id="cb59-57"><a href="#cb59-57" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(lanc<span class="sc">$</span>date, lanc<span class="sc">$</span>pm25, <span class="at">col =</span> <span class="st">"#1f6fb4"</span>, <span class="at">lwd =</span> <span class="dv">2</span>)</span>
+<span id="cb59-58"><a href="#cb59-58" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">h =</span> <span class="dv">35</span>, <span class="at">lty =</span> <span class="dv">2</span>)</span>
+<span id="cb59-59"><a href="#cb59-59" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">"topright"</span>, <span class="fu">c</span>(<span class="st">"Compton"</span>, <span class="st">"Long Beach"</span>, <span class="st">"Lancaster"</span>),</span>
+<span id="cb59-60"><a href="#cb59-60" aria-hidden="true" tabindex="-1"></a>       <span class="at">col =</span> <span class="fu">c</span>(<span class="st">"#b31b1b"</span>, <span class="st">"grey30"</span>, <span class="st">"#1f6fb4"</span>), <span class="at">lwd =</span> <span class="dv">2</span>, <span class="at">bty =</span> <span class="st">"n"</span>)</span>
+<span id="cb59-61"><a href="#cb59-61" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-62"><a href="#cb59-62" aria-hidden="true" tabindex="-1"></a><span class="co"># 11  the line draws straight across April and May, where there are almost</span></span>
+<span id="cb59-63"><a href="#cb59-63" aria-hidden="true" tabindex="-1"></a><span class="co">#     no readings; the points show the gap for what it is</span></span>
+<span id="cb59-64"><a href="#cb59-64" aria-hidden="true" tabindex="-1"></a>op <span class="ot">&lt;-</span> <span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">1</span>), <span class="at">mar =</span> <span class="fu">c</span>(<span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">2</span>, <span class="dv">1</span>))</span>
+<span id="cb59-65"><a href="#cb59-65" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(comp_y<span class="sc">$</span>date, comp_y<span class="sc">$</span>pm25, <span class="at">type =</span> <span class="st">"l"</span>, <span class="at">xlab =</span> <span class="st">""</span>, <span class="at">ylab =</span> <span class="st">"PM2.5"</span>, <span class="at">main =</span> <span class="st">"type = l"</span>)</span>
+<span id="cb59-66"><a href="#cb59-66" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(comp_y<span class="sc">$</span>date, comp_y<span class="sc">$</span>pm25, <span class="at">type =</span> <span class="st">"p"</span>, <span class="at">xlab =</span> <span class="st">""</span>, <span class="at">ylab =</span> <span class="st">"PM2.5"</span>, <span class="at">main =</span> <span class="st">"type = p"</span>)</span>
+<span id="cb59-67"><a href="#cb59-67" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(op)</span>
+<span id="cb59-68"><a href="#cb59-68" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-69"><a href="#cb59-69" aria-hidden="true" tabindex="-1"></a><span class="co"># 12  same skew everywhere, but Lancaster's is compressed against zero</span></span>
+<span id="cb59-70"><a href="#cb59-70" aria-hidden="true" tabindex="-1"></a>op <span class="ot">&lt;-</span> <span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">2</span>), <span class="at">mar =</span> <span class="fu">c</span>(<span class="dv">4</span>, <span class="dv">4</span>, <span class="dv">2</span>, <span class="dv">1</span>))</span>
+<span id="cb59-71"><a href="#cb59-71" aria-hidden="true" tabindex="-1"></a><span class="fu">invisible</span>(<span class="fu">lapply</span>(<span class="fu">sort</span>(<span class="fu">unique</span>(d<span class="sc">$</span>site)), <span class="cf">function</span>(s)</span>
+<span id="cb59-72"><a href="#cb59-72" aria-hidden="true" tabindex="-1"></a>  <span class="fu">hist</span>(d<span class="sc">$</span>pm25[d<span class="sc">$</span>site <span class="sc">==</span> s], <span class="at">breaks =</span> <span class="fu">seq</span>(<span class="sc">-</span><span class="dv">5</span>, <span class="dv">75</span>, <span class="fl">2.5</span>), <span class="at">xlim =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">5</span>, <span class="dv">75</span>),</span>
+<span id="cb59-73"><a href="#cb59-73" aria-hidden="true" tabindex="-1"></a>       <span class="at">main =</span> s, <span class="at">xlab =</span> <span class="st">""</span>, <span class="at">cex.main =</span> <span class="fl">0.8</span>)))</span>
+<span id="cb59-74"><a href="#cb59-74" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(op)</span>
+<span id="cb59-75"><a href="#cb59-75" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-76"><a href="#cb59-76" aria-hidden="true" tabindex="-1"></a><span class="co"># 13</span></span>
+<span id="cb59-77"><a href="#cb59-77" aria-hidden="true" tabindex="-1"></a>op <span class="ot">&lt;-</span> <span class="fu">par</span>(<span class="at">mar =</span> <span class="fu">c</span>(<span class="dv">4</span>, <span class="dv">6</span>, <span class="dv">2</span>, <span class="dv">1</span>), <span class="at">las =</span> <span class="dv">1</span>)</span>
+<span id="cb59-78"><a href="#cb59-78" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(comp<span class="sc">$</span>date, comp<span class="sc">$</span>pm25, <span class="at">type =</span> <span class="st">"l"</span>, <span class="at">col =</span> <span class="st">"#b31b1b"</span>, <span class="at">lwd =</span> <span class="dv">2</span>,</span>
+<span id="cb59-79"><a href="#cb59-79" aria-hidden="true" tabindex="-1"></a>     <span class="at">ylim =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">60</span>), <span class="at">xlab =</span> <span class="st">""</span>, <span class="at">ylab =</span> <span class="st">""</span>,</span>
+<span id="cb59-80"><a href="#cb59-80" aria-hidden="true" tabindex="-1"></a>     <span class="at">main =</span> <span class="st">"January 2025, three stations"</span>)</span>
+<span id="cb59-81"><a href="#cb59-81" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(lb<span class="sc">$</span>date,   lb<span class="sc">$</span>pm25,   <span class="at">col =</span> <span class="st">"grey30"</span>,  <span class="at">lwd =</span> <span class="dv">2</span>)</span>
+<span id="cb59-82"><a href="#cb59-82" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(lanc<span class="sc">$</span>date, lanc<span class="sc">$</span>pm25, <span class="at">col =</span> <span class="st">"#1f6fb4"</span>, <span class="at">lwd =</span> <span class="dv">2</span>)</span>
+<span id="cb59-83"><a href="#cb59-83" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">h =</span> <span class="dv">35</span>, <span class="at">lty =</span> <span class="dv">2</span>)</span>
+<span id="cb59-84"><a href="#cb59-84" aria-hidden="true" tabindex="-1"></a><span class="fu">mtext</span>(<span class="st">"Daily PM2.5 (ug/m3)"</span>, <span class="at">side =</span> <span class="dv">2</span>, <span class="at">line =</span> <span class="dv">4</span>, <span class="at">las =</span> <span class="dv">0</span>)</span>
+<span id="cb59-85"><a href="#cb59-85" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(op)</span>
+<span id="cb59-86"><a href="#cb59-86" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-87"><a href="#cb59-87" aria-hidden="true" tabindex="-1"></a><span class="co"># 14  the PDF. A bitmap has a fixed pixel grid, so zooming shows the grid;</span></span>
+<span id="cb59-88"><a href="#cb59-88" aria-hidden="true" tabindex="-1"></a><span class="co">#     a vector file stores the lines themselves and redraws them at any size</span></span>
+<span id="cb59-89"><a href="#cb59-89" aria-hidden="true" tabindex="-1"></a><span class="fu">png</span>(<span class="st">"stations.png"</span>, <span class="at">width =</span> <span class="dv">2000</span>, <span class="at">height =</span> <span class="dv">1500</span>, <span class="at">pointsize =</span> <span class="dv">30</span>)</span>
+<span id="cb59-90"><a href="#cb59-90" aria-hidden="true" tabindex="-1"></a>op <span class="ot">&lt;-</span> <span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">2</span>), <span class="at">mar =</span> <span class="fu">c</span>(<span class="dv">4</span>, <span class="dv">4</span>, <span class="dv">2</span>, <span class="dv">1</span>))</span>
+<span id="cb59-91"><a href="#cb59-91" aria-hidden="true" tabindex="-1"></a><span class="fu">invisible</span>(<span class="fu">lapply</span>(<span class="fu">sort</span>(<span class="fu">unique</span>(d<span class="sc">$</span>site)), <span class="cf">function</span>(s)</span>
+<span id="cb59-92"><a href="#cb59-92" aria-hidden="true" tabindex="-1"></a>  <span class="fu">hist</span>(d<span class="sc">$</span>pm25[d<span class="sc">$</span>site <span class="sc">==</span> s], <span class="at">breaks =</span> <span class="fu">seq</span>(<span class="sc">-</span><span class="dv">5</span>, <span class="dv">75</span>, <span class="fl">2.5</span>), <span class="at">xlim =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">5</span>, <span class="dv">75</span>),</span>
+<span id="cb59-93"><a href="#cb59-93" aria-hidden="true" tabindex="-1"></a>       <span class="at">main =</span> s, <span class="at">xlab =</span> <span class="st">""</span>)))</span>
+<span id="cb59-94"><a href="#cb59-94" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(op)</span>
+<span id="cb59-95"><a href="#cb59-95" aria-hidden="true" tabindex="-1"></a><span class="fu">dev.off</span>()</span>
+<span id="cb59-96"><a href="#cb59-96" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-97"><a href="#cb59-97" aria-hidden="true" tabindex="-1"></a><span class="fu">cairo_pdf</span>(<span class="st">"stations.pdf"</span>, <span class="at">width =</span> <span class="dv">8</span>, <span class="at">height =</span> <span class="dv">6</span>)</span>
+<span id="cb59-98"><a href="#cb59-98" aria-hidden="true" tabindex="-1"></a>op <span class="ot">&lt;-</span> <span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">2</span>), <span class="at">mar =</span> <span class="fu">c</span>(<span class="dv">4</span>, <span class="dv">4</span>, <span class="dv">2</span>, <span class="dv">1</span>))</span>
+<span id="cb59-99"><a href="#cb59-99" aria-hidden="true" tabindex="-1"></a><span class="fu">invisible</span>(<span class="fu">lapply</span>(<span class="fu">sort</span>(<span class="fu">unique</span>(d<span class="sc">$</span>site)), <span class="cf">function</span>(s)</span>
+<span id="cb59-100"><a href="#cb59-100" aria-hidden="true" tabindex="-1"></a>  <span class="fu">hist</span>(d<span class="sc">$</span>pm25[d<span class="sc">$</span>site <span class="sc">==</span> s], <span class="at">breaks =</span> <span class="fu">seq</span>(<span class="sc">-</span><span class="dv">5</span>, <span class="dv">75</span>, <span class="fl">2.5</span>), <span class="at">xlim =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">5</span>, <span class="dv">75</span>),</span>
+<span id="cb59-101"><a href="#cb59-101" aria-hidden="true" tabindex="-1"></a>       <span class="at">main =</span> s, <span class="at">xlab =</span> <span class="st">""</span>)))</span>
+<span id="cb59-102"><a href="#cb59-102" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(op)</span>
+<span id="cb59-103"><a href="#cb59-103" aria-hidden="true" tabindex="-1"></a><span class="fu">dev.off</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="quick-reference" class="level2">
+<h2 class="anchored" data-anchor-id="quick-reference">Quick reference</h2>
+<p><strong>The four plots</strong></p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Code</th>
+<th style="text-align: left;">What it draws</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><code>plot(x, y)</code></td>
+<td style="text-align: left;">two columns against each other, one point per row</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>plot(x, y, type = "l")</code></td>
+<td style="text-align: left;">one series in its natural order; <code>"p"</code> <code>"b"</code> <code>"o"</code> are the other marks</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>hist(x, breaks = 40)</code></td>
+<td style="text-align: left;">the distribution of one variable; <code>breaks</code> is a suggestion</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>boxplot(y ~ g, data = d)</code></td>
+<td style="text-align: left;"><code>y</code> split by the groups in <code>g</code>; read <code>~</code> as “by”</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>barplot(table(g))</code></td>
+<td style="text-align: left;">how often each category shows up</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Arguments that mean the same thing everywhere</strong></p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Code</th>
+<th style="text-align: left;">What it does</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><code>main =</code>, <code>xlab =</code>, <code>ylab =</code></td>
+<td style="text-align: left;">title and axis labels; units go in <code>ylab</code></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>col =</code></td>
+<td style="text-align: left;">colour of the marks, or the fill on <code>hist</code>/<code>bar</code>/<code>box</code></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>xlim =</code>, <code>ylim =</code></td>
+<td style="text-align: left;">the window; set on the <strong>first</strong> call</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>lwd =</code>, <code>lty =</code></td>
+<td style="text-align: left;">line width; line type, <code>1</code> solid <code>2</code> dashed</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>pch =</code></td>
+<td style="text-align: left;">point symbol; <code>16</code> filled circle, <code>1</code> open</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>las =</code></td>
+<td style="text-align: left;">axis text: <code>0</code> parallel, <code>1</code> horizontal, <code>2</code> perpendicular</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>horiz =</code> / <code>horizontal =</code></td>
+<td style="text-align: left;">sideways; <code>barplot</code> spells it <code>horiz</code>, <code>boxplot</code> <code>horizontal</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Layers on top of an open plot</strong></p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Code</th>
+<th style="text-align: left;">What it adds</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><code>points(x, y)</code>, <code>lines(x, y)</code></td>
+<td style="text-align: left;">marks, a joined line</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>abline(h =, v =)</code></td>
+<td style="text-align: left;">a horizontal or vertical reference line</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>text(x, y, "label")</code></td>
+<td style="text-align: left;">a label at data coordinates</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>legend("topright", labels, col =, lty =, pch =, bty = "n")</code></td>
+<td style="text-align: left;">the key; <code>NA</code> means no sample for that entry</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>axis(1, at =, labels =)</code></td>
+<td style="text-align: left;">your own axis; suppress R’s with <code>xaxt = "n"</code></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>mtext("x", side = 2, line = 3)</code></td>
+<td style="text-align: left;">text in the margin; sides 1–4 from the bottom, clockwise</td>
+</tr>
+</tbody>
+</table>
+<p><strong>The canvas</strong></p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Code</th>
+<th style="text-align: left;">What it does</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><code>par("mar")</code></td>
+<td style="text-align: left;"><strong>read</strong> a setting</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>op &lt;- par(mar = c(4, 15, 1, 1))</code></td>
+<td style="text-align: left;"><strong>write</strong> it and keep the old value; bottom, left, top, right, in lines</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>par(op)</code></td>
+<td style="text-align: left;">put it back — type this line before you type the plot</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>par(mfrow = c(2, 2))</code></td>
+<td style="text-align: left;">panels, filled across the rows</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>par(mfcol = c(2, 2))</code></td>
+<td style="text-align: left;">same grid, filled down the columns</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>par(oma = c(0, 0, 3, 0))</code></td>
+<td style="text-align: left;">outer margin, around <strong>all</strong> the panels</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>mtext("title", outer = TRUE, line = 1)</code></td>
+<td style="text-align: left;">one title across every panel</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>layout(m, heights =, widths =)</code></td>
+<td style="text-align: left;">panels of unequal size; reset with <code>layout(1)</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Writing to disk</strong></p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Code</th>
+<th style="text-align: left;">What it does</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><code>png("f.png", width =, height =, pointsize =)</code></td>
+<td style="text-align: left;">open a bitmap file as the device; pixels</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>png(..., res = 300)</code></td>
+<td style="text-align: left;">pixels per inch; the default 72 is why figures go soft in print</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>cairo_pdf("f.pdf", width = 7, height = 5)</code></td>
+<td style="text-align: left;">vector; no resolution, sized in <strong>inches</strong></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>dev.off()</code></td>
+<td style="text-align: left;">close the device and write the file — <strong>required</strong></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Links</strong></p>
+<ul>
+<li>Session materials: <a href="04-basic-plots-slides.html">slides</a> · <a href="04-basic-plots.R">live script</a> · <a href="data/epa_pm25_la_county_2025.csv">EPA data</a> · <a href="data/SOURCE.md">where it came from</a></li>
+<li><a href="../../fall-2026/syllabus.html">Syllabus</a> · <a href="../../fall-2026/index.html#schedule">full schedule</a></li>
+</ul>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/arielortizbobea\.github\.io\/aem6850\/");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+            // target, if specified
+            link.setAttribute("target", "_blank");
+            if (link.getAttribute("rel") === null) {
+              link.setAttribute("rel", "noopener");
+            }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

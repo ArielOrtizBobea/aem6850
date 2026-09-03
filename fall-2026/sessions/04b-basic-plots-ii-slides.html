@@ -1,0 +1,920 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-html/tabby.min.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/light-border.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-7f8f88aac4f3542376d5c11b86a4c14d.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
+  <meta name="generator" content="quarto-1.9.37">
+
+  <title>Basic plots II</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="../../site_libs/revealjs/dist/reset.css">
+  <link rel="stylesheet" href="../../site_libs/revealjs/dist/reveal.css">
+  <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+      vertical-align: middle;
+    }
+    /* CSS for syntax highlighting */
+    html { -webkit-text-size-adjust: 100%; }
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      { color: #003b4f; background-color: #f1f3f5; }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span { color: #003b4f; } /* Normal */
+    code span.al { color: #ad0000; } /* Alert */
+    code span.an { color: #5e5e5e; } /* Annotation */
+    code span.at { color: #657422; } /* Attribute */
+    code span.bn { color: #ad0000; } /* BaseN */
+    code span.bu { } /* BuiltIn */
+    code span.cf { color: #003b4f; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #20794d; } /* Char */
+    code span.cn { color: #8f5902; } /* Constant */
+    code span.co { color: #5e5e5e; } /* Comment */
+    code span.cv { color: #5e5e5e; font-style: italic; } /* CommentVar */
+    code span.do { color: #5e5e5e; font-style: italic; } /* Documentation */
+    code span.dt { color: #ad0000; } /* DataType */
+    code span.dv { color: #ad0000; } /* DecVal */
+    code span.er { color: #ad0000; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #ad0000; } /* Float */
+    code span.fu { color: #4758ab; } /* Function */
+    code span.im { color: #00769e; } /* Import */
+    code span.in { color: #5e5e5e; } /* Information */
+    code span.kw { color: #003b4f; font-weight: bold; } /* Keyword */
+    code span.op { color: #5e5e5e; } /* Operator */
+    code span.ot { color: #003b4f; } /* Other */
+    code span.pp { color: #ad0000; } /* Preprocessor */
+    code span.sc { color: #5e5e5e; } /* SpecialChar */
+    code span.ss { color: #20794d; } /* SpecialString */
+    code span.st { color: #20794d; } /* String */
+    code span.va { color: #111111; } /* Variable */
+    code span.vs { color: #20794d; } /* VerbatimString */
+    code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
+  </style>
+  <link rel="stylesheet" href="../../site_libs/revealjs/dist/theme/quarto-039e4849221da29d14ca4e6b7b0f1797.css">
+  <link href="../../site_libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
+  <link href="../../site_libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
+  <link href="../../site_libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
+  <link href="../../site_libs/revealjs/plugin/quarto-support/footer.css" rel="stylesheet">
+  <style type="text/css">
+    .reveal div.sourceCode {
+      margin: 0;
+      overflow: auto;
+    }
+    .reveal div.hanging-indent {
+      margin-left: 1em;
+      text-indent: -1em;
+    }
+    .reveal .slide:not(.center) {
+      height: 100%;
+    }
+    .reveal .slide.scrollable {
+      overflow-y: auto;
+    }
+    .reveal .footnotes {
+      height: 100%;
+      overflow-y: auto;
+    }
+    .reveal .slide .absolute {
+      position: absolute;
+      display: block;
+    }
+    .reveal .footnotes ol {
+      counter-reset: ol;
+      list-style-type: none; 
+      margin-left: 0;
+    }
+    .reveal .footnotes ol li:before {
+      counter-increment: ol;
+      content: counter(ol) ". "; 
+    }
+    .reveal .footnotes ol li > p:first-child {
+      display: inline-block;
+    }
+    .reveal .slide ul,
+    .reveal .slide ol {
+      margin-bottom: 0.5em;
+    }
+    .reveal .slide ul li,
+    .reveal .slide ol li {
+      margin-top: 0.4em;
+      margin-bottom: 0.2em;
+    }
+    .reveal .slide ul[role="tablist"] li {
+      margin-bottom: 0;
+    }
+    .reveal .slide ul li > *:first-child,
+    .reveal .slide ol li > *:first-child {
+      margin-block-start: 0;
+    }
+    .reveal .slide ul li > *:last-child,
+    .reveal .slide ol li > *:last-child {
+      margin-block-end: 0;
+    }
+    .reveal .slide .columns:nth-child(3) {
+      margin-block-start: 0.8em;
+    }
+    .reveal blockquote {
+      box-shadow: none;
+    }
+    .reveal .tippy-content>* {
+      margin-top: 0.2em;
+      margin-bottom: 0.7em;
+    }
+    .reveal .tippy-content>*:last-child {
+      margin-bottom: 0.2em;
+    }
+    .reveal .slide > img.stretch.quarto-figure-center,
+    .reveal .slide > img.r-stretch.quarto-figure-center {
+      display: block;
+      margin-left: auto;
+      margin-right: auto; 
+    }
+    .reveal .slide > img.stretch.quarto-figure-left,
+    .reveal .slide > img.r-stretch.quarto-figure-left  {
+      display: block;
+      margin-left: 0;
+      margin-right: auto; 
+    }
+    .reveal .slide > img.stretch.quarto-figure-right,
+    .reveal .slide > img.r-stretch.quarto-figure-right  {
+      display: block;
+      margin-left: auto;
+      margin-right: 0; 
+    }
+  </style>
+</head>
+<body class="quarto-light">
+  <div class="reveal">
+    <div class="slides">
+
+<section id="title-slide" class="center">
+  <p class="ttl-number">AEM 6850</p>
+  <p class="ttl-course">Empirical Methods for Applied Economists</p>
+  <p class="ttl-prof">Prof. Ariel Ortiz-Bobea</p>
+  <h1 class="title">Basic plots II</h1>
+  <p class="subtitle">Thursday, September 3, 2026 · not taught in class</p>
+  <img class="ttl-seal" src="../images/cornell_seal.svg" alt="Cornell University">
+</section>
+<section id="what-this-is" class="slide level2">
+<h2>What this page is</h2>
+<blockquote>
+<p><strong>This page is not on the calendar.</strong> It is written, runnable, and about seventy minutes of material — roughly one more class meeting, if one were ever free.</p>
+</blockquote>
+</section>
+<section id="contents" class="slide level2">
+<h2>What is here</h2>
+<div class="tight-cols">
+<table class="caption-top">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Section</th>
+<th style="text-align: left;">The commands it turns on</th>
+<th style="text-align: right;">Min</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Unequal panels</td>
+<td style="text-align: left;"><code>layout()</code>, <code>layout.show()</code></td>
+<td style="text-align: right;">9</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Shaded areas</td>
+<td style="text-align: left;"><code>rect()</code>, <code>adjustcolor()</code></td>
+<td style="text-align: right;">6</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Confidence bands</td>
+<td style="text-align: left;"><code>polygon()</code></td>
+<td style="text-align: right;">10</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Colour scales</td>
+<td style="text-align: left;"><code>brewer.pal</code>, <code>colorRampPalette</code>, <code>findInterval</code></td>
+<td style="text-align: right;">10</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Custom axes</td>
+<td style="text-align: left;"><code>axes = FALSE</code>, <code>axis()</code>, <code>box()</code>, <code>mtext()</code></td>
+<td style="text-align: right;">9</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Fills, shapes, options</td>
+<td style="text-align: left;"><code>density=</code>, <code>beside=</code>, <code>notch=</code></td>
+<td style="text-align: right;">6</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Heat maps</td>
+<td style="text-align: left;"><code>image()</code></td>
+<td style="text-align: right;">7</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Maps</td>
+<td style="text-align: left;"><code>map()</code>, projections</td>
+<td style="text-align: right;">8</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Animation</td>
+<td style="text-align: left;">the <code>png()</code>-in-a-loop recipe</td>
+<td style="text-align: right;">5</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="build" class="slide level2">
+<h2>Building the table</h2>
+<p>Everything below runs off one data frame, built here so this page and its script stand on their own.</p>
+<div class="cell" data-layout-align="center" data-script="Build the table">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a aria-hidden="true" tabindex="-1"></a>pm <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"data/epa_pm25_la_county_2025.csv"</span>,</span>
+<span id="cb1-2"><a aria-hidden="true" tabindex="-1"></a>               <span class="at">colClasses =</span> <span class="fu">c</span>(<span class="st">"Site.ID"</span> <span class="ot">=</span> <span class="st">"character"</span>))</span>
+<span id="cb1-3"><a aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(pm)[<span class="fu">names</span>(pm) <span class="sc">==</span> <span class="st">"Daily.Mean.PM2.5.Concentration"</span>] <span class="ot">&lt;-</span> <span class="st">"pm25"</span></span>
+<span id="cb1-4"><a aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(pm)[<span class="fu">names</span>(pm) <span class="sc">==</span> <span class="st">"Local.Site.Name"</span>]                <span class="ot">&lt;-</span> <span class="st">"site"</span></span>
+<span id="cb1-5"><a aria-hidden="true" tabindex="-1"></a>pm<span class="sc">$</span>date <span class="ot">&lt;-</span> <span class="fu">as.Date</span>(pm<span class="sc">$</span>Date, <span class="at">format =</span> <span class="st">"%m/%d/%Y"</span>)</span>
+<span id="cb1-6"><a aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-7"><a aria-hidden="true" tabindex="-1"></a>transect <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Pasadena"</span>, <span class="st">"Compton"</span>,</span>
+<span id="cb1-8"><a aria-hidden="true" tabindex="-1"></a>              <span class="st">"Long Beach-Route 710 Near Road"</span>, <span class="st">"Lancaster - Fairgrounds"</span>)</span>
+<span id="cb1-9"><a aria-hidden="true" tabindex="-1"></a>d      <span class="ot">&lt;-</span> pm[pm<span class="sc">$</span>site <span class="sc">%in%</span> transect <span class="sc">&amp;</span></span>
+<span id="cb1-10"><a aria-hidden="true" tabindex="-1"></a>             pm<span class="sc">$</span>POC <span class="sc">==</span> <span class="dv">1</span> <span class="sc">&amp;</span> pm<span class="sc">$</span>AQS.Parameter.Code <span class="sc">==</span> <span class="dv">88101</span>, ]</span>
+<span id="cb1-11"><a aria-hidden="true" tabindex="-1"></a>comp_y <span class="ot">&lt;-</span> d[d<span class="sc">$</span>site <span class="sc">==</span> <span class="st">"Compton"</span>, ]</span>
+<span id="cb1-12"><a aria-hidden="true" tabindex="-1"></a>jan    <span class="ot">&lt;-</span> d[d<span class="sc">$</span>date <span class="sc">&lt;</span> <span class="fu">as.Date</span>(<span class="st">"2025-02-01"</span>), ]</span>
+<span id="cb1-13"><a aria-hidden="true" tabindex="-1"></a>comp   <span class="ot">&lt;-</span> jan[jan<span class="sc">$</span>site <span class="sc">==</span> <span class="st">"Compton"</span>, ]</span>
+<span id="cb1-14"><a aria-hidden="true" tabindex="-1"></a>xr     <span class="ot">&lt;-</span> <span class="fu">as.Date</span>(<span class="fu">c</span>(<span class="st">"2025-01-01"</span>, <span class="st">"2025-01-31"</span>))</span>
+<span id="cb1-15"><a aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-16"><a aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(d)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; [1] 1119   23</code></pre>
+</div>
+</div>
+</section>
+<section id="layout" class="slide level2">
+<h2><code>layout()</code>: panels that are not the same size</h2>
+<p><code>mfrow</code> gives you equal boxes. When you want one wide panel over two small ones, hand <code>layout()</code> a <strong>matrix of panel numbers</strong>:</p>
+<div class="cell" data-layout-align="center" data-script="A layout matrix">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a aria-hidden="true" tabindex="-1"></a><span class="fu">matrix</span>(<span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>), <span class="at">nrow =</span> <span class="dv">2</span>, <span class="at">byrow =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt;      [,1] [,2]
+#&gt; [1,]    1    1
+#&gt; [2,]    2    3</code></pre>
+</div>
+</div>
+<p>The number is the <strong>order the panel is filled</strong>. Repeat a number and that panel spans those cells; use <code>0</code> to leave a cell empty.</p>
+</section>
+<section id="layout-rules" class="slide level2">
+<h2><code>layout()</code>: the five things to know</h2>
+<ul>
+<li><code>matrix()</code> fills <strong>down the first column</strong> unless you say otherwise. <code>byrow = TRUE</code> says otherwise.</li>
+<li><code>layout()</code> does what <code>mfrow</code> does, except the panels need not be the same size.</li>
+<li><code>heights =</code> and <code>widths =</code> are ratios, not units: <code>heights = c(2, 1)</code> makes the top row twice as tall.</li>
+<li><code>layout.show(n)</code> draws the empty numbered regions so you can check a layout before spending any plots on it.</li>
+<li><code>layout(1)</code> is the reset. <strong><code>par(op)</code> does not undo a <code>layout()</code>.</strong></li>
+</ul>
+</section>
+<section id="layout-show" class="slide level2">
+<h2><code>layout.show()</code>: checking a layout</h2>
+<div class="cell" data-layout-align="center" data-script="What that matrix makes">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a aria-hidden="true" tabindex="-1"></a><span class="fu">layout</span>(<span class="fu">matrix</span>(<span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>), <span class="at">nrow =</span> <span class="dv">2</span>, <span class="at">byrow =</span> <span class="cn">TRUE</span>), <span class="at">heights =</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">1</span>))</span>
+<span id="cb5-2"><a aria-hidden="true" tabindex="-1"></a><span class="fu">layout.show</span>(<span class="dv">3</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a aria-hidden="true" tabindex="-1"></a><span class="fu">layout</span>(<span class="dv">1</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<img data-src="04b-basic-plots-ii_files/figure-revealjs/layout-show-1.png" class="quarto-figure quarto-figure-center r-stretch" alt="Three empty numbered regions: one wide panel across the top labelled 1, and two equal panels beneath labelled 2 and 3, the top row twice as tall as the bottom." width="1200"></section>
+<section id="layout-real" class="slide level2">
+<h2>A layout in use</h2>
+<div class="cell" data-layout-align="center" data-script="A layout in use">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a aria-hidden="true" tabindex="-1"></a>op <span class="ot">&lt;-</span> <span class="fu">par</span>(<span class="at">mar =</span> <span class="fu">c</span>(<span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">2</span>, <span class="dv">1</span>))</span>
+<span id="cb7-2"><a aria-hidden="true" tabindex="-1"></a><span class="fu">layout</span>(<span class="fu">matrix</span>(<span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>), <span class="at">nrow =</span> <span class="dv">2</span>, <span class="at">byrow =</span> <span class="cn">TRUE</span>), <span class="at">heights =</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">1</span>))</span>
+<span id="cb7-3"><a aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-4"><a aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(comp<span class="sc">$</span>date, comp<span class="sc">$</span>pm25, <span class="at">type =</span> <span class="st">"o"</span>, <span class="at">xlim =</span> xr,</span>
+<span id="cb7-5"><a aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">""</span>, <span class="at">ylab =</span> <span class="st">"PM2.5 (ug/m3)"</span>, <span class="at">main =</span> <span class="st">"Compton, January 2025"</span>)</span>
+<span id="cb7-6"><a aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(d<span class="sc">$</span>pm25[d<span class="sc">$</span>site <span class="sc">==</span> <span class="st">"Compton"</span>], <span class="at">breaks =</span> <span class="fu">seq</span>(<span class="sc">-</span><span class="dv">5</span>, <span class="dv">60</span>, <span class="at">by =</span> <span class="dv">5</span>),</span>
+<span id="cb7-7"><a aria-hidden="true" tabindex="-1"></a>     <span class="at">main =</span> <span class="st">"Compton, all year"</span>, <span class="at">xlab =</span> <span class="st">""</span>)</span>
+<span id="cb7-8"><a aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(d<span class="sc">$</span>pm25[d<span class="sc">$</span>site <span class="sc">==</span> <span class="st">"Lancaster - Fairgrounds"</span>], <span class="at">breaks =</span> <span class="fu">seq</span>(<span class="sc">-</span><span class="dv">5</span>, <span class="dv">60</span>, <span class="at">by =</span> <span class="dv">5</span>),</span>
+<span id="cb7-9"><a aria-hidden="true" tabindex="-1"></a>     <span class="at">main =</span> <span class="st">"Lancaster, all year"</span>, <span class="at">xlab =</span> <span class="st">""</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a aria-hidden="true" tabindex="-1"></a><span class="fu">layout</span>(<span class="dv">1</span>)</span>
+<span id="cb8-2"><a aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(op)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<img data-src="04b-basic-plots-ii_files/figure-revealjs/layout-real-1.png" class="quarto-figure quarto-figure-center r-stretch" alt="One wide panel across the top showing Compton's January as a line with circles at each day, over two smaller panels holding histograms of Compton's and Lancaster's full-year readings on identical bins. Compton's tail runs past 55; Lancaster's mass sits three bars to the left." width="1200"><p>Two settings were changed, so two get put back — <code>layout(1)</code> first, then <code>par(op)</code>. The two histograms share <code>breaks = seq(-5, 60, by = 5)</code>, which spans both stations and keeps them comparable.</p>
+</section>
+<section id="rect" class="slide level2">
+<h2>Shaded areas: <code>rect()</code></h2>
+<div class="cell" data-layout-align="center" data-script="Shaded areas: rect()">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(comp_y<span class="sc">$</span>date, comp_y<span class="sc">$</span>pm25, <span class="at">type =</span> <span class="st">"l"</span>, <span class="at">col =</span> <span class="st">"grey30"</span>,</span>
+<span id="cb9-2"><a aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">""</span>, <span class="at">ylab =</span> <span class="st">"PM2.5 (ug/m3)"</span>)</span>
+<span id="cb9-3"><a aria-hidden="true" tabindex="-1"></a><span class="fu">rect</span>(<span class="at">xleft =</span> <span class="fu">as.Date</span>(<span class="st">"2025-01-01"</span>), <span class="at">xright =</span> <span class="fu">as.Date</span>(<span class="st">"2025-01-21"</span>),</span>
+<span id="cb9-4"><a aria-hidden="true" tabindex="-1"></a>     <span class="at">ybottom =</span> <span class="sc">-</span><span class="dv">5</span>, <span class="at">ytop =</span> <span class="dv">80</span>,</span>
+<span id="cb9-5"><a aria-hidden="true" tabindex="-1"></a>     <span class="at">col =</span> <span class="fu">adjustcolor</span>(<span class="st">"#b31b1b"</span>, <span class="at">alpha.f =</span> <span class="fl">0.15</span>), <span class="at">border =</span> <span class="cn">NA</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+
+</div>
+<img data-src="04b-basic-plots-ii_files/figure-revealjs/gf-rect-1.png" class="quarto-figure quarto-figure-center r-stretch" alt="Compton's 2025 series as a line with a translucent grey band covering the first three weeks of January." width="1200"><p><code>rect()</code> takes the four edges, and <code>adjustcolor(col, alpha.f = )</code> makes any colour translucent so the data still shows through. All four edge arguments are vectorised, so one call can shade many windows.</p>
+</section>
+<section id="polygon" class="slide level2">
+<h2>Confidence bands: <code>polygon()</code></h2>
+<div class="cell" data-layout-align="center" data-script="Confidence bands: polygon()">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">2</span>)</span>
+<span id="cb10-2"><a aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">runif</span>(<span class="dv">200</span>, <span class="dv">0</span>, <span class="dv">10</span>)</span>
+<span id="cb10-3"><a aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> <span class="dv">20</span> <span class="sc">+</span> <span class="dv">3</span><span class="sc">*</span>x <span class="sc">-</span> <span class="fl">1.5</span><span class="sc">*</span>x<span class="sc">^</span><span class="dv">2</span> <span class="sc">+</span> <span class="fl">0.11</span><span class="sc">*</span>x<span class="sc">^</span><span class="dv">3</span> <span class="sc">+</span> <span class="dv">5</span><span class="sc">*</span><span class="fu">rnorm</span>(<span class="dv">200</span>)</span>
+<span id="cb10-4"><a aria-hidden="true" tabindex="-1"></a>fit  <span class="ot">&lt;-</span> <span class="fu">lm</span>(y <span class="sc">~</span> x <span class="sc">+</span> <span class="fu">I</span>(x<span class="sc">^</span><span class="dv">2</span>) <span class="sc">+</span> <span class="fu">I</span>(x<span class="sc">^</span><span class="dv">3</span>))</span>
+<span id="cb10-5"><a aria-hidden="true" tabindex="-1"></a>X    <span class="ot">&lt;-</span> <span class="fu">cbind</span>(<span class="dv">1</span>, x, x<span class="sc">^</span><span class="dv">2</span>, x<span class="sc">^</span><span class="dv">3</span>)</span>
+<span id="cb10-6"><a aria-hidden="true" tabindex="-1"></a>se   <span class="ot">&lt;-</span> <span class="fu">sqrt</span>(<span class="fu">diag</span>(X <span class="sc">%*%</span> <span class="fu">vcov</span>(fit) <span class="sc">%*%</span> <span class="fu">t</span>(X)))</span>
+<span id="cb10-7"><a aria-hidden="true" tabindex="-1"></a>i    <span class="ot">&lt;-</span> <span class="fu">order</span>(x)</span>
+<span id="cb10-8"><a aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-9"><a aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(x, y, <span class="at">pch =</span> <span class="dv">21</span>, <span class="at">col =</span> <span class="st">"grey40"</span>, <span class="at">bg =</span> <span class="st">"grey85"</span>, <span class="at">xlab =</span> <span class="st">"x"</span>, <span class="at">ylab =</span> <span class="st">"y"</span>)</span>
+<span id="cb10-10"><a aria-hidden="true" tabindex="-1"></a><span class="fu">polygon</span>(<span class="fu">c</span>(x[i], <span class="fu">rev</span>(x[i])),</span>
+<span id="cb10-11"><a aria-hidden="true" tabindex="-1"></a>        <span class="fu">c</span>(<span class="fu">fitted</span>(fit)[i] <span class="sc">+</span> <span class="fl">1.96</span><span class="sc">*</span>se[i], <span class="fu">rev</span>(<span class="fu">fitted</span>(fit)[i] <span class="sc">-</span> <span class="fl">1.96</span><span class="sc">*</span>se[i])),</span>
+<span id="cb10-12"><a aria-hidden="true" tabindex="-1"></a>        <span class="at">col =</span> <span class="fu">adjustcolor</span>(<span class="st">"#b31b1b"</span>, <span class="at">alpha.f =</span> <span class="fl">0.25</span>), <span class="at">border =</span> <span class="cn">NA</span>)</span>
+<span id="cb10-13"><a aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(x[i], <span class="fu">fitted</span>(fit)[i], <span class="at">col =</span> <span class="st">"#b31b1b"</span>, <span class="at">lwd =</span> <span class="dv">2</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+
+</div>
+<img data-src="04b-basic-plots-ii_files/figure-revealjs/gf-polygon-1.png" class="quarto-figure quarto-figure-center r-stretch" alt="A scatter of simulated points with a red fitted cubic curve through them and a translucent red band around the curve widening at both ends." width="1200"><p><code>polygon()</code> takes one closed ring of coordinates. The idiom is <em>x forwards then x backwards</em>, <em>upper forwards then lower backwards</em> — that traces the band’s outline in one loop. Every confidence band, event-study plot and dose-response figure you will ever draw is this shape.</p>
+</section>
+<section id="colours" class="slide level2">
+<h2>Colour scales</h2>
+<div class="cell" data-layout-align="center" data-script="Colour scales">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(RColorBrewer)</span>
+<span id="cb11-2"><a aria-hidden="true" tabindex="-1"></a>cols <span class="ot">&lt;-</span> <span class="fu">colorRampPalette</span>(<span class="fu">brewer.pal</span>(<span class="dv">11</span>, <span class="st">"Spectral"</span>))(<span class="dv">100</span>)</span>
+<span id="cb11-3"><a aria-hidden="true" tabindex="-1"></a>v    <span class="ot">&lt;-</span> <span class="fu">runif</span>(<span class="dv">200</span>, <span class="dv">0</span>, <span class="dv">100</span>)</span>
+<span id="cb11-4"><a aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(v, <span class="fu">seq_along</span>(v), <span class="at">pch =</span> <span class="dv">16</span>, <span class="at">col =</span> cols[<span class="fu">findInterval</span>(v, <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">100</span>, <span class="at">length.out =</span> <span class="dv">100</span>))],</span>
+<span id="cb11-5"><a aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">"value"</span>, <span class="at">ylab =</span> <span class="st">""</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+
+</div>
+<img data-src="04b-basic-plots-ii_files/figure-revealjs/gf-colors-1.png" class="quarto-figure quarto-figure-center r-stretch" alt="A strip of 200 points coloured along a red-to-blue spectral ramp from left to right." width="1200"><p><code>brewer.pal(n, name)</code> gives a designed palette (<code>display.brewer.all()</code> shows them all), <code>colorRampPalette()</code> interpolates it to any length, and <code>findInterval()</code> turns a numeric column into positions in that palette. Those three lines are how every choropleth and heat map gets its colours.</p>
+</section>
+<section id="axes" class="slide level2">
+<h2>Custom axes</h2>
+<div class="cell" data-layout-align="center" data-script="Custom axes">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a aria-hidden="true" tabindex="-1"></a>op <span class="ot">&lt;-</span> <span class="fu">par</span>(<span class="at">mar =</span> <span class="fu">c</span>(<span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">1</span>, <span class="dv">1</span>))</span>
+<span id="cb12-2"><a aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(comp_y<span class="sc">$</span>date, comp_y<span class="sc">$</span>pm25, <span class="at">type =</span> <span class="st">"l"</span>, <span class="at">col =</span> <span class="st">"grey30"</span>,</span>
+<span id="cb12-3"><a aria-hidden="true" tabindex="-1"></a>     <span class="at">axes =</span> <span class="cn">FALSE</span>, <span class="at">xlab =</span> <span class="st">""</span>, <span class="at">ylab =</span> <span class="st">""</span>)</span>
+<span id="cb12-4"><a aria-hidden="true" tabindex="-1"></a>firsts <span class="ot">&lt;-</span> <span class="fu">as.Date</span>(<span class="fu">paste0</span>(<span class="st">"2025-"</span>, <span class="fu">sprintf</span>(<span class="st">"%02d"</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">12</span>), <span class="st">"-01"</span>))</span>
+<span id="cb12-5"><a aria-hidden="true" tabindex="-1"></a><span class="fu">axis</span>(<span class="dv">1</span>, <span class="at">at =</span> firsts, <span class="at">labels =</span> month.abb)</span>
+<span id="cb12-6"><a aria-hidden="true" tabindex="-1"></a><span class="fu">axis</span>(<span class="dv">1</span>, <span class="at">at =</span> firsts <span class="sc">+</span> <span class="dv">15</span>, <span class="at">tck =</span> <span class="sc">-</span><span class="fl">0.01</span>, <span class="at">lwd =</span> <span class="dv">0</span>, <span class="at">lwd.tick =</span> <span class="dv">1</span>, <span class="at">labels =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb12-7"><a aria-hidden="true" tabindex="-1"></a><span class="fu">axis</span>(<span class="dv">2</span>, <span class="at">las =</span> <span class="dv">2</span>)</span>
+<span id="cb12-8"><a aria-hidden="true" tabindex="-1"></a><span class="fu">box</span>()</span>
+<span id="cb12-9"><a aria-hidden="true" tabindex="-1"></a><span class="fu">mtext</span>(<span class="st">"PM2.5 (ug/m3)"</span>, <span class="at">side =</span> <span class="dv">2</span>, <span class="at">line =</span> <span class="fl">2.5</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(op)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<img data-src="04b-basic-plots-ii_files/figure-revealjs/gf-axes-1.png" class="quarto-figure quarto-figure-center r-stretch" alt="Compton's 2025 series with no default axes: month abbreviations along the bottom, minor ticks between them, horizontal y numbers, a box around the plot, and a margin label reading PM2.5." width="1200"><p><code>axes = FALSE</code> suppresses both axes so you can draw your own. A second <code>axis()</code> call on the same side with <code>labels = FALSE</code> and a small <code>tck</code> gives minor ticks. <code>box()</code> puts the frame back.</p>
+</section>
+<section id="variants" class="slide level2">
+<h2>Fills, shapes, and options</h2>
+<div class="cell" data-layout-align="center" data-script="Fills, shapes and options">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a aria-hidden="true" tabindex="-1"></a>op <span class="ot">&lt;-</span> <span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">2</span>), <span class="at">mar =</span> <span class="fu">c</span>(<span class="dv">3</span>, <span class="dv">3</span>, <span class="dv">2</span>, <span class="dv">1</span>))</span>
+<span id="cb14-2"><a aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(d<span class="sc">$</span>pm25, <span class="at">breaks =</span> <span class="dv">30</span>, <span class="at">col =</span> <span class="st">"#b31b1b"</span>, <span class="at">density =</span> <span class="dv">25</span>, <span class="at">angle =</span> <span class="dv">45</span>,</span>
+<span id="cb14-3"><a aria-hidden="true" tabindex="-1"></a>     <span class="at">border =</span> <span class="st">"#b31b1b"</span>, <span class="at">main =</span> <span class="st">"density = / angle ="</span>, <span class="at">xlab =</span> <span class="st">""</span>)</span>
+<span id="cb14-4"><a aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-5"><a aria-hidden="true" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">table</span>(<span class="fu">format</span>(d<span class="sc">$</span>date, <span class="st">"%m"</span>), d<span class="sc">$</span>site)[<span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>, ]</span>
+<span id="cb14-6"><a aria-hidden="true" tabindex="-1"></a><span class="fu">barplot</span>(m, <span class="at">col =</span> <span class="fu">grey.colors</span>(<span class="dv">4</span>), <span class="at">main =</span> <span class="st">"stacked"</span>, <span class="at">las =</span> <span class="dv">2</span>, <span class="at">cex.names =</span> <span class="fl">0.5</span>)</span>
+<span id="cb14-7"><a aria-hidden="true" tabindex="-1"></a><span class="fu">barplot</span>(m, <span class="at">col =</span> <span class="fu">grey.colors</span>(<span class="dv">4</span>), <span class="at">beside =</span> <span class="cn">TRUE</span>, <span class="at">space =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">2</span>),</span>
+<span id="cb14-8"><a aria-hidden="true" tabindex="-1"></a>        <span class="at">main =</span> <span class="st">"beside = TRUE"</span>, <span class="at">las =</span> <span class="dv">2</span>, <span class="at">cex.names =</span> <span class="fl">0.5</span>)</span>
+<span id="cb14-9"><a aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-10"><a aria-hidden="true" tabindex="-1"></a><span class="fu">boxplot</span>(pm25 <span class="sc">~</span> site, <span class="at">data =</span> d, <span class="at">notch =</span> <span class="cn">TRUE</span>, <span class="at">boxwex =</span> <span class="fl">0.5</span>,</span>
+<span id="cb14-11"><a aria-hidden="true" tabindex="-1"></a>        <span class="at">main =</span> <span class="st">"notch = / boxwex ="</span>, <span class="at">xlab =</span> <span class="st">""</span>, <span class="at">ylab =</span> <span class="st">""</span>, <span class="at">names =</span> <span class="fu">rep</span>(<span class="st">""</span>, <span class="dv">4</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(op)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<img data-src="04b-basic-plots-ii_files/figure-revealjs/gf-variants-1.png" class="quarto-figure quarto-figure-center r-stretch" alt="Four panels: a hatched histogram, a stacked bar chart, a side-by-side bar chart, and notched box plots." width="1200"><p>A matrix handed to <code>barplot()</code> stacks by default and sits side by side with <code>beside = TRUE</code>. <code>notch = TRUE</code> cuts a wedge around the median whose width is a rough confidence interval: non-overlapping notches are a hint the medians differ. <code>hist()</code> also <strong>returns</strong> what it drew — <code>h &lt;- hist(x, plot = FALSE)</code> gives you <code>h$breaks</code> and <code>h$counts</code> as ordinary vectors.</p>
+</section>
+<section id="image" class="slide level2">
+<h2>Heat maps: <code>image()</code></h2>
+<div class="cell" data-layout-align="center" data-script="Heat maps with image()">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a aria-hidden="true" tabindex="-1"></a>mm <span class="ot">&lt;-</span> <span class="fu">tapply</span>(d<span class="sc">$</span>pm25, <span class="fu">list</span>(d<span class="sc">$</span>site, <span class="fu">format</span>(d<span class="sc">$</span>date, <span class="st">"%m"</span>)), mean)</span>
+<span id="cb16-2"><a aria-hidden="true" tabindex="-1"></a>op <span class="ot">&lt;-</span> <span class="fu">par</span>(<span class="at">mar =</span> <span class="fu">c</span>(<span class="dv">3</span>, <span class="dv">12</span>, <span class="dv">2</span>, <span class="dv">1</span>))</span>
+<span id="cb16-3"><a aria-hidden="true" tabindex="-1"></a><span class="fu">image</span>(<span class="fu">t</span>(mm), <span class="at">col =</span> <span class="fu">colorRampPalette</span>(<span class="fu">c</span>(<span class="st">"white"</span>, <span class="st">"#b31b1b"</span>))(<span class="dv">20</span>), <span class="at">axes =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb16-4"><a aria-hidden="true" tabindex="-1"></a><span class="fu">axis</span>(<span class="dv">1</span>, <span class="at">at =</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="at">length.out =</span> <span class="dv">12</span>), <span class="at">labels =</span> month.abb, <span class="at">tick =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb16-5"><a aria-hidden="true" tabindex="-1"></a><span class="fu">mtext</span>(<span class="fu">rownames</span>(mm), <span class="at">side =</span> <span class="dv">2</span>, <span class="at">at =</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="at">length.out =</span> <span class="dv">4</span>), <span class="at">las =</span> <span class="dv">2</span>,</span>
+<span id="cb16-6"><a aria-hidden="true" tabindex="-1"></a>      <span class="at">cex =</span> <span class="fl">0.7</span>, <span class="at">line =</span> <span class="fl">0.5</span>)</span>
+<span id="cb16-7"><a aria-hidden="true" tabindex="-1"></a><span class="fu">box</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(op)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<img data-src="04b-basic-plots-ii_files/figure-revealjs/gf-image-1.png" class="quarto-figure quarto-figure-center r-stretch" alt="A four-row heat map, one row per station and one column per month, with Lancaster's row consistently pale and the basin rows darker in January and December." width="1200"><p><code>image()</code> draws a matrix as a grid of coloured cells. Note the <code>t()</code>: <code>image()</code> puts the <strong>first</strong> matrix dimension on the x axis, so a rows-are-sites matrix has to be transposed to get sites down the side.</p>
+</section>
+<section id="maps" class="slide level2">
+<h2>Maps</h2>
+<div class="cell" data-layout-align="center" data-script="Maps">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(maps)</span>
+<span id="cb18-2"><a aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(mapproj)</span>
+<span id="cb18-3"><a aria-hidden="true" tabindex="-1"></a>op <span class="ot">&lt;-</span> <span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>), <span class="at">mar =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">2</span>, <span class="dv">0</span>))</span>
+<span id="cb18-4"><a aria-hidden="true" tabindex="-1"></a><span class="fu">map</span>(<span class="st">"state"</span>); <span class="fu">title</span>(<span class="st">"map(</span><span class="sc">\"</span><span class="st">state</span><span class="sc">\"</span><span class="st">)"</span>)</span>
+<span id="cb18-5"><a aria-hidden="true" tabindex="-1"></a><span class="fu">map</span>(<span class="st">"world"</span>, <span class="at">proj =</span> <span class="st">"orthographic"</span>, <span class="at">orientation =</span> <span class="fu">c</span>(<span class="dv">15</span>, <span class="dv">260</span>, <span class="dv">0</span>))</span>
+<span id="cb18-6"><a aria-hidden="true" tabindex="-1"></a><span class="fu">map</span>(<span class="st">"state"</span>, <span class="at">proj =</span> <span class="st">"orthographic"</span>, <span class="at">orientation =</span> <span class="fu">c</span>(<span class="dv">15</span>, <span class="dv">260</span>, <span class="dv">0</span>), <span class="at">add =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb18-7"><a aria-hidden="true" tabindex="-1"></a><span class="fu">title</span>(<span class="st">"orthographic"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(op)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<img data-src="04b-basic-plots-ii_files/figure-revealjs/gf-maps-1.png" class="quarto-figure quarto-figure-center r-stretch" alt="Two panels: an outline map of the lower 48 US states, and an orthographic globe centred on North America with state outlines drawn on it." width="1200"><p><code>maps</code> ships outlines for <code>"world"</code>, <code>"usa"</code>, <code>"state"</code> and <code>"county"</code>. <code>fill = TRUE</code> with a vector of colours in the same order as the map’s own region names gives you a choropleth; <code>add = TRUE</code> layers one map onto another, exactly like <code>lines()</code> onto a plot.</p>
+<p>The orthographic call warns <code>projection failed for some data</code>. That is the projection saying it cannot draw the half of the globe facing away from you, which is the correct answer. Nothing is broken.</p>
+</section>
+<section id="animation" class="slide level2">
+<h2>Animation</h2>
+<div class="cell" data-layout-align="center" data-script="Animation">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a aria-hidden="true" tabindex="-1"></a><span class="co"># A GIF is just a folder of PNGs shown in order. Write the frames, then</span></span>
+<span id="cb20-2"><a aria-hidden="true" tabindex="-1"></a><span class="co"># stitch them. Needs the magick package, or ImageMagick on the command line.</span></span>
+<span id="cb20-3"><a aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-4"><a aria-hidden="true" tabindex="-1"></a><span class="co"># invisible(lapply(200:300, function(angle) {</span></span>
+<span id="cb20-5"><a aria-hidden="true" tabindex="-1"></a><span class="co">#   png(sprintf("frame_%04d.png", angle), width = 600, height = 600)</span></span>
+<span id="cb20-6"><a aria-hidden="true" tabindex="-1"></a><span class="co">#   par(mar = c(0, 0, 0, 0))</span></span>
+<span id="cb20-7"><a aria-hidden="true" tabindex="-1"></a><span class="co">#   map("world", proj = "orthographic", orientation = c(15, angle, 0))</span></span>
+<span id="cb20-8"><a aria-hidden="true" tabindex="-1"></a><span class="co">#   dev.off()</span></span>
+<span id="cb20-9"><a aria-hidden="true" tabindex="-1"></a><span class="co"># }))</span></span>
+<span id="cb20-10"><a aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-11"><a aria-hidden="true" tabindex="-1"></a><span class="co"># magick::image_write(magick::image_animate(</span></span>
+<span id="cb20-12"><a aria-hidden="true" tabindex="-1"></a><span class="co">#   magick::image_read(list.files(pattern = "^frame_.*png$")), fps = 10),</span></span>
+<span id="cb20-13"><a aria-hidden="true" tabindex="-1"></a><span class="co">#   "globe.gif")</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Everything in that loop is <code>png()</code> and <code>dev.off()</code> from the session, plus a counter. Any figure you can draw once you can animate.</p>
+</section>
+<section id="practice" class="slide level2">
+<h2>Practice</h2>
+<p>Fourteen exercises with solutions, on this page and in the live script.</p>
+</section>
+<section id="quick-reference" class="slide level2">
+<h2>Quick reference</h2>
+<p>On the page: every command on this page in one table.</p>
+
+
+</section>
+    </div>
+  <div class="quarto-auto-generated-content" style="display: none;">
+<div class="footer footer-default">
+<p>AEM 6850 · Basic plots II</p>
+</div>
+</div></div>
+
+  <script>window.backupDefine = window.define; window.define = undefined;</script>
+  <script src="../../site_libs/revealjs/dist/reveal.js"></script>
+  <!-- reveal.js plugins -->
+  <script src="../../site_libs/revealjs/plugin/quarto-line-highlight/line-highlight.js"></script>
+  <script src="../../site_libs/revealjs/plugin/pdf-export/pdfexport.js"></script>
+  <script src="../../site_libs/revealjs/plugin/reveal-menu/menu.js"></script>
+  <script src="../../site_libs/revealjs/plugin/reveal-menu/quarto-menu.js"></script>
+  <script src="../../site_libs/revealjs/plugin/quarto-support/support.js"></script>
+  
+
+  <script src="../../site_libs/revealjs/plugin/notes/notes.js"></script>
+  <script src="../../site_libs/revealjs/plugin/search/search.js"></script>
+  <script src="../../site_libs/revealjs/plugin/zoom/zoom.js"></script>
+  <script src="../../site_libs/revealjs/plugin/math/math.js"></script>
+  <script>window.define = window.backupDefine; window.backupDefine = undefined;</script>
+
+  <script>
+
+      // Full list of configuration options available at:
+      // https://revealjs.com/config/
+      Reveal.initialize({
+'controlsAuto': true,
+'previewLinksAuto': false,
+'pdfSeparateFragments': false,
+'autoAnimateEasing': "ease",
+'autoAnimateDuration': 1,
+'autoAnimateUnmatched': true,
+'jumpToSlide': true,
+'menu': {"side":"left","useTextContentForMissingTitles":true,"markers":false,"loadIcons":false,"custom":[{"title":"Tools","icon":"<i class=\"fas fa-gear\"></i>","content":"<ul class=\"slide-menu-items\">\n<li class=\"slide-tool-item active\" data-item=\"0\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.fullscreen(event)\"><kbd>f</kbd> Fullscreen</a></li>\n<li class=\"slide-tool-item\" data-item=\"1\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.speakerMode(event)\"><kbd>s</kbd> Speaker View</a></li>\n<li class=\"slide-tool-item\" data-item=\"2\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.overview(event)\"><kbd>o</kbd> Slide Overview</a></li>\n<li class=\"slide-tool-item\" data-item=\"3\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.togglePdfExport(event)\"><kbd>e</kbd> PDF Export Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"4\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.toggleScrollView(event)\"><kbd>r</kbd> Scroll View Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"5\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.keyboardHelp(event)\"><kbd>?</kbd> Keyboard Help</a></li>\n</ul>"}],"openButton":true},
+'smaller': false,
+ 
+        // Display controls in the bottom right corner
+        controls: false,
+
+        // Help the user learn the controls by providing hints, for example by
+        // bouncing the down arrow when they first encounter a vertical slide
+        controlsTutorial: false,
+
+        // Determines where controls appear, "edges" or "bottom-right"
+        controlsLayout: 'edges',
+
+        // Visibility rule for backwards navigation arrows; "faded", "hidden"
+        // or "visible"
+        controlsBackArrows: 'faded',
+
+        // Display a presentation progress bar
+        progress: true,
+
+        // Display the page number of the current slide
+        slideNumber: 'c/t',
+
+        // 'all', 'print', or 'speaker'
+        showSlideNumber: 'all',
+
+        // Add the current slide number to the URL hash so that reloading the
+        // page/copying the URL will return you to the same slide
+        hash: true,
+
+        // Start with 1 for the hash rather than 0
+        hashOneBasedIndex: false,
+
+        // Flags if we should monitor the hash and change slides accordingly
+        respondToHashChanges: true,
+
+        // Push each slide change to the browser history
+        history: false,
+
+        // Enable keyboard shortcuts for navigation
+        keyboard: true,
+
+        // Enable the slide overview mode
+        overview: true,
+
+        // Disables the default reveal.js slide layout (scaling and centering)
+        // so that you can use custom CSS layout
+        disableLayout: false,
+
+        // Vertical centering of slides
+        center: false,
+
+        // Enables touch navigation on devices with touch input
+        touch: true,
+
+        // Loop the presentation
+        loop: false,
+
+        // Change the presentation direction to be RTL
+        rtl: false,
+
+        // see https://revealjs.com/vertical-slides/#navigation-mode
+        navigationMode: 'linear',
+
+        // Randomizes the order of slides each time the presentation loads
+        shuffle: false,
+
+        // Turns fragments on and off globally
+        fragments: true,
+
+        // Flags whether to include the current fragment in the URL,
+        // so that reloading brings you to the same fragment position
+        fragmentInURL: false,
+
+        // Flags if the presentation is running in an embedded mode,
+        // i.e. contained within a limited portion of the screen
+        embedded: false,
+
+        // Flags if we should show a help overlay when the questionmark
+        // key is pressed
+        help: true,
+
+        // Flags if it should be possible to pause the presentation (blackout)
+        pause: true,
+
+        // Flags if speaker notes should be visible to all viewers
+        showNotes: false,
+
+        // Global override for autoplaying embedded media (null/true/false)
+        autoPlayMedia: null,
+
+        // Global override for preloading lazy-loaded iframes (null/true/false)
+        preloadIframes: null,
+
+        // Number of milliseconds between automatically proceeding to the
+        // next slide, disabled when set to 0, this value can be overwritten
+        // by using a data-autoslide attribute on your slides
+        autoSlide: 0,
+
+        // Stop auto-sliding after user input
+        autoSlideStoppable: true,
+
+        // Use this method for navigation when auto-sliding
+        autoSlideMethod: null,
+
+        // Specify the average time in seconds that you think you will spend
+        // presenting each slide. This is used to show a pacing timer in the
+        // speaker view
+        defaultTiming: null,
+
+        // Enable slide navigation via mouse wheel
+        mouseWheel: false,
+
+        // The display mode that will be used to show slides
+        display: 'block',
+
+        // Hide cursor if inactive
+        hideInactiveCursor: true,
+
+        // Time before the cursor is hidden (in ms)
+        hideCursorTime: 5000,
+
+        // Opens links in an iframe preview overlay
+        previewLinks: false,
+
+        // Transition style (none/fade/slide/convex/concave/zoom)
+        transition: 'none',
+
+        // Transition speed (default/fast/slow)
+        transitionSpeed: 'default',
+
+        // Transition style for full page slide backgrounds
+        // (none/fade/slide/convex/concave/zoom)
+        backgroundTransition: 'none',
+
+        // Number of slides away from the current that are visible
+        viewDistance: 3,
+
+        // Number of slides away from the current that are visible on mobile
+        // devices. It is advisable to set this to a lower number than
+        // viewDistance in order to save resources.
+        mobileViewDistance: 2,
+
+        // The "normal" size of the presentation, aspect ratio will be preserved
+        // when the presentation is scaled to fit different resolutions. Can be
+        // specified using percentage units.
+        width: 1050,
+
+        height: 700,
+
+        // Factor of the display size that should remain empty around the content
+        margin: 0.1,
+
+        math: {
+          mathjax: 'https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js',
+          config: 'TeX-AMS_HTML-full',
+          tex2jax: {
+            inlineMath: [['\\(','\\)']],
+            displayMath: [['\\[','\\]']],
+            balanceBraces: true,
+            processEscapes: false,
+            processRefs: true,
+            processEnvironments: true,
+            preview: 'TeX',
+            skipTags: ['script','noscript','style','textarea','pre','code'],
+            ignoreClass: 'tex2jax_ignore',
+            processClass: 'tex2jax_process'
+          },
+        },
+
+        // reveal.js plugins
+        plugins: [QuartoLineHighlight, PdfExport, RevealMenu, QuartoSupport,
+
+          RevealMath,
+          RevealNotes,
+          RevealSearch,
+          RevealZoom
+        ]
+      });
+    </script>
+    
+    <script>
+      // htmlwidgets need to know to resize themselves when slides are shown/hidden.
+      // Fire the "slideenter" event (handled by htmlwidgets.js) when the current
+      // slide changes (different for each slide format).
+      (function () {
+        // dispatch for htmlwidgets
+        function fireSlideEnter() {
+          const event = window.document.createEvent("Event");
+          event.initEvent("slideenter", true, true);
+          window.document.dispatchEvent(event);
+        }
+
+        function fireSlideChanged(previousSlide, currentSlide) {
+          fireSlideEnter();
+
+          // dispatch for shiny
+          if (window.jQuery) {
+            if (previousSlide) {
+              window.jQuery(previousSlide).trigger("hidden");
+            }
+            if (currentSlide) {
+              window.jQuery(currentSlide).trigger("shown");
+            }
+          }
+        }
+
+        // hookup for slidy
+        if (window.w3c_slidy) {
+          window.w3c_slidy.add_observer(function (slide_num) {
+            // slide_num starts at position 1
+            fireSlideChanged(null, w3c_slidy.slides[slide_num - 1]);
+          });
+        }
+
+      })();
+    </script>
+
+    <script id="quarto-html-after-body" type="application/javascript">
+      window.document.addEventListener("DOMContentLoaded", function (event) {
+        const tabsets =  window.document.querySelectorAll(".panel-tabset-tabby")
+        tabsets.forEach(function(tabset) {
+          const tabby = new Tabby('#' + tabset.id);
+        });
+        const isCodeAnnotation = (el) => {
+          for (const clz of el.classList) {
+            if (clz.startsWith('code-annotation-')) {                     
+              return true;
+            }
+          }
+          return false;
+        }
+        const onCopySuccess = function(e) {
+          // button target
+          const button = e.trigger;
+          // don't keep focus
+          button.blur();
+          // flash "checked"
+          button.classList.add('code-copy-button-checked');
+          var currentTitle = button.getAttribute("title");
+          button.setAttribute("title", "Copied!");
+          let tooltip;
+          if (window.bootstrap) {
+            button.setAttribute("data-bs-toggle", "tooltip");
+            button.setAttribute("data-bs-placement", "left");
+            button.setAttribute("data-bs-title", "Copied!");
+            tooltip = new bootstrap.Tooltip(button, 
+              { trigger: "manual", 
+                customClass: "code-copy-button-tooltip",
+                offset: [0, -8]});
+            tooltip.show();    
+          }
+          setTimeout(function() {
+            if (tooltip) {
+              tooltip.hide();
+              button.removeAttribute("data-bs-title");
+              button.removeAttribute("data-bs-toggle");
+              button.removeAttribute("data-bs-placement");
+            }
+            button.setAttribute("title", currentTitle);
+            button.classList.remove('code-copy-button-checked');
+          }, 1000);
+          // clear code selection
+          e.clearSelection();
+        }
+        const getTextToCopy = function(trigger) {
+          const outerScaffold = trigger.parentElement.cloneNode(true);
+          const codeEl = outerScaffold.querySelector('code');
+          for (const childEl of codeEl.children) {
+            if (isCodeAnnotation(childEl)) {
+              childEl.remove();
+            }
+          }
+          return codeEl.innerText;
+        }
+        const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+          text: getTextToCopy
+        });
+        clipboard.on('success', onCopySuccess);
+        if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+          const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+            text: getTextToCopy,
+            container: window.document.getElementById('quarto-embedded-source-code-modal')
+          });
+          clipboardModal.on('success', onCopySuccess);
+        }
+          var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+          var mailtoRegex = new RegExp(/^mailto:/);
+            var filterRegex = new RegExp("https:\/\/arielortizbobea\.github\.io\/aem6850\/");
+          var isInternal = (href) => {
+              return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+          }
+          // Inspect non-navigation links and adorn them if external
+         var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+          for (var i=0; i<links.length; i++) {
+            const link = links[i];
+            if (!isInternal(link.href)) {
+              // undo the damage that might have been done by quarto-nav.js in the case of
+              // links that we want to consider external
+              if (link.dataset.originalHref !== undefined) {
+                link.href = link.dataset.originalHref;
+              }
+                // target, if specified
+                link.setAttribute("target", "_blank");
+                if (link.getAttribute("rel") === null) {
+                  link.setAttribute("rel", "noopener");
+                }
+            }
+          }
+        function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+          const config = {
+            allowHTML: true,
+            maxWidth: 500,
+            delay: 100,
+            arrow: false,
+            appendTo: function(el) {
+                return el.closest('section.slide') || el.parentElement;
+            },
+            interactive: true,
+            interactiveBorder: 10,
+            theme: 'light-border',
+            placement: 'bottom-start',
+          };
+          if (contentFn) {
+            config.content = contentFn;
+          }
+          if (onTriggerFn) {
+            config.onTrigger = onTriggerFn;
+          }
+          if (onUntriggerFn) {
+            config.onUntrigger = onUntriggerFn;
+          }
+            config['offset'] = [0,0];
+            config['maxWidth'] = 700;
+          window.tippy(el, config); 
+        }
+        const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+        for (var i=0; i<noterefs.length; i++) {
+          const ref = noterefs[i];
+          tippyHover(ref, function() {
+            // use id or data attribute instead here
+            let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+            try { href = new URL(href).hash; } catch {}
+            const id = href.replace(/^#\/?/, "");
+            const note = window.document.getElementById(id);
+            if (note) {
+              return note.innerHTML;
+            } else {
+              return "";
+            }
+          });
+        }
+        const findCites = (el) => {
+          const parentEl = el.parentElement;
+          if (parentEl) {
+            const cites = parentEl.dataset.cites;
+            if (cites) {
+              return {
+                el,
+                cites: cites.split(' ')
+              };
+            } else {
+              return findCites(el.parentElement)
+            }
+          } else {
+            return undefined;
+          }
+        };
+        var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+        for (var i=0; i<bibliorefs.length; i++) {
+          const ref = bibliorefs[i];
+          const citeInfo = findCites(ref);
+          if (citeInfo) {
+            tippyHover(citeInfo.el, function() {
+              var popup = window.document.createElement('div');
+              citeInfo.cites.forEach(function(cite) {
+                var citeDiv = window.document.createElement('div');
+                citeDiv.classList.add('hanging-indent');
+                citeDiv.classList.add('csl-entry');
+                var biblioDiv = window.document.getElementById('ref-' + cite);
+                if (biblioDiv) {
+                  citeDiv.innerHTML = biblioDiv.innerHTML;
+                }
+                popup.appendChild(citeDiv);
+              });
+              return popup.innerHTML;
+            });
+          }
+        }
+      });
+      </script>
+    
+
+</body></html>

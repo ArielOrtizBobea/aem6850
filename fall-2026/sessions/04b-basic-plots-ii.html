@@ -1,0 +1,1495 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.37">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Basic plots II</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-7f8f88aac4f3542376d5c11b86a4c14d.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-9e1fa279bf766a6aa9044cbdb2ba542d.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="../../styles.css">
+</head>
+
+<body class="nav-sidebar docked quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../fall-2026/sessions/01-overview.html">Part I — Foundations</a></li><li class="breadcrumb-item"><a href="../../fall-2026/sessions/04b-basic-plots-ii.html">   Basic plots II</a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="../../">AEM 6850</a> 
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Home</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/syllabus.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Syllabus</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">Part I — Foundations</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/01-overview.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"> 1 Overview</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/02-r-essentials.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"> 2 R essentials I</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/03-r-essentials-ii.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"> 3 R essentials II</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/04-basic-plots.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"> 4 Basic plots I</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/04b-basic-plots-ii.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">   Basic plots II</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/05-wrangling.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"> 5 Wrangling: dplyr</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/06-functions-debugging.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"> 6 How to code</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/07-git.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"> 7 Projects &amp; git</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/08-ai-chat.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"> 8 AI I: chatbots</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/09-ai-code.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"> 9 AI II: the coding loop</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/10-verification.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">10 Verification</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/11-reproducible-project.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">11 Reproducible projects</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/12-ggplot.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">12 Publication graphics</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
+ <span class="menu-text">Part II — Applications</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/13-landscape.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">13 The data landscape</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/14-apis.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">14 Channels I: APIs</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/15-scraping.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">15 Channels II: scraping</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/16-text-regex.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">16 Text I: regex</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/17-text-llms.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">17 Text II: LLMs</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/18-documents.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">18 Documents &amp; scans</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/19-images-photos.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">19 Images: photographs</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/20-satellite-local.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">20 Satellite I: local</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/21-satellite-gee.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">21 Satellite II: Earth Engine</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/22-audio.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">22 Audio</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/23-time.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">23 Time &amp; time zones</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/24-spatial-vector.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">24 Spatial I: vector</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/25-spatial-rasters.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">25 Spatial II: rasters</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/26-spatial-exposures.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">26 Spatial III: exposures</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/27-ai-ethics.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">27 AI ethics</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/28-moving-forward.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">28 Moving forward</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../../fall-2026/resources.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Resources</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/resources.html#stata" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Coming from Stata</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/resources.html#r" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Learning R</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/resources.html#economists" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Coding guides</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/resources.html#unstuck" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Getting unstuck</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul class="collapse">
+  <li><a href="#what-this-is" id="toc-what-this-is" class="nav-link active" data-scroll-target="#what-this-is">What this page is</a></li>
+  <li><a href="#contents" id="toc-contents" class="nav-link" data-scroll-target="#contents">What is here</a></li>
+  <li><a href="#build" id="toc-build" class="nav-link" data-scroll-target="#build">Building the table</a></li>
+  <li><a href="#layout" id="toc-layout" class="nav-link" data-scroll-target="#layout"><code>layout()</code>: panels that are not the same size</a></li>
+  <li><a href="#layout-rules" id="toc-layout-rules" class="nav-link" data-scroll-target="#layout-rules"><code>layout()</code>: the five things to know</a></li>
+  <li><a href="#layout-show" id="toc-layout-show" class="nav-link" data-scroll-target="#layout-show"><code>layout.show()</code>: checking a layout</a></li>
+  <li><a href="#layout-real" id="toc-layout-real" class="nav-link" data-scroll-target="#layout-real">A layout in use</a></li>
+  <li><a href="#rect" id="toc-rect" class="nav-link" data-scroll-target="#rect">Shaded areas: <code>rect()</code></a></li>
+  <li><a href="#polygon" id="toc-polygon" class="nav-link" data-scroll-target="#polygon">Confidence bands: <code>polygon()</code></a></li>
+  <li><a href="#colours" id="toc-colours" class="nav-link" data-scroll-target="#colours">Colour scales</a></li>
+  <li><a href="#axes" id="toc-axes" class="nav-link" data-scroll-target="#axes">Custom axes</a></li>
+  <li><a href="#variants" id="toc-variants" class="nav-link" data-scroll-target="#variants">Fills, shapes, and options</a></li>
+  <li><a href="#image" id="toc-image" class="nav-link" data-scroll-target="#image">Heat maps: <code>image()</code></a></li>
+  <li><a href="#maps" id="toc-maps" class="nav-link" data-scroll-target="#maps">Maps</a></li>
+  <li><a href="#animation" id="toc-animation" class="nav-link" data-scroll-target="#animation">Animation</a></li>
+  <li><a href="#practice" id="toc-practice" class="nav-link" data-scroll-target="#practice">Practice</a></li>
+  <li><a href="#quick-reference" id="toc-quick-reference" class="nav-link" data-scroll-target="#quick-reference">Quick reference</a></li>
+  </ul>
+<div class="quarto-alternate-formats"><h2>Other Formats</h2><ul><li><a href="04b-basic-plots-ii-slides.html"><i class="bi bi-file-slides"></i>RevealJS</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../fall-2026/sessions/01-overview.html">Part I — Foundations</a></li><li class="breadcrumb-item"><a href="../../fall-2026/sessions/04b-basic-plots-ii.html">   Basic plots II</a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title">Basic plots II</h1>
+<p class="subtitle lead">Thursday, September 3, 2026 · not taught in class</p>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p><a href="04b-basic-plots-ii-slides.html">Slides</a> · <a href="04b-basic-plots-ii.R">Live script</a> · <a href="https://github.com/ArielOrtizBobea/aem6850/blob/main/fall-2026/sessions/04b-basic-plots-ii.qmd">Source</a></p>
+<p>The half of base graphics that turns an instrument into a figure: shading, colour scales, hand-built axes, unequal panels, heat maps, maps, animation.</p>
+<section id="what-this-is" class="level2">
+<h2 class="anchored" data-anchor-id="what-this-is">What this page is</h2>
+<blockquote class="blockquote">
+<p><strong>This page is not on the calendar.</strong> It is written, runnable, and about seventy minutes of material — roughly one more class meeting, if one were ever free.</p>
+</blockquote>
+<p>Session 4 stops at the point where a plot is good enough to read. This is the rest of the toolkit. It is here in full because the material does not get easier by being withheld, and because if a meeting ever frees up it should be teachable off this page without anyone rebuilding it first.</p>
+<p>Nothing here is assumed by any later session, and nothing here is assessed. Read it when you need one of the nine things below.</p>
+</section>
+<section id="contents" class="level2">
+<h2 class="anchored" data-anchor-id="contents">What is here</h2>
+<div class="tight-cols">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Section</th>
+<th style="text-align: left;">The commands it turns on</th>
+<th style="text-align: right;">Min</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Unequal panels</td>
+<td style="text-align: left;"><code>layout()</code>, <code>layout.show()</code></td>
+<td style="text-align: right;">9</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Shaded areas</td>
+<td style="text-align: left;"><code>rect()</code>, <code>adjustcolor()</code></td>
+<td style="text-align: right;">6</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Confidence bands</td>
+<td style="text-align: left;"><code>polygon()</code></td>
+<td style="text-align: right;">10</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Colour scales</td>
+<td style="text-align: left;"><code>brewer.pal</code>, <code>colorRampPalette</code>, <code>findInterval</code></td>
+<td style="text-align: right;">10</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Custom axes</td>
+<td style="text-align: left;"><code>axes = FALSE</code>, <code>axis()</code>, <code>box()</code>, <code>mtext()</code></td>
+<td style="text-align: right;">9</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Fills, shapes, options</td>
+<td style="text-align: left;"><code>density=</code>, <code>beside=</code>, <code>notch=</code></td>
+<td style="text-align: right;">6</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Heat maps</td>
+<td style="text-align: left;"><code>image()</code></td>
+<td style="text-align: right;">7</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Maps</td>
+<td style="text-align: left;"><code>map()</code>, projections</td>
+<td style="text-align: right;">8</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Animation</td>
+<td style="text-align: left;">the <code>png()</code>-in-a-loop recipe</td>
+<td style="text-align: right;">5</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>The colour and map sections want <code>RColorBrewer</code> and <code>maps</code>; install them once with <code>install.packages()</code>.</p>
+</section>
+<section id="build" class="level2">
+<h2 class="anchored" data-anchor-id="build">Building the table</h2>
+<p>Everything below runs off one data frame, built here so this page and its script stand on their own.</p>
+<div class="cell" data-layout-align="center" data-script="Build the table">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>pm <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"data/epa_pm25_la_county_2025.csv"</span>,</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>               <span class="at">colClasses =</span> <span class="fu">c</span>(<span class="st">"Site.ID"</span> <span class="ot">=</span> <span class="st">"character"</span>))</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(pm)[<span class="fu">names</span>(pm) <span class="sc">==</span> <span class="st">"Daily.Mean.PM2.5.Concentration"</span>] <span class="ot">&lt;-</span> <span class="st">"pm25"</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(pm)[<span class="fu">names</span>(pm) <span class="sc">==</span> <span class="st">"Local.Site.Name"</span>]                <span class="ot">&lt;-</span> <span class="st">"site"</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>pm<span class="sc">$</span>date <span class="ot">&lt;-</span> <span class="fu">as.Date</span>(pm<span class="sc">$</span>Date, <span class="at">format =</span> <span class="st">"%m/%d/%Y"</span>)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>transect <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Pasadena"</span>, <span class="st">"Compton"</span>,</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>              <span class="st">"Long Beach-Route 710 Near Road"</span>, <span class="st">"Lancaster - Fairgrounds"</span>)</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>d      <span class="ot">&lt;-</span> pm[pm<span class="sc">$</span>site <span class="sc">%in%</span> transect <span class="sc">&amp;</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>             pm<span class="sc">$</span>POC <span class="sc">==</span> <span class="dv">1</span> <span class="sc">&amp;</span> pm<span class="sc">$</span>AQS.Parameter.Code <span class="sc">==</span> <span class="dv">88101</span>, ]</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>comp_y <span class="ot">&lt;-</span> d[d<span class="sc">$</span>site <span class="sc">==</span> <span class="st">"Compton"</span>, ]</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>jan    <span class="ot">&lt;-</span> d[d<span class="sc">$</span>date <span class="sc">&lt;</span> <span class="fu">as.Date</span>(<span class="st">"2025-02-01"</span>), ]</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>comp   <span class="ot">&lt;-</span> jan[jan<span class="sc">$</span>site <span class="sc">==</span> <span class="st">"Compton"</span>, ]</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>xr     <span class="ot">&lt;-</span> <span class="fu">as.Date</span>(<span class="fu">c</span>(<span class="st">"2025-01-01"</span>, <span class="st">"2025-01-31"</span>))</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(d)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; [1] 1119   23</code></pre>
+</div>
+</div>
+</section>
+<section id="layout" class="level2">
+<h2 class="anchored" data-anchor-id="layout"><code>layout()</code>: panels that are not the same size</h2>
+<p><code>mfrow</code> gives you equal boxes. When you want one wide panel over two small ones, hand <code>layout()</code> a <strong>matrix of panel numbers</strong>:</p>
+<div class="cell" data-layout-align="center" data-script="A layout matrix">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">matrix</span>(<span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>), <span class="at">nrow =</span> <span class="dv">2</span>, <span class="at">byrow =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt;      [,1] [,2]
+#&gt; [1,]    1    1
+#&gt; [2,]    2    3</code></pre>
+</div>
+</div>
+<p>The number is the <strong>order the panel is filled</strong>. Repeat a number and that panel spans those cells; use <code>0</code> to leave a cell empty.</p>
+</section>
+<section id="layout-rules" class="level2">
+<h2 class="anchored" data-anchor-id="layout-rules"><code>layout()</code>: the five things to know</h2>
+<ul>
+<li><code>matrix()</code> fills <strong>down the first column</strong> unless you say otherwise. <code>byrow = TRUE</code> says otherwise.</li>
+<li><code>layout()</code> does what <code>mfrow</code> does, except the panels need not be the same size.</li>
+<li><code>heights =</code> and <code>widths =</code> are ratios, not units: <code>heights = c(2, 1)</code> makes the top row twice as tall.</li>
+<li><code>layout.show(n)</code> draws the empty numbered regions so you can check a layout before spending any plots on it.</li>
+<li><code>layout(1)</code> is the reset. <strong><code>par(op)</code> does not undo a <code>layout()</code>.</strong></li>
+</ul>
+</section>
+<section id="layout-show" class="level2">
+<h2 class="anchored" data-anchor-id="layout-show"><code>layout.show()</code>: checking a layout</h2>
+<div class="cell" data-layout-align="center" data-script="What that matrix makes">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">layout</span>(<span class="fu">matrix</span>(<span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>), <span class="at">nrow =</span> <span class="dv">2</span>, <span class="at">byrow =</span> <span class="cn">TRUE</span>), <span class="at">heights =</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">1</span>))</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">layout.show</span>(<span class="dv">3</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="04b-basic-plots-ii_files/figure-html/layout-show-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" alt="Three empty numbered regions: one wide panel across the top labelled 1, and two equal panels beneath labelled 2 and 3, the top row twice as tall as the bottom." width="1200"></p>
+</figure>
+</div>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">layout</span>(<span class="dv">1</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="layout-real" class="level2">
+<h2 class="anchored" data-anchor-id="layout-real">A layout in use</h2>
+<div class="cell" data-layout-align="center" data-script="A layout in use">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>op <span class="ot">&lt;-</span> <span class="fu">par</span>(<span class="at">mar =</span> <span class="fu">c</span>(<span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">2</span>, <span class="dv">1</span>))</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">layout</span>(<span class="fu">matrix</span>(<span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>), <span class="at">nrow =</span> <span class="dv">2</span>, <span class="at">byrow =</span> <span class="cn">TRUE</span>), <span class="at">heights =</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">1</span>))</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(comp<span class="sc">$</span>date, comp<span class="sc">$</span>pm25, <span class="at">type =</span> <span class="st">"o"</span>, <span class="at">xlim =</span> xr,</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">""</span>, <span class="at">ylab =</span> <span class="st">"PM2.5 (ug/m3)"</span>, <span class="at">main =</span> <span class="st">"Compton, January 2025"</span>)</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(d<span class="sc">$</span>pm25[d<span class="sc">$</span>site <span class="sc">==</span> <span class="st">"Compton"</span>], <span class="at">breaks =</span> <span class="fu">seq</span>(<span class="sc">-</span><span class="dv">5</span>, <span class="dv">60</span>, <span class="at">by =</span> <span class="dv">5</span>),</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>     <span class="at">main =</span> <span class="st">"Compton, all year"</span>, <span class="at">xlab =</span> <span class="st">""</span>)</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(d<span class="sc">$</span>pm25[d<span class="sc">$</span>site <span class="sc">==</span> <span class="st">"Lancaster - Fairgrounds"</span>], <span class="at">breaks =</span> <span class="fu">seq</span>(<span class="sc">-</span><span class="dv">5</span>, <span class="dv">60</span>, <span class="at">by =</span> <span class="dv">5</span>),</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>     <span class="at">main =</span> <span class="st">"Lancaster, all year"</span>, <span class="at">xlab =</span> <span class="st">""</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="04b-basic-plots-ii_files/figure-html/layout-real-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" alt="One wide panel across the top showing Compton's January as a line with circles at each day, over two smaller panels holding histograms of Compton's and Lancaster's full-year readings on identical bins. Compton's tail runs past 55; Lancaster's mass sits three bars to the left." width="1200"></p>
+</figure>
+</div>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">layout</span>(<span class="dv">1</span>)</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(op)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Two settings were changed, so two get put back — <code>layout(1)</code> first, then <code>par(op)</code>. The two histograms share <code>breaks = seq(-5, 60, by = 5)</code>, which spans both stations and keeps them comparable.</p>
+</section>
+<section id="rect" class="level2">
+<h2 class="anchored" data-anchor-id="rect">Shaded areas: <code>rect()</code></h2>
+<div class="cell" data-layout-align="center" data-script="Shaded areas: rect()">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(comp_y<span class="sc">$</span>date, comp_y<span class="sc">$</span>pm25, <span class="at">type =</span> <span class="st">"l"</span>, <span class="at">col =</span> <span class="st">"grey30"</span>,</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">""</span>, <span class="at">ylab =</span> <span class="st">"PM2.5 (ug/m3)"</span>)</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="fu">rect</span>(<span class="at">xleft =</span> <span class="fu">as.Date</span>(<span class="st">"2025-01-01"</span>), <span class="at">xright =</span> <span class="fu">as.Date</span>(<span class="st">"2025-01-21"</span>),</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>     <span class="at">ybottom =</span> <span class="sc">-</span><span class="dv">5</span>, <span class="at">ytop =</span> <span class="dv">80</span>,</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>     <span class="at">col =</span> <span class="fu">adjustcolor</span>(<span class="st">"#b31b1b"</span>, <span class="at">alpha.f =</span> <span class="fl">0.15</span>), <span class="at">border =</span> <span class="cn">NA</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="04b-basic-plots-ii_files/figure-html/gf-rect-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" alt="Compton's 2025 series as a line with a translucent grey band covering the first three weeks of January." width="1200"></p>
+</figure>
+</div>
+</div>
+</div>
+<p><code>rect()</code> takes the four edges, and <code>adjustcolor(col, alpha.f = )</code> makes any colour translucent so the data still shows through. All four edge arguments are vectorised, so one call can shade many windows.</p>
+</section>
+<section id="polygon" class="level2">
+<h2 class="anchored" data-anchor-id="polygon">Confidence bands: <code>polygon()</code></h2>
+<div class="cell" data-layout-align="center" data-script="Confidence bands: polygon()">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">2</span>)</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">runif</span>(<span class="dv">200</span>, <span class="dv">0</span>, <span class="dv">10</span>)</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> <span class="dv">20</span> <span class="sc">+</span> <span class="dv">3</span><span class="sc">*</span>x <span class="sc">-</span> <span class="fl">1.5</span><span class="sc">*</span>x<span class="sc">^</span><span class="dv">2</span> <span class="sc">+</span> <span class="fl">0.11</span><span class="sc">*</span>x<span class="sc">^</span><span class="dv">3</span> <span class="sc">+</span> <span class="dv">5</span><span class="sc">*</span><span class="fu">rnorm</span>(<span class="dv">200</span>)</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>fit  <span class="ot">&lt;-</span> <span class="fu">lm</span>(y <span class="sc">~</span> x <span class="sc">+</span> <span class="fu">I</span>(x<span class="sc">^</span><span class="dv">2</span>) <span class="sc">+</span> <span class="fu">I</span>(x<span class="sc">^</span><span class="dv">3</span>))</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>X    <span class="ot">&lt;-</span> <span class="fu">cbind</span>(<span class="dv">1</span>, x, x<span class="sc">^</span><span class="dv">2</span>, x<span class="sc">^</span><span class="dv">3</span>)</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>se   <span class="ot">&lt;-</span> <span class="fu">sqrt</span>(<span class="fu">diag</span>(X <span class="sc">%*%</span> <span class="fu">vcov</span>(fit) <span class="sc">%*%</span> <span class="fu">t</span>(X)))</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>i    <span class="ot">&lt;-</span> <span class="fu">order</span>(x)</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(x, y, <span class="at">pch =</span> <span class="dv">21</span>, <span class="at">col =</span> <span class="st">"grey40"</span>, <span class="at">bg =</span> <span class="st">"grey85"</span>, <span class="at">xlab =</span> <span class="st">"x"</span>, <span class="at">ylab =</span> <span class="st">"y"</span>)</span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a><span class="fu">polygon</span>(<span class="fu">c</span>(x[i], <span class="fu">rev</span>(x[i])),</span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>        <span class="fu">c</span>(<span class="fu">fitted</span>(fit)[i] <span class="sc">+</span> <span class="fl">1.96</span><span class="sc">*</span>se[i], <span class="fu">rev</span>(<span class="fu">fitted</span>(fit)[i] <span class="sc">-</span> <span class="fl">1.96</span><span class="sc">*</span>se[i])),</span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>        <span class="at">col =</span> <span class="fu">adjustcolor</span>(<span class="st">"#b31b1b"</span>, <span class="at">alpha.f =</span> <span class="fl">0.25</span>), <span class="at">border =</span> <span class="cn">NA</span>)</span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(x[i], <span class="fu">fitted</span>(fit)[i], <span class="at">col =</span> <span class="st">"#b31b1b"</span>, <span class="at">lwd =</span> <span class="dv">2</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="04b-basic-plots-ii_files/figure-html/gf-polygon-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" alt="A scatter of simulated points with a red fitted cubic curve through them and a translucent red band around the curve widening at both ends." width="1200"></p>
+</figure>
+</div>
+</div>
+</div>
+<p><code>polygon()</code> takes one closed ring of coordinates. The idiom is <em>x forwards then x backwards</em>, <em>upper forwards then lower backwards</em> — that traces the band’s outline in one loop. Every confidence band, event-study plot and dose-response figure you will ever draw is this shape.</p>
+</section>
+<section id="colours" class="level2">
+<h2 class="anchored" data-anchor-id="colours">Colour scales</h2>
+<div class="cell" data-layout-align="center" data-script="Colour scales">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(RColorBrewer)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>#&gt; Warning: package 'RColorBrewer' was built under R version 4.3.3</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>cols <span class="ot">&lt;-</span> <span class="fu">colorRampPalette</span>(<span class="fu">brewer.pal</span>(<span class="dv">11</span>, <span class="st">"Spectral"</span>))(<span class="dv">100</span>)</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>v    <span class="ot">&lt;-</span> <span class="fu">runif</span>(<span class="dv">200</span>, <span class="dv">0</span>, <span class="dv">100</span>)</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(v, <span class="fu">seq_along</span>(v), <span class="at">pch =</span> <span class="dv">16</span>, <span class="at">col =</span> cols[<span class="fu">findInterval</span>(v, <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">100</span>, <span class="at">length.out =</span> <span class="dv">100</span>))],</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">"value"</span>, <span class="at">ylab =</span> <span class="st">""</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="04b-basic-plots-ii_files/figure-html/gf-colors-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" alt="A strip of 200 points coloured along a red-to-blue spectral ramp from left to right." width="1200"></p>
+</figure>
+</div>
+</div>
+</div>
+<p><code>brewer.pal(n, name)</code> gives a designed palette (<code>display.brewer.all()</code> shows them all), <code>colorRampPalette()</code> interpolates it to any length, and <code>findInterval()</code> turns a numeric column into positions in that palette. Those three lines are how every choropleth and heat map gets its colours.</p>
+</section>
+<section id="axes" class="level2">
+<h2 class="anchored" data-anchor-id="axes">Custom axes</h2>
+<div class="cell" data-layout-align="center" data-script="Custom axes">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>op <span class="ot">&lt;-</span> <span class="fu">par</span>(<span class="at">mar =</span> <span class="fu">c</span>(<span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">1</span>, <span class="dv">1</span>))</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(comp_y<span class="sc">$</span>date, comp_y<span class="sc">$</span>pm25, <span class="at">type =</span> <span class="st">"l"</span>, <span class="at">col =</span> <span class="st">"grey30"</span>,</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>     <span class="at">axes =</span> <span class="cn">FALSE</span>, <span class="at">xlab =</span> <span class="st">""</span>, <span class="at">ylab =</span> <span class="st">""</span>)</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>firsts <span class="ot">&lt;-</span> <span class="fu">as.Date</span>(<span class="fu">paste0</span>(<span class="st">"2025-"</span>, <span class="fu">sprintf</span>(<span class="st">"%02d"</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">12</span>), <span class="st">"-01"</span>))</span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a><span class="fu">axis</span>(<span class="dv">1</span>, <span class="at">at =</span> firsts, <span class="at">labels =</span> month.abb)</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a><span class="fu">axis</span>(<span class="dv">1</span>, <span class="at">at =</span> firsts <span class="sc">+</span> <span class="dv">15</span>, <span class="at">tck =</span> <span class="sc">-</span><span class="fl">0.01</span>, <span class="at">lwd =</span> <span class="dv">0</span>, <span class="at">lwd.tick =</span> <span class="dv">1</span>, <span class="at">labels =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a><span class="fu">axis</span>(<span class="dv">2</span>, <span class="at">las =</span> <span class="dv">2</span>)</span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a><span class="fu">box</span>()</span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a><span class="fu">mtext</span>(<span class="st">"PM2.5 (ug/m3)"</span>, <span class="at">side =</span> <span class="dv">2</span>, <span class="at">line =</span> <span class="fl">2.5</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="04b-basic-plots-ii_files/figure-html/gf-axes-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" alt="Compton's 2025 series with no default axes: month abbreviations along the bottom, minor ticks between them, horizontal y numbers, a box around the plot, and a margin label reading PM2.5." width="1200"></p>
+</figure>
+</div>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(op)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p><code>axes = FALSE</code> suppresses both axes so you can draw your own. A second <code>axis()</code> call on the same side with <code>labels = FALSE</code> and a small <code>tck</code> gives minor ticks. <code>box()</code> puts the frame back.</p>
+</section>
+<section id="variants" class="level2">
+<h2 class="anchored" data-anchor-id="variants">Fills, shapes, and options</h2>
+<div class="cell" data-layout-align="center" data-script="Fills, shapes and options">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>op <span class="ot">&lt;-</span> <span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">2</span>), <span class="at">mar =</span> <span class="fu">c</span>(<span class="dv">3</span>, <span class="dv">3</span>, <span class="dv">2</span>, <span class="dv">1</span>))</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(d<span class="sc">$</span>pm25, <span class="at">breaks =</span> <span class="dv">30</span>, <span class="at">col =</span> <span class="st">"#b31b1b"</span>, <span class="at">density =</span> <span class="dv">25</span>, <span class="at">angle =</span> <span class="dv">45</span>,</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>     <span class="at">border =</span> <span class="st">"#b31b1b"</span>, <span class="at">main =</span> <span class="st">"density = / angle ="</span>, <span class="at">xlab =</span> <span class="st">""</span>)</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">table</span>(<span class="fu">format</span>(d<span class="sc">$</span>date, <span class="st">"%m"</span>), d<span class="sc">$</span>site)[<span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>, ]</span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a><span class="fu">barplot</span>(m, <span class="at">col =</span> <span class="fu">grey.colors</span>(<span class="dv">4</span>), <span class="at">main =</span> <span class="st">"stacked"</span>, <span class="at">las =</span> <span class="dv">2</span>, <span class="at">cex.names =</span> <span class="fl">0.5</span>)</span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a><span class="fu">barplot</span>(m, <span class="at">col =</span> <span class="fu">grey.colors</span>(<span class="dv">4</span>), <span class="at">beside =</span> <span class="cn">TRUE</span>, <span class="at">space =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">2</span>),</span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>        <span class="at">main =</span> <span class="st">"beside = TRUE"</span>, <span class="at">las =</span> <span class="dv">2</span>, <span class="at">cex.names =</span> <span class="fl">0.5</span>)</span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a><span class="fu">boxplot</span>(pm25 <span class="sc">~</span> site, <span class="at">data =</span> d, <span class="at">notch =</span> <span class="cn">TRUE</span>, <span class="at">boxwex =</span> <span class="fl">0.5</span>,</span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a>        <span class="at">main =</span> <span class="st">"notch = / boxwex ="</span>, <span class="at">xlab =</span> <span class="st">""</span>, <span class="at">ylab =</span> <span class="st">""</span>, <span class="at">names =</span> <span class="fu">rep</span>(<span class="st">""</span>, <span class="dv">4</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="04b-basic-plots-ii_files/figure-html/gf-variants-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" alt="Four panels: a hatched histogram, a stacked bar chart, a side-by-side bar chart, and notched box plots." width="1200"></p>
+</figure>
+</div>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(op)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>A matrix handed to <code>barplot()</code> stacks by default and sits side by side with <code>beside = TRUE</code>. <code>notch = TRUE</code> cuts a wedge around the median whose width is a rough confidence interval: non-overlapping notches are a hint the medians differ. <code>hist()</code> also <strong>returns</strong> what it drew — <code>h &lt;- hist(x, plot = FALSE)</code> gives you <code>h$breaks</code> and <code>h$counts</code> as ordinary vectors.</p>
+</section>
+<section id="image" class="level2">
+<h2 class="anchored" data-anchor-id="image">Heat maps: <code>image()</code></h2>
+<div class="cell" data-layout-align="center" data-script="Heat maps with image()">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>mm <span class="ot">&lt;-</span> <span class="fu">tapply</span>(d<span class="sc">$</span>pm25, <span class="fu">list</span>(d<span class="sc">$</span>site, <span class="fu">format</span>(d<span class="sc">$</span>date, <span class="st">"%m"</span>)), mean)</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>op <span class="ot">&lt;-</span> <span class="fu">par</span>(<span class="at">mar =</span> <span class="fu">c</span>(<span class="dv">3</span>, <span class="dv">12</span>, <span class="dv">2</span>, <span class="dv">1</span>))</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="fu">image</span>(<span class="fu">t</span>(mm), <span class="at">col =</span> <span class="fu">colorRampPalette</span>(<span class="fu">c</span>(<span class="st">"white"</span>, <span class="st">"#b31b1b"</span>))(<span class="dv">20</span>), <span class="at">axes =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a><span class="fu">axis</span>(<span class="dv">1</span>, <span class="at">at =</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="at">length.out =</span> <span class="dv">12</span>), <span class="at">labels =</span> month.abb, <span class="at">tick =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a><span class="fu">mtext</span>(<span class="fu">rownames</span>(mm), <span class="at">side =</span> <span class="dv">2</span>, <span class="at">at =</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="at">length.out =</span> <span class="dv">4</span>), <span class="at">las =</span> <span class="dv">2</span>,</span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>      <span class="at">cex =</span> <span class="fl">0.7</span>, <span class="at">line =</span> <span class="fl">0.5</span>)</span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a><span class="fu">box</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="04b-basic-plots-ii_files/figure-html/gf-image-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" alt="A four-row heat map, one row per station and one column per month, with Lancaster's row consistently pale and the basin rows darker in January and December." width="1200"></p>
+</figure>
+</div>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(op)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p><code>image()</code> draws a matrix as a grid of coloured cells. Note the <code>t()</code>: <code>image()</code> puts the <strong>first</strong> matrix dimension on the x axis, so a rows-are-sites matrix has to be transposed to get sites down the side.</p>
+</section>
+<section id="maps" class="level2">
+<h2 class="anchored" data-anchor-id="maps">Maps</h2>
+<div class="cell" data-layout-align="center" data-script="Maps">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(maps)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>#&gt; Warning: package 'maps' was built under R version 4.3.3</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(mapproj)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>#&gt; Warning: package 'mapproj' was built under R version 4.3.3</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>op <span class="ot">&lt;-</span> <span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>), <span class="at">mar =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">2</span>, <span class="dv">0</span>))</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="fu">map</span>(<span class="st">"state"</span>); <span class="fu">title</span>(<span class="st">"map(</span><span class="sc">\"</span><span class="st">state</span><span class="sc">\"</span><span class="st">)"</span>)</span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a><span class="fu">map</span>(<span class="st">"world"</span>, <span class="at">proj =</span> <span class="st">"orthographic"</span>, <span class="at">orientation =</span> <span class="fu">c</span>(<span class="dv">15</span>, <span class="dv">260</span>, <span class="dv">0</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>#&gt; Warning in map("world", proj = "orthographic", orientation = c(15, 260, :
+#&gt; projection failed for some data</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">map</span>(<span class="st">"state"</span>, <span class="at">proj =</span> <span class="st">"orthographic"</span>, <span class="at">orientation =</span> <span class="fu">c</span>(<span class="dv">15</span>, <span class="dv">260</span>, <span class="dv">0</span>), <span class="at">add =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="fu">title</span>(<span class="st">"orthographic"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="04b-basic-plots-ii_files/figure-html/gf-maps-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" alt="Two panels: an outline map of the lower 48 US states, and an orthographic globe centred on North America with state outlines drawn on it." width="1200"></p>
+</figure>
+</div>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(op)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p><code>maps</code> ships outlines for <code>"world"</code>, <code>"usa"</code>, <code>"state"</code> and <code>"county"</code>. <code>fill = TRUE</code> with a vector of colours in the same order as the map’s own region names gives you a choropleth; <code>add = TRUE</code> layers one map onto another, exactly like <code>lines()</code> onto a plot.</p>
+<p>The orthographic call warns <code>projection failed for some data</code>. That is the projection saying it cannot draw the half of the globe facing away from you, which is the correct answer. Nothing is broken.</p>
+</section>
+<section id="animation" class="level2">
+<h2 class="anchored" data-anchor-id="animation">Animation</h2>
+<div class="cell" data-layout-align="center" data-script="Animation">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="co"># A GIF is just a folder of PNGs shown in order. Write the frames, then</span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a><span class="co"># stitch them. Needs the magick package, or ImageMagick on the command line.</span></span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a><span class="co"># invisible(lapply(200:300, function(angle) {</span></span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a><span class="co">#   png(sprintf("frame_%04d.png", angle), width = 600, height = 600)</span></span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a><span class="co">#   par(mar = c(0, 0, 0, 0))</span></span>
+<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a><span class="co">#   map("world", proj = "orthographic", orientation = c(15, angle, 0))</span></span>
+<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a><span class="co">#   dev.off()</span></span>
+<span id="cb28-9"><a href="#cb28-9" aria-hidden="true" tabindex="-1"></a><span class="co"># }))</span></span>
+<span id="cb28-10"><a href="#cb28-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-11"><a href="#cb28-11" aria-hidden="true" tabindex="-1"></a><span class="co"># magick::image_write(magick::image_animate(</span></span>
+<span id="cb28-12"><a href="#cb28-12" aria-hidden="true" tabindex="-1"></a><span class="co">#   magick::image_read(list.files(pattern = "^frame_.*png$")), fps = 10),</span></span>
+<span id="cb28-13"><a href="#cb28-13" aria-hidden="true" tabindex="-1"></a><span class="co">#   "globe.gif")</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Everything in that loop is <code>png()</code> and <code>dev.off()</code> from the session, plus a counter. Any figure you can draw once you can animate.</p>
+</section>
+<section id="practice" class="level2">
+<h2 class="anchored" data-anchor-id="practice">Practice</h2>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true" href="">Practice</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false" href="">Solutions</a></li></ul>
+<div class="tab-content">
+<div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
+<div class="cell" data-layout-align="center" data-exercise="true" data-script="Practice">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Everything below uses d, comp_y, jan, comp and xr, built at the top of</span></span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a><span class="co"># this script.</span></span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Unequal panels</span></span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a><span class="co">#  1. layout(matrix(c(1, 2, 1, 3), nrow = 2)) -- before you run anything,</span></span>
+<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a><span class="co">#     say which cells panel 1 covers. Then check with layout.show(3).</span></span>
+<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a><span class="co">#  2. Fill that layout: Compton's whole year in the tall panel, and</span></span>
+<span id="cb29-8"><a href="#cb29-8" aria-hidden="true" tabindex="-1"></a><span class="co">#     histograms of Compton and Lancaster in the two small ones. Put the</span></span>
+<span id="cb29-9"><a href="#cb29-9" aria-hidden="true" tabindex="-1"></a><span class="co">#     device back afterwards -- both settings.</span></span>
+<span id="cb29-10"><a href="#cb29-10" aria-hidden="true" tabindex="-1"></a><span class="co">#  3. Make the top row of a c(1,1,2,3) layout three times as tall as the</span></span>
+<span id="cb29-11"><a href="#cb29-11" aria-hidden="true" tabindex="-1"></a><span class="co">#     bottom. Which argument, and is it in inches?</span></span>
+<span id="cb29-12"><a href="#cb29-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-13"><a href="#cb29-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Shaded areas</span></span>
+<span id="cb29-14"><a href="#cb29-14" aria-hidden="true" tabindex="-1"></a><span class="co">#  4. Redraw Compton's January and shade Jan 1 to Jan 21 in translucent</span></span>
+<span id="cb29-15"><a href="#cb29-15" aria-hidden="true" tabindex="-1"></a><span class="co">#     red behind the line. The shading must not hide the data.</span></span>
+<span id="cb29-16"><a href="#cb29-16" aria-hidden="true" tabindex="-1"></a><span class="co">#  5. Compton's monthly means: shade every month whose mean is above</span></span>
+<span id="cb29-17"><a href="#cb29-17" aria-hidden="true" tabindex="-1"></a><span class="co">#     12 ug/m3. How many bands do you get? Do it with ONE rect() call.</span></span>
+<span id="cb29-18"><a href="#cb29-18" aria-hidden="true" tabindex="-1"></a><span class="co">#  6. Overlay Compton's and Lancaster's full-year histograms on one plot</span></span>
+<span id="cb29-19"><a href="#cb29-19" aria-hidden="true" tabindex="-1"></a><span class="co">#     with translucent fills. (Hint: hist(..., add = TRUE), and both need</span></span>
+<span id="cb29-20"><a href="#cb29-20" aria-hidden="true" tabindex="-1"></a><span class="co">#     the same breaks.)</span></span>
+<span id="cb29-21"><a href="#cb29-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-22"><a href="#cb29-22" aria-hidden="true" tabindex="-1"></a><span class="co"># Confidence bands</span></span>
+<span id="cb29-23"><a href="#cb29-23" aria-hidden="true" tabindex="-1"></a><span class="co">#  7. Fit Compton's pm25 on day-of-year and its square. Draw the fitted</span></span>
+<span id="cb29-24"><a href="#cb29-24" aria-hidden="true" tabindex="-1"></a><span class="co">#     curve over a scatter of the raw days, with a 95% band. What does the</span></span>
+<span id="cb29-25"><a href="#cb29-25" aria-hidden="true" tabindex="-1"></a><span class="co">#     curve say about the shape of the year?</span></span>
+<span id="cb29-26"><a href="#cb29-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-27"><a href="#cb29-27" aria-hidden="true" tabindex="-1"></a><span class="co"># Colour scales</span></span>
+<span id="cb29-28"><a href="#cb29-28" aria-hidden="true" tabindex="-1"></a><span class="co">#  8. Colour the AQI-versus-PM2.5 scatter by month, using a 12-colour ramp</span></span>
+<span id="cb29-29"><a href="#cb29-29" aria-hidden="true" tabindex="-1"></a><span class="co">#     built from a Brewer palette. Add a legend.</span></span>
+<span id="cb29-30"><a href="#cb29-30" aria-hidden="true" tabindex="-1"></a><span class="co">#  9. Bucket the four annual means into 5 classes with findInterval() and</span></span>
+<span id="cb29-31"><a href="#cb29-31" aria-hidden="true" tabindex="-1"></a><span class="co">#     draw a bar chart coloured by bucket.</span></span>
+<span id="cb29-32"><a href="#cb29-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-33"><a href="#cb29-33" aria-hidden="true" tabindex="-1"></a><span class="co"># Custom axes</span></span>
+<span id="cb29-34"><a href="#cb29-34" aria-hidden="true" tabindex="-1"></a><span class="co"># 10. Compton's year with NO default axes: month names along the bottom,</span></span>
+<span id="cb29-35"><a href="#cb29-35" aria-hidden="true" tabindex="-1"></a><span class="co">#     small unlabelled ticks at mid-month, horizontal y numbers, a box,</span></span>
+<span id="cb29-36"><a href="#cb29-36" aria-hidden="true" tabindex="-1"></a><span class="co">#     and the y label written with mtext().</span></span>
+<span id="cb29-37"><a href="#cb29-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-38"><a href="#cb29-38" aria-hidden="true" tabindex="-1"></a><span class="co"># Fills, shapes, options</span></span>
+<span id="cb29-39"><a href="#cb29-39" aria-hidden="true" tabindex="-1"></a><span class="co"># 11. Days reported per month per station, once stacked and once beside.</span></span>
+<span id="cb29-40"><a href="#cb29-40" aria-hidden="true" tabindex="-1"></a><span class="co">#     Which of the two answers "did every station report every month?"</span></span>
+<span id="cb29-41"><a href="#cb29-41" aria-hidden="true" tabindex="-1"></a><span class="co"># 12. Box plots by station with notch = TRUE. Which stations' medians are</span></span>
+<span id="cb29-42"><a href="#cb29-42" aria-hidden="true" tabindex="-1"></a><span class="co">#     clearly different, and which are not?</span></span>
+<span id="cb29-43"><a href="#cb29-43" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-44"><a href="#cb29-44" aria-hidden="true" tabindex="-1"></a><span class="co"># Heat maps and maps</span></span>
+<span id="cb29-45"><a href="#cb29-45" aria-hidden="true" tabindex="-1"></a><span class="co"># 13. Site-by-month heat map of mean PM2.5, with the sites sorted by their</span></span>
+<span id="cb29-46"><a href="#cb29-46" aria-hidden="true" tabindex="-1"></a><span class="co">#     annual mean. Which site is the outlier, and which month is worst?</span></span>
+<span id="cb29-47"><a href="#cb29-47" aria-hidden="true" tabindex="-1"></a><span class="co"># 14. Draw California and put the four monitors on it, sized by annual</span></span>
+<span id="cb29-48"><a href="#cb29-48" aria-hidden="true" tabindex="-1"></a><span class="co">#     mean. The coordinates are already in the file.</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+<div id="tabset-1-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-2-tab">
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 1  panel 1 covers BOTH cells of column 1 -- matrix() fills down the</span></span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a><span class="co">#    first column, so c(1, 2, 1, 3) with nrow = 2 is column 1 = (1, 2)</span></span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a><span class="co">#    and column 2 = (1, 3). Panel 1 is repeated, so it spans the rows.</span></span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a><span class="fu">layout</span>(<span class="fu">matrix</span>(<span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">1</span>, <span class="dv">3</span>), <span class="at">nrow =</span> <span class="dv">2</span>)); <span class="fu">layout.show</span>(<span class="dv">3</span>); <span class="fu">layout</span>(<span class="dv">1</span>)</span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a><span class="co"># 2</span></span>
+<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a>op <span class="ot">&lt;-</span> <span class="fu">par</span>(<span class="at">mar =</span> <span class="fu">c</span>(<span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">2</span>, <span class="dv">1</span>))</span>
+<span id="cb30-8"><a href="#cb30-8" aria-hidden="true" tabindex="-1"></a><span class="fu">layout</span>(<span class="fu">matrix</span>(<span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">1</span>, <span class="dv">3</span>), <span class="at">nrow =</span> <span class="dv">2</span>))</span>
+<span id="cb30-9"><a href="#cb30-9" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(comp_y<span class="sc">$</span>date, comp_y<span class="sc">$</span>pm25, <span class="at">type =</span> <span class="st">"l"</span>, <span class="at">xlab =</span> <span class="st">""</span>, <span class="at">ylab =</span> <span class="st">"PM2.5"</span>,</span>
+<span id="cb30-10"><a href="#cb30-10" aria-hidden="true" tabindex="-1"></a>     <span class="at">main =</span> <span class="st">"Compton 2025"</span>)</span>
+<span id="cb30-11"><a href="#cb30-11" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(comp_y<span class="sc">$</span>pm25, <span class="at">breaks =</span> <span class="fu">seq</span>(<span class="sc">-</span><span class="dv">5</span>, <span class="dv">60</span>, <span class="dv">5</span>), <span class="at">main =</span> <span class="st">"Compton"</span>, <span class="at">xlab =</span> <span class="st">""</span>)</span>
+<span id="cb30-12"><a href="#cb30-12" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(d<span class="sc">$</span>pm25[d<span class="sc">$</span>site <span class="sc">==</span> <span class="st">"Lancaster - Fairgrounds"</span>], <span class="at">breaks =</span> <span class="fu">seq</span>(<span class="sc">-</span><span class="dv">5</span>, <span class="dv">60</span>, <span class="dv">5</span>),</span>
+<span id="cb30-13"><a href="#cb30-13" aria-hidden="true" tabindex="-1"></a>     <span class="at">main =</span> <span class="st">"Lancaster"</span>, <span class="at">xlab =</span> <span class="st">""</span>)</span>
+<span id="cb30-14"><a href="#cb30-14" aria-hidden="true" tabindex="-1"></a><span class="fu">layout</span>(<span class="dv">1</span>); <span class="fu">par</span>(op)</span>
+<span id="cb30-15"><a href="#cb30-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-16"><a href="#cb30-16" aria-hidden="true" tabindex="-1"></a><span class="co"># 3  heights =, and they are RATIOS, not inches</span></span>
+<span id="cb30-17"><a href="#cb30-17" aria-hidden="true" tabindex="-1"></a><span class="fu">layout</span>(<span class="fu">matrix</span>(<span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>), <span class="at">nrow =</span> <span class="dv">2</span>, <span class="at">byrow =</span> <span class="cn">TRUE</span>), <span class="at">heights =</span> <span class="fu">c</span>(<span class="dv">3</span>, <span class="dv">1</span>))</span>
+<span id="cb30-18"><a href="#cb30-18" aria-hidden="true" tabindex="-1"></a><span class="fu">layout.show</span>(<span class="dv">3</span>); <span class="fu">layout</span>(<span class="dv">1</span>)</span>
+<span id="cb30-19"><a href="#cb30-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-20"><a href="#cb30-20" aria-hidden="true" tabindex="-1"></a><span class="co"># 4  draw the rectangle FIRST, or use a translucent fill, or the shading</span></span>
+<span id="cb30-21"><a href="#cb30-21" aria-hidden="true" tabindex="-1"></a><span class="co">#    covers the line. Here: line, then translucent rect, then line again.</span></span>
+<span id="cb30-22"><a href="#cb30-22" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(comp<span class="sc">$</span>date, comp<span class="sc">$</span>pm25, <span class="at">type =</span> <span class="st">"l"</span>, <span class="at">lwd =</span> <span class="dv">2</span>, <span class="at">xlab =</span> <span class="st">""</span>, <span class="at">ylab =</span> <span class="st">"PM2.5"</span>)</span>
+<span id="cb30-23"><a href="#cb30-23" aria-hidden="true" tabindex="-1"></a><span class="fu">rect</span>(<span class="fu">as.Date</span>(<span class="st">"2025-01-01"</span>), <span class="sc">-</span><span class="dv">5</span>, <span class="fu">as.Date</span>(<span class="st">"2025-01-21"</span>), <span class="dv">80</span>,</span>
+<span id="cb30-24"><a href="#cb30-24" aria-hidden="true" tabindex="-1"></a>     <span class="at">col =</span> <span class="fu">adjustcolor</span>(<span class="st">"#b31b1b"</span>, <span class="at">alpha.f =</span> <span class="fl">0.15</span>), <span class="at">border =</span> <span class="cn">NA</span>)</span>
+<span id="cb30-25"><a href="#cb30-25" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(comp<span class="sc">$</span>date, comp<span class="sc">$</span>pm25, <span class="at">lwd =</span> <span class="dv">2</span>)</span>
+<span id="cb30-26"><a href="#cb30-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-27"><a href="#cb30-27" aria-hidden="true" tabindex="-1"></a><span class="co"># 5  five months: 01, 02, 05, 11, 12. rect() is vectorised, so one call</span></span>
+<span id="cb30-28"><a href="#cb30-28" aria-hidden="true" tabindex="-1"></a><span class="co">#    with vectors of edges draws all five.</span></span>
+<span id="cb30-29"><a href="#cb30-29" aria-hidden="true" tabindex="-1"></a>cm    <span class="ot">&lt;-</span> <span class="fu">tapply</span>(comp_y<span class="sc">$</span>pm25, <span class="fu">format</span>(comp_y<span class="sc">$</span>date, <span class="st">"%m"</span>), mean)</span>
+<span id="cb30-30"><a href="#cb30-30" aria-hidden="true" tabindex="-1"></a>hot   <span class="ot">&lt;-</span> <span class="fu">names</span>(cm)[cm <span class="sc">&gt;</span> <span class="dv">12</span>]</span>
+<span id="cb30-31"><a href="#cb30-31" aria-hidden="true" tabindex="-1"></a>left  <span class="ot">&lt;-</span> <span class="fu">as.Date</span>(<span class="fu">paste0</span>(<span class="st">"2025-"</span>, hot, <span class="st">"-01"</span>))</span>
+<span id="cb30-32"><a href="#cb30-32" aria-hidden="true" tabindex="-1"></a>right <span class="ot">&lt;-</span> left <span class="sc">+</span> <span class="dv">31</span></span>
+<span id="cb30-33"><a href="#cb30-33" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(comp_y<span class="sc">$</span>date, comp_y<span class="sc">$</span>pm25, <span class="at">type =</span> <span class="st">"l"</span>, <span class="at">xlab =</span> <span class="st">""</span>, <span class="at">ylab =</span> <span class="st">"PM2.5"</span>)</span>
+<span id="cb30-34"><a href="#cb30-34" aria-hidden="true" tabindex="-1"></a><span class="fu">rect</span>(left, <span class="sc">-</span><span class="dv">5</span>, right, <span class="dv">80</span>, <span class="at">col =</span> <span class="fu">adjustcolor</span>(<span class="st">"#b31b1b"</span>, <span class="fl">0.12</span>), <span class="at">border =</span> <span class="cn">NA</span>)</span>
+<span id="cb30-35"><a href="#cb30-35" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(comp_y<span class="sc">$</span>date, comp_y<span class="sc">$</span>pm25)</span>
+<span id="cb30-36"><a href="#cb30-36" aria-hidden="true" tabindex="-1"></a><span class="fu">length</span>(hot)</span>
+<span id="cb30-37"><a href="#cb30-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-38"><a href="#cb30-38" aria-hidden="true" tabindex="-1"></a><span class="co"># 6</span></span>
+<span id="cb30-39"><a href="#cb30-39" aria-hidden="true" tabindex="-1"></a>br <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="sc">-</span><span class="dv">5</span>, <span class="dv">60</span>, <span class="fl">2.5</span>)</span>
+<span id="cb30-40"><a href="#cb30-40" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(comp_y<span class="sc">$</span>pm25, <span class="at">breaks =</span> br, <span class="at">col =</span> <span class="fu">adjustcolor</span>(<span class="st">"#b31b1b"</span>, <span class="fl">0.5</span>),</span>
+<span id="cb30-41"><a href="#cb30-41" aria-hidden="true" tabindex="-1"></a>     <span class="at">border =</span> <span class="cn">NA</span>, <span class="at">main =</span> <span class="st">""</span>, <span class="at">xlab =</span> <span class="st">"PM2.5 (ug/m3)"</span>)</span>
+<span id="cb30-42"><a href="#cb30-42" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(d<span class="sc">$</span>pm25[d<span class="sc">$</span>site <span class="sc">==</span> <span class="st">"Lancaster - Fairgrounds"</span>], <span class="at">breaks =</span> br,</span>
+<span id="cb30-43"><a href="#cb30-43" aria-hidden="true" tabindex="-1"></a>     <span class="at">col =</span> <span class="fu">adjustcolor</span>(<span class="st">"#1f6fb4"</span>, <span class="fl">0.5</span>), <span class="at">border =</span> <span class="cn">NA</span>, <span class="at">add =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb30-44"><a href="#cb30-44" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">"topright"</span>, <span class="fu">c</span>(<span class="st">"Compton"</span>, <span class="st">"Lancaster"</span>), <span class="at">bty =</span> <span class="st">"n"</span>,</span>
+<span id="cb30-45"><a href="#cb30-45" aria-hidden="true" tabindex="-1"></a>       <span class="at">fill =</span> <span class="fu">adjustcolor</span>(<span class="fu">c</span>(<span class="st">"#b31b1b"</span>, <span class="st">"#1f6fb4"</span>), <span class="fl">0.5</span>))</span>
+<span id="cb30-46"><a href="#cb30-46" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-47"><a href="#cb30-47" aria-hidden="true" tabindex="-1"></a><span class="co"># 7  a U: high in January, a trough through spring and summer, rising</span></span>
+<span id="cb30-48"><a href="#cb30-48" aria-hidden="true" tabindex="-1"></a><span class="co">#    again into December. The band is narrow in the middle where the data</span></span>
+<span id="cb30-49"><a href="#cb30-49" aria-hidden="true" tabindex="-1"></a><span class="co">#    is dense and flares at both ends. R-squared is only 0.21 -- the</span></span>
+<span id="cb30-50"><a href="#cb30-50" aria-hidden="true" tabindex="-1"></a><span class="co">#    seasonal shape is real but it explains a fifth of the variation.</span></span>
+<span id="cb30-51"><a href="#cb30-51" aria-hidden="true" tabindex="-1"></a>day <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(comp_y<span class="sc">$</span>date <span class="sc">-</span> <span class="fu">as.Date</span>(<span class="st">"2025-01-01"</span>))</span>
+<span id="cb30-52"><a href="#cb30-52" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">lm</span>(comp_y<span class="sc">$</span>pm25 <span class="sc">~</span> day <span class="sc">+</span> <span class="fu">I</span>(day<span class="sc">^</span><span class="dv">2</span>))</span>
+<span id="cb30-53"><a href="#cb30-53" aria-hidden="true" tabindex="-1"></a>X   <span class="ot">&lt;-</span> <span class="fu">cbind</span>(<span class="dv">1</span>, day, day<span class="sc">^</span><span class="dv">2</span>)</span>
+<span id="cb30-54"><a href="#cb30-54" aria-hidden="true" tabindex="-1"></a>se  <span class="ot">&lt;-</span> <span class="fu">sqrt</span>(<span class="fu">diag</span>(X <span class="sc">%*%</span> <span class="fu">vcov</span>(fit) <span class="sc">%*%</span> <span class="fu">t</span>(X)))</span>
+<span id="cb30-55"><a href="#cb30-55" aria-hidden="true" tabindex="-1"></a>i   <span class="ot">&lt;-</span> <span class="fu">order</span>(day)</span>
+<span id="cb30-56"><a href="#cb30-56" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(comp_y<span class="sc">$</span>date, comp_y<span class="sc">$</span>pm25, <span class="at">pch =</span> <span class="dv">16</span>, <span class="at">cex =</span> <span class="fl">0.5</span>, <span class="at">col =</span> <span class="st">"grey60"</span>,</span>
+<span id="cb30-57"><a href="#cb30-57" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">""</span>, <span class="at">ylab =</span> <span class="st">"PM2.5 (ug/m3)"</span>)</span>
+<span id="cb30-58"><a href="#cb30-58" aria-hidden="true" tabindex="-1"></a><span class="fu">polygon</span>(<span class="fu">c</span>(comp_y<span class="sc">$</span>date[i], <span class="fu">rev</span>(comp_y<span class="sc">$</span>date[i])),</span>
+<span id="cb30-59"><a href="#cb30-59" aria-hidden="true" tabindex="-1"></a>        <span class="fu">c</span>((<span class="fu">fitted</span>(fit) <span class="sc">+</span> <span class="fl">1.96</span> <span class="sc">*</span> se)[i], <span class="fu">rev</span>((<span class="fu">fitted</span>(fit) <span class="sc">-</span> <span class="fl">1.96</span> <span class="sc">*</span> se)[i])),</span>
+<span id="cb30-60"><a href="#cb30-60" aria-hidden="true" tabindex="-1"></a>        <span class="at">col =</span> <span class="fu">adjustcolor</span>(<span class="st">"#b31b1b"</span>, <span class="fl">0.25</span>), <span class="at">border =</span> <span class="cn">NA</span>)</span>
+<span id="cb30-61"><a href="#cb30-61" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(comp_y<span class="sc">$</span>date[i], <span class="fu">fitted</span>(fit)[i], <span class="at">col =</span> <span class="st">"#b31b1b"</span>, <span class="at">lwd =</span> <span class="dv">2</span>)</span>
+<span id="cb30-62"><a href="#cb30-62" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fit)<span class="sc">$</span>r.squared</span>
+<span id="cb30-63"><a href="#cb30-63" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-64"><a href="#cb30-64" aria-hidden="true" tabindex="-1"></a><span class="co"># 8</span></span>
+<span id="cb30-65"><a href="#cb30-65" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(RColorBrewer)</span>
+<span id="cb30-66"><a href="#cb30-66" aria-hidden="true" tabindex="-1"></a>mon  <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(<span class="fu">format</span>(d<span class="sc">$</span>date, <span class="st">"%m"</span>))</span>
+<span id="cb30-67"><a href="#cb30-67" aria-hidden="true" tabindex="-1"></a>cols <span class="ot">&lt;-</span> <span class="fu">colorRampPalette</span>(<span class="fu">brewer.pal</span>(<span class="dv">11</span>, <span class="st">"Spectral"</span>))(<span class="dv">12</span>)</span>
+<span id="cb30-68"><a href="#cb30-68" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(d<span class="sc">$</span>pm25, d<span class="sc">$</span>Daily.AQI.Value, <span class="at">pch =</span> <span class="dv">16</span>, <span class="at">cex =</span> <span class="fl">0.6</span>, <span class="at">col =</span> cols[mon],</span>
+<span id="cb30-69"><a href="#cb30-69" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">"Daily mean PM2.5 (ug/m3)"</span>, <span class="at">ylab =</span> <span class="st">"Daily AQI"</span>)</span>
+<span id="cb30-70"><a href="#cb30-70" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">"bottomright"</span>, month.abb, <span class="at">col =</span> cols, <span class="at">pch =</span> <span class="dv">16</span>, <span class="at">ncol =</span> <span class="dv">2</span>,</span>
+<span id="cb30-71"><a href="#cb30-71" aria-hidden="true" tabindex="-1"></a>       <span class="at">bty =</span> <span class="st">"n"</span>, <span class="at">cex =</span> <span class="fl">0.7</span>)</span>
+<span id="cb30-72"><a href="#cb30-72" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-73"><a href="#cb30-73" aria-hidden="true" tabindex="-1"></a><span class="co"># 9  Lancaster 4.48, Pasadena 11.67, Long Beach 12.21, Compton 13.38 --</span></span>
+<span id="cb30-74"><a href="#cb30-74" aria-hidden="true" tabindex="-1"></a><span class="co">#    Lancaster lands in its own bucket and the other three share one</span></span>
+<span id="cb30-75"><a href="#cb30-75" aria-hidden="true" tabindex="-1"></a>am  <span class="ot">&lt;-</span> <span class="fu">sort</span>(<span class="fu">tapply</span>(d<span class="sc">$</span>pm25, d<span class="sc">$</span>site, mean))</span>
+<span id="cb30-76"><a href="#cb30-76" aria-hidden="true" tabindex="-1"></a>brk <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">15</span>, <span class="at">length.out =</span> <span class="dv">6</span>)</span>
+<span id="cb30-77"><a href="#cb30-77" aria-hidden="true" tabindex="-1"></a>pal <span class="ot">&lt;-</span> <span class="fu">colorRampPalette</span>(<span class="fu">c</span>(<span class="st">"white"</span>, <span class="st">"#b31b1b"</span>))(<span class="dv">5</span>)</span>
+<span id="cb30-78"><a href="#cb30-78" aria-hidden="true" tabindex="-1"></a>op  <span class="ot">&lt;-</span> <span class="fu">par</span>(<span class="at">mar =</span> <span class="fu">c</span>(<span class="dv">4</span>, <span class="dv">15</span>, <span class="dv">1</span>, <span class="dv">1</span>))</span>
+<span id="cb30-79"><a href="#cb30-79" aria-hidden="true" tabindex="-1"></a><span class="fu">barplot</span>(am, <span class="at">horiz =</span> <span class="cn">TRUE</span>, <span class="at">las =</span> <span class="dv">1</span>, <span class="at">col =</span> pal[<span class="fu">findInterval</span>(am, brk)],</span>
+<span id="cb30-80"><a href="#cb30-80" aria-hidden="true" tabindex="-1"></a>        <span class="at">xlab =</span> <span class="st">"Mean PM2.5, 2025 (ug/m3)"</span>)</span>
+<span id="cb30-81"><a href="#cb30-81" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(op)</span>
+<span id="cb30-82"><a href="#cb30-82" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-83"><a href="#cb30-83" aria-hidden="true" tabindex="-1"></a><span class="co"># 10</span></span>
+<span id="cb30-84"><a href="#cb30-84" aria-hidden="true" tabindex="-1"></a>op <span class="ot">&lt;-</span> <span class="fu">par</span>(<span class="at">mar =</span> <span class="fu">c</span>(<span class="dv">3</span>, <span class="dv">5</span>, <span class="dv">1</span>, <span class="dv">1</span>))</span>
+<span id="cb30-85"><a href="#cb30-85" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(comp_y<span class="sc">$</span>date, comp_y<span class="sc">$</span>pm25, <span class="at">type =</span> <span class="st">"l"</span>, <span class="at">col =</span> <span class="st">"grey30"</span>,</span>
+<span id="cb30-86"><a href="#cb30-86" aria-hidden="true" tabindex="-1"></a>     <span class="at">axes =</span> <span class="cn">FALSE</span>, <span class="at">xlab =</span> <span class="st">""</span>, <span class="at">ylab =</span> <span class="st">""</span>)</span>
+<span id="cb30-87"><a href="#cb30-87" aria-hidden="true" tabindex="-1"></a>firsts <span class="ot">&lt;-</span> <span class="fu">as.Date</span>(<span class="fu">paste0</span>(<span class="st">"2025-"</span>, <span class="fu">sprintf</span>(<span class="st">"%02d"</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">12</span>), <span class="st">"-01"</span>))</span>
+<span id="cb30-88"><a href="#cb30-88" aria-hidden="true" tabindex="-1"></a><span class="fu">axis</span>(<span class="dv">1</span>, <span class="at">at =</span> firsts, <span class="at">labels =</span> month.abb)</span>
+<span id="cb30-89"><a href="#cb30-89" aria-hidden="true" tabindex="-1"></a><span class="fu">axis</span>(<span class="dv">1</span>, <span class="at">at =</span> firsts <span class="sc">+</span> <span class="dv">15</span>, <span class="at">tck =</span> <span class="sc">-</span><span class="fl">0.01</span>, <span class="at">lwd =</span> <span class="dv">0</span>, <span class="at">lwd.tick =</span> <span class="dv">1</span>, <span class="at">labels =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb30-90"><a href="#cb30-90" aria-hidden="true" tabindex="-1"></a><span class="fu">axis</span>(<span class="dv">2</span>, <span class="at">las =</span> <span class="dv">2</span>)</span>
+<span id="cb30-91"><a href="#cb30-91" aria-hidden="true" tabindex="-1"></a><span class="fu">box</span>()</span>
+<span id="cb30-92"><a href="#cb30-92" aria-hidden="true" tabindex="-1"></a><span class="fu">mtext</span>(<span class="st">"Daily PM2.5 (ug/m3)"</span>, <span class="at">side =</span> <span class="dv">2</span>, <span class="at">line =</span> <span class="dv">3</span>)</span>
+<span id="cb30-93"><a href="#cb30-93" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(op)</span>
+<span id="cb30-94"><a href="#cb30-94" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-95"><a href="#cb30-95" aria-hidden="true" tabindex="-1"></a><span class="co"># 11  BESIDE answers it. A stacked bar shows the month's total across all</span></span>
+<span id="cb30-96"><a href="#cb30-96" aria-hidden="true" tabindex="-1"></a><span class="co">#     four stations, so a station reporting nothing is invisible inside</span></span>
+<span id="cb30-97"><a href="#cb30-97" aria-hidden="true" tabindex="-1"></a><span class="co">#     someone else's bar; side by side, a missing station is a missing bar.</span></span>
+<span id="cb30-98"><a href="#cb30-98" aria-hidden="true" tabindex="-1"></a>m  <span class="ot">&lt;-</span> <span class="fu">table</span>(<span class="fu">format</span>(d<span class="sc">$</span>date, <span class="st">"%m"</span>), d<span class="sc">$</span>site)</span>
+<span id="cb30-99"><a href="#cb30-99" aria-hidden="true" tabindex="-1"></a>op <span class="ot">&lt;-</span> <span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">1</span>), <span class="at">mar =</span> <span class="fu">c</span>(<span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">2</span>, <span class="dv">1</span>))</span>
+<span id="cb30-100"><a href="#cb30-100" aria-hidden="true" tabindex="-1"></a><span class="fu">barplot</span>(<span class="fu">t</span>(m), <span class="at">col =</span> <span class="fu">grey.colors</span>(<span class="dv">4</span>), <span class="at">main =</span> <span class="st">"stacked"</span>)</span>
+<span id="cb30-101"><a href="#cb30-101" aria-hidden="true" tabindex="-1"></a><span class="fu">barplot</span>(<span class="fu">t</span>(m), <span class="at">col =</span> <span class="fu">grey.colors</span>(<span class="dv">4</span>), <span class="at">beside =</span> <span class="cn">TRUE</span>, <span class="at">main =</span> <span class="st">"beside = TRUE"</span>)</span>
+<span id="cb30-102"><a href="#cb30-102" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(op)</span>
+<span id="cb30-103"><a href="#cb30-103" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-104"><a href="#cb30-104" aria-hidden="true" tabindex="-1"></a><span class="co"># 12  Lancaster (4.20) is clearly different from all three others. Compton</span></span>
+<span id="cb30-105"><a href="#cb30-105" aria-hidden="true" tabindex="-1"></a><span class="co">#     (10.70) and Long Beach (10.65) are not different at all -- their</span></span>
+<span id="cb30-106"><a href="#cb30-106" aria-hidden="true" tabindex="-1"></a><span class="co">#     notches overlap almost completely. Pasadena (9.30) is borderline</span></span>
+<span id="cb30-107"><a href="#cb30-107" aria-hidden="true" tabindex="-1"></a><span class="co">#     against both, and it has the fewest days, which is why its notch is</span></span>
+<span id="cb30-108"><a href="#cb30-108" aria-hidden="true" tabindex="-1"></a><span class="co">#     the widest.</span></span>
+<span id="cb30-109"><a href="#cb30-109" aria-hidden="true" tabindex="-1"></a><span class="fu">boxplot</span>(pm25 <span class="sc">~</span> site, <span class="at">data =</span> d, <span class="at">notch =</span> <span class="cn">TRUE</span>, <span class="at">names =</span> <span class="fu">c</span>(<span class="st">"Com"</span>, <span class="st">"Lan"</span>, <span class="st">"LB"</span>, <span class="st">"Pas"</span>),</span>
+<span id="cb30-110"><a href="#cb30-110" aria-hidden="true" tabindex="-1"></a>        <span class="at">xlab =</span> <span class="st">""</span>, <span class="at">ylab =</span> <span class="st">"PM2.5 (ug/m3)"</span>)</span>
+<span id="cb30-111"><a href="#cb30-111" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-112"><a href="#cb30-112" aria-hidden="true" tabindex="-1"></a><span class="co"># 13  Lancaster is the outlier row, pale all year. December and January</span></span>
+<span id="cb30-113"><a href="#cb30-113" aria-hidden="true" tabindex="-1"></a><span class="co">#     are the worst columns -- and December is worse than January at</span></span>
+<span id="cb30-114"><a href="#cb30-114" aria-hidden="true" tabindex="-1"></a><span class="co">#     three of the four sites.</span></span>
+<span id="cb30-115"><a href="#cb30-115" aria-hidden="true" tabindex="-1"></a>mm <span class="ot">&lt;-</span> <span class="fu">tapply</span>(d<span class="sc">$</span>pm25, <span class="fu">list</span>(d<span class="sc">$</span>site, <span class="fu">format</span>(d<span class="sc">$</span>date, <span class="st">"%m"</span>)), mean)</span>
+<span id="cb30-116"><a href="#cb30-116" aria-hidden="true" tabindex="-1"></a>mm <span class="ot">&lt;-</span> mm[<span class="fu">order</span>(<span class="fu">rowMeans</span>(mm)), ]</span>
+<span id="cb30-117"><a href="#cb30-117" aria-hidden="true" tabindex="-1"></a>op <span class="ot">&lt;-</span> <span class="fu">par</span>(<span class="at">mar =</span> <span class="fu">c</span>(<span class="dv">3</span>, <span class="dv">12</span>, <span class="dv">2</span>, <span class="dv">1</span>))</span>
+<span id="cb30-118"><a href="#cb30-118" aria-hidden="true" tabindex="-1"></a><span class="fu">image</span>(<span class="fu">t</span>(mm), <span class="at">col =</span> <span class="fu">colorRampPalette</span>(<span class="fu">c</span>(<span class="st">"white"</span>, <span class="st">"#b31b1b"</span>))(<span class="dv">20</span>), <span class="at">axes =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb30-119"><a href="#cb30-119" aria-hidden="true" tabindex="-1"></a><span class="fu">axis</span>(<span class="dv">1</span>, <span class="at">at =</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="at">length.out =</span> <span class="dv">12</span>), <span class="at">labels =</span> month.abb, <span class="at">tick =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb30-120"><a href="#cb30-120" aria-hidden="true" tabindex="-1"></a><span class="fu">mtext</span>(<span class="fu">rownames</span>(mm), <span class="at">side =</span> <span class="dv">2</span>, <span class="at">at =</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="at">length.out =</span> <span class="dv">4</span>), <span class="at">las =</span> <span class="dv">2</span>,</span>
+<span id="cb30-121"><a href="#cb30-121" aria-hidden="true" tabindex="-1"></a>      <span class="at">cex =</span> <span class="fl">0.7</span>, <span class="at">line =</span> <span class="fl">0.5</span>)</span>
+<span id="cb30-122"><a href="#cb30-122" aria-hidden="true" tabindex="-1"></a><span class="fu">box</span>()</span>
+<span id="cb30-123"><a href="#cb30-123" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(op)</span>
+<span id="cb30-124"><a href="#cb30-124" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-125"><a href="#cb30-125" aria-hidden="true" tabindex="-1"></a><span class="co"># 14  Lancaster sits north of the mountains; the other three cluster in</span></span>
+<span id="cb30-126"><a href="#cb30-126" aria-hidden="true" tabindex="-1"></a><span class="co">#     the basin, which is the whole reason its readings differ</span></span>
+<span id="cb30-127"><a href="#cb30-127" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(maps)</span>
+<span id="cb30-128"><a href="#cb30-128" aria-hidden="true" tabindex="-1"></a>co <span class="ot">&lt;-</span> <span class="fu">unique</span>(d[, <span class="fu">c</span>(<span class="st">"site"</span>, <span class="st">"Site.Latitude"</span>, <span class="st">"Site.Longitude"</span>)])</span>
+<span id="cb30-129"><a href="#cb30-129" aria-hidden="true" tabindex="-1"></a>co<span class="sc">$</span>mean <span class="ot">&lt;-</span> <span class="fu">tapply</span>(d<span class="sc">$</span>pm25, d<span class="sc">$</span>site, mean)[co<span class="sc">$</span>site]</span>
+<span id="cb30-130"><a href="#cb30-130" aria-hidden="true" tabindex="-1"></a><span class="fu">map</span>(<span class="st">"state"</span>, <span class="at">region =</span> <span class="st">"california"</span>)</span>
+<span id="cb30-131"><a href="#cb30-131" aria-hidden="true" tabindex="-1"></a><span class="fu">points</span>(co<span class="sc">$</span>Site.Longitude, co<span class="sc">$</span>Site.Latitude, <span class="at">pch =</span> <span class="dv">21</span>, <span class="at">bg =</span> <span class="st">"#b31b1b"</span>,</span>
+<span id="cb30-132"><a href="#cb30-132" aria-hidden="true" tabindex="-1"></a>       <span class="at">cex =</span> co<span class="sc">$</span>mean <span class="sc">/</span> <span class="dv">4</span>)</span>
+<span id="cb30-133"><a href="#cb30-133" aria-hidden="true" tabindex="-1"></a><span class="fu">text</span>(co<span class="sc">$</span>Site.Longitude, co<span class="sc">$</span>Site.Latitude, <span class="fu">round</span>(co<span class="sc">$</span>mean, <span class="dv">1</span>), <span class="at">pos =</span> <span class="dv">4</span>, <span class="at">cex =</span> <span class="fl">0.7</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="quick-reference" class="level2">
+<h2 class="anchored" data-anchor-id="quick-reference">Quick reference</h2>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Code</th>
+<th style="text-align: left;">What it does</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><code>layout(m, heights =, widths =)</code></td>
+<td style="text-align: left;">panels of unequal size; <code>m</code> is a matrix of fill positions, a repeated number spans cells, <code>0</code> leaves a cell empty</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>layout.show(n)</code></td>
+<td style="text-align: left;">draw the empty numbered regions before spending plots on them</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>layout(1)</code></td>
+<td style="text-align: left;">the reset — <code>par(op)</code> does <strong>not</strong> undo a layout</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>rect(xleft, ybottom, xright, ytop)</code></td>
+<td style="text-align: left;">a rectangle; all four edges are vectorised</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>adjustcolor(col, alpha.f = 0.2)</code></td>
+<td style="text-align: left;">make any colour translucent</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>polygon(x, y)</code></td>
+<td style="text-align: left;">one closed ring; for a band, x forwards then backwards, upper then lower</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>brewer.pal(n, "Spectral")</code></td>
+<td style="text-align: left;">a designed palette; <code>display.brewer.all()</code> shows them all</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>colorRampPalette(cols)(100)</code></td>
+<td style="text-align: left;">interpolate a palette to any length</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>findInterval(x, breaks)</code></td>
+<td style="text-align: left;">turn a numeric column into palette positions</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>axes = FALSE</code></td>
+<td style="text-align: left;">suppress both axes so you can draw your own</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>axis(1, at =, labels =, tck =, lwd.tick =)</code></td>
+<td style="text-align: left;">your own axis; <code>labels = FALSE</code> with a small <code>tck</code> gives minor ticks</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>box()</code></td>
+<td style="text-align: left;">put the frame back after <code>axes = FALSE</code></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>hist(..., density =, angle =, border =)</code></td>
+<td style="text-align: left;">hatched fills</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>hist(x, plot = FALSE)$counts</code></td>
+<td style="text-align: left;">the bin heights without drawing</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>barplot(m, beside = TRUE, space =)</code></td>
+<td style="text-align: left;">a matrix side by side instead of stacked</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>boxplot(..., notch = TRUE, boxwex =)</code></td>
+<td style="text-align: left;">notches as a rough median CI; box width</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>image(t(m))</code></td>
+<td style="text-align: left;">a matrix as coloured cells — note the transpose</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>map("state")</code>, <code>map(..., fill =, add =, proj =)</code></td>
+<td style="text-align: left;">outlines, choropleths, projections</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>png()</code> in a loop, then stitch</td>
+<td style="text-align: left;">a GIF is a folder of PNGs in order</td>
+</tr>
+</tbody>
+</table>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/arielortizbobea\.github\.io\/aem6850\/");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+            // target, if specified
+            link.setAttribute("target", "_blank");
+            if (link.getAttribute("rel") === null) {
+              link.setAttribute("rel", "noopener");
+            }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

@@ -1,0 +1,1323 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.37">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>5 · Wrangling with dplyr</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-7f8f88aac4f3542376d5c11b86a4c14d.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-9e1fa279bf766a6aa9044cbdb2ba542d.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="../../styles.css">
+</head>
+
+<body class="nav-sidebar docked slimcontent quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../fall-2026/sessions/01-overview.html">Part I — Foundations</a></li><li class="breadcrumb-item"><a href="../../fall-2026/sessions/05-wrangling.html"> 5 Wrangling: dplyr</a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="../../">AEM 6850</a> 
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Home</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/syllabus.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Syllabus</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">Part I — Foundations</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/01-overview.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"> 1 Overview</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/02-r-essentials.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"> 2 R essentials I</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/03-r-essentials-ii.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"> 3 R essentials II</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/04-basic-plots.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"> 4 Basic plots I</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/04b-basic-plots-ii.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">   Basic plots II</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/05-wrangling.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"> 5 Wrangling: dplyr</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/06-functions-debugging.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"> 6 How to code</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/07-git.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"> 7 Projects &amp; git</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/08-ai-chat.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"> 8 AI I: chatbots</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/09-ai-code.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"> 9 AI II: the coding loop</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/10-verification.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">10 Verification</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/11-reproducible-project.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">11 Reproducible projects</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/12-ggplot.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">12 Publication graphics</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
+ <span class="menu-text">Part II — Applications</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/13-landscape.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">13 The data landscape</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/14-apis.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">14 Channels I: APIs</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/15-scraping.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">15 Channels II: scraping</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/16-text-regex.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">16 Text I: regex</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/17-text-llms.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">17 Text II: LLMs</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/18-documents.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">18 Documents &amp; scans</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/19-images-photos.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">19 Images: photographs</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/20-satellite-local.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">20 Satellite I: local</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/21-satellite-gee.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">21 Satellite II: Earth Engine</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/22-audio.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">22 Audio</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/23-time.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">23 Time &amp; time zones</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/24-spatial-vector.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">24 Spatial I: vector</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/25-spatial-rasters.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">25 Spatial II: rasters</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/26-spatial-exposures.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">26 Spatial III: exposures</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/27-ai-ethics.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">27 AI ethics</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/28-moving-forward.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">28 Moving forward</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../../fall-2026/resources.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Resources</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/resources.html#stata" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Coming from Stata</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/resources.html#r" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Learning R</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/resources.html#economists" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Coding guides</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/resources.html#unstuck" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Getting unstuck</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul class="collapse">
+  <li><a href="#objectives" id="toc-objectives" class="nav-link active" data-scroll-target="#objectives">Objectives</a></li>
+  <li><a href="#first-package" id="toc-first-package" class="nav-link" data-scroll-target="#first-package">The first package</a></li>
+  <li><a href="#library" id="toc-library" class="nav-link" data-scroll-target="#library">Load it, every session</a></li>
+  <li><a href="#rebuild" id="toc-rebuild" class="nav-link" data-scroll-target="#rebuild">Rebuild the frame</a></li>
+  <li><a href="#filter" id="toc-filter" class="nav-link" data-scroll-target="#filter"><code>filter()</code>: keep rows</a></li>
+  <li><a href="#select" id="toc-select" class="nav-link" data-scroll-target="#select"><code>select()</code>: keep columns</a></li>
+  <li><a href="#mutate" id="toc-mutate" class="nav-link" data-scroll-target="#mutate"><code>mutate()</code>: add columns</a></li>
+  <li><a href="#arrange" id="toc-arrange" class="nav-link" data-scroll-target="#arrange"><code>arrange()</code>: sort rows</a></li>
+  <li><a href="#pipe" id="toc-pipe" class="nav-link" data-scroll-target="#pipe">The pipe</a></li>
+  <li><a href="#chain" id="toc-chain" class="nav-link" data-scroll-target="#chain">The chain, end to end</a></li>
+  <li><a href="#group-by" id="toc-group-by" class="nav-link" data-scroll-target="#group-by"><code>group_by()</code> and <code>summarize()</code></a></li>
+  <li><a href="#grouped-result" id="toc-grouped-result" class="nav-link" data-scroll-target="#grouped-result">Reading the grouped result</a></li>
+  <li><a href="#factor-order" id="toc-factor-order" class="nav-link" data-scroll-target="#factor-order">Factors put months in order</a></li>
+  <li><a href="#count" id="toc-count" class="nav-link" data-scroll-target="#count"><code>count()</code>: the counting shorthand</a></li>
+  <li><a href="#missing-spring" id="toc-missing-spring" class="nav-link" data-scroll-target="#missing-spring">The missing spring, measured</a></li>
+  <li><a href="#coverage-table" id="toc-coverage-table" class="nav-link" data-scroll-target="#coverage-table">The twelve counts</a></li>
+  <li><a href="#coverage-read" id="toc-coverage-read" class="nav-link" data-scroll-target="#coverage-read">Reading the coverage table</a></li>
+  <li><a href="#timing" id="toc-timing" class="nav-link" data-scroll-target="#timing">The one-line stopwatch</a></li>
+  <li><a href="#quick-reference" id="toc-quick-reference" class="nav-link" data-scroll-target="#quick-reference">Quick reference</a></li>
+  </ul>
+<div class="quarto-alternate-formats"><h2>Other Formats</h2><ul><li><a href="05-wrangling-slides.html"><i class="bi bi-file-slides"></i>RevealJS</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content page-columns page-full" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../fall-2026/sessions/01-overview.html">Part I — Foundations</a></li><li class="breadcrumb-item"><a href="../../fall-2026/sessions/05-wrangling.html"> 5 Wrangling: dplyr</a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title">5 · Wrangling with dplyr</h1>
+<p class="subtitle lead">Tuesday, September 8, 2026</p>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p><a href="05-wrangling-slides.html">Slides</a> · <a href="05-wrangling.R">Live script</a> · <a href="https://github.com/ArielOrtizBobea/aem6850/blob/main/fall-2026/sessions/05-wrangling.qmd">Source</a></p>
+<p>Today the subsetting work gets better grammar: the dplyr verbs, chained with a pipe into lines you can read aloud. By the end, the two-month hole in the regulatory series is measured exactly, in three lines.</p>
+<section id="objectives" class="level2">
+<h2 class="anchored" data-anchor-id="objectives">Objectives</h2>
+<p>By the end of this session you can:</p>
+<ul>
+<li>Translate the base-R subsetting you already know into dplyr verbs.</li>
+<li>Build grouped summaries with <code>group_by()</code> and <code>summarize()</code>.</li>
+<li>Read a pipe chain aloud as a sentence.</li>
+<li>Predict row and group counts before running.</li>
+</ul>
+</section>
+<section id="first-package" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="first-package">The first package</h2>
+<p>Everything so far ran on base R, the toolkit every R installation ships with. A package is R code somebody else wrote, tested, and shared: functions, help pages, sometimes data. <a href="https://dplyr.tidyverse.org">dplyr</a> is the standard package for wrangling data frames, and it is the first one this course needs.</p>
+
+<div class="no-row-height column-margin column-container"><div class="">
+<p>dplyr belongs to a coordinated family of packages called the tidyverse. The course adds members as it needs them.</p>
+</div></div><p>One command fetches it from <a href="https://cran.r-project.org">CRAN</a>, the archive R installs packages from. Type it in the console, not in a script:</p>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"dplyr"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>The console fills with a minute of download messages and ends with a line saying the package was installed. That is the whole install. You do it once per machine, the way you installed R itself once. The command does not belong in a script: a script that carries an install line reinstalls the package on every run.</p>
+</section>
+<section id="library" class="level2">
+<h2 class="anchored" data-anchor-id="library">Load it, every session</h2>
+<p>Installing put dplyr on the machine. <code>library()</code> puts it into the current R session:</p>
+<div class="cell" data-layout-align="center" data-script="Load it (top of every script, every session)">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>#&gt; 
+#&gt; Attaching package: 'dplyr'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>#&gt; The following objects are masked from 'package:stats':
+#&gt; 
+#&gt;     filter, lag</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>#&gt; The following objects are masked from 'package:base':
+#&gt; 
+#&gt;     intersect, setdiff, setequal, union</code></pre>
+</div>
+</div>
+<p>The block about masked objects is information, not an error. dplyr provides functions named <code>filter()</code> and <code>lag()</code>, and base R already had functions with those names. Loading dplyr puts the new ones in front, and the message lists what moved. You will see it at every <code>library(dplyr)</code>.</p>
+<p>The rule from today on: install once per machine, load in every session, and every script opens with its <code>library()</code> lines.</p>
+</section>
+<section id="rebuild" class="level2">
+<h2 class="anchored" data-anchor-id="rebuild">Rebuild the frame</h2>
+<p>Reading stays base R: the same read, the same repairs, the same checks.</p>
+<div class="cell" data-layout-align="center" data-script="Rebuild the frame">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>pm <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"data/epa_pm25_compton_2025.csv"</span>,</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>               <span class="at">colClasses =</span> <span class="fu">c</span>(<span class="st">"Site.ID"</span>          <span class="ot">=</span> <span class="st">"character"</span>,</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>                              <span class="st">"State.FIPS.Code"</span>  <span class="ot">=</span> <span class="st">"character"</span>,</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>                              <span class="st">"County.FIPS.Code"</span> <span class="ot">=</span> <span class="st">"character"</span>))</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(pm)[<span class="fu">names</span>(pm) <span class="sc">==</span> <span class="st">"Daily.Mean.PM2.5.Concentration"</span>] <span class="ot">&lt;-</span> <span class="st">"pm25"</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>pm<span class="sc">$</span>date <span class="ot">&lt;-</span> <span class="fu">as.Date</span>(pm<span class="sc">$</span>Date, <span class="at">format =</span> <span class="st">"%m/%d/%Y"</span>)</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(pm)   <span class="co"># the whole year, both instruments: 662 rows</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; [1] 662</code></pre>
+</div>
+</div>
+<p>dplyr changes nothing about reading a file. <code>read.csv()</code>, the identifier protection, the rename, the date conversion, and the quick checks are unchanged. What dplyr replaces is everything that came after this point with brackets and <code>$</code>. If <code>data/</code> is missing the file, the <a href="data/">data folder</a> has it, alongside the provenance notes.</p>
+</section>
+<section id="filter" class="level2">
+<h2 class="anchored" data-anchor-id="filter"><code>filter()</code>: keep rows</h2>
+<p>Base R cuts the winter window with brackets. Same subset, first verb:</p>
+<div class="cell" data-layout-align="center" data-script="filter(): keep rows">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># base R:  pm[pm$date &lt;= as.Date("2025-02-28") &amp;</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="co">#                pm$POC == 1 &amp; pm$AQS.Parameter.Code == 88101, ]</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>one <span class="ot">&lt;-</span> <span class="fu">filter</span>(pm,</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>              date <span class="sc">&lt;=</span> <span class="fu">as.Date</span>(<span class="st">"2025-02-28"</span>),</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>              POC <span class="sc">==</span> <span class="dv">1</span>,</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>              AQS.Parameter.Code <span class="sc">==</span> <span class="dv">88101</span>)</span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(one)   <span class="co"># must be 59: one row per calendar day</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; [1] 59</code></pre>
+</div>
+</div>
+<p><code>filter()</code> keeps the rows where every condition holds. Three things changed from the base line. The data frame comes first, then the conditions. Column names stand bare, because <code>filter()</code> looks them up inside <code>pm</code>, so no <code>pm$</code> and no brackets. Commas join conditions the way <code>&amp;</code> did; <code>|</code> still spells or, inside a single condition. The answer did not change: 59 rows, one per calendar day of the window.</p>
+</section>
+<section id="select" class="level2">
+<h2 class="anchored" data-anchor-id="select"><code>select()</code>: keep columns</h2>
+<p>Base needed two coordinates and quoted names. <code>select()</code> takes bare names, in the order you want them:</p>
+<div class="cell" data-layout-align="center" data-script="select(): keep columns">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># base R:  one[, c("date", "pm25")]</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(<span class="fu">select</span>(one, date, pm25), <span class="dv">3</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt;         date pm25
+#&gt; 1 2025-01-01 53.2
+#&gt; 2 2025-01-02 33.6
+#&gt; 3 2025-01-03 27.7</code></pre>
+</div>
+</div>
+<p>A minus sign drops instead of keeps: <code>select(one, -Date)</code> returns every column except the raw text date. The result is still a data frame, which is why <code>head()</code> works on it unchanged.</p>
+</section>
+<section id="mutate" class="level2">
+<h2 class="anchored" data-anchor-id="mutate"><code>mutate()</code>: add columns</h2>
+<p><code>mutate()</code> adds columns computed from existing ones. Two at once here, and both get used today. Before running it, set the expectation: four days in this window clear 35 µg/m³, the 24-hour standard set by EPA (the US environmental agency) — January 1, 8, 9, and 10. So a TRUE/FALSE column for <code>pm25 &gt; 35</code> must sum to 4.</p>
+<div class="cell" data-layout-align="center" data-script="mutate(): add columns">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># base R:  one$above35 &lt;- one$pm25 &gt; 35</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>one <span class="ot">&lt;-</span> <span class="fu">mutate</span>(one,</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>              <span class="at">above35 =</span> pm25 <span class="sc">&gt;</span> <span class="dv">35</span>,</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>              <span class="at">month   =</span> <span class="fu">format</span>(date, <span class="st">"%b"</span>))</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(<span class="fu">select</span>(one, date, pm25, above35, month), <span class="dv">3</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt;         date pm25 above35 month
+#&gt; 1 2025-01-01 53.2    TRUE   Jan
+#&gt; 2 2025-01-02 33.6   FALSE   Jan
+#&gt; 3 2025-01-03 27.7   FALSE   Jan</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(one<span class="sc">$</span>above35)   <span class="co"># must be 4</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; [1] 4</code></pre>
+</div>
+</div>
+<p>Each new column is <code>name = expression</code>, computed inside the data frame, so <code>pm25</code> and <code>date</code> stand bare. <code>format(date, "%b")</code> pulls the short month name, <code>"Jan"</code>, out of a date: the same format strings, run in reverse. The sum confirms the count, with <code>TRUE</code> counting as 1.</p>
+</section>
+<section id="arrange" class="level2">
+<h2 class="anchored" data-anchor-id="arrange"><code>arrange()</code>: sort rows</h2>
+<p><code>arrange()</code> sorts rows by a column. <code>desc()</code> flips it to descending:</p>
+<div class="cell" data-layout-align="center" data-script="arrange(): sort rows">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># base R:  head(one[order(-one$pm25), c("date", "pm25")], 5)</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>worst <span class="ot">&lt;-</span> <span class="fu">arrange</span>(one, <span class="fu">desc</span>(pm25))</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(<span class="fu">select</span>(worst, date, pm25), <span class="dv">3</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt;         date pm25
+#&gt; 1 2025-01-01 53.2
+#&gt; 2 2025-01-09 47.7
+#&gt; 3 2025-01-08 44.6</code></pre>
+</div>
+</div>
+<p>January 1 is back on top at 53.2, exactly where the base sort put it. Notice the cost of working verb by verb: <code>worst</code> is a stored intermediate that nothing else will ever use. The base line avoided the intermediate by nesting the subset inside <code>head()</code>, and paid in readability. The pipe removes that trade-off.</p>
+</section>
+<section id="pipe" class="level2">
+<h2 class="anchored" data-anchor-id="pipe">The pipe</h2>
+<p><code>|&gt;</code> passes whatever is on its left to the function on its right, as that function’s first argument:</p>
+<div class="cell" data-layout-align="center" data-script="The pipe">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(<span class="fu">filter</span>(pm, POC <span class="sc">==</span> <span class="dv">1</span>))         <span class="co"># nested: read inside out</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; [1] 301</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>pm <span class="sc">|&gt;</span> <span class="fu">filter</span>(POC <span class="sc">==</span> <span class="dv">1</span>) <span class="sc">|&gt;</span> <span class="fu">nrow</span>()   <span class="co"># piped: read left to right</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; [1] 301</code></pre>
+</div>
+</div>
+<p>Both lines run the same computation and print the same 301. The piped one reads in the order things happen: start from <code>pm</code>, keep the regulatory instrument’s rows, count them. Read <code>|&gt;</code> aloud as “then”. Every dplyr verb takes the data frame as its first argument precisely so chains like this work.</p>
+<p>Two practical notes. RStudio types the pipe for you with Cmd+Shift+M (Mac) or Ctrl+Shift+M (Windows), after you tick “Use native pipe operator” once under Tools, Global Options, Code. And you will meet an older pipe, <code>%&gt;%</code>, all over existing code and AI-generated code. It does nearly the same job. Read it the same way; write <code>|&gt;</code>.</p>
+</section>
+<section id="chain" class="level2">
+<h2 class="anchored" data-anchor-id="chain">The chain, end to end</h2>
+<div class="cell" data-layout-align="center" data-script="The chain, end to end">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co"># base R:  head(one[order(-one$pm25), c("date", "pm25")], 5)</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>pm <span class="sc">|&gt;</span></span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(date <span class="sc">&lt;=</span> <span class="fu">as.Date</span>(<span class="st">"2025-02-28"</span>), POC <span class="sc">==</span> <span class="dv">1</span>, AQS.Parameter.Code <span class="sc">==</span> <span class="dv">88101</span>) <span class="sc">|&gt;</span></span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(pm25)) <span class="sc">|&gt;</span></span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(date, pm25) <span class="sc">|&gt;</span></span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">head</span>(<span class="dv">5</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt;         date pm25
+#&gt; 1 2025-01-01 53.2
+#&gt; 2 2025-01-09 47.7
+#&gt; 3 2025-01-08 44.6
+#&gt; 4 2025-01-10 42.2
+#&gt; 5 2025-01-02 33.6</code></pre>
+</div>
+</div>
+<p>Read it aloud: take the year, keep the winter window from the regulatory sampler, sort worst first, keep the date and the reading, show five. That is one sentence. The five rows match the base sort to the decimal: 53.2, 47.7, 44.6, 42.2, 33.6.</p>
+<p>The chain also changes how you edit. Each verb sits on its own line, so adding a step later means inserting a line, not rebuilding a bracket expression from the inside out.</p>
+</section>
+<section id="group-by" class="level2">
+<h2 class="anchored" data-anchor-id="group-by"><code>group_by()</code> and <code>summarize()</code></h2>
+<p><code>group_by()</code> declares groups; every <code>summarize()</code> after it computes once per group. Before running the block below, write down the six numbers it should print. You already have the evidence. Days: the window has no gaps, so January contributes 31 rows and February 28. Medians: 16.9 for January and 12.6 for February. Means: all four days above the standard belong to January, and in a right-skewed month the mean sits above the median, so January’s mean should clear 16.9 with room. Write your six down, then run.</p>
+<div class="cell" data-layout-align="center" data-script="group_by() + summarize()">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>one <span class="sc">|&gt;</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(month) <span class="sc">|&gt;</span></span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">days        =</span> <span class="fu">n</span>(),</span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>            <span class="at">mean_pm25   =</span> <span class="fu">mean</span>(pm25),</span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>            <span class="at">median_pm25 =</span> <span class="fu">median</span>(pm25))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; # A tibble: 2 x 4
+#&gt;   month  days mean_pm25 median_pm25
+#&gt;   &lt;chr&gt; &lt;int&gt;     &lt;dbl&gt;       &lt;dbl&gt;
+#&gt; 1 Feb      28      13.4        12.6
+#&gt; 2 Jan      31      21.3        16.9</code></pre>
+</div>
+</div>
+</section>
+<section id="grouped-result" class="level2">
+<h2 class="anchored" data-anchor-id="grouped-result">Reading the grouped result</h2>
+<p>Reconcile line by line. The days column reads 31 and 28: <code>n()</code> takes no arguments and counts the rows of whatever group it stands in, and it only works inside <code>summarize()</code> and friends. The medians come back at 16.9 and 12.6, as written down. January’s mean, 21.3, sits far above its own median because the four event days pull it up; February’s, 13.4, barely moves off its median. (<code>summarise()</code> with an s does the same thing; both spellings work.)</p>
+<p>The header row is new. A tibble is dplyr’s flavor of data frame: it behaves like the data frames you know and prints with its dimensions and column types attached. Grouped summaries come back as tibbles.</p>
+<p>And one thing nobody predicted: February printed before January. That is not a dplyr bug. <code>month</code> is text, and text sorts alphabetically. It is <code>"10"</code> before <code>"9"</code>, back again.</p>
+</section>
+<section id="factor-order" class="level2">
+<h2 class="anchored" data-anchor-id="factor-order">Factors put months in order</h2>
+<div class="cell" data-layout-align="center" data-script="Factors put the months in order">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>month.abb   <span class="co"># a vector R ships with</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt;  [1] "Jan" "Feb" "Mar" "Apr" "May" "Jun" "Jul" "Aug" "Sep" "Oct" "Nov" "Dec"</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>one <span class="ot">&lt;-</span> <span class="fu">mutate</span>(one, <span class="at">month =</span> <span class="fu">factor</span>(month, <span class="at">levels =</span> month.abb))</span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>one <span class="sc">|&gt;</span></span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(month) <span class="sc">|&gt;</span></span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">days =</span> <span class="fu">n</span>(), <span class="at">median_pm25 =</span> <span class="fu">median</span>(pm25))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; # A tibble: 2 x 3
+#&gt;   month  days median_pm25
+#&gt;   &lt;fct&gt; &lt;int&gt;       &lt;dbl&gt;
+#&gt; 1 Jan      31        16.9
+#&gt; 2 Feb      28        12.6</code></pre>
+</div>
+</div>
+<p>A factor is a categorical column with a level table. Here the level table does real work: <code>levels = month.abb</code> stores the categories in calendar order, and every grouped result now follows that order. This is what factors are for. Categories usually have an order that is not alphabetical: months, damage classes, education levels, income brackets. Set the levels once and every table downstream prints in the order you meant. (The standing warning: <code>as.numeric()</code> on a factor returns level codes, not the labels.)</p>
+</section>
+<section id="count" class="level2">
+<h2 class="anchored" data-anchor-id="count"><code>count()</code>: the counting shorthand</h2>
+<div class="cell" data-layout-align="center" data-script="count(): the counting shorthand">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="co"># base R:  table(pm$POC, pm$AQS.Parameter.Code)</span></span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>pm <span class="sc">|&gt;</span> <span class="fu">count</span>(POC, AQS.Parameter.Code)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt;   POC AQS.Parameter.Code   n
+#&gt; 1   1              88101 301
+#&gt; 2   3              88101   7
+#&gt; 3   3              88502 354</code></pre>
+</div>
+</div>
+<p><code>count(x)</code> is <code>group_by(x)</code> plus <code>summarize(n = n())</code> in one verb. Give it two columns and it counts every combination that occurs. Base R answers this question with <code>table()</code>; <code>count()</code> answers with a data frame, so the answer itself can go through more verbs. The numbers match it: 301 regulatory days, 7 stray rows under the wrong code, 354 days from the continuous instrument. They sum to 662, every row in the file.</p>
+</section>
+<section id="missing-spring" class="level2">
+<h2 class="anchored" data-anchor-id="missing-spring">The missing spring, measured</h2>
+<p>A bar chart finds the hole. Measuring it takes a chain you can now read:</p>
+<div class="callout callout-style-simple callout-important">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-body-container">
+<p><strong>Write down the twelve counts this should print.</strong> The evidence: the <code>count()</code> above says the regulatory series has 301 rows. A full month has 28 to 31 days. A count plot of this series shows ten tall bars, April near two days, May near one. Your twelve numbers must sum to 301.</p>
+</div>
+</div>
+</div>
+<div class="cell" data-layout-align="center" data-script="The missing spring, measured">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>year <span class="ot">&lt;-</span> pm <span class="sc">|&gt;</span></span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(POC <span class="sc">==</span> <span class="dv">1</span>, AQS.Parameter.Code <span class="sc">==</span> <span class="dv">88101</span>) <span class="sc">|&gt;</span></span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">month =</span> <span class="fu">factor</span>(<span class="fu">format</span>(date, <span class="st">"%b"</span>), <span class="at">levels =</span> month.abb))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="coverage-table" class="level2">
+<h2 class="anchored" data-anchor-id="coverage-table">The twelve counts</h2>
+<div class="cell" data-layout-align="center" data-script="The twelve counts">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>year <span class="sc">|&gt;</span> <span class="fu">count</span>(month)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt;    month  n
+#&gt; 1    Jan 31
+#&gt; 2    Feb 28
+#&gt; 3    Mar 30
+#&gt; 4    Apr  2
+#&gt; 5    May  1
+#&gt; 6    Jun 28
+#&gt; 7    Jul 31
+#&gt; 8    Aug 31
+#&gt; 9    Sep 27
+#&gt; 10   Oct 31
+#&gt; 11   Nov 30
+#&gt; 12   Dec 31</code></pre>
+</div>
+</div>
+</section>
+<section id="coverage-read" class="level2">
+<h2 class="anchored" data-anchor-id="coverage-read">Reading the coverage table</h2>
+<p>Reconcile against your prediction. April and May land at 2 days and 1, exactly where a count plot puts them. The counts sum to 301, and a complete year has 365 days, so the regulatory series is missing 64. Of those, 58 are the spring outage: April is short 28 days and May 30.</p>
+<p>The other six days are the news. If you predicted a full 31 for March, the table corrects you by one day: March logged 30. June logged 28 of 30, September 27 of 30. A bar drawn one day short of thirty looks full; a count is exact. The plot found the hole. The count measured it, and turned up six more missing days nobody had noticed.</p>
+<p>One consequence, computed. The series’ “2025 annual mean” is an average of the 301 days that exist:</p>
+<div class="cell" data-layout-align="center" data-script="What the gap does to an annual mean">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(year<span class="sc">$</span>pm25)   <span class="co"># "the 2025 annual mean" -- of the days that exist</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; [1] 13.38405</code></pre>
+</div>
+</div>
+<p>Is 13.4 high, low, or fine? The missing days decide. The site’s continuous instrument ran through the spring, and its numbers say April and May were the cleanest stretch of its year:</p>
+<div class="cell" data-layout-align="center" data-script="The other instrument's spring">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>other <span class="ot">&lt;-</span> pm <span class="sc">|&gt;</span> <span class="fu">filter</span>(POC <span class="sc">==</span> <span class="dv">3</span>, AQS.Parameter.Code <span class="sc">==</span> <span class="dv">88502</span>)</span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(other<span class="sc">$</span>pm25)   <span class="co"># its full-year mean</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; [1] 12.27881</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>other <span class="sc">|&gt;</span></span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">month =</span> <span class="fu">format</span>(date, <span class="st">"%b"</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(month <span class="sc">==</span> <span class="st">"Apr"</span> <span class="sc">|</span> month <span class="sc">==</span> <span class="st">"May"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">days =</span> <span class="fu">n</span>(), <span class="at">mean_pm25 =</span> <span class="fu">mean</span>(pm25))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt;   days mean_pm25
+#&gt; 1   61  10.13115</code></pre>
+</div>
+</div>
+<p>The continuous instrument averages 12.3 over its year and 10.1 over April and May. The two instruments measure by different methods, so the levels are not exactly comparable. The direction is: the regulatory series is missing precisely the months that would have pulled its average down, so its 13.4 leans high. Every mean is a mean of the days that are there. Today you can put numbers on what that costs.</p>
+</section>
+<section id="timing" class="level2">
+<h2 class="anchored" data-anchor-id="timing">The one-line stopwatch</h2>
+<p>One more habit joins the kit today. Wrap any line in <code>system.time()</code> and R reports how long it took:</p>
+<div class="cell" data-layout-align="center" data-script="system.time(): the one-line stopwatch">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="fu">system.time</span>(<span class="fu">read.csv</span>(<span class="st">"data/epa_pm25_compton_2025.csv"</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt;    user  system elapsed 
+#&gt;   0.003   0.000   0.003</code></pre>
+</div>
+</div>
+<p>Read the <code>elapsed</code> column: the seconds you actually waited. For this file the answer is effectively zero, and it will be for everything in Part I. Part II changes that. Satellite rasters, statewide parcel tables, and folders of hourly files make single lines take minutes. The habit costs one line: when something feels slow, wrap it once, note the number, and compare after you change something.</p>
+</section>
+<section id="quick-reference" class="level2">
+<h2 class="anchored" data-anchor-id="quick-reference">Quick reference</h2>
+<p><strong>The verbs, with the base R you already know</strong></p>
+<div class="tight-cols">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">dplyr</th>
+<th style="text-align: left;">It keeps or makes</th>
+<th style="text-align: left;">Base equivalent</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><code>filter(d, x &gt; 1, g == "a")</code></td>
+<td style="text-align: left;">Rows where all conditions hold</td>
+<td style="text-align: left;"><code>d[d$x &gt; 1 &amp; d$g == "a", ]</code></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>select(d, date, pm25)</code></td>
+<td style="text-align: left;">The named columns; <code>-name</code> drops</td>
+<td style="text-align: left;"><code>d[, c("date", "pm25")]</code></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>mutate(d, new = expr)</code></td>
+<td style="text-align: left;">Adds computed columns</td>
+<td style="text-align: left;"><code>d$new &lt;- expr</code></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>arrange(d, desc(x))</code></td>
+<td style="text-align: left;">Rows sorted; <code>desc()</code> descending</td>
+<td style="text-align: left;"><code>d[order(-d$x), ]</code></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>group_by(d, g)</code></td>
+<td style="text-align: left;">Declares groups for what follows</td>
+<td style="text-align: left;">new today</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>summarize(d, m = mean(x))</code></td>
+<td style="text-align: left;">One row per group</td>
+<td style="text-align: left;">new today</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>count(d, g)</code></td>
+<td style="text-align: left;">Grouped row counts</td>
+<td style="text-align: left;"><code>table(d$g)</code></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p><strong>The pipe and the helpers</strong></p>
+<p>The pipe itself: <code>x |&gt; f() |&gt; g()</code> passes each left side into the next call as its first argument. Read it as “then”.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Code</th>
+<th style="text-align: left;">What it does</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><code>n()</code></td>
+<td style="text-align: left;">Rows in the current group; only inside <code>summarize()</code> and friends</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>desc(x)</code></td>
+<td style="text-align: left;">Descending order inside <code>arrange()</code></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>head(d, 5)</code></td>
+<td style="text-align: left;">Still base R, still works at the end of a chain</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>x %in% c("a", "b")</code></td>
+<td style="text-align: left;">Is each value one of these; tidier than or-chains of <code>==</code></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>factor(x, levels = month.abb)</code></td>
+<td style="text-align: left;">Categories in the order you mean, not alphabetical</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Things that bite</strong></p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Symptom</th>
+<th style="text-align: left;">Cause</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">“Masked objects” message at <code>library(dplyr)</code></td>
+<td style="text-align: left;">Normal. dplyr’s <code>filter()</code> and <code>lag()</code> stand in front of the base ones</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>filter()</code> errors before <code>library(dplyr)</code></td>
+<td style="text-align: left;">The package is not loaded in this session</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>filter(d, x = 1)</code> errors</td>
+<td style="text-align: left;"><code>=</code> assigns; the test is <code>==</code></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">The chain printed, but nothing changed</td>
+<td style="text-align: left;">You never assigned; put <code>d &lt;-</code> in front of the chain</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Reinstalls on every run</td>
+<td style="text-align: left;"><code>install.packages()</code> is in the script; it belongs in the console</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Months print Apr, Aug, Dec, …</td>
+<td style="text-align: left;">Text sorts alphabetically; make a factor with <code>levels = month.abb</code></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>n()</code> errors on its own</td>
+<td style="text-align: left;">It only counts inside <code>summarize()</code> and friends</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Links</strong></p>
+<ul>
+<li>Session materials: <a href="05-wrangling-slides.html">slides</a> · <a href="05-wrangling.R">live script</a> · <a href="data/epa_pm25_compton_2025.csv">EPA data</a> · <a href="data/la-weather-dec2024-feb2025.csv">weather data</a> · <a href="data/SOURCE.md">where they came from</a></li>
+<li><a href="https://dplyr.tidyverse.org">dplyr documentation</a> and the <a href="https://rstudio.github.io/cheatsheets/html/data-transformation.html">data transformation cheatsheet</a></li>
+<li><a href="https://r4ds.hadley.nz/data-transform.html">R for Data Science, ch.&nbsp;3</a>, the book-length treatment of today</li>
+<li><a href="../../fall-2026/syllabus.html">Syllabus</a> · <a href="../../fall-2026/index.html#schedule">full schedule</a></li>
+</ul>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/arielortizbobea\.github\.io\/aem6850\/");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+            // target, if specified
+            link.setAttribute("target", "_blank");
+            if (link.getAttribute("rel") === null) {
+              link.setAttribute("rel", "noopener");
+            }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

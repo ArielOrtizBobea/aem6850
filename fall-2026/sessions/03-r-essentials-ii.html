@@ -1,0 +1,2365 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.37">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>3 · R essentials II</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-7f8f88aac4f3542376d5c11b86a4c14d.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-9e1fa279bf766a6aa9044cbdb2ba542d.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="../../styles.css">
+</head>
+
+<body class="nav-sidebar docked quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../fall-2026/sessions/01-overview.html">Part I — Foundations</a></li><li class="breadcrumb-item"><a href="../../fall-2026/sessions/03-r-essentials-ii.html"> 3 R essentials II</a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="../../">AEM 6850</a> 
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Home</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/syllabus.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Syllabus</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">Part I — Foundations</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/01-overview.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"> 1 Overview</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/02-r-essentials.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"> 2 R essentials I</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/03-r-essentials-ii.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"> 3 R essentials II</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/04-basic-plots.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"> 4 Basic plots I</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/04b-basic-plots-ii.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">   Basic plots II</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/05-wrangling.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"> 5 Wrangling: dplyr</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/06-functions-debugging.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"> 6 How to code</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/07-git.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"> 7 Projects &amp; git</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/08-ai-chat.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"> 8 AI I: chatbots</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/09-ai-code.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"> 9 AI II: the coding loop</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/10-verification.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">10 Verification</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/11-reproducible-project.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">11 Reproducible projects</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/12-ggplot.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">12 Publication graphics</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
+ <span class="menu-text">Part II — Applications</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/13-landscape.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">13 The data landscape</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/14-apis.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">14 Channels I: APIs</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/15-scraping.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">15 Channels II: scraping</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/16-text-regex.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">16 Text I: regex</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/17-text-llms.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">17 Text II: LLMs</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/18-documents.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">18 Documents &amp; scans</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/19-images-photos.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">19 Images: photographs</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/20-satellite-local.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">20 Satellite I: local</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/21-satellite-gee.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">21 Satellite II: Earth Engine</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/22-audio.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">22 Audio</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/23-time.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">23 Time &amp; time zones</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/24-spatial-vector.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">24 Spatial I: vector</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/25-spatial-rasters.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">25 Spatial II: rasters</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/26-spatial-exposures.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">26 Spatial III: exposures</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/27-ai-ethics.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">27 AI ethics</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/28-moving-forward.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">28 Moving forward</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../../fall-2026/resources.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Resources</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/resources.html#stata" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Coming from Stata</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/resources.html#r" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Learning R</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/resources.html#economists" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Coding guides</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/resources.html#unstuck" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Getting unstuck</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul class="collapse">
+  <li><a href="#objectives" id="toc-objectives" class="nav-link active" data-scroll-target="#objectives">Objectives</a></li>
+  <li><a href="#matrices" id="toc-matrices" class="nav-link" data-scroll-target="#matrices">Matrices</a></li>
+  <li><a href="#matrix-indexing" id="toc-matrix-indexing" class="nav-link" data-scroll-target="#matrix-indexing">Indexing a matrix</a></li>
+  <li><a href="#matrix-names" id="toc-matrix-names" class="nav-link" data-scroll-target="#matrix-names">Subsetting by position, name, and logical</a></li>
+  <li><a href="#diag" id="toc-diag" class="nav-link" data-scroll-target="#diag">The diagonal</a></li>
+  <li><a href="#matrix-math" id="toc-matrix-math" class="nav-link" data-scroll-target="#matrix-math">Matrix arithmetic</a></li>
+  <li><a href="#matrix-combine" id="toc-matrix-combine" class="nav-link" data-scroll-target="#matrix-combine">Combining matrices</a></li>
+  <li><a href="#matrix-type" id="toc-matrix-type" class="nav-link" data-scroll-target="#matrix-type">A matrix holds one type</a></li>
+  <li><a href="#sparse" id="toc-sparse" class="nav-link" data-scroll-target="#sparse">Sparse matrices</a></li>
+  <li><a href="#lists" id="toc-lists" class="nav-link" data-scroll-target="#lists">Lists</a></li>
+  <li><a href="#brackets" id="toc-brackets" class="nav-link" data-scroll-target="#brackets">Single and double brackets</a></li>
+  <li><a href="#drawers" id="toc-drawers" class="nav-link" data-scroll-target="#drawers">A list is a chest of drawers</a></li>
+  <li><a href="#nested-lists" id="toc-nested-lists" class="nav-link" data-scroll-target="#nested-lists">Lists inside lists</a></li>
+  <li><a href="#lists-from-functions" id="toc-lists-from-functions" class="nav-link" data-scroll-target="#lists-from-functions">Functions often return lists</a></li>
+  <li><a href="#list-combine" id="toc-list-combine" class="nav-link" data-scroll-target="#list-combine">Combining list elements</a></li>
+  <li><a href="#exercise-1" id="toc-exercise-1" class="nav-link" data-scroll-target="#exercise-1">Exercise 1</a></li>
+  <li><a href="#apply" id="toc-apply" class="nav-link" data-scroll-target="#apply">apply(): over rows and columns</a></li>
+  <li><a href="#apply-any" id="toc-apply-any" class="nav-link" data-scroll-target="#apply-any">apply() with any function</a></li>
+  <li><a href="#split" id="toc-split" class="nav-link" data-scroll-target="#split"><code>split()</code>: one group per element</a></li>
+  <li><a href="#lapply" id="toc-lapply" class="nav-link" data-scroll-target="#lapply"><code>lapply()</code>: a list in, a list out</a></li>
+  <li><a href="#sapply" id="toc-sapply" class="nav-link" data-scroll-target="#sapply"><code>sapply()</code>: the same, simplified</a></li>
+  <li><a href="#exercise-2" id="toc-exercise-2" class="nav-link" data-scroll-target="#exercise-2">Exercise 2</a></li>
+  <li><a href="#read" id="toc-read" class="nav-link" data-scroll-target="#read">Reading a CSV</a></li>
+  <li><a href="#df-is-a-list" id="toc-df-is-a-list" class="nav-link" data-scroll-target="#df-is-a-list">A data frame is a list of columns</a></li>
+  <li><a href="#identifiers" id="toc-identifiers" class="nav-link" data-scroll-target="#identifiers">Identifiers read as numbers</a></li>
+  <li><a href="#identifiers-fix" id="toc-identifiers-fix" class="nav-link" data-scroll-target="#identifiers-fix">colClasses: setting types at read time</a></li>
+  <li><a href="#dates" id="toc-dates" class="nav-link" data-scroll-target="#dates">Dates</a></li>
+  <li><a href="#dates-parts" id="toc-dates-parts" class="nav-link" data-scroll-target="#dates-parts">Pulling pieces out of a date</a></li>
+  <li><a href="#dates-arithmetic" id="toc-dates-arithmetic" class="nav-link" data-scroll-target="#dates-arithmetic">Dates are numbers</a></li>
+  <li><a href="#one-instrument" id="toc-one-instrument" class="nav-link" data-scroll-target="#one-instrument">Checking for duplicate rows</a></li>
+  <li><a href="#sites-by-months" id="toc-sites-by-months" class="nav-link" data-scroll-target="#sites-by-months">tapply(): a matrix from two groupings</a></li>
+  <li><a href="#reshape" id="toc-reshape" class="nav-link" data-scroll-target="#reshape">reshape(): long and wide</a></li>
+  <li><a href="#reshape-back" id="toc-reshape-back" class="nav-link" data-scroll-target="#reshape-back">reshape(): back to long</a></li>
+  <li><a href="#both-margins" id="toc-both-margins" class="nav-link" data-scroll-target="#both-margins">apply() over both margins</a></li>
+  <li><a href="#merge" id="toc-merge" class="nav-link" data-scroll-target="#merge">merge(): joining two tables</a></li>
+  <li><a href="#merge-hazards" id="toc-merge-hazards" class="nav-link" data-scroll-target="#merge-hazards">How merge() drops and duplicates rows</a></li>
+  <li><a href="#lapply-files" id="toc-lapply-files" class="nav-link" data-scroll-target="#lapply-files">Reading many files</a></li>
+  <li><a href="#write" id="toc-write" class="nav-link" data-scroll-target="#write">Writing files to disk</a></li>
+  <li><a href="#practice" id="toc-practice" class="nav-link" data-scroll-target="#practice">Practice</a></li>
+  <li><a href="#quick-reference" id="toc-quick-reference" class="nav-link" data-scroll-target="#quick-reference">Quick reference</a></li>
+  </ul>
+<div class="quarto-alternate-formats"><h2>Other Formats</h2><ul><li><a href="03-r-essentials-ii-slides.html"><i class="bi bi-file-slides"></i>RevealJS</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../fall-2026/sessions/01-overview.html">Part I — Foundations</a></li><li class="breadcrumb-item"><a href="../../fall-2026/sessions/03-r-essentials-ii.html"> 3 R essentials II</a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title">3 · R essentials II</h1>
+<p class="subtitle lead">Tuesday, September 1, 2026</p>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p><a href="03-r-essentials-ii-slides.html">Slides</a> · <a href="03-r-essentials-ii.R">Live script</a> · <a href="https://github.com/ArielOrtizBobea/aem6850/blob/main/fall-2026/sessions/03-r-essentials-ii.qmd">Source</a></p>
+<p>Everything below is in the live script. Run it line by line at home, as many times as it takes.</p>
+<section id="objectives" class="level2">
+<h2 class="anchored" data-anchor-id="objectives">Objectives</h2>
+<p>By the end of this session you can:</p>
+<ul>
+<li>Build, index and combine matrices.</li>
+<li>Build and index lists, and tell <code>[</code> from <code>[[</code>.</li>
+<li>Run one function over every row, column, group or file.</li>
+<li>Read a real CSV, fix its types, and write results back out.</li>
+<li>Join two tables, and check the row count before and after.</li>
+</ul>
+</section>
+<section id="matrices" class="level2">
+<h2 class="anchored" data-anchor-id="matrices">Matrices</h2>
+<p>A <strong>matrix</strong> is one vector with dimensions.</p>
+<div class="cell" data-layout-align="center" data-script="Matrices">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">6</span>, <span class="at">nrow =</span> <span class="dv">2</span>)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>m</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt;      [,1] [,2] [,3]
+#&gt; [1,]    1    3    5
+#&gt; [2,]    2    4    6</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">c</span>(<span class="fu">dim</span>(m), <span class="fu">nrow</span>(m), <span class="fu">ncol</span>(m))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; [1] 2 3 2 3</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">matrix</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">6</span>, <span class="at">nrow =</span> <span class="dv">2</span>, <span class="at">byrow =</span> <span class="cn">TRUE</span>)   <span class="co"># filled across, not down</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt;      [,1] [,2] [,3]
+#&gt; [1,]    1    2    3
+#&gt; [2,]    4    5    6</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">matrix</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>, <span class="at">nrow =</span> <span class="dv">2</span>, <span class="at">ncol =</span> <span class="dv">3</span>)       <span class="co"># too few values: R recycles them</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt;      [,1] [,2] [,3]
+#&gt; [1,]    1    1    1
+#&gt; [2,]    2    2    2</code></pre>
+</div>
+</div>
+<p>R folds the vector down the columns unless you say <code>byrow = TRUE</code>. Get that backwards and every value lands in the wrong cell, with no error.</p>
+<p>The last line is the one that bites. Give <code>matrix()</code> fewer values than cells and it <strong>recycles</strong> them to fill the shape, silently, as long as the count divides evenly. When it does not divide evenly you get a warning, which is the friendlier case. Check <code>dim()</code> against what you meant.</p>
+</section>
+<section id="matrix-indexing" class="level2">
+<h2 class="anchored" data-anchor-id="matrix-indexing">Indexing a matrix</h2>
+<div class="cell" data-layout-align="center" data-script="Indexing a matrix">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>m[<span class="dv">2</span>, <span class="dv">3</span>]     <span class="co"># row 2, column 3</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; [1] 6</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>m[<span class="dv">2</span>, ]      <span class="co"># all of row 2</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; [1] 2 4 6</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>m[, <span class="dv">3</span>]      <span class="co"># all of column 3</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; [1] 5 6</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>(m[, <span class="dv">3</span>])                <span class="co"># a plain vector: the dimension was dropped</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; [1] "integer"</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>(m[, <span class="dv">3</span>, <span class="at">drop =</span> <span class="cn">FALSE</span>])  <span class="co"># still a matrix</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; [1] "matrix" "array"</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(m, <span class="dv">1</span>)                   <span class="co"># first rows; tail() for the last</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt;      [,1] [,2] [,3]
+#&gt; [1,]    1    3    5</code></pre>
+</div>
+</div>
+<p>Two coordinates, <code>m[row, column]</code>, and a blank means all of them. The same rule you use on a data frame.</p>
+<p>Note that <code>m[2, ]</code> came back as a plain vector, not a one-row matrix. R drops the dimension when you ask for a single row or column, which is convenient at the console and a bug inside a function that expected a matrix. <code>drop = FALSE</code> keeps the shape.</p>
+</section>
+<section id="matrix-names" class="level2">
+<h2 class="anchored" data-anchor-id="matrix-names">Subsetting by position, name, and logical</h2>
+<div class="cell" data-layout-align="center" data-script="Three ways to pick: position, name, logical">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>temps <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">c</span>(<span class="dv">12</span>, <span class="dv">15</span>, <span class="dv">19</span>,</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>                  <span class="dv">14</span>, <span class="dv">17</span>, <span class="dv">22</span>), <span class="at">nrow =</span> <span class="dv">2</span>, <span class="at">byrow =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a><span class="fu">rownames</span>(temps) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Compton"</span>, <span class="st">"Reseda"</span>)</span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(temps) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Jan"</span>, <span class="st">"Feb"</span>, <span class="st">"Mar"</span>)</span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>temps</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt;         Jan Feb Mar
+#&gt; Compton  12  15  19
+#&gt; Reseda   14  17  22</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>temps[<span class="st">"Reseda"</span>, <span class="st">"Feb"</span>]     <span class="co"># by name, not position</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; [1] 17</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>temps[, <span class="fu">c</span>(<span class="st">"Jan"</span>, <span class="st">"Feb"</span>)]   <span class="co"># several at once</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt;         Jan Feb
+#&gt; Compton  12  15
+#&gt; Reseda   14  17</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>temps[temps <span class="sc">&gt;</span> <span class="dv">15</span>]          <span class="co"># by logical: returns a vector</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; [1] 17 19 22</code></pre>
+</div>
+</div>
+<p>Three notations, one operation. Position counts, names read, and a logical test picks whatever passes.</p>
+<p>Names are worth setting the moment a matrix means something. <code>temps[2, 2]</code> is a number you have to decode; <code>temps["Reseda", "Feb"]</code> says what it is, and it keeps working when the rows get reordered.</p>
+<p>The logical form behaves differently from the other two: it hands back a plain vector, not a matrix, because the cells that pass do not generally form a rectangle. Ask for the positions instead with <code>which(temps &gt; 15, arr.ind = TRUE)</code> when you need to know <em>where</em> they were.</p>
+</section>
+<section id="diag" class="level2">
+<h2 class="anchored" data-anchor-id="diag">The diagonal</h2>
+<div class="cell" data-layout-align="center" data-script="The diagonal">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>sq <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">9</span>, <span class="at">nrow =</span> <span class="dv">3</span>)</span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>sq</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt;      [,1] [,2] [,3]
+#&gt; [1,]    1    4    7
+#&gt; [2,]    2    5    8
+#&gt; [3,]    3    6    9</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">diag</span>(sq)          <span class="co"># pull the diagonal out</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; [1] 1 5 9</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="fu">diag</span>(<span class="dv">3</span>)           <span class="co"># build a 3 x 3 identity matrix</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt;      [,1] [,2] [,3]
+#&gt; [1,]    1    0    0
+#&gt; [2,]    0    1    0
+#&gt; [3,]    0    0    1</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="fu">diag</span>(<span class="fu">c</span>(<span class="dv">4</span>, <span class="dv">5</span>, <span class="dv">6</span>))  <span class="co"># build a diagonal matrix from a vector</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt;      [,1] [,2] [,3]
+#&gt; [1,]    4    0    0
+#&gt; [2,]    0    5    0
+#&gt; [3,]    0    0    6</code></pre>
+</div>
+</div>
+<p><code>diag()</code> does two jobs depending on what you hand it. Give it a matrix and it extracts the diagonal. Give it a single number and it builds an identity matrix of that size. Give it a vector and it builds a diagonal matrix with that vector down the middle and zeros elsewhere.</p>
+<p>Diagonal matrices come up constantly once you write estimators by hand: weights, variances, and the identity that sits in a projection formula are all diagonal. Most of a diagonal matrix is zeros, which is worth remembering for later today.</p>
+</section>
+<section id="matrix-math" class="level2">
+<h2 class="anchored" data-anchor-id="matrix-math">Matrix arithmetic</h2>
+<div class="cell" data-layout-align="center" data-script="Matrix arithmetic">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>temps <span class="sc">*</span> <span class="dv">9</span><span class="sc">/</span><span class="dv">5</span> <span class="sc">+</span> <span class="dv">32</span>     <span class="co"># every cell at once, Celsius to Fahrenheit</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt;          Jan  Feb  Mar
+#&gt; Compton 53.6 59.0 66.2
+#&gt; Reseda  57.2 62.6 71.6</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="fu">t</span>(temps)             <span class="co"># flip rows and columns</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt;     Compton Reseda
+#&gt; Jan      12     14
+#&gt; Feb      15     17
+#&gt; Mar      19     22</code></pre>
+</div>
+</div>
+<p>Arithmetic runs cell by cell, exactly as it does on a vector, because underneath a matrix is a vector.</p>
+<p>This is why images and grids are stored as matrices. A photograph is a matrix of pixel values, and making it brighter is one multiplication. A weather grid is a matrix of temperatures, and converting the whole grid to Fahrenheit is the line above.</p>
+</section>
+<section id="matrix-combine" class="level2">
+<h2 class="anchored" data-anchor-id="matrix-combine">Combining matrices</h2>
+<div class="cell" data-layout-align="center" data-script="Combining matrices">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>more <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">c</span>(<span class="dv">9</span>, <span class="dv">11</span>, <span class="dv">16</span>), <span class="at">nrow =</span> <span class="dv">1</span>,</span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>               <span class="at">dimnames =</span> <span class="fu">list</span>(<span class="st">"Pasadena"</span>, <span class="fu">c</span>(<span class="st">"Jan"</span>, <span class="st">"Feb"</span>, <span class="st">"Mar"</span>)))</span>
+<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a><span class="fu">rbind</span>(temps, more)              <span class="co"># a new row: same columns</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt;          Jan Feb Mar
+#&gt; Compton   12  15  19
+#&gt; Reseda    14  17  22
+#&gt; Pasadena   9  11  16</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cbind</span>(temps, <span class="at">Apr =</span> <span class="fu">c</span>(<span class="dv">21</span>, <span class="dv">24</span>))   <span class="co"># a new column: same rows</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt;         Jan Feb Mar Apr
+#&gt; Compton  12  15  19  21
+#&gt; Reseda   14  17  22  24</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>Matrix<span class="sc">::</span><span class="fu">bdiag</span>(<span class="fu">diag</span>(<span class="dv">2</span>), <span class="fu">matrix</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">2</span>))   <span class="co"># blocks down the diagonal</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; 4 x 4 sparse Matrix of class "dsCMatrix"
+#&gt;             
+#&gt; [1,] 1 . . .
+#&gt; [2,] . 1 . .
+#&gt; [3,] . . 1 1
+#&gt; [4,] . . 1 1</code></pre>
+</div>
+</div>
+<p><code>rbind()</code> stacks matrices on top of each other and <code>cbind()</code> puts them side by side. The shared margin has to agree: <code>rbind()</code> needs the same number of columns, <code>cbind()</code> the same number of rows.</p>
+<p>R matches columns by <strong>position, not by name</strong>. If the second matrix carries the same three months in a different order, <code>rbind()</code> will stack them anyway and put February’s numbers under the January heading, with no warning. Check the names agree before you stack, not after.</p>
+</section>
+<section id="matrix-type" class="level2">
+<h2 class="anchored" data-anchor-id="matrix-type">A matrix holds one type</h2>
+<div class="cell" data-layout-align="center" data-script="One matrix, one type">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rbind</span>(<span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>),</span>
+<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a>      <span class="fu">c</span>(<span class="st">"a"</span>, <span class="st">"b"</span>, <span class="st">"c"</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt;      [,1] [,2] [,3]
+#&gt; [1,] "1"  "2"  "3" 
+#&gt; [2,] "a"  "b"  "c"</code></pre>
+</div>
+</div>
+<p>One vector underneath means one class throughout. Add a row of text and every number becomes text, silently, with no warning. It is the same conversion that turns a numeric column into text when one entry is a word.</p>
+<p>A data frame does not do this, because its columns are separate vectors. That is the whole reason both containers exist: tables of mixed data are data frames, and grids of one measurement are matrices.</p>
+</section>
+<section id="sparse" class="level2">
+<h2 class="anchored" data-anchor-id="sparse">Sparse matrices</h2>
+<p>Most of the cells are zero. Store only the ones that are not, and both the memory and the arithmetic get cheaper.</p>
+<div class="cell" data-layout-align="center" data-script="Sparse matrices">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(Matrix)</span>
+<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1</span>); n <span class="ot">&lt;-</span> <span class="dv">2000</span></span>
+<span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="dv">0</span>, n, n); d[<span class="fu">sample</span>(n <span class="sc">*</span> n, n <span class="sc">*</span> n <span class="sc">*</span> <span class="fl">0.01</span>)] <span class="ot">&lt;-</span> <span class="dv">1</span>   <span class="co"># 1% non-zero</span></span>
+<span id="cb49-4"><a href="#cb49-4" aria-hidden="true" tabindex="-1"></a>s <span class="ot">&lt;-</span> <span class="fu">Matrix</span>(d, <span class="at">sparse =</span> <span class="cn">TRUE</span>); v <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n)</span>
+<span id="cb49-5"><a href="#cb49-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb49-6"><a href="#cb49-6" aria-hidden="true" tabindex="-1"></a><span class="fu">c</span>(<span class="at">dense =</span> <span class="fu">format</span>(<span class="fu">object.size</span>(d), <span class="at">units =</span> <span class="st">"MB"</span>),</span>
+<span id="cb49-7"><a href="#cb49-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">sparse =</span> <span class="fu">format</span>(<span class="fu">object.size</span>(s), <span class="at">units =</span> <span class="st">"MB"</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt;     dense    sparse 
+#&gt; "30.5 Mb"  "0.5 Mb"</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a><span class="fu">c</span>(<span class="at">dense  =</span> <span class="fu">system.time</span>(<span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">20</span>) d <span class="sc">%*%</span> v)[[<span class="st">"elapsed"</span>]],</span>
+<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">sparse =</span> <span class="fu">system.time</span>(<span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">20</span>) s <span class="sc">%*%</span> v)[[<span class="st">"elapsed"</span>]])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt;  dense sparse 
+#&gt;  0.070  0.004</code></pre>
+</div>
+</div>
+<p>A dense matrix stores every cell, including all the zeros. A <strong>sparse</strong> matrix stores only the non-zero values and the positions they sit in. Same numbers, same indexing, a fraction of the memory.</p>
+<p><strong>The arithmetic gets faster too</strong>, which is the part that pays. Multiplying skips the zeros instead of multiplying by them, so the same product runs more than ten times quicker here. Two things you will do constantly are matrix multiplications underneath: <strong>aggregating</strong> values up to groups, which is a matrix of weights times a vector of values, and any estimator written in matrix form.</p>
+<p>You meet these the moment a matrix gets large and mostly empty: a county-by-county adjacency matrix, a word-by-document count, a design matrix of fixed effects with one 1 per row, or extraction weights mapping grid cells to regions. At <code>n = 2000</code> the saving is a convenience. At <code>n = 100,000</code> it decides whether the code runs at all.</p>
+<p><code>Matrix</code> ships with R, so there is nothing to install. Its matrices index and multiply like ordinary ones; <code>as.matrix()</code> converts back when a function insists on dense input.</p>
+</section>
+<section id="lists" class="level2">
+<h2 class="anchored" data-anchor-id="lists">Lists</h2>
+<p>A <strong>list</strong> holds anything, in any mix, at any length.</p>
+<div class="cell" data-layout-align="center" data-script="Lists">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a>l <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="at">site =</span> <span class="st">"Compton"</span>, <span class="at">readings =</span> <span class="fu">c</span>(<span class="fl">53.2</span>, <span class="fl">33.6</span>, <span class="fl">47.0</span>), <span class="at">clean =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(l)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; List of 3
+#&gt;  $ site    : chr "Compton"
+#&gt;  $ readings: num [1:3] 53.2 33.6 47
+#&gt;  $ clean   : logi TRUE</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a><span class="fu">length</span>(l)      <span class="co"># three elements...</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; [1] 3</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb57"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a><span class="fu">lengths</span>(l)     <span class="co"># ...of these lengths</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt;     site readings    clean 
+#&gt;        1        3        1</code></pre>
+</div>
+</div>
+<p>Text, a numeric vector, and a logical, side by side in one object. A vector could not do this: it would convert everything to text. A matrix could not either: one type throughout, and every row the same length.</p>
+<p>That freedom is the point. Lists are what R uses whenever the pieces do not line up.</p>
+</section>
+<section id="brackets" class="level2">
+<h2 class="anchored" data-anchor-id="brackets">Single and double brackets</h2>
+<div class="cell" data-layout-align="center" data-script="One bracket or two">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb59"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a>l[<span class="st">"readings"</span>]     <span class="co"># a LIST of length one</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; $readings
+#&gt; [1] 53.2 33.6 47.0</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb61"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a>l[[<span class="st">"readings"</span>]]   <span class="co"># the vector itself</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; [1] 53.2 33.6 47.0</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb63"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb63-1"><a href="#cb63-1" aria-hidden="true" tabindex="-1"></a>l<span class="sc">$</span>readings        <span class="co"># the same thing, less typing</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; [1] 53.2 33.6 47.0</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb65"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb65-1"><a href="#cb65-1" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>(l[<span class="st">"readings"</span>])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; [1] "list"</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb67"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb67-1"><a href="#cb67-1" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>(l[[<span class="st">"readings"</span>]])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; [1] "numeric"</code></pre>
+</div>
+</div>
+<p>The mistake to expect is arithmetic on a single-bracket result: <code>mean(l["readings"])</code> fails, because you handed <code>mean()</code> a list. <code>$</code> and <code>[[ ]]</code> do the same job; <code>[[ ]]</code> is the one that also takes a variable, which matters as soon as the name is computed rather than typed.</p>
+</section>
+<section id="drawers" class="level2">
+<h2 class="anchored" data-anchor-id="drawers">A list is a chest of drawers</h2>
+<p>Think of the list as a chest of drawers. <strong>Single brackets take the drawer out of the chest</strong>, and a drawer is still a drawer. <strong>Double brackets open the drawer and hand you what is inside.</strong></p>
+<svg viewbox="0 0 620 128" role="img" aria-label="A chest of drawers: single brackets take a whole drawer out, double brackets hand you its contents." style="max-width:100%;height:auto;font-family:inherit">
+  <g fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="10" y="14" width="92" height="100" rx="4"></rect>
+    <rect x="20" y="24" width="72" height="24" rx="3"></rect>
+    <rect x="20" y="54" width="72" height="24" rx="3"></rect>
+    <rect x="20" y="84" width="72" height="24" rx="3"></rect>
+    <line x1="47" y1="36" x2="65" y2="36"></line><line x1="47" y1="66" x2="65" y2="66"></line>
+    <line x1="47" y1="96" x2="65" y2="96"></line>
+    <path d="M116 44 L162 44"></path><path d="M155 39 L162 44 L155 49"></path>
+    <path d="M116 92 L162 92"></path><path d="M155 87 L162 92 L155 97"></path>
+    <rect x="176" y="30" width="86" height="26" rx="3"></rect>
+    <line x1="210" y1="43" x2="228" y2="43"></line>
+    <circle cx="192" cy="92" r="8"></circle><circle cx="219" cy="92" r="8"></circle><circle cx="246" cy="92" r="8"></circle>
+  </g>
+  <g font-size="12" fill="currentColor" font-family="ui-monospace,monospace" text-anchor="middle">
+    <text x="139" y="36">l["a"]</text><text x="139" y="84">l[["a"]]</text>
+  </g>
+  <g font-size="12.5" fill="currentColor">
+    <text x="278" y="47">the drawer, still a list</text>
+    <text x="278" y="97">what was inside it</text>
+  </g>
+</svg>
+</section>
+<section id="nested-lists" class="level2">
+<h2 class="anchored" data-anchor-id="nested-lists">Lists inside lists</h2>
+<div class="cell" data-layout-align="center" data-script="Lists inside lists">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb69"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb69-1"><a href="#cb69-1" aria-hidden="true" tabindex="-1"></a>monitor <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
+<span id="cb69-2"><a href="#cb69-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">id   =</span> <span class="st">"060371302"</span>,</span>
+<span id="cb69-3"><a href="#cb69-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">site =</span> <span class="fu">list</span>(<span class="at">name =</span> <span class="st">"Compton"</span>, <span class="at">lat =</span> <span class="fl">33.90</span>, <span class="at">lon =</span> <span class="sc">-</span><span class="fl">118.21</span>),</span>
+<span id="cb69-4"><a href="#cb69-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">pm   =</span> <span class="fu">c</span>(<span class="fl">53.2</span>, <span class="fl">33.6</span>, <span class="fl">47.0</span>)</span>
+<span id="cb69-5"><a href="#cb69-5" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb69-6"><a href="#cb69-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb69-7"><a href="#cb69-7" aria-hidden="true" tabindex="-1"></a>monitor<span class="sc">$</span>site<span class="sc">$</span>name</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; [1] "Compton"</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb71"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb71-1"><a href="#cb71-1" aria-hidden="true" tabindex="-1"></a>monitor[[<span class="st">"site"</span>]][[<span class="st">"lat"</span>]]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; [1] 33.9</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb73"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb73-1"><a href="#cb73-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(monitor)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; List of 3
+#&gt;  $ id  : chr "060371302"
+#&gt;  $ site:List of 3
+#&gt;   ..$ name: chr "Compton"
+#&gt;   ..$ lat : num 33.9
+#&gt;   ..$ lon : num -118
+#&gt;  $ pm  : num [1:3] 53.2 33.6 47</code></pre>
+</div>
+</div>
+<p>An element of a list can be another list, to any depth. Chain the operators to walk down: <code>$</code> after <code>$</code>, or <code>[[ ]]</code> after <code>[[ ]]</code>.</p>
+<p>This is exactly the shape of the JSON that web APIs return, which is why the lesson pays off well beyond R. <code>str()</code> is how you find your way around one you did not build.</p>
+</section>
+<section id="lists-from-functions" class="level2">
+<h2 class="anchored" data-anchor-id="lists-from-functions">Functions often return lists</h2>
+<div class="cell" data-layout-align="center" data-script="Where lists come from">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb75"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb75-1"><a href="#cb75-1" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>)</span>
+<span id="cb75-2"><a href="#cb75-2" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">3</span>, <span class="dv">2</span>, <span class="dv">5</span>)</span>
+<span id="cb75-3"><a href="#cb75-3" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">lm</span>(y <span class="sc">~</span> x)</span>
+<span id="cb75-4"><a href="#cb75-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb75-5"><a href="#cb75-5" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>(fit)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; [1] "lm"</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb77"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb77-1"><a href="#cb77-1" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(fit)          <span class="co"># a list underneath</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt;  [1] "coefficients"  "residuals"     "effects"       "rank"         
+#&gt;  [5] "fitted.values" "assign"        "qr"            "df.residual"  
+#&gt;  [9] "xlevels"       "call"          "terms"         "model"</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb79"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb79-1"><a href="#cb79-1" aria-hidden="true" tabindex="-1"></a>fit<span class="sc">$</span>coefficients</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt;   (Intercept)             x 
+#&gt; -2.220446e-16  1.100000e+00</code></pre>
+</div>
+</div>
+<div class="cell" data-layout-align="center" data-script="What the fitted list is describing">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb81"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb81-1"><a href="#cb81-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(x, y, <span class="at">pch =</span> <span class="dv">16</span>, <span class="at">xlab =</span> <span class="st">"x"</span>, <span class="at">ylab =</span> <span class="st">"y"</span>)</span>
+<span id="cb81-2"><a href="#cb81-2" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(fit, <span class="at">col =</span> <span class="st">"#b31b1b"</span>, <span class="at">lwd =</span> <span class="dv">2</span>)</span>
+<span id="cb81-3"><a href="#cb81-3" aria-hidden="true" tabindex="-1"></a><span class="fu">segments</span>(x, y, x, <span class="fu">fitted</span>(fit), <span class="at">lty =</span> <span class="dv">2</span>, <span class="at">col =</span> <span class="st">"grey55"</span>)   <span class="co"># the residuals</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="03-r-essentials-ii_files/figure-html/lists-from-functions-plot-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" alt="Four points scattered upward with the fitted least-squares line through them, and dashed vertical segments joining each point to the line to show its residual." width="1200"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Most functions that return more than one thing return a list, because a list is the only container that can hold a number, a vector and a data frame at once.</p>
+<p>A fitted model is a list with a class on it. <code>names()</code> shows you the parts and <code>$</code> takes one out. Every modelling function you meet this semester follows this pattern, so knowing lists means never being stuck at “what did this thing give me?”</p>
+<p>The plot is what those numbers describe. <code>fit$coefficients</code> is the line, <code>fitted(fit)</code> is where the line sits above each <code>x</code>, and <code>fit$residuals</code> is the length of each dashed segment. Three elements of one list, all visible at once.</p>
+</section>
+<section id="list-combine" class="level2">
+<h2 class="anchored" data-anchor-id="list-combine">Combining list elements</h2>
+<div class="cell" data-layout-align="center" data-script="Combining list elements">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb82"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb82-1"><a href="#cb82-1" aria-hidden="true" tabindex="-1"></a>pieces <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="at">a =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>), <span class="at">b =</span> <span class="fu">c</span>(<span class="dv">3</span>, <span class="dv">4</span>), <span class="at">c =</span> <span class="fu">c</span>(<span class="dv">5</span>, <span class="dv">6</span>))</span>
+<span id="cb82-2"><a href="#cb82-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb82-3"><a href="#cb82-3" aria-hidden="true" tabindex="-1"></a><span class="fu">unlist</span>(pieces)              <span class="co"># one flat vector, names kept</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; a1 a2 b1 b2 c1 c2 
+#&gt;  1  2  3  4  5  6</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb84"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb84-1"><a href="#cb84-1" aria-hidden="true" tabindex="-1"></a><span class="fu">do.call</span>(rbind, pieces)      <span class="co"># one matrix, one row per element</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt;   [,1] [,2]
+#&gt; a    1    2
+#&gt; b    3    4
+#&gt; c    5    6</code></pre>
+</div>
+</div>
+<p><code>unlist()</code> flattens a list into a single vector. It is convenient and it is lossy: everything becomes one type, and any structure below the top level disappears.</p>
+<p><code>do.call(f, list)</code> calls <code>f</code> with the list’s elements as its arguments, so <code>do.call(rbind, pieces)</code> is <code>rbind(pieces$a, pieces$b, pieces$c)</code> without your having to know how many there are or what they are called. That is the standard way to turn a list of rows into a matrix, or a list of data frames into one data frame.</p>
+</section>
+<section id="exercise-1" class="level2">
+<h2 class="anchored" data-anchor-id="exercise-1">Exercise 1</h2>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true" href="">Exercise</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false" href="">Solution</a></li></ul>
+<div class="tab-content">
+<div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
+<div class="cell" data-layout-align="center" data-exercise="true" data-script="Exercise 1 (5 minutes)">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb86"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb86-1"><a href="#cb86-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 1. Build a diagonal matrix with the numbers 1 to 5 down the middle.</span></span>
+<span id="cb86-2"><a href="#cb86-2" aria-hidden="true" tabindex="-1"></a><span class="co">#</span></span>
+<span id="cb86-3"><a href="#cb86-3" aria-hidden="true" tabindex="-1"></a><span class="co"># 2. From m (the 2 x 3 matrix), pull the second column two ways: once</span></span>
+<span id="cb86-4"><a href="#cb86-4" aria-hidden="true" tabindex="-1"></a><span class="co">#    as a vector, once still a matrix.</span></span>
+<span id="cb86-5"><a href="#cb86-5" aria-hidden="true" tabindex="-1"></a><span class="co">#</span></span>
+<span id="cb86-6"><a href="#cb86-6" aria-hidden="true" tabindex="-1"></a><span class="co"># 3. l["readings"] and l[["readings"]]: which one can you take a mean of?</span></span>
+<span id="cb86-7"><a href="#cb86-7" aria-hidden="true" tabindex="-1"></a><span class="co">#    Find out with class(), not from memory.</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+<div id="tabset-1-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-2-tab">
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb87"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb87-1"><a href="#cb87-1" aria-hidden="true" tabindex="-1"></a><span class="fu">diag</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt;      [,1] [,2] [,3] [,4] [,5]
+#&gt; [1,]    1    0    0    0    0
+#&gt; [2,]    0    2    0    0    0
+#&gt; [3,]    0    0    3    0    0
+#&gt; [4,]    0    0    0    4    0
+#&gt; [5,]    0    0    0    0    5</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb89"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb89-1"><a href="#cb89-1" aria-hidden="true" tabindex="-1"></a>m[, <span class="dv">2</span>]; m[, <span class="dv">2</span>, drop <span class="ot">=</span> <span class="cn">FALSE</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; [1] 3 4</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt;      [,1]
+#&gt; [1,]    3
+#&gt; [2,]    4</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb92"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb92-1"><a href="#cb92-1" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>(l[<span class="st">"readings"</span>]); <span class="fu">class</span>(l[[<span class="st">"readings"</span>]])   <span class="co"># list vs numeric</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; [1] "list"</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; [1] "numeric"</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="apply" class="level2">
+<h2 class="anchored" data-anchor-id="apply">apply(): over rows and columns</h2>
+<p>You built these containers and picked things out of them. Now the other half: run one function over every row, column, group or file.</p>
+<div class="cell" data-layout-align="center" data-script="apply(): once per row, once per column">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb95"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb95-1"><a href="#cb95-1" aria-hidden="true" tabindex="-1"></a><span class="fu">apply</span>(temps, <span class="dv">1</span>, mean)              <span class="co"># 1 = rows</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt;  Compton   Reseda 
+#&gt; 15.33333 17.66667</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb97"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb97-1"><a href="#cb97-1" aria-hidden="true" tabindex="-1"></a><span class="fu">apply</span>(temps, <span class="dv">2</span>, mean)              <span class="co"># 2 = columns</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt;  Jan  Feb  Mar 
+#&gt; 13.0 16.0 20.5</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb99"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb99-1"><a href="#cb99-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rowMeans</span>(temps); <span class="fu">colMeans</span>(temps)   <span class="co"># same answers, named and faster</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt;  Compton   Reseda 
+#&gt; 15.33333 17.66667</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt;  Jan  Feb  Mar 
+#&gt; 13.0 16.0 20.5</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb102"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb102-1"><a href="#cb102-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rowSums</span>(temps)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; Compton  Reseda 
+#&gt;      46      53</code></pre>
+</div>
+</div>
+<p><code>apply(m, MARGIN, f)</code> runs <code>f</code> over one margin of a matrix and collects the results.</p>
+<p>The margin numbers are the bracket coordinates. You write <code>m[row, column]</code>, so 1 is rows and 2 is columns. Margin 1 gives you one answer per row; margin 2 gives you one per column.</p>
+<p><code>rowMeans()</code> and <code>colMeans()</code> are fast special cases of exactly this.</p>
+</section>
+<section id="apply-any" class="level2">
+<h2 class="anchored" data-anchor-id="apply-any">apply() with any function</h2>
+<div class="cell" data-layout-align="center" data-script="Any function, not just mean">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb104"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb104-1"><a href="#cb104-1" aria-hidden="true" tabindex="-1"></a><span class="fu">apply</span>(temps, <span class="dv">2</span>, max)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; Jan Feb Mar 
+#&gt;  14  17  22</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb106"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb106-1"><a href="#cb106-1" aria-hidden="true" tabindex="-1"></a><span class="fu">apply</span>(temps, <span class="dv">2</span>, range)                       <span class="co"># two numbers per column</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt;      Jan Feb Mar
+#&gt; [1,]  12  15  19
+#&gt; [2,]  14  17  22</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb108"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb108-1"><a href="#cb108-1" aria-hidden="true" tabindex="-1"></a><span class="fu">apply</span>(temps, <span class="dv">2</span>, <span class="cf">function</span>(x) <span class="fu">max</span>(x) <span class="sc">-</span> <span class="fu">min</span>(x)) <span class="co"># write your own, inline</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; Jan Feb Mar 
+#&gt;   2   2   3</code></pre>
+</div>
+</div>
+<p>The function is an argument like any other. Pass it by name with no parentheses, or write it inline with <code>function(x)</code> when it is too small to deserve a name. Inside, <code>x</code> is one row or one column.</p>
+<p><code>range</code> returns two numbers per column, so <code>apply()</code> hands back a matrix rather than a vector. What you get out depends on what your function returns.</p>
+</section>
+<section id="split" class="level2">
+<h2 class="anchored" data-anchor-id="split"><code>split()</code>: one group per element</h2>
+<div class="cell" data-layout-align="center" data-script="split(): one group per element">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb110"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb110-1"><a href="#cb110-1" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">12</span>, <span class="dv">15</span>, <span class="dv">19</span>, <span class="dv">14</span>, <span class="dv">17</span>, <span class="dv">22</span>)</span>
+<span id="cb110-2"><a href="#cb110-2" aria-hidden="true" tabindex="-1"></a>g <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Compton"</span>, <span class="st">"Compton"</span>, <span class="st">"Compton"</span>, <span class="st">"Reseda"</span>, <span class="st">"Reseda"</span>, <span class="st">"Reseda"</span>)</span>
+<span id="cb110-3"><a href="#cb110-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb110-4"><a href="#cb110-4" aria-hidden="true" tabindex="-1"></a><span class="fu">split</span>(x, g)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; $Compton
+#&gt; [1] 12 15 19
+#&gt; 
+#&gt; $Reseda
+#&gt; [1] 14 17 22</code></pre>
+</div>
+</div>
+<p><code>split()</code> cuts an object into a list, one element per group. Those are the same six numbers that went into <code>temps</code>, arranged as a list of two vectors instead of a two-row matrix.</p>
+<p>That is the choice in miniature. A matrix needs every group to be the same length; a list does not. Real groups are rarely the same size, which is why <code>split()</code> returns a list.</p>
+</section>
+<section id="lapply" class="level2">
+<h2 class="anchored" data-anchor-id="lapply"><code>lapply()</code>: a list in, a list out</h2>
+<div class="cell" data-layout-align="center" data-script="lapply(): a list in, a list out">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb112"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb112-1"><a href="#cb112-1" aria-hidden="true" tabindex="-1"></a>by_site <span class="ot">&lt;-</span> <span class="fu">split</span>(x, g)</span>
+<span id="cb112-2"><a href="#cb112-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb112-3"><a href="#cb112-3" aria-hidden="true" tabindex="-1"></a><span class="fu">lapply</span>(by_site, mean)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; $Compton
+#&gt; [1] 15.33333
+#&gt; 
+#&gt; $Reseda
+#&gt; [1] 17.66667</code></pre>
+</div>
+</div>
+<p><code>lapply(x, f)</code> runs <code>f</code> on every element of <code>x</code> and returns a list of the same length, with the same names. One call, one result per group, and no loop written by hand.</p>
+<p>Inside the function, the argument is one element: here, one site’s readings. You write the code once, for one group, and <code>lapply()</code> handles the repetition.</p>
+</section>
+<section id="sapply" class="level2">
+<h2 class="anchored" data-anchor-id="sapply"><code>sapply()</code>: the same, simplified</h2>
+<div class="cell" data-layout-align="center" data-script="sapply(): the same, simplified">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb114"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb114-1"><a href="#cb114-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sapply</span>(by_site, mean)      <span class="co"># a named vector, not a list</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt;  Compton   Reseda 
+#&gt; 15.33333 17.66667</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb116"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb116-1"><a href="#cb116-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sapply</span>(by_site, length)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; Compton  Reseda 
+#&gt;       3       3</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb118"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb118-1"><a href="#cb118-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sapply</span>(by_site, range)     <span class="co"># two numbers each, so a matrix comes back</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt;      Compton Reseda
+#&gt; [1,]      12     14
+#&gt; [2,]      19     22</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb120"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb120-1"><a href="#cb120-1" aria-hidden="true" tabindex="-1"></a><span class="fu">apply</span>(temps, <span class="dv">1</span>, mean)      <span class="co"># same answers, from the matrix</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt;  Compton   Reseda 
+#&gt; 15.33333 17.66667</code></pre>
+</div>
+</div>
+<p><code>sapply()</code> is <code>lapply()</code> plus one step: when every result is a single value, it returns a named vector instead of a list. When every result is the same longer length, it returns a matrix.</p>
+<p>Use <code>sapply()</code> when you want something to print or compute with. Use <code>lapply()</code> when each result is bigger than one value, or when you want the shape guaranteed. <code>sapply()</code> decides what to return based on what it gets, which is convenient at the console and a hazard inside a script.</p>
+<p>The last line is the same question asked of the matrix. Two containers, two verbs, one answer: <code>apply()</code> walks a margin, <code>sapply()</code> walks a list.</p>
+</section>
+<section id="exercise-2" class="level2">
+<h2 class="anchored" data-anchor-id="exercise-2">Exercise 2</h2>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-2-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-1" role="tab" aria-controls="tabset-2-1" aria-selected="true" href="">Exercise</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-2" role="tab" aria-controls="tabset-2-2" aria-selected="false" href="">Solution</a></li></ul>
+<div class="tab-content">
+<div id="tabset-2-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-2-1-tab">
+<div class="cell" data-layout-align="center" data-exercise="true" data-script="Exercise 2 (5 minutes)">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb122"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb122-1"><a href="#cb122-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 1. One line: the highest reading in each city. One line: the highest</span></span>
+<span id="cb122-2"><a href="#cb122-2" aria-hidden="true" tabindex="-1"></a><span class="co">#    in each month.</span></span>
+<span id="cb122-3"><a href="#cb122-3" aria-hidden="true" tabindex="-1"></a><span class="co">#</span></span>
+<span id="cb122-4"><a href="#cb122-4" aria-hidden="true" tabindex="-1"></a><span class="co"># 2. One line: the range of each site in by_site. Why does that come</span></span>
+<span id="cb122-5"><a href="#cb122-5" aria-hidden="true" tabindex="-1"></a><span class="co">#    back as a matrix?</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+<div id="tabset-2-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-2-2-tab">
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb123"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb123-1"><a href="#cb123-1" aria-hidden="true" tabindex="-1"></a><span class="fu">apply</span>(temps, <span class="dv">1</span>, max)   <span class="co"># margin 1 = rows = cities</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; Compton  Reseda 
+#&gt;      19      22</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb125"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb125-1"><a href="#cb125-1" aria-hidden="true" tabindex="-1"></a><span class="fu">apply</span>(temps, <span class="dv">2</span>, max)   <span class="co"># margin 2 = columns = months</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; Jan Feb Mar 
+#&gt;  14  17  22</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb127"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb127-1"><a href="#cb127-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sapply</span>(by_site, range)        <span class="co"># two numbers per site...</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt;      Compton Reseda
+#&gt; [1,]      12     14
+#&gt; [2,]      19     22</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb129"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb129-1"><a href="#cb129-1" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(<span class="fu">sapply</span>(by_site, range))   <span class="co"># ...so sapply stacks them into a matrix</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; [1] 2 2</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="read" class="level2">
+<h2 class="anchored" data-anchor-id="read">Reading a CSV</h2>
+<div class="cell" data-layout-align="center" data-script="Read the file">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb131"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb131-1"><a href="#cb131-1" aria-hidden="true" tabindex="-1"></a>la <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"data/epa_pm25_la_county_2025.csv"</span>)</span>
+<span id="cb131-2"><a href="#cb131-2" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(la)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; [1] 4757   22</code></pre>
+</div>
+</div>
+<div class="cell" data-layout-align="center" data-script="If you do not have the file yet">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb133"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb133-1"><a href="#cb133-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Uncomment and run once. Same file, fetched instead of clicked.</span></span>
+<span id="cb133-2"><a href="#cb133-2" aria-hidden="true" tabindex="-1"></a><span class="co"># dir.create("data", showWarnings = FALSE)</span></span>
+<span id="cb133-3"><a href="#cb133-3" aria-hidden="true" tabindex="-1"></a><span class="co"># download.file(paste0("https://arielortizbobea.github.io/aem6850/",</span></span>
+<span id="cb133-4"><a href="#cb133-4" aria-hidden="true" tabindex="-1"></a><span class="co">#                      "fall-2026/sessions/data/epa_pm25_la_county_2025.csv"),</span></span>
+<span id="cb133-5"><a href="#cb133-5" aria-hidden="true" tabindex="-1"></a><span class="co">#               "data/epa_pm25_la_county_2025.csv")</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p><code>read.csv()</code> takes a path relative to the working directory, which <code>getwd()</code> prints and <code>list.files()</code> lets you check. “File not found” is almost always a disagreement about where you are, not a missing file.</p>
+<p>4,757 rows and 22 columns: every monitor in the county, every day of 2025.</p>
+</section>
+<section id="df-is-a-list" class="level2">
+<h2 class="anchored" data-anchor-id="df-is-a-list">A data frame is a list of columns</h2>
+<div class="cell" data-layout-align="center" data-script="A data frame is a list of columns">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb134"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb134-1"><a href="#cb134-1" aria-hidden="true" tabindex="-1"></a><span class="fu">is.list</span>(la)             <span class="co"># a data frame IS a list</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; [1] TRUE</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb136"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb136-1"><a href="#cb136-1" aria-hidden="true" tabindex="-1"></a><span class="fu">length</span>(la)              <span class="co"># of 22 columns</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; [1] 22</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb138"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb138-1"><a href="#cb138-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(<span class="fu">sapply</span>(la, class)) <span class="co"># so sapply walks the columns</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt;                           Date                         Source 
+#&gt;                    "character"                    "character" 
+#&gt;                        Site.ID                            POC 
+#&gt;                      "integer"                      "integer" 
+#&gt; Daily.Mean.PM2.5.Concentration                          Units 
+#&gt;                      "numeric"                    "character"</code></pre>
+</div>
+</div>
+<p>A data frame is a list of equal-length vectors with a class on top. <code>$</code> is the list’s own operator, which is why the same notation reaches a column of a table and an element of a list.</p>
+<p>That is why <code>sapply()</code> works here with no extra effort: hand it a data frame and it walks the columns. On a file with 22 columns this beats scrolling through <code>str()</code> output, and it puts two problems on screen at once. <code>Site.ID</code> came in as an integer. <code>Date</code> came in as character.</p>
+</section>
+<section id="identifiers" class="level2">
+<h2 class="anchored" data-anchor-id="identifiers">Identifiers read as numbers</h2>
+<div class="cell" data-layout-align="center" data-script="The identifier trap">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb140"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb140-1"><a href="#cb140-1" aria-hidden="true" tabindex="-1"></a>la<span class="sc">$</span>Site.ID[<span class="dv">1</span>]        <span class="co"># what R holds</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; [1] 60370016</code></pre>
+</div>
+</div>
+<p>The file says <code>060370016</code>. R says <code>60370016</code>.</p>
+<p><code>read.csv()</code> looked at a column of digits and decided it was a number, and the leading zero of a number is meaningless, so it is gone. The identifier is now wrong, silently, and it will fail to match every other file that spells it correctly.</p>
+<p>This is not an EPA quirk. FIPS codes, ZIP codes, CUSIPs, phone numbers and account numbers all lead with zeros that R will strip on the way in.</p>
+</section>
+<section id="identifiers-fix" class="level2">
+<h2 class="anchored" data-anchor-id="identifiers-fix">colClasses: setting types at read time</h2>
+<div class="cell" data-layout-align="center" data-script="Protect identifiers at read time">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb142"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb142-1"><a href="#cb142-1" aria-hidden="true" tabindex="-1"></a>la <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"data/epa_pm25_la_county_2025.csv"</span>,</span>
+<span id="cb142-2"><a href="#cb142-2" aria-hidden="true" tabindex="-1"></a>               <span class="at">colClasses =</span> <span class="fu">c</span>(<span class="st">"Site.ID"</span> <span class="ot">=</span> <span class="st">"character"</span>))</span>
+<span id="cb142-3"><a href="#cb142-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb142-4"><a href="#cb142-4" aria-hidden="true" tabindex="-1"></a>la<span class="sc">$</span>Site.ID[<span class="dv">1</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; [1] "060370016"</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb144"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb144-1"><a href="#cb144-1" aria-hidden="true" tabindex="-1"></a><span class="fu">unique</span>(la<span class="sc">$</span>Site.ID)            <span class="co"># unique() drops repeats</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt;  [1] "060370016" "060371103" "060371201" "060371302" "060371602" "060372005"
+#&gt;  [7] "060374008" "060374009" "060374010" "060376012" "060379035"</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb146"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb146-1"><a href="#cb146-1" aria-hidden="true" tabindex="-1"></a><span class="fu">length</span>(<span class="fu">unique</span>(la<span class="sc">$</span>Site.ID))    <span class="co"># ...so this counts monitors: eleven</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; [1] 11</code></pre>
+</div>
+</div>
+<p><code>colClasses</code> names the columns you want read a particular way. Everything you do not name is guessed as before.</p>
+<p>Fix it at read time, not afterwards. Once the zero is gone, <code>as.character()</code> gives you back <code>"60370016"</code>, which is a different string from <code>"060370016"</code> and matches nothing. The information left the building when the file came in.</p>
+</section>
+<section id="dates" class="level2">
+<h2 class="anchored" data-anchor-id="dates">Dates</h2>
+<div class="cell" data-layout-align="center" data-script="Dates, one line deep">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb148"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb148-1"><a href="#cb148-1" aria-hidden="true" tabindex="-1"></a>la<span class="sc">$</span>Date[<span class="dv">1</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; [1] "01/01/2025"</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb150"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb150-1"><a href="#cb150-1" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>(la<span class="sc">$</span>Date)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; [1] "character"</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb152"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb152-1"><a href="#cb152-1" aria-hidden="true" tabindex="-1"></a>la<span class="sc">$</span>date <span class="ot">&lt;-</span> <span class="fu">as.Date</span>(la<span class="sc">$</span>Date, <span class="at">format =</span> <span class="st">"%m/%d/%Y"</span>)</span>
+<span id="cb152-2"><a href="#cb152-2" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>(la<span class="sc">$</span>date)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; [1] "Date"</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb154"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb154-1"><a href="#cb154-1" aria-hidden="true" tabindex="-1"></a><span class="fu">range</span>(la<span class="sc">$</span>date)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; [1] "2025-01-01" "2025-12-31"</code></pre>
+</div>
+</div>
+</section>
+<section id="dates-parts" class="level2">
+<h2 class="anchored" data-anchor-id="dates-parts">Pulling pieces out of a date</h2>
+<div class="cell" data-layout-align="center" data-script="Pulling pieces back out of a date">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb156"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb156-1"><a href="#cb156-1" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> <span class="fu">as.Date</span>(<span class="st">"2025-01-07"</span>)</span>
+<span id="cb156-2"><a href="#cb156-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb156-3"><a href="#cb156-3" aria-hidden="true" tabindex="-1"></a><span class="fu">c</span>(<span class="at">month =</span> <span class="fu">format</span>(d, <span class="st">"%m"</span>), <span class="at">name =</span> <span class="fu">format</span>(d, <span class="st">"%b"</span>),</span>
+<span id="cb156-4"><a href="#cb156-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">year =</span> <span class="fu">format</span>(d, <span class="st">"%Y"</span>), <span class="at">doy =</span> <span class="fu">format</span>(d, <span class="st">"%j"</span>),</span>
+<span id="cb156-5"><a href="#cb156-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">day =</span> <span class="fu">weekdays</span>(d))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt;     month      name      year       doy       day 
+#&gt;      "01"     "Jan"    "2025"     "007" "Tuesday"</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb158"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb158-1"><a href="#cb158-1" aria-hidden="true" tabindex="-1"></a>la<span class="sc">$</span>month <span class="ot">&lt;-</span> <span class="fu">format</span>(la<span class="sc">$</span>date, <span class="st">"%m"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p><code>format()</code> runs the parsing backwards: give it a code and it returns that piece as text. <code>weekdays()</code> and <code>months()</code> are the two shortcuts worth remembering, because they are what you want for seasonality and for day-of-week effects.</p>
+<p><code>%m/%d/%Y</code> is a format string describing where the pieces are:</p>
+<svg viewbox="0 0 560 132" role="img" aria-label="The date 01/07/2025 with each piece labelled by its format code: %m for month, %d for day, %Y for four-digit year." style="max-width:100%;height:auto;font-family:inherit">
+  <g fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="16" y="16" width="86" height="96" rx="8"></rect>
+    <line x1="16" y1="42" x2="102" y2="42"></line>
+    <line x1="42" y1="16" x2="42" y2="8"></line><line x1="76" y1="16" x2="76" y2="8"></line>
+  </g>
+  <text x="59" y="36" text-anchor="middle" font-size="12" fill="currentColor">JAN</text>
+  <text x="59" y="88" text-anchor="middle" font-size="34" fill="currentColor">7</text>
+
+  <text x="150" y="58" font-size="30" fill="currentColor" font-family="ui-monospace,monospace">01/07/2025</text>
+
+  <g stroke="currentColor" stroke-width="1.5" fill="none" opacity="0.6">
+    <path d="M171 70 L171 86"></path><path d="M228 70 L228 86"></path><path d="M312 70 L312 86"></path>
+  </g>
+  <g font-size="14" fill="currentColor" font-family="ui-monospace,monospace" text-anchor="middle">
+    <text x="171" y="103">%m</text><text x="228" y="103">%d</text><text x="312" y="103">%Y</text>
+  </g>
+  <g font-size="11.5" fill="currentColor" opacity="0.72" text-anchor="middle">
+    <text x="171" y="121">month</text><text x="228" y="121">day</text><text x="312" y="121">year</text>
+  </g>
+  <g font-size="12.5" fill="currentColor">
+    <text x="392" y="46">Get a code wrong and</text>
+    <text x="392" y="66">you get NAs, not an error.</text>
+    <text x="392" y="92" opacity="0.72">So check range() after.</text>
+  </g>
+</svg>
+</section>
+<section id="dates-arithmetic" class="level2">
+<h2 class="anchored" data-anchor-id="dates-arithmetic">Dates are numbers</h2>
+<div class="cell" data-layout-align="center" data-script="Dates are numbers, so they do arithmetic">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb159"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb159-1"><a href="#cb159-1" aria-hidden="true" tabindex="-1"></a>d <span class="sc">+</span> <span class="dv">30</span>                                <span class="co"># thirty days later</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; [1] "2025-02-06"</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb161"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb161-1"><a href="#cb161-1" aria-hidden="true" tabindex="-1"></a><span class="fu">as.Date</span>(<span class="st">"2025-03-01"</span>) <span class="sc">-</span> d             <span class="co"># how far apart</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; Time difference of 53 days</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb163"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb163-1"><a href="#cb163-1" aria-hidden="true" tabindex="-1"></a><span class="fu">seq</span>(d, <span class="at">by =</span> <span class="st">"week"</span>, <span class="at">length.out =</span> <span class="dv">4</span>)   <span class="co"># a sequence of dates</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; [1] "2025-01-07" "2025-01-14" "2025-01-21" "2025-01-28"</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb165"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb165-1"><a href="#cb165-1" aria-hidden="true" tabindex="-1"></a><span class="fu">seq</span>(<span class="fu">as.Date</span>(<span class="st">"2025-01-01"</span>), <span class="fu">as.Date</span>(<span class="st">"2025-12-01"</span>), <span class="at">by =</span> <span class="st">"month"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt;  [1] "2025-01-01" "2025-02-01" "2025-03-01" "2025-04-01" "2025-05-01"
+#&gt;  [6] "2025-06-01" "2025-07-01" "2025-08-01" "2025-09-01" "2025-10-01"
+#&gt; [11] "2025-11-01" "2025-12-01"</code></pre>
+</div>
+</div>
+<p>Underneath, a <code>Date</code> is a count of days since January 1, 1970. That is why <code>+</code> and <code>-</code> work, why <code>seq()</code> can step by <code>"day"</code>, <code>"week"</code>, <code>"month"</code> or <code>"year"</code>, and why sorting finally puts dates in time order. Text dates sort character by character, so <code>"10/01"</code> lands before <code>"9/01"</code>.</p>
+<p>Two-digit month, slash, two-digit day, slash, four-digit year. Get a code wrong and you get <code>NA</code>s rather than an error, so check <code>range()</code> afterwards.</p>
+</section>
+<section id="one-instrument" class="level2">
+<h2 class="anchored" data-anchor-id="one-instrument">Checking for duplicate rows</h2>
+<p>Before averaging anything, find out what one row is.</p>
+<div class="cell" data-layout-align="center" data-script="One row per what?">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb167"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb167-1"><a href="#cb167-1" aria-hidden="true" tabindex="-1"></a>key <span class="ot">&lt;-</span> la[, <span class="fu">c</span>(<span class="st">"Site.ID"</span>, <span class="st">"date"</span>)]</span>
+<span id="cb167-2"><a href="#cb167-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb167-3"><a href="#cb167-3" aria-hidden="true" tabindex="-1"></a><span class="fu">anyDuplicated</span>(key)     <span class="co"># 0 means none; otherwise the first repeated row</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; [1] 695</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb169"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb169-1"><a href="#cb169-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(<span class="fu">duplicated</span>(key))   <span class="co"># how many rows repeat a site-day</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; [1] 1270</code></pre>
+</div>
+</div>
+<div class="cell" data-layout-align="center" data-script="Keep one instrument per site">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb171"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb171-1"><a href="#cb171-1" aria-hidden="true" tabindex="-1"></a>frm <span class="ot">&lt;-</span> la[la<span class="sc">$</span>AQS.Parameter.Code <span class="sc">==</span> <span class="dv">88101</span> <span class="sc">&amp;</span> la<span class="sc">$</span>POC <span class="sc">==</span> <span class="dv">1</span>, ]</span>
+<span id="cb171-2"><a href="#cb171-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb171-3"><a href="#cb171-3" aria-hidden="true" tabindex="-1"></a><span class="fu">anyDuplicated</span>(frm[, <span class="fu">c</span>(<span class="st">"Site.ID"</span>, <span class="st">"date"</span>)])   <span class="co"># 0: one row per site-day now</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; [1] 0</code></pre>
+</div>
+</div>
+<p><code>duplicated()</code> returns <code>TRUE</code> for every row that repeats an earlier one, so <code>sum()</code> counts them. <code>anyDuplicated()</code> is the fast version: it stops at the first repeat and returns its position, or <code>0</code> if the rows are unique. Use <code>anyDuplicated()</code> when you want a yes or no, and <code>duplicated()</code> when you want to see the offenders: <code>key[duplicated(key), ]</code>.</p>
+<p><strong>There are 1,270 repeated site-days here.</strong> Nothing warned you: the file is correct, it just is not one row per thing you think you are counting.</p>
+<p>The reason is that a site can run several instruments, and the file gives each its own row on the same day. Take a mean now and you average a site with itself, weighted by how many instruments it happens to run. That is not a number about air quality; it is a number about equipment.</p>
+<p>The fix keeps one instrument per site. Parameter 88101 is the federal reference method, and <code>POC == 1</code> takes the first instrument at each site. Then the check passes, and every row is one site on one day.</p>
+<p>Ask this of every file. “What is one row?” is the question that catches duplicated keys, and it is the same check a join needs later.</p>
+</section>
+<section id="sites-by-months" class="level2">
+<h2 class="anchored" data-anchor-id="sites-by-months">tapply(): a matrix from two groupings</h2>
+<p>Numbers to summarise, what to group them by, a function to run on each group. Two groupings give one value per combination.</p>
+<div class="cell" data-layout-align="center" data-script="Sites by months">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb173"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb173-1"><a href="#cb173-1" aria-hidden="true" tabindex="-1"></a>tb <span class="ot">&lt;-</span> <span class="fu">tapply</span>(frm<span class="sc">$</span>Daily.Mean.PM2.<span class="fl">5.</span>Concentration,</span>
+<span id="cb173-2"><a href="#cb173-2" aria-hidden="true" tabindex="-1"></a>             <span class="fu">list</span>(frm<span class="sc">$</span>Local.Site.Name, frm<span class="sc">$</span>month), mean)</span>
+<span id="cb173-3"><a href="#cb173-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb173-4"><a href="#cb173-4" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(tb)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; [1]  8 12</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb175"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb175-1"><a href="#cb175-1" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(tb[, <span class="dv">1</span><span class="sc">:</span><span class="dv">6</span>], <span class="dv">1</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt;                                  01   02  03   04   05   06
+#&gt; Compton                        21.3 13.4 8.7  5.8 15.5 10.8
+#&gt; Lancaster - Fairgrounds         4.1  1.8 2.6  4.9  6.0  6.1
+#&gt; Long Beach-Route 710 Near Road 18.4 11.4 8.7  9.0 10.2 11.2
+#&gt; Los Angeles-North Main Street  19.4 13.1 7.9 10.1 11.5 12.5
+#&gt; Pasadena                       25.4  9.6 7.7  9.1 10.3 11.9
+#&gt; Pico Rivera #2                 21.6 11.6 8.7  9.2 10.8 11.7
+#&gt; Reseda                         11.6  7.2 7.6  8.5  9.5 10.9
+#&gt; Signal Hill (LBSH)             20.6  7.9 4.7  8.1  9.0  9.3</code></pre>
+</div>
+</div>
+<p>Read the call left to right. The first argument is the column you want summarised, here the concentration. The second says how to cut it up: <code>list(site, month)</code> means group by site <em>and</em> by month, so every site-and-month pair is its own group. The third is what to compute on each group, here <code>mean</code>.</p>
+<p><code>tapply()</code> then does three things. It splits the vector into those groups, runs the function on each one, and arranges the answers by the groupings it was given. One grouping gives a named vector. Two give a <strong>matrix</strong>, with the first grouping down the rows and the second across the columns: eight sites by twelve months, one mean in each of the 96 cells.</p>
+<p>Cells with no rows come back <code>NA</code> rather than zero, which is the honest answer. A month a site never reported is missing, not clean air.</p>
+<p>A long file of 4,757 rows is now a grid you can read at a glance. That is the move worth taking away: the data frame is how the file arrives, and the matrix is the shape the question has.</p>
+</section>
+<section id="reshape" class="level2">
+<h2 class="anchored" data-anchor-id="reshape">reshape(): long and wide</h2>
+<p><code>tapply()</code> gave a matrix. <code>reshape()</code> does the same turn on a data frame, and turns it back.</p>
+<div class="cell" data-layout-align="center" data-script="reshape(): long to wide and back">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb177"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb177-1"><a href="#cb177-1" aria-hidden="true" tabindex="-1"></a>long <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">site  =</span> <span class="fu">c</span>(<span class="st">"A"</span>, <span class="st">"A"</span>, <span class="st">"B"</span>, <span class="st">"B"</span>),</span>
+<span id="cb177-2"><a href="#cb177-2" aria-hidden="true" tabindex="-1"></a>                   <span class="at">month =</span> <span class="fu">c</span>(<span class="st">"01"</span>, <span class="st">"02"</span>, <span class="st">"01"</span>, <span class="st">"02"</span>),</span>
+<span id="cb177-3"><a href="#cb177-3" aria-hidden="true" tabindex="-1"></a>                   <span class="at">pm25  =</span> <span class="fu">c</span>(<span class="fl">21.3</span>, <span class="fl">13.4</span>, <span class="fl">11.6</span>, <span class="fl">7.2</span>))</span>
+<span id="cb177-4"><a href="#cb177-4" aria-hidden="true" tabindex="-1"></a>long</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt;   site month pm25
+#&gt; 1    A    01 21.3
+#&gt; 2    A    02 13.4
+#&gt; 3    B    01 11.6
+#&gt; 4    B    02  7.2</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb179"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb179-1"><a href="#cb179-1" aria-hidden="true" tabindex="-1"></a>wide <span class="ot">&lt;-</span> <span class="fu">reshape</span>(long, <span class="at">direction =</span> <span class="st">"wide"</span>,</span>
+<span id="cb179-2"><a href="#cb179-2" aria-hidden="true" tabindex="-1"></a>                <span class="at">idvar =</span> <span class="st">"site"</span>, <span class="at">timevar =</span> <span class="st">"month"</span>, <span class="at">v.names =</span> <span class="st">"pm25"</span>)</span>
+<span id="cb179-3"><a href="#cb179-3" aria-hidden="true" tabindex="-1"></a>wide</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt;   site pm25.01 pm25.02
+#&gt; 1    A    21.3    13.4
+#&gt; 3    B    11.6     7.2</code></pre>
+</div>
+</div>
+</section>
+<section id="reshape-back" class="level2">
+<h2 class="anchored" data-anchor-id="reshape-back">reshape(): back to long</h2>
+<div class="cell" data-layout-align="center" data-script="reshape(): wide back to long">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb181"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb181-1"><a href="#cb181-1" aria-hidden="true" tabindex="-1"></a><span class="fu">reshape</span>(wide, <span class="at">direction =</span> <span class="st">"long"</span>, <span class="at">idvar =</span> <span class="st">"site"</span>,</span>
+<span id="cb181-2"><a href="#cb181-2" aria-hidden="true" tabindex="-1"></a>        <span class="at">varying =</span> <span class="fu">list</span>(<span class="dv">2</span><span class="sc">:</span><span class="dv">3</span>), <span class="at">v.names =</span> <span class="st">"pm25"</span>, <span class="at">times =</span> <span class="fu">c</span>(<span class="st">"01"</span>, <span class="st">"02"</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt;      site time pm25
+#&gt; A.01    A   01 21.3
+#&gt; B.01    B   01 11.6
+#&gt; A.02    A   02 13.4
+#&gt; B.02    B   02  7.2</code></pre>
+</div>
+</div>
+<p><strong>Long</strong> means one row per observation, with a column saying which group it belongs to. <strong>Wide</strong> means one row per unit and one column per group. The same numbers, two shapes, and most of the reshaping you will do in your career is moving between them.</p>
+<p>The arguments name the pieces: <code>idvar</code> is what stays a row, <code>timevar</code> is what becomes columns, and <code>v.names</code> is the value being spread. Going back, <code>varying</code> names the columns to stack and <code>times</code> says what to call them.</p>
+<p>Base <code>reshape()</code> is famously awkward, and it is worth knowing that <code>tidyr::pivot_wider()</code> and <code>pivot_longer()</code> do the same job with friendlier arguments. Panels arrive long, regressions usually want long, and tables for readers want wide.</p>
+</section>
+<section id="both-margins" class="level2">
+<h2 class="anchored" data-anchor-id="both-margins">apply() over both margins</h2>
+<div class="cell" data-layout-align="center" data-script="Both margins at once">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb183"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb183-1"><a href="#cb183-1" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">sort</span>(<span class="fu">apply</span>(tb, <span class="dv">1</span>, mean), <span class="at">decreasing =</span> <span class="cn">TRUE</span>), <span class="dv">1</span>)   <span class="co"># per site, all year</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt;                        Compton  Los Angeles-North Main Street 
+#&gt;                           12.9                           12.7 
+#&gt;                 Pico Rivera #2 Long Beach-Route 710 Near Road 
+#&gt;                           12.3                           12.3 
+#&gt;                       Pasadena             Signal Hill (LBSH) 
+#&gt;                           11.4                           10.7 
+#&gt;                         Reseda        Lancaster - Fairgrounds 
+#&gt;                            9.2                            4.5</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb185"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb185-1"><a href="#cb185-1" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">apply</span>(tb, <span class="dv">2</span>, mean), <span class="dv">1</span>)                            <span class="co"># per month, all sites</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt;   01   02   03   04   05   06   07   08   09   10   11   12 
+#&gt; 17.8  9.5  7.1  8.1 10.3 10.6  8.6 11.1  8.6  9.7 12.3 15.4</code></pre>
+</div>
+</div>
+<p>Read that first line from the <strong>inside out</strong>, which is how you write it too: <code>apply(tb, 1, mean)</code> gives one number per site, <code>sort()</code> puts them in order, <code>round()</code> tidies them for printing. Build the innermost piece, run it, look at what came back, then wrap the next call around it. Typing the whole nest in one go and hoping is how you end up debugging four functions at once.</p>
+<p>Now the two margins answer two different questions with the same verb.</p>
+<p>Down the rows: which monitors sit in the dirtiest air all year. Lancaster, out in the desert, reads a third of what the basin sites do.</p>
+<p>Across the columns: what the county did month by month. January is the worst month at nearly every site at once, which is the signature of something county-wide rather than one instrument drifting.</p>
+</section>
+<section id="merge" class="level2">
+<h2 class="anchored" data-anchor-id="merge">merge(): joining two tables</h2>
+<p>Results in one table, the thing you want to attach in another. <code>merge()</code> matches them on a shared column.</p>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb187"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb187-1"><a href="#cb187-1" aria-hidden="true" tabindex="-1"></a>means  <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">site =</span> <span class="fu">rownames</span>(tb), <span class="at">pm25 =</span> <span class="fu">round</span>(<span class="fu">apply</span>(tb, <span class="dv">1</span>, mean), <span class="dv">1</span>))</span>
+<span id="cb187-2"><a href="#cb187-2" aria-hidden="true" tabindex="-1"></a>coords <span class="ot">&lt;-</span> <span class="fu">unique</span>(frm[, <span class="fu">c</span>(<span class="st">"Local.Site.Name"</span>, <span class="st">"Site.Latitude"</span>, <span class="st">"Site.Longitude"</span>)])</span>
+<span id="cb187-3"><a href="#cb187-3" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(coords) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"site"</span>, <span class="st">"lat"</span>, <span class="st">"lon"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="cell" data-layout-align="center" data-script="Merge, counting rows before and after">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb188"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb188-1"><a href="#cb188-1" aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(means); <span class="fu">nrow</span>(coords)                    <span class="co"># count BEFORE</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; [1] 8</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; [1] 8</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb191"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb191-1"><a href="#cb191-1" aria-hidden="true" tabindex="-1"></a>sites <span class="ot">&lt;-</span> <span class="fu">merge</span>(means, coords, <span class="at">by =</span> <span class="st">"site"</span>)</span>
+<span id="cb191-2"><a href="#cb191-2" aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(sites)                                  <span class="co"># and after</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; [1] 8</code></pre>
+</div>
+</div>
+<p><code>by</code> names the column the two tables share. Rows whose keys match are glued side by side; the result carries the columns of both.</p>
+<p>Eight rows in, eight rows out, so nothing was lost. <strong>That check is the whole discipline of joining.</strong> Write down the row count you expect before you run it, and compare. A join has two silent failure modes and neither one errors.</p>
+</section>
+<section id="merge-hazards" class="level2">
+<h2 class="anchored" data-anchor-id="merge-hazards">How merge() drops and duplicates rows</h2>
+<div class="cell" data-layout-align="center" data-script="What a join does silently">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb193"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb193-1"><a href="#cb193-1" aria-hidden="true" tabindex="-1"></a>partial <span class="ot">&lt;-</span> coords[coords<span class="sc">$</span>site <span class="sc">!=</span> <span class="st">"Compton"</span>, ]   <span class="co"># pretend one site is missing</span></span>
+<span id="cb193-2"><a href="#cb193-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb193-3"><a href="#cb193-3" aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(<span class="fu">merge</span>(means, partial, <span class="at">by =</span> <span class="st">"site"</span>))                <span class="co"># dropped</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; [1] 7</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb195"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb195-1"><a href="#cb195-1" aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(<span class="fu">merge</span>(means, partial, <span class="at">by =</span> <span class="st">"site"</span>, <span class="at">all.x =</span> <span class="cn">TRUE</span>))  <span class="co"># kept, with NA</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; [1] 8</code></pre>
+</div>
+</div>
+<p><strong>Rows can disappear.</strong> By default <code>merge()</code> keeps only keys present in both tables, so a site missing from the lookup takes its result with it. Seven rows came back where you asked about eight, with no error and no warning. <code>all.x = TRUE</code> keeps every row of the first table and fills the missing side with <code>NA</code>, which is almost always what you want: an <code>NA</code> you can see beats a row you cannot.</p>
+<p><strong>Rows can also multiply.</strong> If the second table has two rows for one site, every matching row of the first is repeated to pair with each. Ask for eight and get twelve. That is why <code>unique()</code> is in the line that built <code>coords</code>.</p>
+<p>Keys have to be the same type, too. A site id read as a number will not match the same id read as text, and that failure looks exactly like “no matching rows”.</p>
+</section>
+<section id="lapply-files" class="level2">
+<h2 class="anchored" data-anchor-id="lapply-files">Reading many files</h2>
+<div class="cell" data-layout-align="center" data-script="One line, every file">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb197"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb197-1"><a href="#cb197-1" aria-hidden="true" tabindex="-1"></a>files <span class="ot">&lt;-</span> <span class="fu">list.files</span>(<span class="st">"data"</span>, <span class="at">pattern =</span> <span class="st">"</span><span class="sc">\\</span><span class="st">.csv$"</span>)</span>
+<span id="cb197-2"><a href="#cb197-2" aria-hidden="true" tabindex="-1"></a>files</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; [1] "epa_pm25_compton_2025.csv"      "epa_pm25_la_county_2025.csv"   
+#&gt; [3] "la-weather-dec2024-feb2025.csv"</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb199"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb199-1"><a href="#cb199-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sapply</span>(files, <span class="cf">function</span>(f) <span class="fu">nrow</span>(<span class="fu">read.csv</span>(<span class="fu">file.path</span>(<span class="st">"data"</span>, f))))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt;      epa_pm25_compton_2025.csv    epa_pm25_la_county_2025.csv 
+#&gt;                            662                           4757 
+#&gt; la-weather-dec2024-feb2025.csv 
+#&gt;                             92</code></pre>
+</div>
+</div>
+<p><code>list.files()</code> gives you the names, and <code>lapply()</code> or <code>sapply()</code> runs the same call on each one.</p>
+<p>This is the shape of most real data collection: one file per year, per state or per month, and one function that handles any single file. You get it right once, then hand the function the list. <code>do.call(rbind, ...)</code> on the result stacks them into one frame.</p>
+</section>
+<section id="write" class="level2">
+<h2 class="anchored" data-anchor-id="write">Writing files to disk</h2>
+<div class="cell" data-layout-align="center" data-script="Writing files to disk">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb201"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb201-1"><a href="#cb201-1" aria-hidden="true" tabindex="-1"></a>answers <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">site =</span> <span class="fu">rownames</span>(tb),</span>
+<span id="cb201-2"><a href="#cb201-2" aria-hidden="true" tabindex="-1"></a>                      <span class="at">mean =</span> <span class="fu">round</span>(<span class="fu">apply</span>(tb, <span class="dv">1</span>, mean), <span class="dv">1</span>))</span>
+<span id="cb201-3"><a href="#cb201-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb201-4"><a href="#cb201-4" aria-hidden="true" tabindex="-1"></a><span class="fu">write.csv</span>(answers, <span class="st">"results.csv"</span>, <span class="at">row.names =</span> <span class="cn">FALSE</span>)   <span class="co"># text, anything reads it</span></span>
+<span id="cb201-5"><a href="#cb201-5" aria-hidden="true" tabindex="-1"></a><span class="fu">saveRDS</span>(answers, <span class="st">"results.rds"</span>)                        <span class="co"># R's own format</span></span>
+<span id="cb201-6"><a href="#cb201-6" aria-hidden="true" tabindex="-1"></a><span class="fu">readRDS</span>(<span class="st">"results.rds"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p><code>write.csv()</code> is <code>read.csv()</code> run backwards. <code>row.names = FALSE</code> stops R adding a column of row numbers you never asked for, which is the most common complaint about files written from R. Round before you write, not after: a mean lands in the file as <code>19.386666666667</code> unless you say <code>round(x, 1)</code>.</p>
+<p><strong>CSV forgets what things were.</strong> It is text, so a <code>Date</code> comes back as character, a factor comes back as character, and every column has to be guessed again on the way in. That is fine for a results table someone else will open, and wrong for an intermediate you will read back into R.</p>
+<p><code>saveRDS()</code> writes one R object exactly as it is, compressed. Dates stay dates, factors keep their levels, and <code>readRDS()</code> hands it back unchanged. Use it for anything you computed and do not want to recompute. <code>save()</code> and <code>load()</code> do the same for several objects at once, but they restore names into your workspace instead of returning a value, so <code>saveRDS()</code> is easier to reason about.</p>
+<p><strong>Other people’s formats.</strong> Applied economics runs on Stata files, and the <code>haven</code> package reads and writes them: <code>read_dta()</code>, <code>write_dta()</code>, plus <code>read_sav()</code> for SPSS and <code>read_sas()</code> for SAS. <code>readxl::read_excel()</code> opens spreadsheets, and <code>writexl::write_xlsx()</code> writes them. For data too big for CSV to be sensible, <code>arrow::write_parquet()</code> writes a columnar file that loads far faster and keeps its types.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Code</th>
+<th style="text-align: left;">When</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><code>write.csv(d, f, row.names = FALSE)</code></td>
+<td style="text-align: left;">A results table anyone should be able to open</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>saveRDS(d, f)</code> · <code>readRDS(f)</code></td>
+<td style="text-align: left;">An R object you want back exactly as it was</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>haven::read_dta(f)</code> · <code>write_dta()</code></td>
+<td style="text-align: left;">Stata; also <code>read_sav()</code>, <code>read_sas()</code></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>readxl::read_excel(f)</code></td>
+<td style="text-align: left;">Spreadsheets, one sheet at a time</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>arrow::write_parquet(d, f)</code></td>
+<td style="text-align: left;">Large tables, typed and fast</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="practice" class="level2">
+<h2 class="anchored" data-anchor-id="practice">Practice</h2>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-3-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-1" role="tab" aria-controls="tabset-3-1" aria-selected="true" href="">Practice</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-3-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-2" role="tab" aria-controls="tabset-3-2" aria-selected="false" href="">Solutions</a></li></ul>
+<div class="tab-content">
+<div id="tabset-3-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-3-1-tab">
+<div class="cell" data-layout-align="center" data-exercise="true" data-script="Practice">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb202"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb202-1"><a href="#cb202-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Everything below uses la, frm and tb, built earlier in this script.</span></span>
+<span id="cb202-2"><a href="#cb202-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb202-3"><a href="#cb202-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Matrices</span></span>
+<span id="cb202-4"><a href="#cb202-4" aria-hidden="true" tabindex="-1"></a><span class="co">#  1. Build a 3 x 4 matrix of the numbers 1 to 12, filled across the rows.</span></span>
+<span id="cb202-5"><a href="#cb202-5" aria-hidden="true" tabindex="-1"></a><span class="co">#  2. Same matrix: what is the sum of each row? Of each column?</span></span>
+<span id="cb202-6"><a href="#cb202-6" aria-hidden="true" tabindex="-1"></a><span class="co">#  3. Same matrix: divide every cell by its own column's total.</span></span>
+<span id="cb202-7"><a href="#cb202-7" aria-hidden="true" tabindex="-1"></a><span class="co">#  4. Add a fourth row of zeros with rbind(). Then add a fifth column.</span></span>
+<span id="cb202-8"><a href="#cb202-8" aria-hidden="true" tabindex="-1"></a><span class="co">#  5. Run rbind(c(1, 2), c("a", "b")). What class is the result, and why?</span></span>
+<span id="cb202-9"><a href="#cb202-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb202-10"><a href="#cb202-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Lists</span></span>
+<span id="cb202-11"><a href="#cb202-11" aria-hidden="true" tabindex="-1"></a><span class="co">#  6. Build a list holding your name, the numbers 1 to 5, and TRUE.</span></span>
+<span id="cb202-12"><a href="#cb202-12" aria-hidden="true" tabindex="-1"></a><span class="co">#  7. Same list: pull the numeric vector out two different ways.</span></span>
+<span id="cb202-13"><a href="#cb202-13" aria-hidden="true" tabindex="-1"></a><span class="co">#  8. What class does l["readings"] return? Check with class().</span></span>
+<span id="cb202-14"><a href="#cb202-14" aria-hidden="true" tabindex="-1"></a><span class="co">#  9. Split "2025-01-07" on the dash and get back a vector of three pieces.</span></span>
+<span id="cb202-15"><a href="#cb202-15" aria-hidden="true" tabindex="-1"></a><span class="co"># 10. unlist() the list from question 6. What happened to the numbers?</span></span>
+<span id="cb202-16"><a href="#cb202-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb202-17"><a href="#cb202-17" aria-hidden="true" tabindex="-1"></a><span class="co"># apply and friends</span></span>
+<span id="cb202-18"><a href="#cb202-18" aria-hidden="true" tabindex="-1"></a><span class="co"># 11. Which column of la came in as character? (One line, all 22 at once.)</span></span>
+<span id="cb202-19"><a href="#cb202-19" aria-hidden="true" tabindex="-1"></a><span class="co"># 12. How many rows does each site have in la? (One line.)</span></span>
+<span id="cb202-20"><a href="#cb202-20" aria-hidden="true" tabindex="-1"></a><span class="co"># 13. Which month had the highest county-wide mean, and what was it?</span></span>
+<span id="cb202-21"><a href="#cb202-21" aria-hidden="true" tabindex="-1"></a><span class="co"># 14. Which site had the single dirtiest month of 2025?</span></span>
+<span id="cb202-22"><a href="#cb202-22" aria-hidden="true" tabindex="-1"></a><span class="co"># 15. Rebuild tb with median instead of mean. Where do the two disagree</span></span>
+<span id="cb202-23"><a href="#cb202-23" aria-hidden="true" tabindex="-1"></a><span class="co">#     most, and what does that tell you about those days?</span></span>
+<span id="cb202-24"><a href="#cb202-24" aria-hidden="true" tabindex="-1"></a><span class="co"># 16. One line: the number of rows in every CSV in your data folder.</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+<div id="tabset-3-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-3-2-tab">
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb203"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb203-1"><a href="#cb203-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 1</span></span>
+<span id="cb203-2"><a href="#cb203-2" aria-hidden="true" tabindex="-1"></a>mm <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">12</span>, <span class="at">nrow =</span> <span class="dv">3</span>, <span class="at">byrow =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb203-3"><a href="#cb203-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb203-4"><a href="#cb203-4" aria-hidden="true" tabindex="-1"></a><span class="co"># 2</span></span>
+<span id="cb203-5"><a href="#cb203-5" aria-hidden="true" tabindex="-1"></a><span class="fu">apply</span>(mm, <span class="dv">1</span>, sum); <span class="fu">apply</span>(mm, <span class="dv">2</span>, sum)</span>
+<span id="cb203-6"><a href="#cb203-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb203-7"><a href="#cb203-7" aria-hidden="true" tabindex="-1"></a><span class="co"># 3</span></span>
+<span id="cb203-8"><a href="#cb203-8" aria-hidden="true" tabindex="-1"></a><span class="fu">sweep</span>(mm, <span class="dv">2</span>, <span class="fu">colSums</span>(mm), <span class="st">"/"</span>)</span>
+<span id="cb203-9"><a href="#cb203-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb203-10"><a href="#cb203-10" aria-hidden="true" tabindex="-1"></a><span class="co"># 4</span></span>
+<span id="cb203-11"><a href="#cb203-11" aria-hidden="true" tabindex="-1"></a>mm <span class="ot">&lt;-</span> <span class="fu">rbind</span>(mm, <span class="dv">0</span>); mm <span class="ot">&lt;-</span> <span class="fu">cbind</span>(mm, <span class="dv">0</span>)</span>
+<span id="cb203-12"><a href="#cb203-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb203-13"><a href="#cb203-13" aria-hidden="true" tabindex="-1"></a><span class="co"># 5  character: one vector underneath, so one type throughout</span></span>
+<span id="cb203-14"><a href="#cb203-14" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>(<span class="fu">rbind</span>(<span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>), <span class="fu">c</span>(<span class="st">"a"</span>, <span class="st">"b"</span>)))</span>
+<span id="cb203-15"><a href="#cb203-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb203-16"><a href="#cb203-16" aria-hidden="true" tabindex="-1"></a><span class="co"># 6</span></span>
+<span id="cb203-17"><a href="#cb203-17" aria-hidden="true" tabindex="-1"></a>l3 <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="at">name =</span> <span class="st">"Ariel"</span>, <span class="at">nums =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>, <span class="at">ok =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb203-18"><a href="#cb203-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb203-19"><a href="#cb203-19" aria-hidden="true" tabindex="-1"></a><span class="co"># 7</span></span>
+<span id="cb203-20"><a href="#cb203-20" aria-hidden="true" tabindex="-1"></a>l3<span class="sc">$</span>nums; l3[[<span class="st">"nums"</span>]]</span>
+<span id="cb203-21"><a href="#cb203-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb203-22"><a href="#cb203-22" aria-hidden="true" tabindex="-1"></a><span class="co"># 8  a list of length one, not the vector: single brackets stay wrapped</span></span>
+<span id="cb203-23"><a href="#cb203-23" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>(l[<span class="st">"readings"</span>])</span>
+<span id="cb203-24"><a href="#cb203-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb203-25"><a href="#cb203-25" aria-hidden="true" tabindex="-1"></a><span class="co"># 9</span></span>
+<span id="cb203-26"><a href="#cb203-26" aria-hidden="true" tabindex="-1"></a><span class="fu">strsplit</span>(<span class="st">"2025-01-07"</span>, <span class="st">"-"</span>)[[<span class="dv">1</span>]]</span>
+<span id="cb203-27"><a href="#cb203-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb203-28"><a href="#cb203-28" aria-hidden="true" tabindex="-1"></a><span class="co"># 10  everything became text: one type, and "TRUE" is now a word</span></span>
+<span id="cb203-29"><a href="#cb203-29" aria-hidden="true" tabindex="-1"></a><span class="fu">unlist</span>(l3)</span>
+<span id="cb203-30"><a href="#cb203-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb203-31"><a href="#cb203-31" aria-hidden="true" tabindex="-1"></a><span class="co"># 11  a data frame is a list of columns, so sapply walks them</span></span>
+<span id="cb203-32"><a href="#cb203-32" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(<span class="fu">which</span>(<span class="fu">sapply</span>(la, class) <span class="sc">==</span> <span class="st">"character"</span>))</span>
+<span id="cb203-33"><a href="#cb203-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb203-34"><a href="#cb203-34" aria-hidden="true" tabindex="-1"></a><span class="co"># 12</span></span>
+<span id="cb203-35"><a href="#cb203-35" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(la<span class="sc">$</span>Local.Site.Name)</span>
+<span id="cb203-36"><a href="#cb203-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb203-37"><a href="#cb203-37" aria-hidden="true" tabindex="-1"></a><span class="co"># 13</span></span>
+<span id="cb203-38"><a href="#cb203-38" aria-hidden="true" tabindex="-1"></a>month_means <span class="ot">&lt;-</span> <span class="fu">apply</span>(tb, <span class="dv">2</span>, mean, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb203-39"><a href="#cb203-39" aria-hidden="true" tabindex="-1"></a>month_means[<span class="fu">which.max</span>(month_means)]</span>
+<span id="cb203-40"><a href="#cb203-40" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb203-41"><a href="#cb203-41" aria-hidden="true" tabindex="-1"></a><span class="co"># 14</span></span>
+<span id="cb203-42"><a href="#cb203-42" aria-hidden="true" tabindex="-1"></a><span class="fu">which</span>(tb <span class="sc">==</span> <span class="fu">max</span>(tb, <span class="at">na.rm =</span> <span class="cn">TRUE</span>), <span class="at">arr.ind =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb203-43"><a href="#cb203-43" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb203-44"><a href="#cb203-44" aria-hidden="true" tabindex="-1"></a><span class="co"># 15  the mean sits above the median wherever a few days ran very high</span></span>
+<span id="cb203-45"><a href="#cb203-45" aria-hidden="true" tabindex="-1"></a>tb_med <span class="ot">&lt;-</span> <span class="fu">tapply</span>(frm<span class="sc">$</span>Daily.Mean.PM2.<span class="fl">5.</span>Concentration,</span>
+<span id="cb203-46"><a href="#cb203-46" aria-hidden="true" tabindex="-1"></a>                 <span class="fu">list</span>(frm<span class="sc">$</span>Local.Site.Name, frm<span class="sc">$</span>month), median)</span>
+<span id="cb203-47"><a href="#cb203-47" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">sort</span>(<span class="fu">apply</span>(tb <span class="sc">-</span> tb_med, <span class="dv">1</span>, mean, <span class="at">na.rm =</span> <span class="cn">TRUE</span>), <span class="at">decreasing =</span> <span class="cn">TRUE</span>), <span class="dv">2</span>)</span>
+<span id="cb203-48"><a href="#cb203-48" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb203-49"><a href="#cb203-49" aria-hidden="true" tabindex="-1"></a><span class="co"># 16</span></span>
+<span id="cb203-50"><a href="#cb203-50" aria-hidden="true" tabindex="-1"></a><span class="fu">sapply</span>(<span class="fu">list.files</span>(<span class="st">"data"</span>, <span class="at">pattern =</span> <span class="st">"</span><span class="sc">\\</span><span class="st">.csv$"</span>),</span>
+<span id="cb203-51"><a href="#cb203-51" aria-hidden="true" tabindex="-1"></a>       <span class="cf">function</span>(f) <span class="fu">nrow</span>(<span class="fu">read.csv</span>(<span class="fu">file.path</span>(<span class="st">"data"</span>, f))))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="quick-reference" class="level2">
+<h2 class="anchored" data-anchor-id="quick-reference">Quick reference</h2>
+<p><strong>Matrices</strong></p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Code</th>
+<th style="text-align: left;">What it does</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><code>matrix(x, nrow =, ncol =, byrow =)</code></td>
+<td style="text-align: left;">Build one; <code>byrow = TRUE</code> fills across; short input is recycled</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>dim(m)</code>, <code>nrow(m)</code>, <code>ncol(m)</code></td>
+<td style="text-align: left;">Its shape</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>m[i, j]</code>, <code>m[i, ]</code>, <code>m[, j]</code></td>
+<td style="text-align: left;">Cell, row, column; blank means all</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>m[, j, drop = FALSE]</code></td>
+<td style="text-align: left;">Keep it a matrix instead of dropping to a vector</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>rownames(m)</code>, <code>colnames(m)</code></td>
+<td style="text-align: left;">Names on the margins</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>m["a", "Feb"]</code>, <code>m[, c("a", "b")]</code></td>
+<td style="text-align: left;">Subset by name instead of position</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>m[m &gt; 15]</code></td>
+<td style="text-align: left;">Subset by logical; returns a vector, not a matrix</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>which(m &gt; 15, arr.ind = TRUE)</code></td>
+<td style="text-align: left;">The row and column of every cell that passes</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>t(m)</code>, <code>m %*% v</code></td>
+<td style="text-align: left;">Transpose; matrix multiplication</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>diag(m)</code></td>
+<td style="text-align: left;">Pull out the diagonal</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>diag(3)</code>, <code>diag(c(4, 5, 6))</code></td>
+<td style="text-align: left;">Build an identity matrix; build a diagonal one</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>Matrix::bdiag(a, b)</code></td>
+<td style="text-align: left;">Blocks down the diagonal, zeros elsewhere</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>rbind(a, b)</code>, <code>cbind(a, b)</code></td>
+<td style="text-align: left;">Stack; widen. Matched by position, not by name</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>head(m, 3)</code>, <code>tail(m)</code></td>
+<td style="text-align: left;">First or last rows; works on frames too</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>rowSums(m)</code>, <code>rowMeans(m)</code></td>
+<td style="text-align: left;">One number per row, fast</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>colSums(m)</code>, <code>colMeans(m)</code></td>
+<td style="text-align: left;">One number per column, fast</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>sweep(m, 2, v, "/")</code></td>
+<td style="text-align: left;">Divide every column by its own entry in <code>v</code></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>Matrix(m, sparse = TRUE)</code></td>
+<td style="text-align: left;">Store only the non-zeros; <code>library(Matrix)</code></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>object.size(x)</code>, <code>system.time(expr)</code></td>
+<td style="text-align: left;">How big it is; how long it took</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Lists</strong></p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Code</th>
+<th style="text-align: left;">What it does</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><code>list(a = , b = )</code></td>
+<td style="text-align: left;">Build one; anything, any length</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>l[["a"]]</code>, <code>l$a</code></td>
+<td style="text-align: left;">The element itself</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>l["a"]</code></td>
+<td style="text-align: left;">A list of length one, not the element</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>names(l)</code>, <code>is.list(x)</code></td>
+<td style="text-align: left;">The element names; is this a list at all</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>str(l)</code>, <code>lengths(l)</code></td>
+<td style="text-align: left;">What is in there; how long each part is</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>unlist(l)</code></td>
+<td style="text-align: left;">Flatten to one vector, one type</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>do.call(rbind, l)</code></td>
+<td style="text-align: left;">Stack the elements into a matrix or frame</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>lm(y ~ x)</code>, <code>fitted(fit)</code></td>
+<td style="text-align: left;">A fitted model is a list; the values on the line</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>plot(x, y)</code>, <code>abline(fit)</code>, <code>segments()</code></td>
+<td style="text-align: left;">Draw the points, the fitted line, the residuals</td>
+</tr>
+</tbody>
+</table>
+<p><strong>One function, many things</strong></p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Code</th>
+<th style="text-align: left;">What it does</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><code>apply(m, 1, f)</code></td>
+<td style="text-align: left;">Once per row; <code>2</code> for columns</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>apply(m, 2, function(x) ...)</code></td>
+<td style="text-align: left;">Write the function inline when it is small</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>split(x, g)</code></td>
+<td style="text-align: left;">A list, one element per group</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>lapply(l, f)</code></td>
+<td style="text-align: left;">A list in, a list of the same length out</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>sapply(l, f)</code></td>
+<td style="text-align: left;">The same, simplified to a vector or matrix</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>tapply(x, list(g1, g2), f)</code></td>
+<td style="text-align: left;">A matrix of <code>f</code> over two groupings</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>reshape(d, direction = "wide", idvar =, timevar =, v.names =)</code></td>
+<td style="text-align: left;">Long to wide</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>reshape(d, direction = "long", varying =, v.names =, times =)</code></td>
+<td style="text-align: left;">Wide back to long</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>sapply(d, class)</code></td>
+<td style="text-align: left;">The class of every column at once</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Dates</strong></p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Code</th>
+<th style="text-align: left;">What it does</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><code>as.Date(x, format = "%m/%d/%Y")</code></td>
+<td style="text-align: left;">Text to a real date; wrong format gives <code>NA</code>, not an error</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>format(d, "%m")</code>, <code>"%b"</code>, <code>"%Y"</code>, <code>"%j"</code></td>
+<td style="text-align: left;">Month, short month name, year, day of the year</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>weekdays(d)</code>, <code>months(d)</code></td>
+<td style="text-align: left;">The day and month names</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>d + 30</code>, <code>d2 - d1</code></td>
+<td style="text-align: left;">Dates are numbers, so arithmetic works</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>seq(d, by = "week", length.out = 4)</code></td>
+<td style="text-align: left;">A sequence of dates; also <code>"day"</code>, <code>"month"</code>, <code>"year"</code></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>range(d)</code>, <code>sort(d)</code></td>
+<td style="text-align: left;">The span; in order</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Vectors you will keep reaching for</strong></p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Code</th>
+<th style="text-align: left;">What it does</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><code>unique(x)</code></td>
+<td style="text-align: left;">Drop repeats; <code>length(unique(x))</code> counts distinct values</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>duplicated(d)</code></td>
+<td style="text-align: left;"><code>TRUE</code> for each row that repeats an earlier one</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>anyDuplicated(d)</code></td>
+<td style="text-align: left;">Position of the first repeat, or <code>0</code> if there are none</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>which.max(x)</code>, <code>which.min(x)</code></td>
+<td style="text-align: left;">The <em>position</em> of the extreme value</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>x[which.max(x)]</code></td>
+<td style="text-align: left;">…so this is the value itself</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>max(x)</code>, <code>min(x)</code>, <code>range(x)</code></td>
+<td style="text-align: left;">The extremes</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>sort(x)</code>, <code>order(x)</code></td>
+<td style="text-align: left;">Sorted values; the positions that would sort them</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>strsplit(x, "-")</code></td>
+<td style="text-align: left;">Split text; returns a list, so <code>[[1]]</code> to get the pieces</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>set.seed(1)</code>, <code>sample(x, n)</code></td>
+<td style="text-align: left;">A reproducible random draw</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>rnorm(n)</code></td>
+<td style="text-align: left;"><code>n</code> draws from a standard normal</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>sum(x)</code>, <code>mean(x)</code>, <code>median(x)</code></td>
+<td style="text-align: left;">The obvious ones; <code>sum()</code> of a logical counts <code>TRUE</code>s</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>round(x, 1)</code></td>
+<td style="text-align: left;">Cut decimals before you write, not after</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>data.frame(a = , b = )</code></td>
+<td style="text-align: left;">Build one from columns</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>paste0("a", "b")</code></td>
+<td style="text-align: left;">Glue text with no separator; <code>paste()</code> adds a space</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Files</strong></p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Code</th>
+<th style="text-align: left;">What it does</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><code>read.csv(f)</code></td>
+<td style="text-align: left;">Read a CSV, guessing every column’s type</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>colClasses = c(id = "character")</code></td>
+<td style="text-align: left;">Stop it guessing; protects identifiers</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>write.csv(d, f, row.names = FALSE)</code></td>
+<td style="text-align: left;">Write a table anyone can open</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>saveRDS(d, f)</code>, <code>readRDS(f)</code></td>
+<td style="text-align: left;">One R object, saved exactly as it is</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>haven::read_dta(f)</code>, <code>write_dta()</code></td>
+<td style="text-align: left;">Stata; also <code>read_sav()</code>, <code>read_sas()</code></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>readxl::read_excel(f)</code></td>
+<td style="text-align: left;">Spreadsheets</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>arrow::write_parquet(d, f)</code></td>
+<td style="text-align: left;">Large tables, typed and fast</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>list.files(dir, pattern =)</code></td>
+<td style="text-align: left;">The names, ready for <code>lapply()</code></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>file.path("data", f)</code></td>
+<td style="text-align: left;">Build a path that works on any machine</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>dir.create("data")</code></td>
+<td style="text-align: left;">Make a folder from the script, not by hand</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>download.file(url, dest)</code></td>
+<td style="text-align: left;">Fetch a file so the script is self-contained</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>merge(a, b, by = "id")</code></td>
+<td style="text-align: left;">Glue two tables on a shared key</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>merge(a, b, by =, all.x = TRUE)</code></td>
+<td style="text-align: left;">Keep every row of <code>a</code>; fill the rest with <code>NA</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Links</strong></p>
+<ul>
+<li>Session materials: <a href="03-r-essentials-ii-slides.html">slides</a> · <a href="03-r-essentials-ii.R">live script</a> · <a href="data/epa_pm25_la_county_2025.csv">EPA data</a> · <a href="data/SOURCE.md">where it came from</a> · <a href="https://www.epa.gov/outdoor-air-quality-data/download-daily-data">EPA’s download tool</a></li>
+<li><a href="../../fall-2026/syllabus.html">Syllabus</a> · <a href="../../fall-2026/index.html#schedule">full schedule</a></li>
+</ul>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/arielortizbobea\.github\.io\/aem6850\/");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+            // target, if specified
+            link.setAttribute("target", "_blank");
+            if (link.getAttribute("rel") === null) {
+              link.setAttribute("rel", "noopener");
+            }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
