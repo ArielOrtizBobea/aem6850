@@ -1,8 +1,8 @@
 # = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 # AEM 6850 -- Empirical Methods for Applied Economists
 # Prof. Ariel Ortiz-Bobea
-# Session 5 -- Wrangling with dplyr
-# Tuesday, September 8, 2026
+# Wrangling with dplyr
+# Optional · not taught in class
 #
 # Run it one line at a time: put the cursor on a line and press Cmd-Return
 # (Mac) or Ctrl-Enter (Windows).
@@ -125,6 +125,38 @@ other |>
   mutate(month = format(date, "%b")) |>
   filter(month == "Apr" | month == "May") |>
   summarize(days = n(), mean_pm25 = mean(pm25))
+
+
+# Two tables, one key ----
+wx <- read.csv("data/la-weather-dec2024-feb2025.csv", skip = 3)
+names(wx)[names(wx) == "precipitation_sum..mm."] <- "rain"
+wx$date <- as.Date(wx$time)
+
+nrow(one); nrow(wx)   # count BEFORE: 59 days of readings, 90 days of weather
+
+
+# left_join(): rows of the left table, columns of both ----
+# base R:  merge(one, wx, by = "date", all.x = TRUE)
+
+both <- left_join(select(one, date, pm25),
+                  select(wx, date, rain),
+                  by = "date")
+nrow(both)            # and after: 59
+sum(is.na(both$rain))
+
+
+# Rain days against dry days ----
+both |>
+  mutate(wet = rain > 0) |>
+  group_by(wet) |>
+  summarize(days = n(), mean_pm25 = mean(pm25))
+
+
+# What a join does silently ----
+partial <- filter(wx, date != as.Date("2025-01-07"))   # pretend one day is missing
+
+nrow(inner_join(one, partial, by = "date"))   # dropped
+nrow(left_join(one, partial, by = "date"))    # kept, with NA
 
 
 # system.time(): the one-line stopwatch ----

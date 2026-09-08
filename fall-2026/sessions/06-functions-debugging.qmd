@@ -1,75 +1,1139 @@
 ---
 title: "6 · How to code"
-subtitle: "Thursday, Sep 10, 2026"
+subtitle: "Thursday, September 10, 2026"
 pagetitle: "6 · How to code"
 title-prefix: ""
+execute:
+  echo: true
+format:
+  html:
+    toc: true
+    toc-depth: 2
+  revealjs:
+    output-file: 06-functions-debugging-slides.html
+    theme: [default, slides.scss]
+    template-partials:
+      - title-slide.html
+    footer: "AEM 6850 · Session 6"
+    slide-number: c/t
+    incremental: false
+    code-line-numbers: false
+    code-overflow: scroll
+    history: false
+    link-external-newwindow: true
 ---
 
-::: {.callout-note appearance="simple"}
-Materials for this session are not published yet. They appear here
-before class.
+```{r}
+#| purl: false
+#| include: false
+knitr::opts_chunk$set(
+  comment = "#>",
+  collapse = FALSE,
+  fig.width = 8,
+  fig.height = 4,
+  fig.align = "center",
+  dpi = 150
+)
+```
+
+::: {.content-hidden when-format="revealjs"}
+
+[Slides](06-functions-debugging-slides.html) · [Live script](06-functions-debugging.R) ·
+[Source](https://github.com/ArielOrtizBobea/aem6850/blob/main/fall-2026/sessions/06-functions-debugging.qmd)
+
+Functions, one function over many files, the habits that make a script
+readable and checkable, and what to do when a number is wrong.
+
 :::
 
 ## Objectives {#objectives}
 
 By the end of this session you can:
 
-- Write and call your own functions.
-- Run a function over a list of files with `lapply()`.
-- Say how research code differs from software, and which software
-  engineering practices are worth borrowing anyway.
-- Structure a script so a stranger can read it: sections, names,
-  comments that say why.
-- Avoid duplicated code and unexplained constants.
-- Write code that is easy to check — and explain why that is a
-  property of the code, not of the checker.
-- Localize a defect by bisection, and pick the right tool for the
-  kind of failure you have.
-- Document a diagnosis: the line, the mechanism, the fix, and the
-  proof.
+- Write a function and call it with its own arguments.
+- Run one function over every file in a folder with `lapply()`.
+- Trace a `for` loop by hand.
+- Structure a script: sections, names, comments that say why, named
+  constants, no duplicated code.
+- Stop a script with `stopifnot()` when a number is not what you wrote down.
+- Localize a defect by bisection, and write the diagnosis down: line,
+  mechanism, fix, proof.
 
-## What we cover {#coverage}
+## Building the Compton frame {#build}
 
-- Writing functions; `for` loops at reading depth.
-- `lapply()` and `sapply()` for real: apply a function to every
-  element of a list — every file in a folder, every group in a
-  split — the pattern most of the applied work runs on. Lists are
-  what they eat and what they return.
-- **Research code is not software.** Software has users, ships, and
-  is maintained for years; a research script has one author, runs a
-  handful of times, and has to produce a number someone can defend.
-  So the engineering practices divide in three: the ones that pay off
-  immediately here (naming, structure, no duplication, version
-  control, small tested pieces), the ones that pay off selectively
-  (unit tests, code review, refactoring), and the ones that are
-  overhead at this scale (APIs, design patterns, coverage targets,
-  CI). Borrow deliberately rather than by reputation.
-- Coding practices: naming things, `# section ----` structure,
-  comments that explain why rather than what, named constants instead
-  of magic numbers, not repeating yourself — you are writing code
-  for others, and that includes yourself in six months.
-- **Write code that is easy to check.** Checkability is a property of
-  how the code is built, not of how hard you look at it afterwards:
-  small pieces with one job, intermediate values you can print,
-  no step that changes three things at once, and results that come
-  out where an assertion can reach them. Code you cannot check is
-  code you cannot defend, whatever it computed.
-- Test small before you run big; re-run the whole script, not just
-  the piece you changed.
-- A personal style sheet: eleven dimensions of how *you* write code —
-  kept, and paid off later in the semester.
-- **Debugging as a strategy, not a toolbox.** Read the error before
-  you change anything; reproduce it on the smallest input that still
-  fails; form one hypothesis at a time and test it; change one thing
-  per run. Then the tools, matched to the failure: `traceback()` for
-  where it died, `browser()` for what the state was, print debugging
-  for how a value evolved, and bisection for a wrong number that
-  never errored at all.
-- Bisection — comment out half, re-run, repeat until the defect has
-  nowhere to hide. It is the only one of the four that works when
-  nothing crashed.
-- The in-class bug hunt: a short script that runs clean and reports a
-  plausible wrong number. Find it — no AI, in the room.
+Everything below runs off the Compton file, read here so this page and its
+script stand on their own.
 
-**Verification habit.** Bisection: where could the wrong number have
-entered?
+```{r}
+#| label: build
+#| script: "Build the Compton frame"
+pm <- read.csv("data/epa_pm25_compton_2025.csv",
+               colClasses = c("Site.ID" = "character"))
+names(pm)[names(pm) == "Daily.Mean.PM2.5.Concentration"] <- "pm25"
+names(pm)[names(pm) == "Local.Site.Name"]                <- "site"
+pm$date <- as.Date(pm$Date, format = "%m/%d/%Y")
+pm <- pm[pm$POC == 1 & pm$AQS.Parameter.Code == 88101, ]
+
+nrow(pm)   # one regulatory instrument, the days it ran
+```
+
+::: {.content-hidden when-format="revealjs"}
+
+Five lines: read the file with the identifier protected, rename the
+concentration and site columns, convert the date, keep one instrument.
+Every EPA (the US Environmental Protection Agency) file needs the same five
+lines, and every script that reads one starts by typing them again. A
+function lets you type them once.
+
+:::
+
+::: {.content-visible when-format="revealjs"}
+
+- Read with the identifier protected, rename, convert the date, keep one
+  instrument. 301 rows.
+- Every EPA file needs these five lines. A function lets you type them once.
+
+:::
+
+## `function()`: naming a block of code {#function}
+
+```{r}
+#| label: function
+#| script: "function(): naming a block of code"
+days_above <- function(x, standard = 35) {
+  sum(x > standard)
+}
+
+dec <- pm[format(pm$date, "%m") == "12", ]
+days_above(dec$pm25)                  # December, at the 35 standard
+days_above(dec$pm25, standard = 50)   # the same days, a higher bar
+days_above(c(1, 50))                  # a case you can check by eye
+```
+
+::: {.content-hidden when-format="revealjs"}
+
+`function()` builds a function. The names in its parentheses are the
+arguments; `standard = 35` gives one of them a default, so a call can leave
+it out. The body runs when you call the function, with `x` standing for
+whatever you passed in. The value of a function is its last expression.
+`return(x)` says the same thing explicitly, and is only needed to leave a
+function early.
+
+December had 5 days above the standard and 3 above 50. The last call is
+the one to keep in the habit: two numbers you can check by eye, and the
+answer must be 1.
+
+:::
+
+::: {.content-visible when-format="revealjs"}
+
+- `function(x, standard = 35)`: the arguments. `= 35` is a default.
+- The value is the last expression. `return()` is for leaving early.
+- December: 5 days above 35, 3 above 50. `c(1, 50)`: 1, as it must be.
+
+:::
+
+## Local names and global names {#scope}
+
+```{r}
+#| label: scope
+#| script: "Local names and global names"
+#| error: true
+count_pos <- function(x) {
+  n <- sum(x > 0)   # n exists inside the call
+  n
+}
+count_pos(c(-1, 2, 3))
+n                     # and not outside it
+```
+
+::: {.content-hidden when-format="revealjs"}
+
+A name made inside a function dies at the closing brace. Outside the call,
+`n` never existed. That is what lets a function use short names like `n`
+and `d` without trampling anything in the workspace.
+
+:::
+
+::: {.content-visible when-format="revealjs"}
+
+- Names made inside a function die at the closing brace.
+- So a function can use short names without touching the workspace.
+
+:::
+
+## A function can read a global name {#scope-global}
+
+```{r}
+#| label: scope-global
+#| script: "A function can read a global name"
+#| error: true
+standard <- 35
+share_above <- function(x) sum(x > standard) / length(x)
+share_above(dec$pm25)
+
+rm(standard)
+share_above(dec$pm25)   # worked until the global was gone
+```
+
+::: {.content-hidden when-format="revealjs"}
+
+The other direction is the trap. A function can read a name from outside
+itself, and `share_above()` does: it uses `standard` without ever being
+given it. It works while `standard` happens to sit in the workspace and
+fails in a fresh session with `object 'standard' not found`. Everything a
+function needs should come in through its arguments. Then it works
+anywhere, and a two-number test tells you it reads its own input.
+
+:::
+
+::: {.content-visible when-format="revealjs"}
+
+- A function can read a global name. It works until the global is gone.
+- Everything a function needs comes in through its arguments.
+
+:::
+
+## `read_epa()`: the five lines, once {#read-epa}
+
+```{r}
+#| label: read-epa
+#| script: "read_epa(): the five lines, once"
+read_epa <- function(path) {
+  d <- read.csv(path, colClasses = c("Site.ID" = "character"))
+  names(d)[names(d) == "Daily.Mean.PM2.5.Concentration"] <- "pm25"
+  names(d)[names(d) == "Local.Site.Name"]                <- "site"
+  d$date <- as.Date(d$Date, format = "%m/%d/%Y")
+  d[d$POC == 1 & d$AQS.Parameter.Code == 88101, ]
+}
+
+nrow(read_epa("data/epa_pm25_compton_2025.csv"))
+nrow(read_epa("data/epa_pm25_la_county_2025.csv"))
+```
+
+::: {.content-hidden when-format="revealjs"}
+
+The five lines from the top of the page, with `path` in place of the file
+name and the frame as the value. Copy-pasting code is a red flag, and the
+function is the fix: a change to the rename or to the instrument filter now
+happens in one place, and every file gets it. The county file holds eleven
+sites and 4,757 rows; 1,738 of them are on a regulatory instrument.
+
+:::
+
+::: {.content-visible when-format="revealjs"}
+
+- The five lines, with `path` for the file name and the frame as the value.
+- Copy-pasting code is a red flag. A function is the fix.
+- 301 rows at Compton; 1,738 across the county's regulatory instruments.
+
+:::
+
+## `lapply()` over files {#lapply-files}
+
+```{r}
+#| label: lapply-files
+#| script: "lapply() over files: a list in, a list out"
+files <- list.files("data", pattern = "^epa_.*\\.csv$", full.names = TRUE)
+files
+
+frames <- lapply(files, read_epa)
+class(frames); length(frames)
+names(frames) <- basename(files)
+sapply(frames, nrow)
+```
+
+::: {.content-hidden when-format="revealjs"}
+
+In: a character vector of paths. Out: a list, one data frame per file, in
+the same order. `list.files()` finds the files; the pattern keeps the EPA
+ones and `full.names = TRUE` returns paths you can hand to `read_epa()`.
+`sapply()` is `lapply()` with the result simplified when every element has
+the same shape, which a row count does.
+
+This is the shape of most real data collection: one file per year, per
+state, or per month. Get one file right, then hand the function the list.
+
+:::
+
+::: {.content-visible when-format="revealjs"}
+
+- In: a character vector of paths. Out: a list, one data frame per file.
+- `sapply()` simplifies when every element has the same shape.
+- Get one file right, then hand the function the list.
+
+:::
+
+## `split()`: one data frame per site {#split}
+
+```{r}
+#| label: split
+#| script: "split(): one data frame per site"
+la     <- frames[["epa_pm25_la_county_2025.csv"]]
+la_jan <- la[format(la$date, "%m") == "01", ]
+
+by_site <- split(la_jan, la_jan$site)
+sapply(by_site, nrow)
+```
+
+::: {.content-hidden when-format="revealjs"}
+
+`split()` cuts a data frame into a list, one piece per value of the
+grouping column. `by_site[["Compton"]]` is a plain data frame with
+Compton's 31 January rows. Eight sites, not the county's eleven: three
+sites run no regulatory instrument, so the filter inside `read_epa()`
+removed them.
+
+Count rows before you trust a mean. Four sites report 6 to 11 January days;
+whatever they average rests on very little. `do.call(rbind, by_site)` puts
+the pieces back together, 157 rows, as before the split.
+
+:::
+
+::: {.content-visible when-format="revealjs"}
+
+- A list, one data frame per site. Eight, not eleven: three run no
+  regulatory instrument.
+- Rows per site first. Four sites have 6 to 11 January days.
+
+:::
+
+## The same function, every site {#lapply-groups}
+
+```{r}
+#| label: lapply-groups
+#| script: "The same function, every site"
+sapply(by_site, function(s) days_above(s$pm25))
+```
+
+::: {.content-hidden when-format="revealjs"}
+
+`function(s) days_above(s$pm25)` is a function with no name, written where
+it is used. `s` stands for one piece of the list at a time, and the body
+says what to do with it. Compton had 4 days above the standard in January,
+Lancaster - Fairgrounds none.
+
+:::
+
+::: {.content-visible when-format="revealjs"}
+
+- `function(s) ...`: a function with no name, written where it is used.
+- `s` is one piece of the list at a time.
+- Compton 4, Lancaster - Fairgrounds 0.
+
+:::
+
+## `for` loops, traced by hand {#for}
+
+```{r}
+#| label: for
+#| script: "for loops, traced by hand"
+x   <- c(10, 40, 36)
+out <- numeric(length(x))        # one slot per answer, made first
+for (i in seq_along(x)) {
+  out[i] <- x[i] > 35
+}
+out
+```
+
+| pass | `i` | `x[i]` | `x[i] > 35` | `out` after |
+|:--|:--|:--|:--|:--|
+| 1 | 1 | 10 | FALSE | 0 0 0 |
+| 2 | 2 | 40 | TRUE | 0 1 0 |
+| 3 | 3 | 36 | TRUE | 0 1 1 |
+
+::: {.content-hidden when-format="revealjs"}
+
+`for` runs the body once per value of `i`; `seq_along(x)` is 1, 2, 3. The
+table is the loop traced by hand: fill it in before running, then run and
+compare. `out` is made first, at full size, so each pass fills a slot
+instead of growing a vector.
+
+`lapply()` does this job in one line. `for` is the tool when order matters
+or when each pass does something besides return a value, like writing one
+file per site.
+
+:::
+
+::: {.content-visible when-format="revealjs"}
+
+- Trace it by hand before running. `out` is made first, full size.
+- `for` when order matters or a pass has a side effect. `lapply()` otherwise.
+
+:::
+
+## Exercise 1 {#exercise-1}
+
+::: {.panel-tabset}
+
+### Exercise
+
+```{r}
+#| label: exercise-1
+#| exercise: true
+#| script: "Exercise 1 (5 minutes)"
+#| eval: false
+# 1. Write mean_above(x, standard = 35): the mean of the readings in x
+#    that are above the standard.
+# 2. Run it on every site in by_site with sapply().
+# 3. One number to compare with the room: Pasadena.
+# 4. One site returns NaN. Say why in one sentence, and whether that is
+#    wrong.
+```
+
+### Solution
+
+```{r}
+#| label: exercise-1-solution
+#| purl: false
+mean_above <- function(x, standard = 35) mean(x[x > standard])
+round(sapply(by_site, function(s) mean_above(s$pm25)), 1)
+```
+
+::: {.content-visible when-format="revealjs"}
+
+Pasadena 58.1. Lancaster - Fairgrounds `NaN`: no reading above 35, so the
+mean of nothing. Honest.
+
+:::
+
+::: {.content-hidden when-format="revealjs"}
+
+Pasadena 58.1. Lancaster - Fairgrounds returns `NaN`: no January reading
+there was above 35, so `x[x > standard]` is empty and the mean of nothing
+is not a number.
+That is the honest answer. A function that quietly returned 0 would be
+lying.
+
+:::
+
+:::
+
+## Which software practices pay for research code {#research-code}
+
+::: {.content-hidden when-format="revealjs"}
+
+Software has users, ships, and is maintained for years. A research script
+has one author, runs a handful of times, and has to produce a number
+someone can defend. So the practices of software engineering divide in
+three at this scale:
+
+:::
+
+| Pays now | Pays sometimes | Overhead at this scale |
+|:--|:--|:--|
+| Names that mean something | Unit tests | Design patterns |
+| Sections | Code review | Interfaces for other programs |
+| No duplicated code | Refactoring | Coverage targets |
+| Small, tested pieces | | Continuous integration |
+| Version control | | |
+
+::: {.content-visible when-format="revealjs"}
+
+- One author, a handful of runs, one number someone has to defend.
+- Borrow deliberately, not by reputation.
+
+:::
+
+::: {.content-hidden when-format="revealjs"}
+
+Borrow deliberately, not by reputation. The first column is the rest of
+this page.
+
+:::
+
+## Naming things and named constants {#naming}
+
+```{r}
+#| label: naming
+#| script: "Naming things and named constants"
+STANDARD <- 35   # US EPA 24-hour PM2.5 standard, ug/m3
+
+days_above <- function(x, standard = STANDARD) sum(x > standard)
+days_above(dec$pm25)
+```
+
+::: {.content-hidden when-format="revealjs"}
+
+Names are short and informative, lower case, with underscores: `pm25`,
+`by_site`, `read_epa`. Verbs for functions. Not `MyModified.PM.var`, not
+`T` for `TRUE`.
+
+A number that means something gets a name at the top of the script, in
+capitals, and is used by that name everywhere. `35` typed in six places is
+six chances to change five of them.
+
+Comments say why, not what. `# EPA 24-hour standard` tells a reader
+something the code cannot; `# set x to 35` repeats the line below it.
+
+:::
+
+::: {.content-visible when-format="revealjs"}
+
+- Short, lower case, underscores. Verbs for functions. Never `T` for `TRUE`.
+- A number that means something gets a name at the top, in capitals.
+- Comments say why. The code already says what.
+
+:::
+
+## `# section ----` structure {#sections}
+
+```{r}
+#| label: sections
+#| script: "A script with sections"
+#| eval: false
+# air.R -- days above the PM2.5 standard at one monitor, 2025
+# Your Name, NetID
+
+# 0) Setup ----
+STANDARD <- 35                        # US EPA 24-hour standard, ug/m3
+pm <- read_epa("data/epa_pm25_compton_2025.csv")
+
+# 1) One instrument, one month ----
+
+# 2) The numbers ----
+
+# 3) Write results.csv ----
+```
+
+::: {.content-hidden when-format="revealjs"}
+
+A title block says what the script does and who wrote it. A setup section
+holds packages, constants, and the data coming in. Then one section per
+task, numbered in the order they run, and nothing from setup reappears
+lower down. A comment ending in four dashes is a section: RStudio's outline
+(Ctrl+Shift+O, Cmd+Shift+O on a Mac) lists them, and you can jump between
+them. A script does one job. Two jobs, two scripts.
+
+:::
+
+::: {.content-visible when-format="revealjs"}
+
+- Title block, setup, then one numbered section per task.
+- `# Name ----` is a section. RStudio's outline lists them.
+- A script does one job. Two jobs, two scripts.
+
+:::
+
+## Sketch the sections first {#sketch}
+
+::: {.content-hidden when-format="revealjs"}
+
+You are writing code for others, and that includes yourself in t+1. Six
+months from now you will open this script with no memory of writing it,
+and the section headers are what you will read first.
+
+"Would you tell me, please, which way I ought to go from here?" "That
+depends a good deal on where you want to get to," said the Cat (*Alice in
+Wonderland*, Lewis Carroll). Before the first line of code, write the
+section headers: what comes in, what each step produces, what goes out.
+Then fill them in, interactively, one at a time.
+
+:::
+
+::: {.content-visible when-format="revealjs"}
+
+- You are writing code for others. That includes yourself in t+1.
+- "That depends a good deal on where you want to get to," said the Cat.
+- Write the section headers first. Then fill them in, one at a time.
+
+:::
+
+## Write code that is easy to check {#checkable}
+
+::: {.content-hidden when-format="revealjs"}
+
+Whether code can be checked is a property of how it is built, not of how
+hard you look at it afterwards. Small pieces with one job each. Intermediate
+values that land in named objects, so `nrow(pm)` after the filter and
+`range(pm$date)` after the date conversion are one line away. No step that
+changes three things at once. Results that come out where a check can reach
+them. Code you cannot check is code you cannot defend, whatever it
+computed.
+
+:::
+
+::: {.content-visible when-format="revealjs"}
+
+- Small pieces, one job each.
+- Intermediate values in named objects you can print.
+- No step that changes three things at once.
+- Code you cannot check is code you cannot defend.
+
+:::
+
+## `stopifnot()`: a check that stops the script {#stopifnot}
+
+```{r}
+#| label: stopifnot
+#| script: "stopifnot(): a check that stops the script"
+jan <- pm[format(pm$date, "%m") == "01", ]
+
+stopifnot(nrow(pm) == 301)
+stopifnot(nrow(jan) == 31, abs(mean(jan$pm25) - 21.28) < 0.05)
+```
+
+::: {.content-hidden when-format="revealjs"}
+
+`stopifnot()` takes conditions. If every one is `TRUE` it does nothing;
+if any is `FALSE` it stops the script and names the first that failed.
+Several conditions fit in one call, one per line when they are long, and a
+condition may be a whole vector, in which case every element must be
+`TRUE`. A check that sits commented out is turned on by selecting its lines
+and pressing Ctrl+Shift+C (Cmd+Shift+C on a Mac). Put the check right
+after the step it guards, with the number you wrote down before running.
+
+A mean is compared with a tolerance, `abs(x - 21.28) < 0.05`, never with
+`==`. The computed mean is 21.2806..., and 21.28 is what you wrote down;
+`==` would call them different.
+
+:::
+
+::: {.content-visible when-format="revealjs"}
+
+- Silent when every condition holds. Stops the script when one fails.
+- Several conditions in one call. Right after the step it guards.
+- A mean gets a tolerance, `abs(x - 21.28) < 0.05`, never `==`.
+
+:::
+
+## What a failed check looks like {#stopifnot-fail}
+
+```{r}
+#| label: stopifnot-fail
+#| script: "What a failed check looks like"
+#| error: true
+stopifnot(nrow(jan) == 30)
+stopifnot("one row per calendar day" = nrow(jan) == length(unique(jan$date)))
+```
+
+::: {.content-hidden when-format="revealjs"}
+
+The message is the condition that failed, so a reader knows what was
+expected without opening the script. A named condition prints its name
+instead; the second call passes and prints nothing.
+
+A check you edited so that it passes is worse than a check that fails.
+The failing check still tells the truth; the edited one hides a number you
+could not explain.
+
+:::
+
+::: {.content-visible when-format="revealjs"}
+
+- The message is the condition that failed. A named condition prints its name.
+- A check edited to pass is worse than a check that fails honestly.
+
+:::
+
+## Test small, then run big {#test-small}
+
+```{r}
+#| label: test-small
+#| script: "Test small, then run big"
+days_above(c(1, 50))                              # a case you can check by eye
+nrow(read_epa(files[1]))                          # one file before the folder
+system.time(lapply(files, read_epa))              # the whole folder, timed
+```
+
+::: {.content-hidden when-format="revealjs"}
+
+Never run the big job untested. A function gets a case you can check by
+eye. A loop runs on one file before the folder, on one site before all of
+them. `system.time()` around the big call tells you what the next run will
+cost: nothing here, and minutes when a folder holds a thousand files.
+
+:::
+
+::: {.content-visible when-format="revealjs"}
+
+- Never run the big job untested. A function gets a case you can check by eye.
+- One file before the folder. `system.time()` around the big call.
+
+:::
+
+## Restart R and source the script {#restart}
+
+```{r}
+#| label: restart
+#| script: "Restart R and source the script"
+#| eval: false
+#| purl: false
+# Session > Restart R   (Ctrl+Shift+F10 on Windows, Cmd+Shift+0 on a Mac)
+ls()                    # character(0), or it was not a clean restart
+getwd()                 # where "data/..." is looked for
+list.files("data")      # what is there
+source("air.R")         # your script, top to bottom, in a clean session
+```
+
+::: {.content-hidden when-format="revealjs"}
+
+A script that runs only because of what is already in your environment is
+not a script yet. Restart R: packages unload, and the workspace empties
+once Tools > Global Options > General has "Save workspace to .RData on
+exit" set to Never and "Restore .RData into workspace at startup"
+unchecked. On the default settings RStudio puts the old objects back after
+a restart, so set both once, and expect `ls()` to print `character(0)`.
+Then `source()` the file. It runs top to bottom and stops at the first
+error. `rm(list = ls())` clears objects but not packages or options; it is
+not a restart.
+
+`source()` reads `"data/..."` relative to the working directory. Opening a
+project's `.Rproj` file sets the working directory to the project folder,
+which is why every path in a script is relative: `"data/file.csv"`, never
+`"/Users/you/Desktop/file.csv"`, which runs on one laptop and nowhere else.
+When R says a file does not exist, check `getwd()` and `list.files("data")`
+before blaming the file.
+
+:::
+
+::: {.content-visible when-format="revealjs"}
+
+- Restart R, check `ls()` is empty, then `source()`. `rm()` is not a restart.
+- Paths are relative to `getwd()`. The `.Rproj` file sets it when opened.
+- "File does not exist": check `getwd()` and `list.files("data")` first.
+
+:::
+
+## Debugging as a strategy {#debugging}
+
+::: {.content-hidden when-format="revealjs"}
+
+Read the error before changing anything. It names the call that failed and
+usually the cause. Reproduce the failure on the smallest input that still
+fails: one file, one site, two numbers. Form one hypothesis at a time and
+test it. Change one thing per run, so that when the output changes you know
+why.
+
+Then the tool, matched to the failure. `traceback()` for where it died.
+`print()` for how a value evolved. Bisection for a wrong number that never
+errored.
+
+:::
+
+::: {.content-visible when-format="revealjs"}
+
+- Read the error before changing anything.
+- Reproduce it on the smallest input that still fails.
+- One hypothesis at a time. Change one thing per run.
+- Then the tool: `traceback()`, `print()`, bisection.
+
+:::
+
+## `traceback()`: where it died {#traceback}
+
+```{r}
+#| label: traceback
+#| script: "traceback(): where it died"
+#| eval: false
+frames <- lapply(c("data/epa_pm25_compton_2025.csv", "data/nope.csv"), read_epa)
+traceback()
+```
+
+```
+Error in file(file, "rt") : cannot open the connection
+In addition: Warning message:
+In file(file, "rt") :
+  cannot open file 'data/nope.csv': No such file or directory
+
+5: file(file, "rt")
+4: read.table(file = file, header = header, sep = sep, quote = quote, 
+       dec = dec, fill = fill, comment.char = comment.char, ...)
+3: read.csv(path, colClasses = c(Site.ID = "character"))
+2: FUN(X[[i]], ...)
+1: lapply(c("data/epa_pm25_compton_2025.csv", "data/nope.csv"), 
+       read_epa)
+```
+
+::: {.content-hidden when-format="revealjs"}
+
+`traceback()` prints the calls that were running when the error happened,
+innermost first. Read it from the bottom: your `lapply()` (1) called your
+function (2, `FUN` is `read_epa`), which called `read.csv()` (3), which
+could not open the file (5). The warning names the file. The error is in
+the line you wrote at 1, not in `read.csv()`.
+
+:::
+
+::: {.content-visible when-format="revealjs"}
+
+- Read it from the bottom: your call, your function, then R's.
+- The error is in the line you wrote at 1. The warning names the file.
+
+:::
+
+## `print()` and `cat()`: how a value evolved {#print}
+
+```{r}
+#| label: print
+#| script: "print() and cat(): how a value evolved"
+for (site in names(by_site)[1:3]) {
+  s <- by_site[[site]]
+  cat(site, ": ", nrow(s), " days, ", days_above(s$pm25), " above\n", sep = "")
+}
+
+print(c(days = nrow(jan), above = days_above(jan$pm25)))
+```
+
+::: {.content-hidden when-format="revealjs"}
+
+Inside a loop or a function, a `print()` or `cat()` line shows what a value
+was on each pass. `print()` shows an object the way the console would;
+`cat()` pastes text and numbers into one line, and `"\n"` ends it. A named
+vector, `c(days = , above = )`, prints label and value together. Take the
+line out once the question is answered.
+
+`browser()` is the same idea with a pause. Put `browser()` inside a
+function and the run stops there with a `Browse[1]>` prompt; you can print
+any local name, `n` steps to the next line, `c` continues, `Q` quits.
+
+:::
+
+::: {.content-visible when-format="revealjs"}
+
+- `cat()` pastes text and numbers into one line. `print()` shows an object.
+- A named vector prints label and value together.
+- Take the line out once the question is answered.
+
+:::
+
+## Bisection: a wrong number that never errored {#bisection}
+
+::: {.content-hidden when-format="revealjs"}
+
+No error, no warning, and the number is wrong. `traceback()` has nothing
+to point at. Where could the wrong number have entered? Every step that
+changes a row count or a value is a suspect.
+
+Write down what each step should produce: rows after the read, rows after
+the filter, the date range, the count. Comment out the second half of the
+script and run the first half. Compare what printed with what you wrote
+down. Halve the half that disagrees. Repeat until the defect has nowhere to
+hide. It is usually one line, and the line is usually not the one that
+printed the number.
+
+:::
+
+::: {.content-visible when-format="revealjs"}
+
+- No error, no warning, and the number is wrong. Nothing to trace.
+- Write down what each step should produce: rows, dates, a count.
+- Comment out half. Run. Compare. Halve the half that disagrees.
+- Repeat until the defect has nowhere to hide. Usually one line.
+
+:::
+
+## Documenting a diagnosis {#diagnosis}
+
+```{r}
+#| label: diagnosis
+#| script: "Documenting a diagnosis: line, mechanism, fix, proof"
+# Line:      share_above <- function(x) sum(x > standard) / length(x)
+# Mechanism: standard is not an argument; the function reads it from the
+#            workspace and fails in a fresh session
+# Fix:       the standard comes in as an argument, with a default
+share_above <- function(x, standard = 35) sum(x > standard) / length(x)
+# Proof:
+stopifnot(share_above(c(1, 50)) == 0.5)
+```
+
+::: {.content-hidden when-format="revealjs"}
+
+Four lines, as comments, next to the fix. The line that was wrong. The
+mechanism, meaning why it produced what it produced. The fix. And the
+proof: a small case that now gives the right answer, written as a check
+that runs. That is what a fixed script carries. When a check fails and you
+cannot fix it, the same four lines with the fix left blank are the honest
+note, and they are worth more than an edited check.
+
+:::
+
+::: {.content-visible when-format="revealjs"}
+
+- Line. Mechanism. Fix. Proof, as a check that runs.
+- Cannot fix it? The same four lines, fix left blank. Never an edited check.
+
+:::
+
+## The bug hunt {#bug-hunt}
+
+::: {.content-hidden when-format="revealjs"}
+
+No AI. The script below runs clean and prints a wrong number. Find the
+line, then write the four-line diagnosis: line, mechanism, fix, proof.
+Copy the script into its own file if you want to halve it.
+
+:::
+
+::: {.panel-tabset}
+
+### Exercise
+
+```{r}
+#| label: bug-hunt
+#| exercise: true
+#| script: "The bug hunt (15 minutes)"
+# No AI. Runs clean, prints a wrong number. Find the line; write the
+# diagnosis: line, mechanism, fix, proof.
+# 0) Setup ----
+STANDARD <- 35
+air <- read.csv("data/epa_pm25_compton_2025.csv",
+                colClasses = c("Site.ID" = "character"))
+names(air)[names(air) == "Daily.Mean.PM2.5.Concentration"] <- "pm25"
+air$date <- as.Date(air$Date, format = "%m/%d/%Y")
+# 1) The month ----
+jan_air <- air[format(air$date, "%m") == "01", ]
+# 2) One instrument ----
+air_one <- air[air$POC == 1 & air$AQS.Parameter.Code == 88101, ]
+# 3) The count ----
+count_above <- function(x, standard = STANDARD) sum(x > standard)
+cat("January:", count_above(jan_air$pm25), "days above the standard\n")
+```
+
+### Solution
+
+```{r}
+#| label: bug-hunt-solution
+#| purl: false
+nrow(jan_air)         # 62 rows for a 31-day month
+table(jan_air$POC)    # two instruments, 31 rows each
+```
+
+```{r}
+#| label: bug-hunt-diagnosis
+#| purl: false
+# Line:      jan_air <- air[...] (section 1) runs before the filter (section 2)
+# Mechanism: both instruments in January, 62 rows for 31 days; each day
+#            above the standard counted twice, 8 instead of 4
+# Fix:       cut the month from the one-instrument frame
+jan_air <- air_one[format(air_one$date, "%m") == "01", ]
+# Proof:
+stopifnot(nrow(jan_air) == 31, count_above(jan_air$pm25) == 4)
+```
+
+::: {.content-hidden when-format="revealjs"}
+
+Nothing errored, nothing warned, and 8 is a believable number for the
+month of the January 2025 Los Angeles fires. The defect is the order of two sections: the month was
+cut before the instrument was chosen. Bisection finds it at the first
+halving, because the row count written down for section 1 was 31.
+
+:::
+
+:::
+
+## Your style sheet {#style-sheet}
+
+::: {.content-visible when-format="revealjs"}
+
+On the page: a table with eleven rows, one per dimension of how you write
+code. Copy it into a file in your project and fill in one rule per row.
+Keep it with your code.
+
+:::
+
+::: {.content-hidden when-format="revealjs"}
+
+Every choice below is one you make anyway, by habit, every time you write
+a script. Making them once, on purpose, and writing them down is what
+turns habits into a style. Copy the table into a file in your project and
+fill in one rule per row. Keep it with your code.
+
+| Dimension | A rule from this page | Your rule |
+|:--|:--|:--|
+| Project structure | Code, data, and output in separate folders; raw data never edited | |
+| File-level conventions | A title block; one script, one job | |
+| Naming | `snake_case`; verbs for functions; capitals for constants | |
+| Formatting | Spaces around `<-` and `=`; one statement per line; indent inside braces | |
+| When to write a function | The second time you paste the same lines | |
+| Function design | Everything the function needs comes in through its arguments; the value is the last expression | |
+| Control flow and idioms | `lapply()` when each pass returns a value; `for` when order or a side effect matters | |
+| Errors, messages, logging | `stopifnot()` after every step that changes a row count | |
+| Comments and documentation | Comments say why; a diagnosis is four lines | |
+| Interactive workflow | Test small, then run big; restart R and source before you trust a result | |
+| Reproducibility hygiene | Relative paths from the project folder; never `setwd()`; a fresh session runs top to bottom | |
+
+:::
+
+::: {.content-visible when-format="revealjs"}
+::: {.notes}
+The sheet comes back when students start briefing an assistant: the
+filled-in table is the brief. Do not say so today.
+:::
+:::
+
+## Practice {#practice}
+
+::: {.content-visible when-format="revealjs"}
+
+Nine exercises with solutions, on the session page and in the live script.
+
+:::
+
+::: {.content-hidden when-format="revealjs"}
+
+::: {.panel-tabset}
+
+### Practice
+
+```{r}
+#| label: practice
+#| exercise: true
+#| script: "Practice"
+#| eval: false
+# Everything below uses pm, dec, jan, files, frames, la, by_site,
+# read_epa() and days_above(), all built earlier in this script.
+
+# Functions
+#  1. Write peak_day(d): the date of the highest pm25 in a data frame d.
+#     Run it on pm. Check the answer against the row that which.max()
+#     points at.
+#  2. Run peak_day() on every site in by_site. Which site peaked last in
+#     January? (sapply() turns dates into numbers; wrap the call in
+#     format() to keep them readable.)
+#  3. From memory, without scrolling up: write share_above(x, standard = 35)
+#     so that it works in a fresh session, with nothing read from the
+#     workspace. Run it on dec$pm25 and on c(1, 50).
+
+# Lists and loops
+#  4. How many sites does each frame in frames hold? One sapply() call.
+#  5. Trace this by hand, writing the value of total after each pass, then
+#     run it:
+#       x <- c(3, 8, 1); total <- 0
+#       for (i in seq_along(x)) total <- total + x[i]
+#  6. One plot per site, written to disk: for each site in by_site, a
+#     line plot of pm25 against date saved as a PNG named after the site.
+#     Do not run it until it works for one site.
+
+# Checks
+#  7. After read_epa() on the county file, write one stopifnot() with two
+#     conditions: exactly 8 sites, and no date outside 2025.
+#  8. This check fails on la. Say why, and whether the data or the check
+#     is wrong. Then write the check that is right for this frame.
+#       stopifnot(nrow(la) == length(unique(la$date)))
+#  9. Time read_epa() on the county file alone, then lapply() over both
+#     files. Does the second take more than the first? By roughly how much?
+```
+
+### Solutions
+
+::: {.callout-tip collapse="true"}
+## Solutions
+
+```{r}
+#| label: practice-solutions
+#| purl: false
+# 1.
+peak_day <- function(d) d$date[which.max(d$pm25)]
+peak_day(pm)
+pm[which.max(pm$pm25), c("date", "pm25")]
+
+# 2. Pasadena, on 2025-01-10. Four sites peaked on January 1.
+sapply(by_site, function(s) format(peak_day(s)))
+
+# 3.
+share_above <- function(x, standard = 35) sum(x > standard) / length(x)
+round(share_above(dec$pm25), 3)
+share_above(c(1, 50))
+
+# 4.
+sapply(frames, function(d) length(unique(d$site)))
+
+# 5. total is 3, then 11, then 12.
+x <- c(3, 8, 1); total <- 0
+for (i in seq_along(x)) total <- total + x[i]
+total
+
+# 7. The second condition is a whole vector; every element must be TRUE.
+stopifnot(length(unique(la$site)) == 8,
+          format(la$date, "%Y") == "2025")
+
+# 8. The check is wrong for this frame, not the data. Several sites
+#    report on the same day, so dates repeat by design. The right check
+#    is one row per site and day.
+nrow(la) == length(unique(la$date))
+stopifnot(nrow(la) == nrow(unique(la[, c("site", "date")])))
+
+# 9. Barely. The Compton file is about a seventh the size of the county
+#    file, so the second call costs about a seventh more.
+system.time(read_epa("data/epa_pm25_la_county_2025.csv"))
+system.time(lapply(files, read_epa))
+```
+
+```{r}
+#| label: practice-solution-6
+#| purl: false
+#| eval: false
+# 6. Test on one site first: for (site in names(by_site)[1]). Then all of them.
+for (site in names(by_site)) {
+  s <- by_site[[site]]
+  png(paste0(site, ".png"), width = 1600, height = 800, res = 150)
+  plot(s$date, s$pm25, type = "l", main = site,
+       xlab = "", ylab = "PM2.5 (ug/m3)")
+  dev.off()
+}
+```
+
+:::
+
+:::
+
+:::
+
+## Quick reference {#quick-reference}
+
+::: {.content-visible when-format="revealjs"}
+
+On the page: every command on this page in one table, and the habits next
+to it.
+
+:::
+
+::: {.content-hidden when-format="revealjs"}
+
+**Functions and lists**
+
+| Code | What it does |
+|:--|:--|
+| `f <- function(x, k = 35) { ... }` | A function; `k = 35` is a default; the value is the last expression |
+| `return(x)` | Leave the function now with `x`; only needed to leave early |
+| `function(s) ...` inside `lapply()` | A function with no name, written where it is used |
+| `list.files("data", pattern =, full.names = TRUE)` | Paths you can hand to a function |
+| `lapply(files, f)` | A list in, a list out: `f` on each element |
+| `sapply(x, f)` | The same, simplified when every element has the same shape |
+| `split(d, d$g)` | A list, one data frame per value of `g` |
+| `do.call(rbind, pieces)` | Stack a list of data frames back into one |
+| `for (i in seq_along(x)) out[i] <- ...` | A loop; make `out` first, at full size |
+
+**Checks and habits**
+
+| Code | What it does |
+|:--|:--|
+| `stopifnot(a, b)` | Stop the script and name the first condition that is not `TRUE` |
+| `stopifnot("why" = a)` | The same, printing your message instead |
+| `abs(x - 21.28) < 0.05` | Compare a computed number with a tolerance, never `==` |
+| `STANDARD <- 35` | A named constant at the top; used by name everywhere |
+| `# Name ----` | A section RStudio's outline can jump to |
+| `system.time(expr)` | Seconds the line took; wrap the big call once |
+| Session > Restart R, then `source("air.R")` | The only test that a script runs on its own |
+| `getwd()`, `list.files("data")` | Where relative paths are looked for, and what is there |
+
+**When something is wrong**
+
+| Symptom | Tool |
+|:--|:--|
+| An error | Read it. Then `traceback()`: your call is at the bottom |
+| A loop or function misbehaves on some passes | `print()` or `cat()` inside it; `browser()` to pause there |
+| A wrong number and no error | Bisection: write down what each step should give, halve, compare |
+| `object 'x' not found` inside a function | The function reads a global; make `x` an argument |
+| `NaN` from a mean | The subset was empty; that is the honest answer |
+| A file "does not exist" | `getwd()` and `list.files()` before blaming the file |
+
+:::
+
+```{r}
+#| purl: false
+#| include: false
+source("_purl.R")
+purl_session("06-functions-debugging.qmd", "06-functions-debugging.R")
+```

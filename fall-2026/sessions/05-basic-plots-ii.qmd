@@ -1,7 +1,7 @@
 ---
-title: "Basic plots II"
-subtitle: "Thursday, September 3, 2026 · not taught in class"
-pagetitle: "Basic plots II"
+title: "5 · Basic plots II"
+subtitle: "Tuesday, September 8, 2026"
+pagetitle: "5 · Basic plots II"
 title-prefix: ""
 execute:
   echo: true
@@ -10,11 +10,11 @@ format:
     toc: true
     toc-depth: 2
   revealjs:
-    output-file: 04b-basic-plots-ii-slides.html
+    output-file: 05-basic-plots-ii-slides.html
     theme: [default, slides.scss]
     template-partials:
       - title-slide.html
-    footer: "AEM 6850 · Basic plots II"
+    footer: "AEM 6850 · Session 5"
     slide-number: c/t
     incremental: false
     code-line-numbers: false
@@ -38,56 +38,28 @@ knitr::opts_chunk$set(
 
 ::: {.content-hidden when-format="revealjs"}
 
-[Slides](04b-basic-plots-ii-slides.html) · [Live script](04b-basic-plots-ii.R) ·
-[Source](https://github.com/ArielOrtizBobea/aem6850/blob/main/fall-2026/sessions/04b-basic-plots-ii.qmd)
+[Slides](05-basic-plots-ii-slides.html) · [Live script](05-basic-plots-ii.R) ·
+[Source](https://github.com/ArielOrtizBobea/aem6850/blob/main/fall-2026/sessions/05-basic-plots-ii.qmd)
 
 The half of base graphics that turns an instrument into a figure: shading,
 colour scales, hand-built axes, unequal panels, heat maps, maps, animation.
 
-:::
-
-## What this page is {#what-this-is}
-
-> **This page is not on the calendar.** It is written, runnable, and about
-> seventy minutes of material — roughly one more class meeting, if one were
-> ever free.
-
-::: {.content-hidden when-format="revealjs"}
-
-Session 4 stops at the point where a plot is good enough to read. This is
-the rest of the toolkit. It is here in full because the material does not
-get easier by being withheld, and because if a meeting ever frees up it
-should be teachable off this page without anyone rebuilding it first.
-
-Nothing here is assumed by any later session, and nothing here is assessed.
-Read it when you need one of the nine things below.
+The colour and map sections use `RColorBrewer`, `maps` and `mapproj`;
+install them once with `install.packages()`.
 
 :::
 
-## What is here {#contents}
+## Objectives {#objectives}
 
-::: {.tight-cols}
+By the end of this session you can:
 
-| Section | The commands it turns on | Min |
-|:--|:--|--:|
-| Unequal panels | `layout()`, `layout.show()` | 9 |
-| Shaded areas | `rect()`, `adjustcolor()` | 6 |
-| Confidence bands | `polygon()` | 10 |
-| Colour scales | `brewer.pal`, `colorRampPalette`, `findInterval` | 10 |
-| Custom axes | `axes = FALSE`, `axis()`, `box()`, `mtext()` | 9 |
-| Fills, shapes, options | `density=`, `beside=`, `notch=` | 6 |
-| Heat maps | `image()` | 7 |
-| Maps | `map()`, projections | 8 |
-| Animation | the `png()`-in-a-loop recipe | 5 |
-
-:::
-
-::: {.content-hidden when-format="revealjs"}
-
-The colour and map sections want `RColorBrewer` and `maps`; install them
-once with `install.packages()`.
-
-:::
+- Lay out panels of unequal size with `layout()`.
+- Shade a window with `rect()`; draw a confidence band with `polygon()`.
+- Turn a numeric column into a colour scale with `brewer.pal()` and
+  `findInterval()`.
+- Draw your own axes with `axis()`, `box()` and `mtext()`.
+- Draw a matrix as a heat map with `image()`, and points on a map with `map()`.
+- Write `png()` frames in a loop and stitch them into an animation.
 
 ## Building the table {#build}
 
@@ -357,8 +329,7 @@ which is the correct answer. Nothing is broken.
 #   "globe.gif")
 ```
 
-Everything in that loop is `png()` and `dev.off()` from the session, plus a
-counter. Any figure you can draw once you can animate.
+Everything in that loop is `png()` and `dev.off()`, plus a counter. Any figure you can draw once you can animate.
 
 
 ## Practice {#practice}
@@ -613,5 +584,5 @@ On the page: every command on this page in one table.
 #| purl: false
 #| include: false
 source("_purl.R")
-purl_session("04b-basic-plots-ii.qmd", "04b-basic-plots-ii.R")
+purl_session("05-basic-plots-ii.qmd", "05-basic-plots-ii.R")
 ```

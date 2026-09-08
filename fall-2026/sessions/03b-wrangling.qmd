@@ -1,7 +1,7 @@
 ---
-title: "5 · Wrangling with dplyr"
-subtitle: "Tuesday, September 8, 2026"
-pagetitle: "5 · Wrangling with dplyr"
+title: "Wrangling with dplyr"
+subtitle: "Optional · not taught in class"
+pagetitle: "Wrangling with dplyr"
 title-prefix: ""
 execute:
   echo: true
@@ -10,11 +10,11 @@ format:
     toc: true
     toc-depth: 2
   revealjs:
-    output-file: 05-wrangling-slides.html
+    output-file: 03b-wrangling-slides.html
     theme: [default, slides.scss]
     template-partials:
       - title-slide.html
-    footer: "AEM 6850 · Session 5"
+    footer: "AEM 6850 · Wrangling with dplyr"
     slide-number: c/t
     incremental: false
     code-line-numbers: false
@@ -38,23 +38,40 @@ knitr::opts_chunk$set(
 
 ::: {.content-hidden when-format="revealjs"}
 
-[Slides](05-wrangling-slides.html) · [Live script](05-wrangling.R) ·
-[Source](https://github.com/ArielOrtizBobea/aem6850/blob/main/fall-2026/sessions/05-wrangling.qmd)
+[Slides](03b-wrangling-slides.html) · [Live script](03b-wrangling.R) ·
+[Source](https://github.com/ArielOrtizBobea/aem6850/blob/main/fall-2026/sessions/03b-wrangling.qmd)
 
-Today the subsetting work gets better grammar: the dplyr verbs, chained
-with a pipe into lines you can read aloud. By the end, the two-month hole
-in the regulatory series is measured exactly, in three lines.
+Subsetting with better grammar: the dplyr verbs, chained with a pipe
+into lines you can read aloud. By the end, the two-month hole in the
+regulatory series is measured exactly, in three lines.
+
+:::
+
+## What this page is {#what-this-is}
+
+> **This page is not on the calendar.** It is written, runnable, and about
+> one class meeting of material.
+
+::: {.content-hidden when-format="revealjs"}
+
+Everything on this page has a base R equivalent, and the verb table at the
+end gives the translation. dplyr is the data-manipulation package of the
+tidyverse, a family of packages that share this grammar, and most R code
+you meet outside this course uses it. Read the page when you meet that
+code, or when a base R line gets too long to read aloud.
 
 :::
 
 ## Objectives {#objectives}
 
-By the end of this session you can:
+By the end of this page you can:
 
 - Translate the base-R subsetting you already know into dplyr verbs.
 - Build grouped summaries with `group_by()` and `summarize()`.
 - Read a pipe chain aloud as a sentence.
 - Predict row and group counts before running.
+- Join two tables on a shared key with `left_join()`, and check the row
+  count before and after.
 
 ## The first package {#first-package}
 
@@ -142,7 +159,7 @@ functions named `filter()` and `lag()`, and base R already had functions
 with those names. Loading dplyr puts the new ones in front, and the message
 lists what moved. You will see it at every `library(dplyr)`.
 
-The rule from today on: install once per machine, load in every session,
+The rule: install once per machine, load in every session,
 and every script opens with its `library()` lines.
 
 :::
@@ -245,7 +262,7 @@ why `head()` works on it unchanged.
 ::: {.content-hidden when-format="revealjs"}
 
 `mutate()` adds columns computed from existing ones. Two at once here, and
-both get used today. Before running it, set the expectation:
+both get used below. Before running it, set the expectation:
 four days in this window clear 35 µg/m³, the 24-hour standard set by EPA
 (the US environmental agency) — January 1, 8, 9, and 10. So a TRUE/FALSE column for `pm25 > 35` must sum
 to 4.
@@ -391,20 +408,21 @@ expression from the inside out.
 ::: {.content-hidden when-format="revealjs"}
 
 `group_by()` declares groups; every `summarize()` after it computes once
-per group. Before running the block below, write down the six numbers it
-should print. You already have the evidence. Days: the window has no
-gaps, so January contributes 31 rows and February 28. Medians: 16.9 for
-January and 12.6 for February. Means: all four days above the standard
-belong to January, and in a right-skewed month the mean sits above the
-median, so January's mean should clear 16.9 with room. Write your six down, then run.
+per group. Before running the block below, write down what it should
+print. You already have some of the evidence. Days: the window has no
+gaps, so January contributes 31 rows and February 28. Means against
+medians: all four days above the standard belong to January, and in a
+right-skewed month the mean sits above the median, so January's mean
+should clear its median with room and February's should sit close to
+its median. Write your numbers down, then run.
 
 :::
 
 ::: {.content-visible when-format="revealjs"}
 
-Write down the six numbers this should print. Evidence: no gaps in the
-window, so 31 and 28 days. Boxplot medians were 16.9 and 12.6. January has
-all four event days, so its mean should clear its median with room.
+Write down what this should print. Evidence: no gaps in the window, so
+31 and 28 days. January has all four event days, so its mean should clear
+its median with room.
 
 :::
 
@@ -425,7 +443,7 @@ one |>
 Reconcile line by line. The days column reads 31 and 28: `n()` takes no
 arguments and counts the rows of whatever group it stands in, and it only
 works inside `summarize()` and friends. The medians come back at 16.9 and
-12.6, as written down. January's mean, 21.3, sits far above its
+12.6. January's mean, 21.3, sits far above its
 own median because the four event days pull it up; February's, 13.4, barely
 moves off its median. (`summarise()` with an s does the same thing; both
 spellings work.)
@@ -444,8 +462,8 @@ not a dplyr bug. `month` is text, and text sorts alphabetically. It is
 
 - Days 31 and 28. `n()` counts the rows of its group; it works only inside
   `summarize()`.
-- Medians 16.9 and 12.6: the boxplot, as numbers. January's mean sits at
-  21.3, pulled up by the four event days.
+- Medians 16.9 and 12.6. January's mean sits at 21.3, pulled up by the
+  four event days.
 - "A tibble": dplyr's flavor of data frame. Same behavior, more careful
   printing.
 - Nobody predicted this part: February printed first. Text sorts
@@ -520,13 +538,14 @@ continuous instrument. They sum to 662, every row in the file.
 
 ## The missing spring, measured {#missing-spring}
 
-A bar chart finds the hole. Measuring it takes a chain you can now read:
+The regulatory series has 301 rows where a full year has 365. A chain you
+can now read says which months the missing days fall in:
 
 ::: {.callout-important appearance="simple"}
 **Write down the twelve counts this should print.** The evidence: the
-`count()` above says the regulatory series has 301 rows. A full month has
-28 to 31 days. A count plot of this series shows ten tall bars, April near
-two days, May near one. Your twelve numbers must sum to 301.
+`count()` above says the regulatory series has 301 rows, and a full month
+has 28 to 31 days, so 64 days are missing somewhere. Your twelve numbers
+must sum to 301. Decide where you think the gap falls before you look.
 :::
 
 ```{r}
@@ -547,10 +566,9 @@ year |> count(month)
 
 ::: {.content-visible when-format="revealjs"}
 
-- April 2 and May 1, as the bars showed. The counts sum to 301, so 64 days
-  are missing from a 365-day year.
-- What the bars could not show: March 30 of 31, June 28 of 30, September 27
-  of 30.
+- April 2 and May 1: the sampler was down for the spring. The counts sum
+  to 301, so 64 days are missing from a 365-day year.
+- Smaller gaps: March 30 of 31, June 28 of 30, September 27 of 30.
 
 :::
 
@@ -558,16 +576,15 @@ year |> count(month)
 
 ::: {.content-hidden when-format="revealjs"}
 
-Reconcile against your prediction. April and May land at 2 days and 1, exactly
-where a count plot puts them. The counts sum to 301, and a
+Reconcile against your prediction. April and May land at 2 days and 1: the
+sampler was down for nearly two months. The counts sum to 301, and a
 complete year has 365 days, so the regulatory series is missing 64. Of
 those, 58 are the spring outage: April is short 28 days and May 30.
 
 The other six days are the news. If you predicted a full 31 for March, the
 table corrects you by one day: March logged 30. June logged 28 of 30,
-September 27 of 30. A bar drawn one day short of thirty looks full; a
-count is exact. The plot found the hole. The count measured it, and turned
-up six more missing days nobody had noticed.
+September 27 of 30. A count is exact, and it turned up six missing days
+that no summary of the whole year would have shown.
 
 One consequence, computed. The series' "2025 annual mean" is an average of
 the 301 days that exist:
@@ -598,14 +615,14 @@ The continuous instrument averages 12.3 over its year and 10.1 over April
 and May. The two instruments measure by different methods, so the levels
 are not exactly comparable. The direction is: the regulatory series is
 missing precisely the months that would have pulled its average down, so
-its 13.4 leans high. Every mean is a mean of the days that are there. Today you can put numbers on what that costs.
+its 13.4 leans high. Every mean is a mean of the days that are there. You can now put numbers on what that costs.
 
 :::
 
 ::: {.content-visible when-format="revealjs"}
 
 - 58 of the 64 missing days are the spring outage. The other six are
-  single days in March, June, and September that the bars could not show.
+  single days in March, June, and September.
 - The cost, quantified on the page: the missing months were the cleanest
   stretch of the year by the site's other instrument. An annual mean over
   the 301 days leans high.
@@ -620,9 +637,142 @@ point stands either way: the series has no spring.
 :::
 :::
 
+## Reading the weather file {#weather}
+
+Readings in one table, the weather in another. The weather file carries
+three lines of station metadata before its header, so `skip = 3`:
+
+```{r}
+#| label: join-setup
+#| script: "Two tables, one key"
+wx <- read.csv("data/la-weather-dec2024-feb2025.csv", skip = 3)
+names(wx)[names(wx) == "precipitation_sum..mm."] <- "rain"
+wx$date <- as.Date(wx$time)
+
+nrow(one); nrow(wx)   # count BEFORE: 59 days of readings, 90 days of weather
+```
+
+::: {.content-hidden when-format="revealjs"}
+
+The read is base R again: `skip`, a rename, a date conversion. The weather
+runs December through February, the readings January through February, and
+both tables carry a `date` column. That shared column is the key.
+
+:::
+
+::: {.content-visible when-format="revealjs"}
+
+- `skip = 3` steps over the station metadata. Rename, convert the date.
+- 59 days of readings, 90 days of weather, one `date` column in each.
+
+:::
+
+## `left_join()`: joining two tables {#left-join}
+
+```{r}
+#| label: join
+#| script: "left_join(): rows of the left table, columns of both"
+# base R:  merge(one, wx, by = "date", all.x = TRUE)
+
+both <- left_join(select(one, date, pm25),
+                  select(wx, date, rain),
+                  by = "date")
+nrow(both)            # and after: 59
+sum(is.na(both$rain))
+```
+
+::: {.content-hidden when-format="revealjs"}
+
+`by` names the column the two tables share. `left_join()` keeps every row
+of the first table and glues on the matching columns of the second; a day
+with no weather row would come back with `rain` as `NA`. Fifty-nine rows
+in, fifty-nine out, and no `NA`: every day of the window found its
+weather. Write down the row count you expect before you run a join, and
+compare. That check is the whole discipline of joining.
+
+:::
+
+::: {.content-visible when-format="revealjs"}
+
+- `by` names the shared column. The left table's rows, both tables' columns.
+- 59 in, 59 out, no `NA`: every day found its weather.
+- Write down the row count you expect, then compare. Every time.
+
+:::
+
+## Rain days against dry days {#join-payoff}
+
+The join is what makes the next question one chain:
+
+```{r}
+#| label: join-payoff
+#| script: "Rain days against dry days"
+both |>
+  mutate(wet = rain > 0) |>
+  group_by(wet) |>
+  summarize(days = n(), mean_pm25 = mean(pm25))
+```
+
+::: {.content-hidden when-format="revealjs"}
+
+Eleven days of the window had rain. Their mean PM2.5 is 6.4, against 20.1
+on the 48 dry days. The biggest storm, 37.9 mm on February 13, sits under
+a reading of 3.2. Rain scrubs the air, and the number that says so took
+one join and one chain.
+
+:::
+
+::: {.content-visible when-format="revealjs"}
+
+- 11 rain days averaged 6.4. The 48 dry days averaged 20.1.
+- The biggest storm, 37.9 mm on February 13, sits under a reading of 3.2.
+
+:::
+
+## How a join drops and multiplies rows {#join-hazards}
+
+```{r}
+#| label: join-hazards
+#| script: "What a join does silently"
+partial <- filter(wx, date != as.Date("2025-01-07"))   # pretend one day is missing
+
+nrow(inner_join(one, partial, by = "date"))   # dropped
+nrow(left_join(one, partial, by = "date"))    # kept, with NA
+```
+
+::: {.content-hidden when-format="revealjs"}
+
+**Rows can disappear.** `inner_join()` keeps only keys present in both
+tables, so a day missing from the weather takes its reading with it: 58
+rows where you asked about 59, with no error and no warning. `left_join()`
+keeps every row of the left table and fills the missing side with `NA`,
+which is almost always what you want: an `NA` you can see beats a row you
+cannot.
+
+**Rows can also multiply.** If the right table has two rows for one date,
+every matching row on the left is repeated to pair with each. Ask for 59
+and get 60. Run `unique()` on the right table's key before you trust a
+join, and count after it.
+
+Keys have to be the same type. Ask dplyr to join a `Date` column to the
+same dates stored as text and it stops with an error naming both types.
+That error is a favor: it is the one join failure that does not pass
+silently.
+
+:::
+
+::: {.content-visible when-format="revealjs"}
+
+- `inner_join()` keeps only keys in **both** tables: rows vanish, silently.
+- `left_join()` keeps the left table and fills with `NA`.
+- A duplicated key on the right **multiplies** rows instead.
+- Mismatched key types stop with an error. The only failure that does.
+
+:::
+
 ## The one-line stopwatch {#timing}
 
-One more habit joins the kit today. Wrap any line in `system.time()` and R
+One more habit. Wrap any line in `system.time()` and R
 reports how long it took:
 
 ```{r}
@@ -634,9 +784,8 @@ system.time(read.csv("data/epa_pm25_compton_2025.csv"))
 ::: {.content-hidden when-format="revealjs"}
 
 Read the `elapsed` column: the seconds you actually waited. For this file
-the answer is effectively zero, and it will be for everything in Part I.
-Part II changes that. Satellite rasters, statewide parcel tables, and
-folders of hourly files make single lines take minutes. The habit costs one
+the answer is effectively zero. Satellite rasters, statewide parcel
+tables, and folders of hourly files make single lines take minutes. The habit costs one
 line: when something feels slow, wrap it once, note the number, and compare
 after you change something.
 
@@ -644,7 +793,7 @@ after you change something.
 
 ::: {.content-visible when-format="revealjs"}
 
-- Read `elapsed`: the seconds you waited. Today, effectively zero.
+- Read `elapsed`: the seconds you waited. Here, effectively zero.
 - The habit: when a line feels slow, wrap it once and note the number.
 
 :::
@@ -653,7 +802,7 @@ after you change something.
 
 ::: {.content-visible when-format="revealjs"}
 
-On the session page: the verb table with base translations, the pipe and
+On the page: the verb table with base translations, the pipe and
 its shortcut, the factor recipe, and the things that bite.
 
 :::
@@ -670,9 +819,10 @@ its shortcut, the factor recipe, and the things that bite.
 | `select(d, date, pm25)` | The named columns; `-name` drops | `d[, c("date", "pm25")]` |
 | `mutate(d, new = expr)` | Adds computed columns | `d$new <- expr` |
 | `arrange(d, desc(x))` | Rows sorted; `desc()` descending | `d[order(-d$x), ]` |
-| `group_by(d, g)` | Declares groups for what follows | new today |
-| `summarize(d, m = mean(x))` | One row per group | new today |
+| `group_by(d, g)` | Declares groups for what follows | no separate step |
+| `summarize(d, m = mean(x))` | One row per group | `tapply(d$x, d$g, mean)` |
 | `count(d, g)` | Grouped row counts | `table(d$g)` |
+| `left_join(a, b, by = "k")` | Rows of `a`, matching columns of `b` glued on | `merge(a, b, by = "k", all.x = TRUE)` |
 
 :::
 
@@ -700,11 +850,13 @@ call as its first argument. Read it as "then".
 | Reinstalls on every run | `install.packages()` is in the script; it belongs in the console |
 | Months print Apr, Aug, Dec, ... | Text sorts alphabetically; make a factor with `levels = month.abb` |
 | `n()` errors on its own | It only counts inside `summarize()` and friends |
+| A join returns fewer rows than the left table | `inner_join()` dropped the keys it could not match; use `left_join()` |
+| A join returns more rows than the left table | A duplicated key on the right; `unique()` it first |
 
 **Links**
 
-- Session materials: [slides](05-wrangling-slides.html) ·
-  [live script](05-wrangling.R) ·
+- Page materials: [slides](03b-wrangling-slides.html) ·
+  [live script](03b-wrangling.R) ·
   [EPA data](data/epa_pm25_compton_2025.csv) ·
   [weather data](data/la-weather-dec2024-feb2025.csv) ·
   [where they came from](data/SOURCE.md)
@@ -712,7 +864,7 @@ call as its first argument. Read it as "then".
   transformation
   cheatsheet](https://rstudio.github.io/cheatsheets/html/data-transformation.html)
 - [R for Data Science, ch. 3](https://r4ds.hadley.nz/data-transform.html),
-  the book-length treatment of today
+  the book-length treatment of this page
 - [Syllabus](../syllabus.qmd) · [full schedule](../index.qmd#schedule)
 
 :::
@@ -723,5 +875,5 @@ call as its first argument. Read it as "then".
 # Single-source build: the .R live script is generated from this file every
 # time the page renders, so it cannot fall out of step with the prose.
 source("_purl.R")
-purl_session("05-wrangling.qmd", "05-wrangling.R")
+purl_session("03b-wrangling.qmd", "03b-wrangling.R")
 ```

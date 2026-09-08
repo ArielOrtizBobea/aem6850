@@ -1,8 +1,8 @@
 # = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 # AEM 6850 -- Empirical Methods for Applied Economists
 # Prof. Ariel Ortiz-Bobea
-# Basic plots II
-# Thursday, September 3, 2026 · not taught in class
+# Session 5 -- Basic plots II
+# Tuesday, September 8, 2026
 #
 # Run it one line at a time: put the cursor on a line and press Cmd-Return
 # (Mac) or Ctrl-Enter (Windows).
