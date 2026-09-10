@@ -32,6 +32,7 @@ knitr::opts_chunk$set(
   fig.width = 8,
   fig.height = 4,
   fig.align = "center",
+  fig.show = "hold",
   dpi = 150
 )
 ```
@@ -44,8 +45,8 @@ knitr::opts_chunk$set(
 The half of base graphics that turns an instrument into a figure: shading,
 colour scales, hand-built axes, unequal panels, heat maps, maps, animation.
 
-The colour and map sections use `RColorBrewer`, `maps` and `mapproj`;
-install them once with `install.packages()`.
+The colour, map and animation sections use `RColorBrewer`, `maps`,
+`mapproj` and `magick`; install them once with `install.packages()`.
 
 :::
 
@@ -129,6 +130,7 @@ layout(1)
 
 ```{r}
 #| label: layout-real
+#| output-location: slide
 #| script: "A layout in use"
 #| fig-height: 5.5
 #| fig-alt: "One wide panel across the top showing Compton's January as a line with circles at each day, over two smaller panels holding histograms of Compton's and Lancaster's full-year readings on identical bins. Compton's tail runs past 55; Lancaster's mass sits three bars to the left."
@@ -154,6 +156,7 @@ spans both stations and keeps them comparable.
 
 ```{r}
 #| label: gf-rect
+#| output-location: slide
 #| script: "Shaded areas: rect()"
 #| fig-alt: "Compton's 2025 series as a line with a translucent grey band covering the first three weeks of January."
 plot(comp_y$date, comp_y$pm25, type = "l", col = "grey30",
@@ -171,6 +174,7 @@ are vectorised, so one call can shade many windows.
 
 ```{r}
 #| label: gf-polygon
+#| output-location: slide
 #| script: "Confidence bands: polygon()"
 #| fig-alt: "A scatter of simulated points with a red fitted cubic curve through them and a translucent red band around the curve widening at both ends."
 set.seed(2)
@@ -193,10 +197,64 @@ then x backwards*, *upper forwards then lower backwards* — that traces the
 band's outline in one loop. Every confidence band, event-study plot and
 dose-response figure you will ever draw is this shape.
 
+## Exercise 1 {#exercise-1}
+
+::: {.panel-tabset}
+
+### Exercise
+
+```{r}
+#| label: exercise-1
+#| exercise: true
+#| script: "Exercise 1 (3 minutes)"
+#| eval: false
+# Three minutes. "A layout in use" put the January line on top of the two
+# histograms. Turn it on its side.
+#
+# 1. Write the matrix() call that stacks the two histograms on the LEFT and
+#    gives the January line one tall panel on the RIGHT. The line is still
+#    drawn first.
+# 2. Check it with layout.show(3) before you draw anything.
+# 3. Make the right column twice as wide as the left. Which argument?
+#
+# Two answers to compare with the room: your matrix, and one argument name.
+```
+
+### Solution
+
+```{r}
+#| label: exercise-1-solution
+#| purl: false
+#| fig-width: 6
+#| fig-height: 3
+#| out-width: "40%"
+layout(matrix(c(2, 3, 1, 1), nrow = 2), widths = c(1, 2))
+layout.show(3)
+layout(1)
+```
+
+::: {.content-hidden when-format="revealjs"}
+
+The line is drawn first, so it is panel **1** and it fills the whole right
+column. `matrix()` fills down column 1 first (2 over 3), then column 2 (1
+over 1). The argument is **`widths`**, a ratio like `heights`.
+
+:::
+
+::: {.content-visible when-format="revealjs"}
+
+Panel **1** is the line, drawn first; `matrix()` fills column 1 first.
+The argument is **`widths`**, a ratio like `heights`.
+
+:::
+
+:::
+
 ## Colour scales {#colours}
 
 ```{r}
 #| label: gf-colors
+#| output-location: slide
 #| script: "Colour scales"
 #| fig-height: 3.6
 #| fig-alt: "A strip of 200 points coloured along a red-to-blue spectral ramp from left to right."
@@ -216,6 +274,7 @@ three lines are how every choropleth and heat map gets its colours.
 
 ```{r}
 #| label: gf-axes
+#| output-location: slide
 #| script: "Custom axes"
 #| fig-alt: "Compton's 2025 series with no default axes: month abbreviations along the bottom, minor ticks between them, horizontal y numbers, a box around the plot, and a margin label reading PM2.5."
 op <- par(mar = c(3, 4, 1, 1))
@@ -234,10 +293,59 @@ par(op)
 `axis()` call on the same side with `labels = FALSE` and a small `tck` gives
 minor ticks. `box()` puts the frame back.
 
+## `par(xpd)`: drawing outside the plot region {#xpd}
+
+```{r}
+#| label: gf-xpd
+#| output-location: slide
+#| script: "Drawing outside the plot region"
+#| fig-alt: "Two panels of the same January figure with Compton in red and Lancaster in grey. The left panel, xpd = FALSE, has no legend at all. The right panel, xpd = NA, carries the same legend on one line below the date axis."
+lanc <- jan[jan$site == "Lancaster - Fairgrounds", ]
+op   <- par(mfrow = c(1, 2), mar = c(5, 4, 3, 1))
+
+for (clip in c(FALSE, NA)) {
+  plot(comp$date, comp$pm25, type = "l", lwd = 2, col = "#b31b1b", xlim = xr,
+       ylim = c(0, 60), xlab = "", ylab = "PM2.5 (ug/m3)",
+       main = paste("xpd =", clip))
+  lines(lanc$date, lanc$pm25, lwd = 2, col = "grey50")
+  legend(xr[1], -18, c("Compton", "Lancaster"), col = c("#b31b1b", "grey50"),
+         lwd = 2, bty = "n", horiz = TRUE, xpd = clip)
+}
+
+par(op)
+```
+
+::: {.content-hidden when-format="revealjs"}
+
+Anything drawn outside the axes is clipped away, silently: the left
+`legend()` call ran and produced nothing at all. `xpd` says where the
+clipping stops — `FALSE` is the plot region, `TRUE` is that panel's own
+margins, and `NA` is the whole device, which is what puts one legend under a
+grid of panels. Every drawing function takes `xpd =` on its own call, and
+`par(xpd = NA)` sets it for everything after.
+
+The negative `y` in the `legend()` call is the giveaway: those coordinates
+are read in the panel's own units, so a legend below the axis sits at a
+negative height. Clipping is usually what you want — it is why the shaded
+`rect()` earlier stopped at the edge of the plot instead of bleeding into
+the margin.
+
+:::
+
+::: {.content-visible when-format="revealjs"}
+
+Clipped away silently — the left `legend()` ran and produced nothing.
+
+- `FALSE` the plot region, `TRUE` the panel's own margins, `NA` the device.
+- `par(xpd = NA)` sets it for everything after.
+
+:::
+
 ## Fills, shapes, and options {#variants}
 
 ```{r}
 #| label: gf-variants
+#| output-location: slide
 #| script: "Fills, shapes and options"
 #| fig-height: 5
 #| fig-alt: "Four panels: a hatched histogram, a stacked bar chart, a side-by-side bar chart, and notched box plots."
@@ -265,6 +373,7 @@ gives you `h$breaks` and `h$counts` as ordinary vectors.
 
 ```{r}
 #| label: gf-image
+#| output-location: slide
 #| script: "Heat maps with image()"
 #| fig-height: 3.6
 #| fig-alt: "A four-row heat map, one row per station and one column per month, with Lancaster's row consistently pale and the basin rows darker in January and December."
@@ -282,10 +391,64 @@ par(op)
 puts the **first** matrix dimension on the x axis, so a rows-are-sites matrix
 has to be transposed to get sites down the side.
 
+## Exercise 2 {#exercise-2}
+
+::: {.panel-tabset}
+
+### Exercise
+
+```{r}
+#| label: exercise-2
+#| exercise: true
+#| script: "Exercise 2 (4 minutes)"
+#| eval: false
+# Four minutes. Compton's year as points, coloured by how bad the day was.
+#
+# 1. Take five colours from the "Reds" Brewer palette.
+# 2. Put every reading in comp_y into one of five bands, with cut points at
+#    0, 10, 20, 35 and 55, and plot pm25 against date, one colour per band.
+# 3. How many days are in the top band, and which colour did they get?
+#
+# Two answers to compare with the room: a count, and a hex code.
+```
+
+### Solution
+
+```{r}
+#| label: exercise-2-solution
+#| purl: false
+#| fig-height: 2.8
+#| out-width: "40%"
+cols <- brewer.pal(5, "Reds")
+band <- findInterval(comp_y$pm25, c(0, 10, 20, 35, 55))
+plot(comp_y$date, comp_y$pm25, pch = 16, col = cols[band],
+     xlab = "", ylab = "PM2.5 (ug/m3)")
+sum(band == 5)
+```
+
+::: {.content-hidden when-format="revealjs"}
+
+**Two days**, December 13 and 17, and `cols[5]` is **`#A50F15`**. A reading
+below the first cut point would get band 0, and `cols[0]` is nothing: the
+colour vector comes out one short and R recycles it, so every later point
+is coloured wrong, silently. Compton has no readings below zero; Lancaster
+does.
+
+:::
+
+::: {.content-visible when-format="revealjs"}
+
+**Two days** (December 13 and 17), in `cols[5]` = **`#A50F15`**.
+
+:::
+
+:::
+
 ## Maps {#maps}
 
 ```{r}
 #| label: gf-maps
+#| output-location: slide
 #| script: "Maps"
 #| fig-height: 4
 #| fig-alt: "Two panels: an outline map of the lower 48 US states, and an orthographic globe centred on North America with state outlines drawn on it."
@@ -312,31 +475,41 @@ which is the correct answer. Nothing is broken.
 
 ```{r}
 #| label: gf-animation
+#| output-location: slide
 #| script: "Animation"
-#| eval: false
-# A GIF is just a folder of PNGs shown in order. Write the frames, then
-# stitch them. Needs the magick package, or ImageMagick on the command line.
-
-# invisible(lapply(200:300, function(angle) {
-#   png(sprintf("frame_%04d.png", angle), width = 600, height = 600)
-#   par(mar = c(0, 0, 0, 0))
-#   map("world", proj = "orthographic", orientation = c(15, angle, 0))
-#   dev.off()
-# }))
-
-# magick::image_write(magick::image_animate(
-#   magick::image_read(list.files(pattern = "^frame_.*png$")), fps = 10),
-#   "globe.gif")
+#| warning: false
+#| fig-alt: "An orthographic globe with country outlines, rotating one full turn."
+library(magick)
+frames <- file.path(tempdir(), "frames")
+dir.create(frames, showWarnings = FALSE)
+for (angle in seq(0, 355, by = 5)) {
+  png(file.path(frames, sprintf("frame_%03d.png", angle)), width = 480, height = 480)
+  par(mar = c(0, 0, 0, 0))
+  map("world", proj = "orthographic", orientation = c(15, angle, 0))
+  dev.off()
+}
+globe <- image_animate(image_read(list.files(frames, full.names = TRUE)), fps = 10)
+globe
 ```
 
-Everything in that loop is `png()` and `dev.off()`, plus a counter. Any figure you can draw once you can animate.
-
+A GIF is a folder of PNGs shown in order. Everything in that loop is
+`png()` and `dev.off()` plus a counter; `image_read()` loads the frames and
+`image_animate()` strings them together. `image_write(globe, "globe.gif")`
+saves it. Any figure you can draw once you can animate.
 
 ## Practice {#practice}
 
 ::: {.content-visible when-format="revealjs"}
 
-Fourteen exercises with solutions, on this page and in the live script.
+Fourteen exercises, with solutions, on the page and in the script.
+
+- **1–3** Unequal panels: read a `layout()` matrix, fill it, set `heights`.
+- **4–6** Shaded areas: a window, five bands in one call, overlaid histograms.
+- **7** A fitted curve with its 95% band from `polygon()`.
+- **8–9** Colour scales: a 12-colour Brewer ramp; `findInterval()` buckets.
+- **10** Custom axes: month names, mid-month ticks, a label with `mtext()`.
+- **11–12** Stacked versus beside bars; notched box plots.
+- **13–14** A site-by-month heat map; four monitors on a map of California.
 
 :::
 
@@ -570,6 +743,7 @@ On the page: every command on this page in one table.
 | `axes = FALSE` | suppress both axes so you can draw your own |
 | `axis(1, at =, labels =, tck =, lwd.tick =)` | your own axis; `labels = FALSE` with a small `tck` gives minor ticks |
 | `box()` | put the frame back after `axes = FALSE` |
+| `legend(..., xpd = NA)` | draw outside the axes: `FALSE` = plot region, `TRUE` = the panel's margins, `NA` = the device |
 | `hist(..., density =, angle =, border =)` | hatched fills |
 | `hist(x, plot = FALSE)$counts` | the bin heights without drawing |
 | `barplot(m, beside = TRUE, space =)` | a matrix side by side instead of stacked |

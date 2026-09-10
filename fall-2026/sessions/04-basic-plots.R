@@ -198,16 +198,18 @@ file.exists("compton.png")
 
 
 # Resolution, bitmap and vector ----
-# Same figure, three ways.
+# One letter, three files. Nothing to load first.
 
-png("fig-draft.png", width = 800,  height = 600)              # screen draft
-plot(comp$date, comp$pm25, type = "l"); dev.off()
+png("letter-72.png", width = 200, height = 200)               # bitmap, 72 dpi
+plot.new(); text(0.5, 0.5, "a", cex = 8); dev.off()
+png("letter-300.png", width = 833, height = 833, res = 300)   # bitmap, 300 dpi
+plot.new(); text(0.5, 0.5, "a", cex = 8); dev.off()
+svg("letter.svg", width = 2.78, height = 2.78)                # vector, in inches
+plot.new(); text(0.5, 0.5, "a", cex = 8); dev.off()
 
-png("fig-print.png", width = 2400, height = 1800, res = 300)  # print quality
-plot(comp$date, comp$pm25, type = "l"); dev.off()
 
-cairo_pdf("fig-final.pdf", width = 7, height = 5)             # vector, in inches
-plot(comp$date, comp$pm25, type = "l"); dev.off()
+# The three file sizes, in bytes ----
+file.size(c("letter-72.png", "letter-300.png", "letter.svg"))
 
 
 # = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =

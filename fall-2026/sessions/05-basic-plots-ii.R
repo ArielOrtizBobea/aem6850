@@ -76,6 +76,23 @@ polygon(c(x[i], rev(x[i])),
 lines(x[i], fitted(fit)[i], col = "#b31b1b", lwd = 2)
 
 
+# = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+# Exercise 1 (3 minutes) ----
+# Three minutes. "A layout in use" put the January line on top of the two
+# histograms. Turn it on its side.
+#
+# 1. Write the matrix() call that stacks the two histograms on the LEFT and
+#    gives the January line one tall panel on the RIGHT. The line is still
+#    drawn first.
+# 2. Check it with layout.show(3) before you draw anything.
+# 3. Make the right column twice as wide as the left. Which argument?
+#
+# Two answers to compare with the room: your matrix, and one argument name.
+# = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+
+
+
+
 # Colour scales ----
 library(RColorBrewer)
 cols <- colorRampPalette(brewer.pal(11, "Spectral"))(100)
@@ -94,6 +111,22 @@ axis(1, at = firsts + 15, tck = -0.01, lwd = 0, lwd.tick = 1, labels = FALSE)
 axis(2, las = 2)
 box()
 mtext("PM2.5 (ug/m3)", side = 2, line = 2.5)
+par(op)
+
+
+# Drawing outside the plot region ----
+lanc <- jan[jan$site == "Lancaster - Fairgrounds", ]
+op   <- par(mfrow = c(1, 2), mar = c(5, 4, 3, 1))
+
+for (clip in c(FALSE, NA)) {
+  plot(comp$date, comp$pm25, type = "l", lwd = 2, col = "#b31b1b", xlim = xr,
+       ylim = c(0, 60), xlab = "", ylab = "PM2.5 (ug/m3)",
+       main = paste("xpd =", clip))
+  lines(lanc$date, lanc$pm25, lwd = 2, col = "grey50")
+  legend(xr[1], -18, c("Compton", "Lancaster"), col = c("#b31b1b", "grey50"),
+         lwd = 2, bty = "n", horiz = TRUE, xpd = clip)
+}
+
 par(op)
 
 
@@ -123,6 +156,21 @@ box()
 par(op)
 
 
+# = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+# Exercise 2 (4 minutes) ----
+# Four minutes. Compton's year as points, coloured by how bad the day was.
+#
+# 1. Take five colours from the "Reds" Brewer palette.
+# 2. Put every reading in comp_y into one of five bands, with cut points at
+#    0, 10, 20, 35 and 55, and plot pm25 against date, one colour per band.
+# 3. How many days are in the top band, and which colour did they get?
+#
+# Two answers to compare with the room: a count, and a hex code.
+# = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+
+
+
+
 # Maps ----
 library(maps)
 library(mapproj)
@@ -135,19 +183,17 @@ par(op)
 
 
 # Animation ----
-# A GIF is just a folder of PNGs shown in order. Write the frames, then
-# stitch them. Needs the magick package, or ImageMagick on the command line.
-
-# invisible(lapply(200:300, function(angle) {
-#   png(sprintf("frame_%04d.png", angle), width = 600, height = 600)
-#   par(mar = c(0, 0, 0, 0))
-#   map("world", proj = "orthographic", orientation = c(15, angle, 0))
-#   dev.off()
-# }))
-
-# magick::image_write(magick::image_animate(
-#   magick::image_read(list.files(pattern = "^frame_.*png$")), fps = 10),
-#   "globe.gif")
+library(magick)
+frames <- file.path(tempdir(), "frames")
+dir.create(frames, showWarnings = FALSE)
+for (angle in seq(0, 355, by = 5)) {
+  png(file.path(frames, sprintf("frame_%03d.png", angle)), width = 480, height = 480)
+  par(mar = c(0, 0, 0, 0))
+  map("world", proj = "orthographic", orientation = c(15, angle, 0))
+  dev.off()
+}
+globe <- image_animate(image_read(list.files(frames, full.names = TRUE)), fps = 10)
+globe
 
 
 # = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =

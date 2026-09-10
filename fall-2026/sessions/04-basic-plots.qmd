@@ -979,45 +979,81 @@ into it.
 ```{r}
 #| label: png-formats
 #| script: "Resolution, bitmap and vector"
-#| eval: false
-# Same figure, three ways.
+#| results: hide
+# One letter, three files. Nothing to load first.
 
-png("fig-draft.png", width = 800,  height = 600)              # screen draft
-plot(comp$date, comp$pm25, type = "l"); dev.off()
+png("letter-72.png", width = 200, height = 200)               # bitmap, 72 dpi
+plot.new(); text(0.5, 0.5, "a", cex = 8); dev.off()
+png("letter-300.png", width = 833, height = 833, res = 300)   # bitmap, 300 dpi
+plot.new(); text(0.5, 0.5, "a", cex = 8); dev.off()
+svg("letter.svg", width = 2.78, height = 2.78)                # vector, in inches
+plot.new(); text(0.5, 0.5, "a", cex = 8); dev.off()
+```
 
-png("fig-print.png", width = 2400, height = 1800, res = 300)  # print quality
-plot(comp$date, comp$pm25, type = "l"); dev.off()
-
-cairo_pdf("fig-final.pdf", width = 7, height = 5)             # vector, in inches
-plot(comp$date, comp$pm25, type = "l"); dev.off()
+```{r}
+#| label: png-formats-size
+#| script: "The three file sizes, in bytes"
+file.size(c("letter-72.png", "letter-300.png", "letter.svg"))
 ```
 
 ::: {.content-hidden when-format="revealjs"}
 
-**Bitmap** formats — `png()`, `jpeg()`, `tiff()` — store a grid of pixels.
-`res` sets how many pixels make an inch. At the default 72 the figure looks
-fine on screen and blurry the moment it is printed or enlarged, which is why
-a plot that looked sharp in RStudio turns soft in Word. Raising `res` without
-raising `width` and `height` shrinks the figure; raise all three together.
+All three files hold the same 2.78-inch figure. **Bitmap** formats —
+`png()`, `jpeg()`, `tiff()` — store a grid of pixels. `res` sets how many
+pixels make an inch. At the default 72 the figure looks fine on screen and
+turns soft the moment it is printed or enlarged, which is why a plot that
+looked sharp in RStudio goes blurry in Word. Raising `res` without raising
+`width` and `height` shrinks the figure, so raise all three together: 833
+pixels at 300 per inch is the same 2.78 inches as 200 pixels at 72.
 
-**Vector** formats — `cairo_pdf()`, `cairo_ps()` — store the lines and shapes
+**Vector** formats — `svg()`, `cairo_pdf()`, `cairo_ps()` — store the shapes
 themselves, so there is no resolution to get wrong and no pixellation at any
-size. Their width and height are in **inches**, not pixels. Journals normally
-want vector for anything that is not a photograph.
+size. Their width and height are in **inches**, not pixels. The vector file
+is also the smallest of the three. Journals want PDF for anything that is
+not a photograph; the web wants SVG.
 
-Decide early. Converting a folder of bitmaps to vector after a paper is
-accepted means redrawing every figure.
+Open the three files and zoom in. Decide early: converting a folder of
+bitmaps to vector after a paper is accepted means redrawing every figure.
 
 :::
 
 ::: {.content-visible when-format="revealjs"}
 
+- Same 2.78-inch figure, three files. Open them and zoom in.
 - **Bitmap** (`png`, `jpeg`): pixels. `res` is pixels per inch; the default 72
-  is why figures go soft in Word. Raise `width`, `height` and `res` together.
-- **Vector** (`cairo_pdf`): lines, no resolution, no pixellation. Sized in
-  **inches**. What journals ask for.
+  is why figures go soft in Word.
+- **Vector** (`svg`, `cairo_pdf`): shapes, no resolution, sized in **inches**.
+  Smallest file of the three.
 
 :::
+
+## The same letter, magnified {#formats-zoom}
+
+```{r}
+#| label: png-formats-zoom
+#| echo: false
+#| purl: false
+#| fig-alt: "Two rows of three panels. Top: the letter a from each file at its own size, indistinguishable. Bottom: the same patch of each file magnified six times: a pixel staircase from the 72-dpi PNG, a smooth but faintly stepped edge from the 300-dpi PNG, and an exact curve from the SVG."
+library(magick)
+lo  <- image_read("letter-72.png")
+hi  <- image_read("letter-300.png")
+vec <- image_read("letter.svg", density = 432)
+big <- c(image_resize(lo,  "1200x1200", filter = "point"),
+         image_resize(hi,  "1200x1200", filter = "point"),
+         image_resize(vec, "1200x1200"))
+zoom <- image_border(image_border(image_crop(big, "400x400+484+358"),
+                                  "grey60", "1x1"), "white", "20x10")
+full <- image_extent(c(lo, image_resize(hi, "200x200"), image_resize(vec, "200x200")),
+                     "400x200", color = "white")
+top  <- image_border(image_annotate(full, c("png(), 72 dpi", "png(), res = 300", "svg()"),
+                                    size = 18, gravity = "north"), "white", "21x10")
+image_append(c(image_append(top), image_append(zoom)), stack = TRUE)
+```
+
+Top row: the three files at their own size. Bottom row: the same patch of
+each, magnified six times. The 72-dpi file is a staircase, the 300-dpi file
+is smooth until you look closer, and the vector file is the drawing itself
+at any zoom.
 
 ## Exercise 2 {#exercise-2}
 
@@ -1104,7 +1140,15 @@ relationship rather than a level.** Its bad-for: 1,119 points read fine;
 
 ::: {.content-visible when-format="revealjs"}
 
-Fourteen exercises with solutions, on the session page and in the live script.
+Fourteen exercises, with solutions, on the page and in the script.
+
+- **1** Choosing the plot: one function name per question.
+- **2–3** One series: Lancaster's year; December with a reference line.
+- **4–6** Distributions: default bins, `breaks =`, one station against the pool.
+- **7–9** Groups and counts: box plots by station and month; sorted bars.
+- **10–11** Several series: a three-station January to replicate; line vs points.
+- **12–13** Panels and the canvas: a 2 × 2 grid; margins and `mtext()`.
+- **14** To disk: the same figure as PNG and PDF, zoomed to 400%.
 
 :::
 
@@ -1353,6 +1397,7 @@ the layers, the canvas, and writing to disk.
 | `png("f.png", width =, height =, pointsize =)` | open a bitmap file as the device; pixels |
 | `png(..., res = 300)` | pixels per inch; the default 72 is why figures go soft in print |
 | `cairo_pdf("f.pdf", width = 7, height = 5)` | vector; no resolution, sized in **inches** |
+| `svg("f.svg", width = 7, height = 5)` | vector for the web; same inches |
 | `dev.off()` | close the device and write the file — **required** |
 
 **Links**
