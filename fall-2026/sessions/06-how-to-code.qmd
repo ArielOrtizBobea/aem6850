@@ -10,7 +10,7 @@ format:
     toc: true
     toc-depth: 2
   revealjs:
-    output-file: 06-functions-debugging-slides.html
+    output-file: 06-how-to-code-slides.html
     theme: [default, slides.scss]
     template-partials:
       - title-slide.html
@@ -38,8 +38,8 @@ knitr::opts_chunk$set(
 
 ::: {.content-hidden when-format="revealjs"}
 
-[Slides](06-functions-debugging-slides.html) · [Live script](06-functions-debugging.R) ·
-[Source](https://github.com/ArielOrtizBobea/aem6850/blob/main/fall-2026/sessions/06-functions-debugging.qmd)
+[Slides](06-how-to-code-slides.html) · [Live script](06-how-to-code.R) ·
+[Source](https://github.com/ArielOrtizBobea/aem6850/blob/main/fall-2026/sessions/06-how-to-code.qmd)
 
 How a project and a script are organized, the habits that make a script
 readable and checkable, writing functions instead of copy-pasting, and what
@@ -529,7 +529,7 @@ computed.
 ```{r}
 #| label: function
 #| script: "function(): naming a block of code"
-days_above <- function(x, standard = STANDARD) {
+days_above <- function(x, standard = 35) {
   sum(x > standard)
 }
 
@@ -542,8 +542,8 @@ days_above(c(1, 50))                  # a case you can check by eye
 ::: {.content-hidden when-format="revealjs"}
 
 `function()` builds a function. The names in its parentheses are the
-arguments; `standard = STANDARD` gives one of them a default, so a call can
-leave it out. The body runs when you call the function, with `x` standing for
+arguments; `standard = 35` gives one of them a default, so a call can leave
+it out. The body runs when you call the function, with `x` standing for
 whatever you passed in. The value of a function is its last expression.
 `return(x)` says the same thing explicitly, and is only needed to leave a
 function early.
@@ -556,7 +556,7 @@ answer must be 1.
 
 ::: {.content-visible when-format="revealjs"}
 
-- `function(x, standard = STANDARD)`: the arguments. `= STANDARD` is a default.
+- `function(x, standard = 35)`: the arguments. `= 35` is a default.
 - The value is the last expression. `return()` is for leaving early.
 - December: 5 days above 35, 3 above 50. `c(1, 50)`: 1, as it must be.
 
@@ -570,7 +570,7 @@ Both return the number of days above the standard.
 #| label: fn-legible
 #| eval: false
 #| purl: false
-days_above <- function(x, standard = STANDARD) {
+days_above <- function(x, standard = 35) {
   sum(x > standard)
 }
 ```
@@ -591,7 +591,7 @@ da <- function(v, s = 35, na = TRUE, f = NULL) {
 ::: {.content-visible when-format="revealjs"}
 
 - The name does not say what it returns. Four arguments where one is
-  needed. The `35` is a bare number again.
+  needed, three of them hidden at the call.
 - A function is easy to read when its name says what it returns and its
   body fits in your head.
 
@@ -606,8 +606,7 @@ one of those additions was free to write and is paid for on every reading.
 `da` does not say what it returns. `v`, `s`, `na` and `f` do not say what
 they take. Three of the four arguments have defaults nobody at the call
 site will see, so `da(x)` hides three decisions. `length(which(...))`
-counts what `sum()` counts, in more steps. And the standard is a bare `35`
-again, so changing it means finding it.
+counts what `sum()` counts, in more steps.
 
 The same dimensions from the two script versions apply here: does the name
 say what comes back, are the values visible at the call, and is the body
@@ -1194,5 +1193,5 @@ to it.
 #| purl: false
 #| include: false
 source("_purl.R")
-purl_session("06-functions-debugging.qmd", "06-functions-debugging.R")
+purl_session("06-how-to-code.qmd", "06-how-to-code.R")
 ```

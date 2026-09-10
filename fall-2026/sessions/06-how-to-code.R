@@ -44,7 +44,7 @@ sum(pm$pm25 > STANDARD)   # days above the standard, 2025
 
 
 # function(): naming a block of code ----
-days_above <- function(x, standard = STANDARD) {
+days_above <- function(x, standard = 35) {
   sum(x > standard)
 }
 
