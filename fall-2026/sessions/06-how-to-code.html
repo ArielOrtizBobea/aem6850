@@ -1,0 +1,1781 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.37">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>6 · How to code</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-7f8f88aac4f3542376d5c11b86a4c14d.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-9e1fa279bf766a6aa9044cbdb2ba542d.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="../../styles.css">
+</head>
+
+<body class="nav-sidebar docked quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../fall-2026/sessions/01-overview.html">Part I — Foundations</a></li><li class="breadcrumb-item"><a href="../../fall-2026/sessions/06-how-to-code.html"> 6 How to code</a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="../../">AEM 6850</a> 
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Home</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/syllabus.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Syllabus</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">Part I — Foundations</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/01-overview.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"> 1 Overview</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/02-r-essentials.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"> 2 R essentials I</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/03-r-essentials-ii.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"> 3 R essentials II</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/03b-wrangling.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">   Wrangling: dplyr</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/04-basic-plots.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"> 4 Basic plots I</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/05-basic-plots-ii.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"> 5 Basic plots II</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/06-how-to-code.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"> 6 How to code</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/07-git.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"> 7 Projects &amp; git</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/08-ai-chat.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"> 8 AI I: chatbots</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/09-ai-code.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"> 9 AI II: the coding loop</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/10-verification.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">10 Verification</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/11-reproducible-project.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">11 Reproducible projects</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/12-ggplot.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">12 Publication graphics</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
+ <span class="menu-text">Part II — Applications</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/13-landscape.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">13 The data landscape</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/14-apis.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">14 Channels I: APIs</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/15-scraping.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">15 Channels II: scraping</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/16-text-regex.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">16 Text I: regex</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/17-text-llms.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">17 Text II: LLMs</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/18-documents.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">18 Documents &amp; scans</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/19-images-photos.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">19 Images: photographs</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/20-satellite-local.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">20 Satellite I: local</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/21-satellite-gee.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">21 Satellite II: Earth Engine</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/22-audio.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">22 Audio</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/23-time.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">23 Time &amp; time zones</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/24-spatial-vector.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">24 Spatial I: vector</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/25-spatial-rasters.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">25 Spatial II: rasters</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/26-spatial-exposures.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">26 Spatial III: exposures</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/27-ai-ethics.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">27 AI ethics</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/28-moving-forward.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">28 Moving forward</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../../fall-2026/assignments.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Homework</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/assignments/hw01-air.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">1 How bad was the air?</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../../fall-2026/resources.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Resources</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/resources.html#stata" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Coming from Stata</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/resources.html#r" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Learning R</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/resources.html#economists" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Coding guides</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/resources.html#unstuck" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Getting unstuck</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul class="collapse">
+  <li><a href="#objectives" id="toc-objectives" class="nav-link active" data-scroll-target="#objectives">Objectives</a></li>
+  <li><a href="#plan" id="toc-plan" class="nav-link" data-scroll-target="#plan">Plan for today</a></li>
+  <li><a href="#disclaimers" id="toc-disclaimers" class="nav-link" data-scroll-target="#disclaimers">Disclaimers</a></li>
+  <li><a href="#motivation" id="toc-motivation" class="nav-link" data-scroll-target="#motivation">Motivation</a></li>
+  <li><a href="#philosophy" id="toc-philosophy" class="nav-link" data-scroll-target="#philosophy">Coding philosophy</a></li>
+  <li><a href="#efficiency" id="toc-efficiency" class="nav-link" data-scroll-target="#efficiency">Two kinds of efficiency</a></li>
+  <li><a href="#organizing-project" id="toc-organizing-project" class="nav-link" data-scroll-target="#organizing-project">Organizing a project</a></li>
+  <li><a href="#folder-structure" id="toc-folder-structure" class="nav-link" data-scroll-target="#folder-structure">Example of folder structure</a></li>
+  <li><a href="#organizing-scripts" id="toc-organizing-scripts" class="nav-link" data-scroll-target="#organizing-scripts">Organizing your script files</a></li>
+  <li><a href="#special-scripts" id="toc-special-scripts" class="nav-link" data-scroll-target="#special-scripts">Good practice to create special script files</a></li>
+  <li><a href="#sections" id="toc-sections" class="nav-link" data-scroll-target="#sections">Code within a script file</a></li>
+  <li><a href="#clarity" id="toc-clarity" class="nav-link" data-scroll-target="#clarity">Two versions of the same script</a></li>
+  <li><a href="#principles-1" id="toc-principles-1" class="nav-link" data-scroll-target="#principles-1">Guiding principles 1/2</a></li>
+  <li><a href="#principles-2" id="toc-principles-2" class="nav-link" data-scroll-target="#principles-2">Guiding principles 2/2</a></li>
+  <li><a href="#process-tips" id="toc-process-tips" class="nav-link" data-scroll-target="#process-tips">General tips on the process of writing code</a></li>
+  <li><a href="#data" id="toc-data" class="nav-link" data-scroll-target="#data">Getting the data</a></li>
+  <li><a href="#build" id="toc-build" class="nav-link" data-scroll-target="#build">Building the Compton dataframe</a></li>
+  <li><a href="#naming" id="toc-naming" class="nav-link" data-scroll-target="#naming">Naming things and named constants</a></li>
+  <li><a href="#checkable" id="toc-checkable" class="nav-link" data-scroll-target="#checkable">Write code that is easy to check</a></li>
+  <li><a href="#function" id="toc-function" class="nav-link" data-scroll-target="#function"><code>function()</code>: naming a block of code</a></li>
+  <li><a href="#function-clarity" id="toc-function-clarity" class="nav-link" data-scroll-target="#function-clarity">Two versions of the same function</a></li>
+  <li><a href="#scope" id="toc-scope" class="nav-link" data-scroll-target="#scope">Local names and global names</a></li>
+  <li><a href="#scope-global" id="toc-scope-global" class="nav-link" data-scroll-target="#scope-global">A function can read a global name</a></li>
+  <li><a href="#setup-objects" id="toc-setup-objects" class="nav-link" data-scroll-target="#setup-objects">Writing the five lines once</a></li>
+  <li><a href="#exercise-1" id="toc-exercise-1" class="nav-link" data-scroll-target="#exercise-1">Exercise</a></li>
+  <li><a href="#stopifnot" id="toc-stopifnot" class="nav-link" data-scroll-target="#stopifnot"><code>stopifnot()</code>: a check that stops the script</a></li>
+  <li><a href="#test-small" id="toc-test-small" class="nav-link" data-scroll-target="#test-small">Test small, then run big</a></li>
+  <li><a href="#restart" id="toc-restart" class="nav-link" data-scroll-target="#restart">Restart R and source the script</a></li>
+  <li><a href="#debugging" id="toc-debugging" class="nav-link" data-scroll-target="#debugging">Debugging as a strategy</a></li>
+  <li><a href="#traceback" id="toc-traceback" class="nav-link" data-scroll-target="#traceback"><code>traceback()</code>: where it died</a></li>
+  <li><a href="#print" id="toc-print" class="nav-link" data-scroll-target="#print"><code>print()</code> and <code>cat()</code>: how a value evolved</a></li>
+  <li><a href="#halving" id="toc-halving" class="nav-link" data-scroll-target="#halving">Halving: a wrong number that never errored</a></li>
+  <li><a href="#diagnosis" id="toc-diagnosis" class="nav-link" data-scroll-target="#diagnosis">Documenting a diagnosis</a></li>
+  <li><a href="#practice" id="toc-practice" class="nav-link" data-scroll-target="#practice">Practice</a></li>
+  <li><a href="#quick-reference" id="toc-quick-reference" class="nav-link" data-scroll-target="#quick-reference">Quick reference</a></li>
+  </ul>
+<div class="quarto-alternate-formats"><h2>Other Formats</h2><ul><li><a href="06-how-to-code-slides.html"><i class="bi bi-file-slides"></i>RevealJS</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../fall-2026/sessions/01-overview.html">Part I — Foundations</a></li><li class="breadcrumb-item"><a href="../../fall-2026/sessions/06-how-to-code.html"> 6 How to code</a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title">6 · How to code</h1>
+<p class="subtitle lead">Thursday, September 10, 2026</p>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p><a href="06-how-to-code-slides.html">Slides</a> · <a href="06-how-to-code.R">Live script</a> · <a href="https://github.com/ArielOrtizBobea/aem6850/blob/main/fall-2026/sessions/06-how-to-code.qmd">Source</a></p>
+<p>How a project and a script are organized, the habits that make a script readable and checkable, writing functions instead of copy-pasting, and what to do when a number is wrong.</p>
+<section id="objectives" class="level2">
+<h2 class="anchored" data-anchor-id="objectives">Objectives</h2>
+<p>By the end of this session you can:</p>
+<ul>
+<li>Lay out a project: folders for code, data and output, one script per task, and a master script that runs them in order.</li>
+<li>Structure a script: sections, names, comments that say why, named constants, no duplicated code.</li>
+<li>Write a function and call it with its own arguments.</li>
+<li>Run one function over every file in a folder with <code>lapply()</code>.</li>
+<li>Stop a script with <code>stopifnot()</code> when a number is not what you wrote down.</li>
+<li>Localize a mistake by halving the script, and write the diagnosis down: line, mechanism, fix, proof.</li>
+</ul>
+</section>
+<section id="plan" class="level2">
+<h2 class="anchored" data-anchor-id="plan">Plan for today</h2>
+<ol type="1">
+<li>Motivation and philosophy</li>
+<li>Organizing projects, scripts, and code</li>
+<li>Guiding principles</li>
+<li>Writing functions</li>
+<li>Checking a script as you write it</li>
+<li>Finding a mistake when the number is wrong</li>
+</ol>
+</section>
+<section id="disclaimers" class="level2">
+<h2 class="anchored" data-anchor-id="disclaimers">Disclaimers</h2>
+<ul>
+<li>I’m not a computer scientist.</li>
+<li>The ideas here reflect my experience and that of others.</li>
+<li>Although our work is in R, many of these ideas apply to other languages.</li>
+</ul>
+</section>
+<section id="motivation" class="level2">
+<h2 class="anchored" data-anchor-id="motivation">Motivation</h2>
+<p>Good code…</p>
+<ul>
+<li>Increases confidence in your work</li>
+<li>Increases the chances other researchers will reproduce, replicate and cite your work</li>
+<li>Saves you (and others) time</li>
+<li>Reduces the chances of making mistakes</li>
+<li>Is easy to understand</li>
+<li>May be portable</li>
+</ul>
+</section>
+<section id="philosophy" class="level2">
+<h2 class="anchored" data-anchor-id="philosophy">Coding philosophy</h2>
+<p>You are writing code for others. That includes yourself at <span class="math inline">\(t+1\)</span>.</p>
+<p>A script is written once and read many times. You read it again when a referee asks where a number came from, when a coauthor wants the same table on a different sample, when you reopen a project after a semester on something else. Each of those readers works from the file. None of them works from what you remember about the file.</p>
+<p>Most of the time that reader is you. Not the you who wrote it, who knew which rows were dropped and why. The you six months from now, who does not. What you knew at the keyboard is not in the file; only what you wrote down is. Everything in this session follows from that.</p>
+</section>
+<section id="efficiency" class="level2">
+<h2 class="anchored" data-anchor-id="efficiency">Two kinds of efficiency</h2>
+<p>Efficiency has two meanings and they pull against each other.</p>
+<p>One is the machine’s: how many operations, how much memory, how long the run takes. The other is yours: how long it takes you to read the script, change it, and work out why a number moved.</p>
+<p>Compact, fast code can be hard to follow. Code you can trace line by line often does more work than it strictly needs to. Neither is always right, but at the scale of a research script the machine’s time is cheap and yours is not. A script that takes four seconds instead of one has cost you nothing. A script you cannot follow has cost you an afternoon.</p>
+<p>This session is about the second kind.</p>
+</section>
+<section id="organizing-project" class="level2 smaller">
+<h2 class="smaller anchored" data-anchor-id="organizing-project">Organizing a project</h2>
+<ul>
+<li><p>A project comes with general instructions</p>
+<ul>
+<li>It could be a <code>readme.txt</code> file</li>
+<li>It should specify the authors, what the project is about, and describe the files</li>
+</ul></li>
+<li><p>Folders for different types of files</p>
+<ul>
+<li>Don’t mix raw data with “cleaned” data</li>
+</ul></li>
+<li><p>No single best way of organizing, but this is a good start:</p>
+<ul>
+<li>Folder for code (no subfolders)</li>
+<li>Folder(s) for input(s): raw data you never modify, and cleaned data your scripts create</li>
+<li>Folder(s) for output(s): figures, tables</li>
+<li>Folder for packages (optional)</li>
+</ul></li>
+</ul>
+</section>
+<section id="folder-structure" class="level2">
+<h2 class="anchored" data-anchor-id="folder-structure">Example of folder structure</h2>
+<ul>
+<li><p><code>code</code> — all script files, including the RStudio project</p></li>
+<li><p><code>data</code></p>
+<ul>
+<li><code>raw</code> — data as downloaded from the web, can be large</li>
+<li><code>clean</code> — data needed for the analysis</li>
+</ul></li>
+<li><p><code>output</code> — what shows up in the paper</p>
+<ul>
+<li><code>figures</code></li>
+<li><code>tables</code></li>
+</ul></li>
+<li><p><code>paper</code></p></li>
+<li><p><code>presentations</code></p></li>
+<li><p>Others: meeting notes, documentation</p></li>
+</ul>
+</section>
+<section id="organizing-scripts" class="level2">
+<h2 class="anchored" data-anchor-id="organizing-scripts">Organizing your script files</h2>
+<ul>
+<li><p>A script file should accomplish a specific and well-identified task</p>
+<ul>
+<li>Cleaning data, regression analysis, and so on</li>
+</ul></li>
+<li><p>Never have all your code in a single script file, unless it is a tiny project — your homework, for instance</p></li>
+<li><p>Script files should have intuitive names and follow a workflow:</p>
+<ul>
+<li><code>1.1_clean_economic_data.R</code></li>
+<li><code>1.2_clean_pollution_data.R</code></li>
+<li><code>1.3_prepare_regression_data.R</code></li>
+<li><code>2.1_regression_analysis.R</code></li>
+<li><code>2.2_post_estimation_analysis.R</code></li>
+</ul></li>
+</ul>
+</section>
+<section id="special-scripts" class="level2">
+<h2 class="anchored" data-anchor-id="special-scripts">Good practice to create special script files</h2>
+<ul>
+<li><p>A master script file, <code>master.R</code>, that runs all the project’s scripts in the correct order</p>
+<ul>
+<li>Installs and loads all necessary packages</li>
+<li>Simplifies life for whoever reproduces your work</li>
+<li>Typically written at the very end of the project</li>
+</ul></li>
+<li><p>A file containing user-defined functions, <code>functions.R</code></p>
+<ul>
+<li>Improves automation when the same function is used in several scripts</li>
+<li>Invites you to write more portable functions for future projects</li>
+</ul></li>
+</ul>
+</section>
+<section id="sections" class="level2">
+<h2 class="anchored" data-anchor-id="sections">Code within a script file</h2>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># air.R -- days above the PM2.5 standard at one monitor, 2025</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Your Name, NetID</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># 0) Setup ----</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>STANDARD <span class="ot">&lt;-</span> <span class="dv">35</span>                        <span class="co"># US EPA 24-hour standard, ug/m3</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>pm <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"data/epa_pm25_compton_2025.csv"</span>,</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>               <span class="at">colClasses =</span> <span class="fu">c</span>(<span class="st">"Site.ID"</span> <span class="ot">=</span> <span class="st">"character"</span>))</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="co"># 1) One instrument, one month ----</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="co"># 2) The numbers ----</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="co"># 3) Write results.csv ----</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>A title block says what the script does and who wrote it. A setup section holds packages, constants, and the data coming in. Then one section per task, numbered in the order they run, and nothing from setup reappears lower down. A comment ending in four dashes is a section: RStudio’s outline (Ctrl+Shift+O, Cmd+Shift+O on a Mac) lists them, and you can jump between them. A script does one job. Two jobs, two scripts.</p>
+</section>
+<section id="clarity" class="level2">
+<h2 class="anchored" data-anchor-id="clarity">Two versions of the same script</h2>
+<p>Both count the days above the standard at one monitor. Both are correct.</p>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>STANDARD <span class="ot">&lt;-</span> <span class="dv">35</span>                    <span class="co"># US EPA 24-hour standard, ug/m3</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>pm <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"data/epa_pm25_compton_2025.csv"</span>)</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(pm)[<span class="fu">names</span>(pm) <span class="sc">==</span> <span class="st">"Daily.Mean.PM2.5.Concentration"</span>] <span class="ot">&lt;-</span> <span class="st">"pm25"</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>pm <span class="ot">&lt;-</span> pm[pm<span class="sc">$</span>POC <span class="sc">==</span> <span class="dv">1</span>, ]           <span class="co"># one instrument</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(pm<span class="sc">$</span>pm25 <span class="sc">&gt;</span> STANDARD)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div style="height:1.1em">
+
+</div>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>compose <span class="ot">&lt;-</span> <span class="cf">function</span>(...) { fs <span class="ot">&lt;-</span> <span class="fu">list</span>(...); <span class="cf">function</span>(x) <span class="fu">Reduce</span>(\(a, f) <span class="fu">f</span>(a), fs, x) }</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>run <span class="ot">&lt;-</span> <span class="fu">compose</span>(read.csv, \(d) <span class="fu">subset</span>(d, POC <span class="sc">==</span> <span class="dv">1</span>),</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>               \(d) d<span class="sc">$</span>Daily.Mean.PM2.<span class="fl">5.</span>Concentration, \(v) <span class="fu">sum</span>(v <span class="sc">&gt;</span> <span class="dv">35</span>))</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="fu">run</span>(<span class="st">"data/epa_pm25_compton_2025.csv"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>The second version is shorter, and by the standards of software engineering it is better: nothing is repeated, each step is a separate piece, and the whole thing could be pointed at another file tomorrow. It is also unreadable at a glance. The <code>35</code> has disappeared into the last argument as a bare number with no name, there is no object between the file and the answer, and you have to read it inside out to work out what happens first.</p>
+<p>Research code is read far more often than it is reused. These are the dimensions that decide whether a reader can follow it:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;"></th>
+<th style="text-align: left;">The first version</th>
+<th style="text-align: left;">The second</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><strong>Names</strong></td>
+<td style="text-align: left;"><code>STANDARD</code> says what <code>35</code> is</td>
+<td style="text-align: left;"><code>35</code> is a bare number in the last argument</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>Visible values</strong></td>
+<td style="text-align: left;">every number is on its own line</td>
+<td style="text-align: left;">values are buried inside calls</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><strong>Intermediate objects</strong></td>
+<td style="text-align: left;"><code>pm</code> exists; you can print it</td>
+<td style="text-align: left;">nothing between the file and the answer</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>Somewhere to put a check</strong></td>
+<td style="text-align: left;">after any step, on <code>pm</code></td>
+<td style="text-align: left;">nowhere</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><strong>Layers to hold at once</strong></td>
+<td style="text-align: left;">one line at a time</td>
+<td style="text-align: left;"><code>compose</code>, <code>Reduce</code>, and four unnamed functions</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>Reading order</strong></td>
+<td style="text-align: left;">top to bottom, in the order it happens</td>
+<td style="text-align: left;">inside out</td>
+</tr>
+</tbody>
+</table>
+<p>The same list applies to a single function: a function is easy to read when its name says what it returns, its arguments are visible at the call, and its body is short enough to hold in your head at once.</p>
+</section>
+<section id="principles-1" class="level2 smaller">
+<h2 class="smaller anchored" data-anchor-id="principles-1">Guiding principles 1/2</h2>
+<ul>
+<li><p>Think constantly about reproducibility</p>
+<ul>
+<li>Your script files should run entirely without errors — start with your own computer</li>
+<li>Rely on relative paths, no hard coding</li>
+<li>RStudio projects help. Use them.</li>
+</ul></li>
+<li><p>Do not repeat yourself</p>
+<ul>
+<li>Do not copy-paste code within a script file. Write a function and use loops.</li>
+<li>Do not copy-paste code across script files. Put the function in its own file and load it when needed.</li>
+<li>Copy-pasting code is a red flag.</li>
+</ul></li>
+<li><p>Give objects and folders simple and intuitive names</p>
+<ul>
+<li>Good names are short and informative</li>
+<li>Limit upper case and odd characters: <code>MyModified.GDP.var</code> or <code>log_gdp</code>?</li>
+</ul></li>
+</ul>
+</section>
+<section id="principles-2" class="level2 smaller">
+<h2 class="smaller anchored" data-anchor-id="principles-2">Guiding principles 2/2</h2>
+<ul>
+<li><p>Annotate your code concisely but generously</p>
+<ul>
+<li>Better to err on the side of too many annotations</li>
+<li>They should help a reader understand the purpose of any significant piece of your code</li>
+<li>Annotate single lines when the code is relatively complex</li>
+</ul></li>
+<li><p>Make your code look good, which is to say easy to read</p>
+<ul>
+<li>Keep consistent indentation and spacing</li>
+<li>Exploit RStudio’s ability to fold your code</li>
+<li>Avoid deep nesting when possible</li>
+<li>Let your code breathe — leave some blank space</li>
+<li>Favor several lines with short expressions over one long line with several expressions</li>
+</ul></li>
+</ul>
+</section>
+<section id="process-tips" class="level2 smaller">
+<h2 class="smaller anchored" data-anchor-id="process-tips">General tips on the process of writing code</h2>
+<ul>
+<li><p>Before starting, visualize the workflow</p>
+<ul>
+<li><em>“If you don’t know where you’re going, any road’ll take you there”</em> — after <em>Alice in Wonderland</em>, Lewis Carroll</li>
+<li>Have a clear idea of the repetitive tasks</li>
+<li>Think about how the project and the code should be structured when it is done</li>
+</ul></li>
+<li><p>Then start writing your code interactively</p>
+<ul>
+<li>Working in the console and the editor together</li>
+<li>But do not lose sight of the forest for the trees</li>
+</ul></li>
+<li><p>Do not run a big task without testing it on a small dataset</p></li>
+<li><p>Constantly re-check that your code runs <em>entirely</em>, not just in pieces</p></li>
+<li><p>Leave breadcrumbs so you can find a mistake later</p></li>
+</ul>
+</section>
+<section id="data" class="level2 smaller">
+<h2 class="smaller anchored" data-anchor-id="data">Getting the data</h2>
+<p>Two files: one monitor in Compton, and every PM2.5 monitor in Los Angeles County, both for 2025. This chunk fetches them if you do not already have them, and does nothing if you do.</p>
+<div class="cell" data-layout-align="center" data-script="Get the data">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">dir.create</span>(<span class="st">"data"</span>, <span class="at">showWarnings =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>f <span class="ot">&lt;-</span> <span class="st">"data/epa_pm25_compton_2025.csv"</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="sc">!</span><span class="fu">file.exists</span>(f)) {</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">download.file</span>(<span class="fu">paste0</span>(<span class="st">"https://arielortizbobea.github.io/aem6850/"</span>,</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>                       <span class="st">"fall-2026/sessions/"</span>, f), f)</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>f <span class="ot">&lt;-</span> <span class="st">"data/epa_pm25_la_county_2025.csv"</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="sc">!</span><span class="fu">file.exists</span>(f)) {</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">download.file</span>(<span class="fu">paste0</span>(<span class="st">"https://arielortizbobea.github.io/aem6850/"</span>,</span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>                       <span class="st">"fall-2026/sessions/"</span>, f), f)</span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a><span class="fu">list.files</span>(<span class="st">"data"</span>, <span class="at">pattern =</span> <span class="st">"^epa_.*</span><span class="sc">\\</span><span class="st">.csv$"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; [1] "epa_pm25_compton_2025.csv"   "epa_pm25_la_county_2025.csv"</code></pre>
+</div>
+</div>
+<p><code>dir.create()</code> makes the folder and stays quiet when it is already there. <code>download.file()</code> fetches a URL to a path. The <code>if (!file.exists(f))</code> wrapper means running this a second time costs nothing.</p>
+<p>A script that fetches its own inputs runs on a machine that has never seen the data. That includes a coauthor’s, a referee’s, and your own six months from now.</p>
+</section>
+<section id="build" class="level2">
+<h2 class="anchored" data-anchor-id="build">Building the Compton dataframe</h2>
+<p>Everything below runs off the Compton file, read here so this page and its script stand on their own.</p>
+<div class="cell" data-layout-align="center" data-script="Build the Compton frame">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>pm <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"data/epa_pm25_compton_2025.csv"</span>,</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>               <span class="at">colClasses =</span> <span class="fu">c</span>(<span class="st">"Site.ID"</span> <span class="ot">=</span> <span class="st">"character"</span>))</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(pm)[<span class="fu">names</span>(pm) <span class="sc">==</span> <span class="st">"Daily.Mean.PM2.5.Concentration"</span>] <span class="ot">&lt;-</span> <span class="st">"pm25"</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(pm)[<span class="fu">names</span>(pm) <span class="sc">==</span> <span class="st">"Local.Site.Name"</span>]                <span class="ot">&lt;-</span> <span class="st">"site"</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>pm<span class="sc">$</span>date <span class="ot">&lt;-</span> <span class="fu">as.Date</span>(pm<span class="sc">$</span>Date, <span class="at">format =</span> <span class="st">"%m/%d/%Y"</span>)</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>pm <span class="ot">&lt;-</span> pm[pm<span class="sc">$</span>POC <span class="sc">==</span> <span class="dv">1</span> <span class="sc">&amp;</span> pm<span class="sc">$</span>AQS.Parameter.Code <span class="sc">==</span> <span class="dv">88101</span>, ]</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(pm)   <span class="co"># one regulatory instrument, the days it ran</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; [1] 301</code></pre>
+</div>
+</div>
+<p>Five lines: read the file with the identifier protected, rename the concentration and site columns, convert the date, keep one instrument. Every EPA (the US Environmental Protection Agency) file needs the same five lines, and every script that reads one starts by typing them again. A function lets you type them once.</p>
+</section>
+<section id="naming" class="level2">
+<h2 class="anchored" data-anchor-id="naming">Naming things and named constants</h2>
+<div class="cell" data-layout-align="center" data-script="Naming things and named constants">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>STANDARD <span class="ot">&lt;-</span> <span class="dv">35</span>   <span class="co"># US EPA 24-hour PM2.5 standard, ug/m3</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(pm<span class="sc">$</span>pm25 <span class="sc">&gt;</span> STANDARD)   <span class="co"># days above the standard, 2025</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; [1] 10</code></pre>
+</div>
+</div>
+<p>Names are short and informative, lower case, with underscores: <code>pm25</code>, <code>site</code>, <code>days_above</code>. Verbs for functions. Not <code>MyModified.PM.var</code>, not <code>T</code> for <code>TRUE</code>.</p>
+<p>A number that means something gets a name at the top of the script, in capitals, and is used by that name everywhere. <code>35</code> typed in six places is six chances to change five of them.</p>
+<p>Comments say why, not what. <code># EPA 24-hour standard</code> tells a reader something the code cannot; <code># set x to 35</code> repeats the line below it.</p>
+</section>
+<section id="checkable" class="level2">
+<h2 class="anchored" data-anchor-id="checkable">Write code that is easy to check</h2>
+<p>Whether code can be checked is a property of how it is built, not of how hard you look at it afterwards. Small pieces with one job each. Intermediate values that land in named objects, so <code>nrow(pm)</code> after the filter and <code>range(pm$date)</code> after the date conversion are one line away. No step that changes three things at once. Results that come out where a check can reach them. Code you cannot check is code you cannot defend, whatever it computed.</p>
+</section>
+<section id="function" class="level2">
+<h2 class="anchored" data-anchor-id="function"><code>function()</code>: naming a block of code</h2>
+<div class="cell" data-layout-align="center" data-script="function(): naming a block of code">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>days_above <span class="ot">&lt;-</span> <span class="cf">function</span>(x, <span class="at">standard =</span> <span class="dv">35</span>) {</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">sum</span>(x <span class="sc">&gt;</span> standard)</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>dec <span class="ot">&lt;-</span> pm[<span class="fu">format</span>(pm<span class="sc">$</span>date, <span class="st">"%m"</span>) <span class="sc">==</span> <span class="st">"12"</span>, ]</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a><span class="fu">days_above</span>(dec<span class="sc">$</span>pm25)                  <span class="co"># December, at the 35 standard</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; [1] 5</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">days_above</span>(dec<span class="sc">$</span>pm25, <span class="at">standard =</span> <span class="dv">50</span>)   <span class="co"># the same days, a higher bar</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; [1] 3</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">days_above</span>(<span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">50</span>))                  <span class="co"># a case you can check by eye</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; [1] 1</code></pre>
+</div>
+</div>
+<p><code>function()</code> builds a function. The names in its parentheses are the arguments; <code>standard = 35</code> gives one of them a default, so a call can leave it out. The body runs when you call the function, with <code>x</code> standing for whatever you passed in. The value of a function is its last expression. <code>return(x)</code> says the same thing explicitly, and is only needed to leave a function early.</p>
+<p>December had 5 days above the standard and 3 above 50. The last call is the one to keep in the habit: two numbers you can check by eye, and the answer must be 1.</p>
+</section>
+<section id="function-clarity" class="level2">
+<h2 class="anchored" data-anchor-id="function-clarity">Two versions of the same function</h2>
+<p>Both return the number of days above the standard.</p>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>days_above <span class="ot">&lt;-</span> <span class="cf">function</span>(x, <span class="at">standard =</span> <span class="dv">35</span>) {</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">sum</span>(x <span class="sc">&gt;</span> standard)</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div style="height:1.1em">
+
+</div>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>da <span class="ot">&lt;-</span> <span class="cf">function</span>(v, <span class="at">s =</span> <span class="dv">35</span>, <span class="at">na =</span> <span class="cn">TRUE</span>, <span class="at">f =</span> <span class="cn">NULL</span>) {</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="sc">!</span><span class="fu">is.null</span>(f)) v <span class="ot">&lt;-</span> <span class="fu">f</span>(v)</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">length</span>(<span class="fu">which</span>(<span class="cf">if</span> (na) v[<span class="sc">!</span><span class="fu">is.na</span>(v)] <span class="sc">&gt;</span> s <span class="cf">else</span> v <span class="sc">&gt;</span> s))</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>The second returns the same answer, and it does more: it drops missing values, and it will apply a transformation first if you hand it one. Every one of those additions was free to write and is paid for on every reading.</p>
+<p><code>da</code> does not say what it returns. <code>v</code>, <code>s</code>, <code>na</code> and <code>f</code> do not say what they take. Three of the four arguments have defaults nobody at the call site will see, so <code>da(x)</code> hides three decisions. <code>length(which(...))</code> counts what <code>sum()</code> counts, in more steps.</p>
+<p>The same dimensions from the two script versions apply here: does the name say what comes back, are the values visible at the call, and is the body short enough to hold at once.</p>
+</section>
+<section id="scope" class="level2">
+<h2 class="anchored" data-anchor-id="scope">Local names and global names</h2>
+<div class="cell" data-layout-align="center" data-script="Local names and global names">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>count_pos <span class="ot">&lt;-</span> <span class="cf">function</span>(x) {</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>  n <span class="ot">&lt;-</span> <span class="fu">sum</span>(x <span class="sc">&gt;</span> <span class="dv">0</span>)   <span class="co"># n exists inside the call</span></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>  n</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a><span class="fu">count_pos</span>(<span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; [1] 2</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>n                     <span class="co"># and not outside it</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-error">
+<pre><code>#&gt; Error: object 'n' not found</code></pre>
+</div>
+</div>
+<p>A name made inside a function dies at the closing brace. Outside the call, <code>n</code> never existed. That is what lets a function use short names like <code>n</code> and <code>d</code> without trampling anything in the workspace.</p>
+</section>
+<section id="scope-global" class="level2">
+<h2 class="anchored" data-anchor-id="scope-global">A function can read a global name</h2>
+<div class="cell" data-layout-align="center" data-script="A function can read a global name">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>standard <span class="ot">&lt;-</span> <span class="dv">35</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>share_above <span class="ot">&lt;-</span> <span class="cf">function</span>(x) <span class="fu">sum</span>(x <span class="sc">&gt;</span> standard) <span class="sc">/</span> <span class="fu">length</span>(x)</span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a><span class="fu">share_above</span>(dec<span class="sc">$</span>pm25)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; [1] 0.1612903</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rm</span>(standard)</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="fu">share_above</span>(dec<span class="sc">$</span>pm25)   <span class="co"># worked until the global was gone</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-error">
+<pre><code>#&gt; Error in share_above(dec$pm25): object 'standard' not found</code></pre>
+</div>
+</div>
+<p>The other direction is the trap. A function can read a name from outside itself, and <code>share_above()</code> does: it uses <code>standard</code> without ever being given it. It works while <code>standard</code> happens to sit in the workspace and fails in a fresh session with <code>object 'standard' not found</code>. Everything a function needs should come in through its arguments. Then it works anywhere, and a two-number test tells you it reads its own input.</p>
+</section>
+<section id="setup-objects" class="level2 smaller">
+<h2 class="smaller anchored" data-anchor-id="setup-objects">Writing the five lines once</h2>
+<div class="cell" data-layout-align="center" data-script="Writing the five lines once">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>read_epa <span class="ot">&lt;-</span> <span class="cf">function</span>(path) {</span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>  d <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(path, <span class="at">colClasses =</span> <span class="fu">c</span>(<span class="st">"Site.ID"</span> <span class="ot">=</span> <span class="st">"character"</span>))</span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">names</span>(d)[<span class="fu">names</span>(d) <span class="sc">==</span> <span class="st">"Daily.Mean.PM2.5.Concentration"</span>] <span class="ot">&lt;-</span> <span class="st">"pm25"</span></span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">names</span>(d)[<span class="fu">names</span>(d) <span class="sc">==</span> <span class="st">"Local.Site.Name"</span>]                <span class="ot">&lt;-</span> <span class="st">"site"</span></span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>  d<span class="sc">$</span>date <span class="ot">&lt;-</span> <span class="fu">as.Date</span>(d<span class="sc">$</span>Date, <span class="at">format =</span> <span class="st">"%m/%d/%Y"</span>)</span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>  d[d<span class="sc">$</span>POC <span class="sc">==</span> <span class="dv">1</span> <span class="sc">&amp;</span> d<span class="sc">$</span>AQS.Parameter.Code <span class="sc">==</span> <span class="dv">88101</span>, ]</span>
+<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-9"><a href="#cb26-9" aria-hidden="true" tabindex="-1"></a>files  <span class="ot">&lt;-</span> <span class="fu">list.files</span>(<span class="st">"data"</span>, <span class="at">pattern =</span> <span class="st">"^epa_.*</span><span class="sc">\\</span><span class="st">.csv$"</span>, <span class="at">full.names =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb26-10"><a href="#cb26-10" aria-hidden="true" tabindex="-1"></a>frames <span class="ot">&lt;-</span> <span class="fu">lapply</span>(files, read_epa)</span>
+<span id="cb26-11"><a href="#cb26-11" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(frames) <span class="ot">&lt;-</span> <span class="fu">basename</span>(files)</span>
+<span id="cb26-12"><a href="#cb26-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-13"><a href="#cb26-13" aria-hidden="true" tabindex="-1"></a>la      <span class="ot">&lt;-</span> frames[[<span class="st">"epa_pm25_la_county_2025.csv"</span>]]</span>
+<span id="cb26-14"><a href="#cb26-14" aria-hidden="true" tabindex="-1"></a>la_jan  <span class="ot">&lt;-</span> la[<span class="fu">format</span>(la<span class="sc">$</span>date, <span class="st">"%m"</span>) <span class="sc">==</span> <span class="st">"01"</span>, ]</span>
+<span id="cb26-15"><a href="#cb26-15" aria-hidden="true" tabindex="-1"></a>by_site <span class="ot">&lt;-</span> <span class="fu">split</span>(la_jan, la_jan<span class="sc">$</span>site)</span>
+<span id="cb26-16"><a href="#cb26-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-17"><a href="#cb26-17" aria-hidden="true" tabindex="-1"></a><span class="fu">sapply</span>(by_site, nrow)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt;                        Compton        Lancaster - Fairgrounds 
+#&gt;                             31                             31 
+#&gt; Long Beach-Route 710 Near Road  Los Angeles-North Main Street 
+#&gt;                             26                             30 
+#&gt;                       Pasadena                 Pico Rivera #2 
+#&gt;                             11                             11 
+#&gt;                         Reseda             Signal Hill (LBSH) 
+#&gt;                             11                              6</code></pre>
+</div>
+</div>
+<p>The five lines from the build, with <code>path</code> in place of the file name and the frame as the value. Copy-pasting code is a red flag, and the function is the fix: a change to the rename or to the instrument filter now happens in one place, and every file gets it.</p>
+<p><code>lapply()</code> hands the function every EPA file in the folder. <code>split()</code> cuts January into one frame per site. Eight sites, not the county’s eleven: three run no regulatory instrument, so the filter inside <code>read_epa()</code> removed them. Count rows before you trust a mean — four sites report between 6 and 11 January days.</p>
+</section>
+<section id="exercise-1" class="level2">
+<h2 class="anchored" data-anchor-id="exercise-1">Exercise</h2>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true" href="">Exercise</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false" href="">Solution</a></li></ul>
+<div class="tab-content">
+<div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
+<div class="cell" data-layout-align="center" data-exercise="true" data-script="Exercise (5 minutes)">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 1. Write mean_above(x, standard = 35): the mean of the readings in x</span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a><span class="co">#    that are above the standard.</span></span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a><span class="co"># 2. Run it on every site in by_site with sapply().</span></span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a><span class="co"># 3. One number to compare with the room: Pasadena.</span></span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a><span class="co"># 4. One site returns NaN. Say why in one sentence, and whether that is</span></span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a><span class="co">#    wrong.</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+<div id="tabset-1-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-2-tab">
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>mean_above <span class="ot">&lt;-</span> <span class="cf">function</span>(x, <span class="at">standard =</span> <span class="dv">35</span>) <span class="fu">mean</span>(x[x <span class="sc">&gt;</span> standard])</span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">sapply</span>(by_site, <span class="cf">function</span>(s) <span class="fu">mean_above</span>(s<span class="sc">$</span>pm25)), <span class="dv">1</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt;                        Compton        Lancaster - Fairgrounds 
+#&gt;                           46.9                            NaN 
+#&gt; Long Beach-Route 710 Near Road  Los Angeles-North Main Street 
+#&gt;                           39.2                           82.1 
+#&gt;                       Pasadena                 Pico Rivera #2 
+#&gt;                           58.1                           40.1 
+#&gt;                         Reseda             Signal Hill (LBSH) 
+#&gt;                           45.1                           49.3</code></pre>
+</div>
+</div>
+<p>Pasadena 58.1. Lancaster - Fairgrounds returns <code>NaN</code>: no January reading there was above 35, so <code>x[x &gt; standard]</code> is empty and the mean of nothing is not a number. That is the honest answer. A function that quietly returned 0 would be lying.</p>
+</div>
+</div>
+</div>
+</section>
+<section id="stopifnot" class="level2">
+<h2 class="anchored" data-anchor-id="stopifnot"><code>stopifnot()</code>: a check that stops the script</h2>
+<div class="cell" data-layout-align="center" data-script="stopifnot(): a check that stops the script">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>jan <span class="ot">&lt;-</span> pm[<span class="fu">format</span>(pm<span class="sc">$</span>date, <span class="st">"%m"</span>) <span class="sc">==</span> <span class="st">"01"</span>, ]</span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a><span class="fu">stopifnot</span>(<span class="fu">nrow</span>(pm) <span class="sc">==</span> <span class="dv">301</span>)</span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a><span class="fu">stopifnot</span>(<span class="fu">nrow</span>(jan) <span class="sc">==</span> <span class="dv">31</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p><code>stopifnot()</code> takes conditions. If every one is <code>TRUE</code> it does nothing; if any is <code>FALSE</code> it stops the script and names the first that failed, so a reader knows what was expected without opening the script. Several conditions fit in one call, one per line when they are long. A check that sits commented out is turned on by selecting its lines and pressing Ctrl+Shift+C (Cmd+Shift+C on a Mac).</p>
+<p>Put the check right after the step it guards. A step that changes a row count is where a mistake enters without announcing itself, and a check there turns a wrong number into a stopped script.</p>
+</section>
+<section id="test-small" class="level2">
+<h2 class="anchored" data-anchor-id="test-small">Test small, then run big</h2>
+<div class="cell" data-layout-align="center" data-script="Test small, then run big">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="fu">days_above</span>(<span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">50</span>))                              <span class="co"># a case you can check by eye</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; [1] 1</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(<span class="fu">read_epa</span>(files[<span class="dv">1</span>]))                          <span class="co"># one file before the folder</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; [1] 301</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="fu">system.time</span>(<span class="fu">lapply</span>(files, read_epa))              <span class="co"># the whole folder, timed</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt;    user  system elapsed 
+#&gt;   0.043   0.002   0.044</code></pre>
+</div>
+</div>
+<p>Never run the big job untested. A function gets a case you can check by eye. A loop runs on one file before the folder, on one site before all of them. <code>system.time()</code> around the big call tells you what the next run will cost: nothing here, and minutes when a folder holds a thousand files.</p>
+</section>
+<section id="restart" class="level2">
+<h2 class="anchored" data-anchor-id="restart">Restart R and source the script</h2>
+<div class="cell" data-layout-align="center" data-script="Restart R and source the script">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Session &gt; Restart R   (Ctrl+Shift+F10 on Windows, Cmd+Shift+0 on a Mac)</span></span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ls</span>()                    <span class="co"># character(0), or it was not a clean restart</span></span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a><span class="fu">getwd</span>()                 <span class="co"># where "data/..." is looked for</span></span>
+<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a><span class="fu">list.files</span>(<span class="st">"data"</span>)      <span class="co"># what is there</span></span>
+<span id="cb38-5"><a href="#cb38-5" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">"air.R"</span>)         <span class="co"># your script, top to bottom, in a clean session</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>A script that runs only because of what is already in your environment is not a script yet. Restart R: packages unload, and the workspace empties once Tools &gt; Global Options &gt; General has “Save workspace to .RData on exit” set to Never and “Restore .RData into workspace at startup” unchecked. On the default settings RStudio puts the old objects back after a restart, so set both once, and expect <code>ls()</code> to print <code>character(0)</code>. Then <code>source()</code> the file. It runs top to bottom and stops at the first error. <code>rm(list = ls())</code> clears objects but not packages or options; it is not a restart.</p>
+<p><code>source()</code> reads <code>"data/..."</code> relative to the working directory. Opening a project’s <code>.Rproj</code> file sets the working directory to the project folder, which is why every path in a script is relative: <code>"data/file.csv"</code>, never <code>"/Users/you/Desktop/file.csv"</code>, which runs on one laptop and nowhere else. When R says a file does not exist, check <code>getwd()</code> and <code>list.files("data")</code> before blaming the file.</p>
+</section>
+<section id="debugging" class="level2">
+<h2 class="anchored" data-anchor-id="debugging">Debugging as a strategy</h2>
+<p>Read the error before changing anything. It names the call that failed and usually the cause. Reproduce the failure on the smallest input that still fails: one file, one site, two numbers. Form one hypothesis at a time and test it. Change one thing per run, so that when the output changes you know why.</p>
+<p>Then the tool, matched to the failure. <code>traceback()</code> for where it died. <code>print()</code> for how a value evolved. Halving for a wrong number that never errored.</p>
+</section>
+<section id="traceback" class="level2">
+<h2 class="anchored" data-anchor-id="traceback"><code>traceback()</code>: where it died</h2>
+<div class="cell" data-layout-align="center" data-script="traceback(): where it died">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>frames <span class="ot">&lt;-</span> <span class="fu">lapply</span>(<span class="fu">c</span>(<span class="st">"data/epa_pm25_compton_2025.csv"</span>, <span class="st">"data/nope.csv"</span>), read_epa)</span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a><span class="fu">traceback</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<pre><code>Error in file(file, "rt") : cannot open the connection
+In addition: Warning message:
+In file(file, "rt") :
+  cannot open file 'data/nope.csv': No such file or directory
+
+5: file(file, "rt")
+4: read.table(file = file, header = header, sep = sep, quote = quote, 
+       dec = dec, fill = fill, comment.char = comment.char, ...)
+3: read.csv(path, colClasses = c(Site.ID = "character"))
+2: FUN(X[[i]], ...)
+1: lapply(c("data/epa_pm25_compton_2025.csv", "data/nope.csv"), 
+       read_epa)</code></pre>
+<p><code>traceback()</code> prints the calls that were running when the error happened, innermost first. Read it from the bottom: your <code>lapply()</code> (1) called your function (2, <code>FUN</code> is <code>read_epa</code>), which called <code>read.csv()</code> (3), which could not open the file (5). The warning names the file. The error is in the line you wrote at 1, not in <code>read.csv()</code>.</p>
+</section>
+<section id="print" class="level2">
+<h2 class="anchored" data-anchor-id="print"><code>print()</code> and <code>cat()</code>: how a value evolved</h2>
+<div class="cell" data-layout-align="center" data-script="print() and cat(): how a value evolved">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (site <span class="cf">in</span> <span class="fu">names</span>(by_site)[<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>]) {</span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>  s <span class="ot">&lt;-</span> by_site[[site]]</span>
+<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cat</span>(site, <span class="st">": "</span>, <span class="fu">nrow</span>(s), <span class="st">" days, "</span>, <span class="fu">days_above</span>(s<span class="sc">$</span>pm25), <span class="st">" above</span><span class="sc">\n</span><span class="st">"</span>, <span class="at">sep =</span> <span class="st">""</span>)</span>
+<span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; Compton: 31 days, 4 above
+#&gt; Lancaster - Fairgrounds: 31 days, 0 above
+#&gt; Long Beach-Route 710 Near Road: 26 days, 3 above</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">c</span>(<span class="at">days =</span> <span class="fu">nrow</span>(jan), <span class="at">above =</span> <span class="fu">days_above</span>(jan<span class="sc">$</span>pm25)))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt;  days above 
+#&gt;    31     4</code></pre>
+</div>
+</div>
+<p>Inside a loop or a function, a <code>print()</code> or <code>cat()</code> line shows what a value was on each pass. <code>print()</code> shows an object the way the console would; <code>cat()</code> pastes text and numbers into one line, and <code>"\n"</code> ends it. A named vector, <code>c(days = , above = )</code>, prints label and value together. Take the line out once the question is answered.</p>
+<p><code>browser()</code> is the same idea with a pause. Put <code>browser()</code> inside a function and the run stops there with a <code>Browse[1]&gt;</code> prompt; you can print any local name, <code>n</code> steps to the next line, <code>c</code> continues, <code>Q</code> quits.</p>
+</section>
+<section id="halving" class="level2">
+<h2 class="anchored" data-anchor-id="halving">Halving: a wrong number that never errored</h2>
+<p>No error, no warning, and the number is wrong. <code>traceback()</code> has nothing to point at. Where could the wrong number have entered? Every step that changes a row count or a value is a suspect.</p>
+<p>Write down what each step should produce: rows after the read, rows after the filter, the date range, the count. Comment out the second half of the script and run the first half. Compare what printed with what you wrote down. Halve the half that disagrees. Repeat until the mistake has nowhere to hide. It is usually one line, and the line is usually not the one that printed the number.</p>
+</section>
+<section id="diagnosis" class="level2">
+<h2 class="anchored" data-anchor-id="diagnosis">Documenting a diagnosis</h2>
+<div class="cell" data-layout-align="center" data-script="Documenting a diagnosis: line, mechanism, fix, proof">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Line:      share_above &lt;- function(x) sum(x &gt; standard) / length(x)</span></span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Mechanism: standard is not an argument; the function reads it from the</span></span>
+<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a><span class="co">#            workspace and fails in a fresh session</span></span>
+<span id="cb45-4"><a href="#cb45-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Fix:       the standard comes in as an argument, with a default</span></span>
+<span id="cb45-5"><a href="#cb45-5" aria-hidden="true" tabindex="-1"></a>share_above <span class="ot">&lt;-</span> <span class="cf">function</span>(x, <span class="at">standard =</span> <span class="dv">35</span>) <span class="fu">sum</span>(x <span class="sc">&gt;</span> standard) <span class="sc">/</span> <span class="fu">length</span>(x)</span>
+<span id="cb45-6"><a href="#cb45-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Proof:</span></span>
+<span id="cb45-7"><a href="#cb45-7" aria-hidden="true" tabindex="-1"></a><span class="fu">stopifnot</span>(<span class="fu">share_above</span>(<span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">50</span>)) <span class="sc">==</span> <span class="fl">0.5</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Four lines, as comments, next to the fix. The line that was wrong. The mechanism, meaning why it produced what it produced. The fix. And the proof: a small case that now gives the right answer, written as a check that runs. That is what a fixed script carries. When a check fails and you cannot fix it, the same four lines with the fix left blank are the honest note, and they are worth more than an edited check.</p>
+</section>
+<section id="practice" class="level2">
+<h2 class="anchored" data-anchor-id="practice">Practice</h2>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-2-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-1" role="tab" aria-controls="tabset-2-1" aria-selected="true" href="">Practice</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-2" role="tab" aria-controls="tabset-2-2" aria-selected="false" href="">Solutions</a></li></ul>
+<div class="tab-content">
+<div id="tabset-2-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-2-1-tab">
+<div class="cell" data-layout-align="center" data-exercise="true" data-script="Practice">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Everything below uses pm, dec, jan, files, frames, la, by_site,</span></span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a><span class="co"># read_epa() and days_above(), all built earlier in this script.</span></span>
+<span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-4"><a href="#cb46-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Functions</span></span>
+<span id="cb46-5"><a href="#cb46-5" aria-hidden="true" tabindex="-1"></a><span class="co">#  1. Write peak_day(d): the date of the highest pm25 in a data frame d.</span></span>
+<span id="cb46-6"><a href="#cb46-6" aria-hidden="true" tabindex="-1"></a><span class="co">#     Run it on pm. Check the answer against the row that which.max()</span></span>
+<span id="cb46-7"><a href="#cb46-7" aria-hidden="true" tabindex="-1"></a><span class="co">#     points at.</span></span>
+<span id="cb46-8"><a href="#cb46-8" aria-hidden="true" tabindex="-1"></a><span class="co">#  2. Run peak_day() on every site in by_site. Which site peaked last in</span></span>
+<span id="cb46-9"><a href="#cb46-9" aria-hidden="true" tabindex="-1"></a><span class="co">#     January? (sapply() turns dates into numbers; wrap the call in</span></span>
+<span id="cb46-10"><a href="#cb46-10" aria-hidden="true" tabindex="-1"></a><span class="co">#     format() to keep them readable.)</span></span>
+<span id="cb46-11"><a href="#cb46-11" aria-hidden="true" tabindex="-1"></a><span class="co">#  3. From memory, without scrolling up: write share_above(x, standard = 35)</span></span>
+<span id="cb46-12"><a href="#cb46-12" aria-hidden="true" tabindex="-1"></a><span class="co">#     so that it works in a fresh session, with nothing read from the</span></span>
+<span id="cb46-13"><a href="#cb46-13" aria-hidden="true" tabindex="-1"></a><span class="co">#     workspace. Run it on dec$pm25 and on c(1, 50).</span></span>
+<span id="cb46-14"><a href="#cb46-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-15"><a href="#cb46-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Lists and loops</span></span>
+<span id="cb46-16"><a href="#cb46-16" aria-hidden="true" tabindex="-1"></a><span class="co">#  4. How many sites does each frame in frames hold? One sapply() call.</span></span>
+<span id="cb46-17"><a href="#cb46-17" aria-hidden="true" tabindex="-1"></a><span class="co">#  5. One plot per site, written to disk: for each site in by_site, a</span></span>
+<span id="cb46-18"><a href="#cb46-18" aria-hidden="true" tabindex="-1"></a><span class="co">#     line plot of pm25 against date saved as a PNG named after the site.</span></span>
+<span id="cb46-19"><a href="#cb46-19" aria-hidden="true" tabindex="-1"></a><span class="co">#     Do not run it until it works for one site.</span></span>
+<span id="cb46-20"><a href="#cb46-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-21"><a href="#cb46-21" aria-hidden="true" tabindex="-1"></a><span class="co"># Checks</span></span>
+<span id="cb46-22"><a href="#cb46-22" aria-hidden="true" tabindex="-1"></a><span class="co">#  6. After read_epa() on the county file, write one stopifnot() with two</span></span>
+<span id="cb46-23"><a href="#cb46-23" aria-hidden="true" tabindex="-1"></a><span class="co">#     conditions: exactly 8 sites, and no date outside 2025.</span></span>
+<span id="cb46-24"><a href="#cb46-24" aria-hidden="true" tabindex="-1"></a><span class="co">#  7. This check fails on la. Say why, and whether the data or the check</span></span>
+<span id="cb46-25"><a href="#cb46-25" aria-hidden="true" tabindex="-1"></a><span class="co">#     is wrong. Then write the check that is right for this frame.</span></span>
+<span id="cb46-26"><a href="#cb46-26" aria-hidden="true" tabindex="-1"></a><span class="co">#       stopifnot(nrow(la) == length(unique(la$date)))</span></span>
+<span id="cb46-27"><a href="#cb46-27" aria-hidden="true" tabindex="-1"></a><span class="co">#  8. Time read_epa() on the county file alone, then lapply() over both</span></span>
+<span id="cb46-28"><a href="#cb46-28" aria-hidden="true" tabindex="-1"></a><span class="co">#     files. Does the second take more than the first? By roughly how much?</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+<div id="tabset-2-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-2-2-tab">
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Solutions
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-1" class="callout-1-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 1.</span></span>
+<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a>peak_day <span class="ot">&lt;-</span> <span class="cf">function</span>(d) d<span class="sc">$</span>date[<span class="fu">which.max</span>(d<span class="sc">$</span>pm25)]</span>
+<span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a><span class="fu">peak_day</span>(pm)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; [1] "2025-12-13"</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a>pm[<span class="fu">which.max</span>(pm<span class="sc">$</span>pm25), <span class="fu">c</span>(<span class="st">"date"</span>, <span class="st">"pm25"</span>)]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt;           date pm25
+#&gt; 283 2025-12-13   56</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 2. Pasadena, on 2025-01-10. Four sites peaked on January 1.</span></span>
+<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sapply</span>(by_site, <span class="cf">function</span>(s) <span class="fu">format</span>(<span class="fu">peak_day</span>(s)))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt;                        Compton        Lancaster - Fairgrounds 
+#&gt;                   "2025-01-01"                   "2025-01-07" 
+#&gt; Long Beach-Route 710 Near Road  Los Angeles-North Main Street 
+#&gt;                   "2025-01-09"                   "2025-01-08" 
+#&gt;                       Pasadena                 Pico Rivera #2 
+#&gt;                   "2025-01-10"                   "2025-01-01" 
+#&gt;                         Reseda             Signal Hill (LBSH) 
+#&gt;                   "2025-01-01"                   "2025-01-01"</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 3.</span></span>
+<span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a>share_above <span class="ot">&lt;-</span> <span class="cf">function</span>(x, <span class="at">standard =</span> <span class="dv">35</span>) <span class="fu">sum</span>(x <span class="sc">&gt;</span> standard) <span class="sc">/</span> <span class="fu">length</span>(x)</span>
+<span id="cb53-3"><a href="#cb53-3" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">share_above</span>(dec<span class="sc">$</span>pm25), <span class="dv">3</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; [1] 0.161</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a><span class="fu">share_above</span>(<span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">50</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; [1] 0.5</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb57"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 4.</span></span>
+<span id="cb57-2"><a href="#cb57-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sapply</span>(frames, <span class="cf">function</span>(d) <span class="fu">length</span>(<span class="fu">unique</span>(d<span class="sc">$</span>site)))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt;   epa_pm25_compton_2025.csv epa_pm25_la_county_2025.csv 
+#&gt;                           1                           8</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb59"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 6. The second condition is a whole vector; every element must be TRUE.</span></span>
+<span id="cb59-2"><a href="#cb59-2" aria-hidden="true" tabindex="-1"></a><span class="fu">stopifnot</span>(<span class="fu">length</span>(<span class="fu">unique</span>(la<span class="sc">$</span>site)) <span class="sc">==</span> <span class="dv">8</span>,</span>
+<span id="cb59-3"><a href="#cb59-3" aria-hidden="true" tabindex="-1"></a>          <span class="fu">format</span>(la<span class="sc">$</span>date, <span class="st">"%Y"</span>) <span class="sc">==</span> <span class="st">"2025"</span>)</span>
+<span id="cb59-4"><a href="#cb59-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-5"><a href="#cb59-5" aria-hidden="true" tabindex="-1"></a><span class="co"># 7. The check is wrong for this frame, not the data. Several sites</span></span>
+<span id="cb59-6"><a href="#cb59-6" aria-hidden="true" tabindex="-1"></a><span class="co">#    report on the same day, so dates repeat by design. The right check</span></span>
+<span id="cb59-7"><a href="#cb59-7" aria-hidden="true" tabindex="-1"></a><span class="co">#    is one row per site and day.</span></span>
+<span id="cb59-8"><a href="#cb59-8" aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(la) <span class="sc">==</span> <span class="fu">length</span>(<span class="fu">unique</span>(la<span class="sc">$</span>date))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; [1] FALSE</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb61"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a><span class="fu">stopifnot</span>(<span class="fu">nrow</span>(la) <span class="sc">==</span> <span class="fu">nrow</span>(<span class="fu">unique</span>(la[, <span class="fu">c</span>(<span class="st">"site"</span>, <span class="st">"date"</span>)])))</span>
+<span id="cb61-2"><a href="#cb61-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb61-3"><a href="#cb61-3" aria-hidden="true" tabindex="-1"></a><span class="co"># 8. Barely. The Compton file is about a seventh the size of the county</span></span>
+<span id="cb61-4"><a href="#cb61-4" aria-hidden="true" tabindex="-1"></a><span class="co">#    file, so the second call costs about a seventh more.</span></span>
+<span id="cb61-5"><a href="#cb61-5" aria-hidden="true" tabindex="-1"></a><span class="fu">system.time</span>(<span class="fu">read_epa</span>(<span class="st">"data/epa_pm25_la_county_2025.csv"</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt;    user  system elapsed 
+#&gt;   0.037   0.001   0.038</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb63"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb63-1"><a href="#cb63-1" aria-hidden="true" tabindex="-1"></a><span class="fu">system.time</span>(<span class="fu">lapply</span>(files, read_epa))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt;    user  system elapsed 
+#&gt;   0.042   0.003   0.046</code></pre>
+</div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb65"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb65-1"><a href="#cb65-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 5. Test on one site first: for (site in names(by_site)[1]). Then all of them.</span></span>
+<span id="cb65-2"><a href="#cb65-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (site <span class="cf">in</span> <span class="fu">names</span>(by_site)) {</span>
+<span id="cb65-3"><a href="#cb65-3" aria-hidden="true" tabindex="-1"></a>  s <span class="ot">&lt;-</span> by_site[[site]]</span>
+<span id="cb65-4"><a href="#cb65-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">png</span>(<span class="fu">paste0</span>(site, <span class="st">".png"</span>), <span class="at">width =</span> <span class="dv">1600</span>, <span class="at">height =</span> <span class="dv">800</span>, <span class="at">res =</span> <span class="dv">150</span>)</span>
+<span id="cb65-5"><a href="#cb65-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot</span>(s<span class="sc">$</span>date, s<span class="sc">$</span>pm25, <span class="at">type =</span> <span class="st">"l"</span>, <span class="at">main =</span> site,</span>
+<span id="cb65-6"><a href="#cb65-6" aria-hidden="true" tabindex="-1"></a>       <span class="at">xlab =</span> <span class="st">""</span>, <span class="at">ylab =</span> <span class="st">"PM2.5 (ug/m3)"</span>)</span>
+<span id="cb65-7"><a href="#cb65-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">dev.off</span>()</span>
+<span id="cb65-8"><a href="#cb65-8" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="quick-reference" class="level2">
+<h2 class="anchored" data-anchor-id="quick-reference">Quick reference</h2>
+<p><strong>Functions and lists</strong></p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Code</th>
+<th style="text-align: left;">What it does</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><code>f &lt;- function(x, k = 35) { ... }</code></td>
+<td style="text-align: left;">A function; <code>k = 35</code> is a default; the value is the last expression</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>return(x)</code></td>
+<td style="text-align: left;">Leave the function now with <code>x</code>; only needed to leave early</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>function(s) ...</code> inside <code>lapply()</code></td>
+<td style="text-align: left;">A function with no name, written where it is used</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>list.files("data", pattern =, full.names = TRUE)</code></td>
+<td style="text-align: left;">Paths you can hand to a function</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>lapply(files, f)</code></td>
+<td style="text-align: left;">A list in, a list out: <code>f</code> on each element</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>sapply(x, f)</code></td>
+<td style="text-align: left;">The same, simplified when every element has the same shape</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>split(d, d$g)</code></td>
+<td style="text-align: left;">A list, one data frame per value of <code>g</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Checks and habits</strong></p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Code</th>
+<th style="text-align: left;">What it does</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><code>stopifnot(a, b)</code></td>
+<td style="text-align: left;">Stop the script and name the first condition that is not <code>TRUE</code></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>stopifnot("why" = a)</code></td>
+<td style="text-align: left;">The same, printing your message instead</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>STANDARD &lt;- 35</code></td>
+<td style="text-align: left;">A named constant at the top; used by name everywhere</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code># Name ----</code></td>
+<td style="text-align: left;">A section RStudio’s outline can jump to</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>system.time(expr)</code></td>
+<td style="text-align: left;">Seconds the line took; wrap the big call once</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Session &gt; Restart R, then <code>source("air.R")</code></td>
+<td style="text-align: left;">The only test that a script runs on its own</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>getwd()</code>, <code>list.files("data")</code></td>
+<td style="text-align: left;">Where relative paths are looked for, and what is there</td>
+</tr>
+</tbody>
+</table>
+<p><strong>When something is wrong</strong></p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Symptom</th>
+<th style="text-align: left;">Tool</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">An error</td>
+<td style="text-align: left;">Read it. Then <code>traceback()</code>: your call is at the bottom</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">A loop or function misbehaves on some passes</td>
+<td style="text-align: left;"><code>print()</code> or <code>cat()</code> inside it; <code>browser()</code> to pause there</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">A wrong number and no error</td>
+<td style="text-align: left;">Halve the script: write down what each step should give, compare</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>object 'x' not found</code> inside a function</td>
+<td style="text-align: left;">The function reads a global; make <code>x</code> an argument</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>NaN</code> from a mean</td>
+<td style="text-align: left;">The subset was empty; that is the honest answer</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">A file “does not exist”</td>
+<td style="text-align: left;"><code>getwd()</code> and <code>list.files()</code> before blaming the file</td>
+</tr>
+</tbody>
+</table>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/arielortizbobea\.github\.io\/aem6850\/");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+            // target, if specified
+            link.setAttribute("target", "_blank");
+            if (link.getAttribute("rel") === null) {
+              link.setAttribute("rel", "noopener");
+            }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
