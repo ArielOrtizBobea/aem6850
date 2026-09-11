@@ -1,11 +1,14 @@
 project:
   type: website
   output-dir: _site
-  # Homework is withheld from the site until the instructor releases it.
-  # Sources stay in the repo; nothing under assignments/ is built.
+  # Homework is released one assignment at a time: an assignment is
+  # withheld by listing it here and released by removing it. (A later
+  # positive pattern does not re-include an excluded file, so each
+  # withheld page has to be named.) HW1 is released.
   render:
     - "**/*.qmd"
-    - "!fall-2026/assignments/*.qmd"
+    - "!fall-2026/assignments/hw0[2-9]-*.qmd"
+    - "!fall-2026/assignments/hw1[0-9]-*.qmd"
     - "!fall-2026/assignments.qmd"
     # Instructor solutions. Private by construction (publish.sh whitelist);
     # excluded here too so a stray .qmd under HW/ can never render into _site.
@@ -97,6 +100,10 @@ website:
               href: fall-2026/sessions/27-ai-ethics.qmd
             - text: "28 Moving forward"
               href: fall-2026/sessions/28-moving-forward.qmd
+        - section: "Homework"
+          contents:
+            - text: " 1 How bad was the air?"
+              href: fall-2026/assignments/hw01-air.qmd
         - section: "Resources"
           href: fall-2026/resources.qmd
           contents:

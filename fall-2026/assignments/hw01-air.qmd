@@ -5,111 +5,285 @@ pagetitle: "AEM 6850 · HW1"
 ---
 
 ![NASA Terra/MODIS, January 10, 2025. Smoke from the Palisades and Eaton
-fires streaming out over the Pacific. Your monitor sits downtown, under
-it.](../sessions/figures/la-fires-2025-annotated.jpg){fig-alt="Satellite
+fires streaming out over the Pacific.](../sessions/figures/la-fires-2025-annotated.jpg){fig-alt="Satellite
 image of Los Angeles on January 10, 2025, with smoke plumes from the
 Palisades and Eaton fires blowing offshore."}
 
-## The goal
 
-On January 7, 2025, the Palisades and Eaton fires ignited in Los Angeles
-County. How bad did the air get, at one monitor downtown, that winter?
+**No AI on this one.** See the rule near the bottom. It is the only kind of
+exception the course makes, and it is made on purpose.
 
-You answer with six numbers, written to a file called `results.csv`.
+---
 
-## The six numbers
+## What happened
 
-Your window is **December 1, 2024 through February 28, 2025**, at EPA site
-`06-037-1103` ("Los Angeles-North Main Street"), primary regulatory monitor
-only.
+On the morning of 7 January 2025, a wildfire started in the hills above
+Pacific Palisades, on the coast of Los Angeles, California. That evening a
+second fire started in Eaton Canyon, above the city of Altadena, 40 km to
+the east. Both were driven by Santa Ana winds, a dry wind that blows from
+the desert toward the ocean, gusting that night past 100 km/h. The two
+fires burned for over three weeks, destroyed thousands of homes, and
+became two of the most destructive wildfires in California's history.
 
-| `quantity` | what it is | format |
+- [Palisades Fire](https://www.fire.ca.gov/incidents/2025/1/7/palisades-fire/):
+  23,448 acres, 7 to 31 January.
+- [Eaton Fire](https://www.fire.ca.gov/incidents/2025/1/7/eaton-fire/):
+  14,021 acres, 7 to 31 January.
+
+Los Angeles sits in a basin ringed by mountains, and the basin is dense
+with air quality monitors. The US Environmental Protection Agency (EPA)
+publishes what every one of them recorded, every day. This assignment
+asks a plain question of that record: **how bad did the air get, where,
+and for how long?**
+
+## What you produce
+
+One figure, rebuilt from the raw data so that it matches the target below
+as closely as you can.
+
+![Target figure](https://arielortizbobea.github.io/assets/data/hw1_target.png)
+
+Panel **A** is the whole network on each day: the average across every
+monitor reporting, with the 10th and 90th percentile of monitors.
+
+Panel **B** is every monitor on every day, coloured by EPA's Air Quality
+Index category, with the monitors nearest the Eaton Fire at the top and
+their distance from it down the right edge.
+
+Study the target before you write a line. Two things it shows are worth
+noticing now: the air was worse in early December than during the fire,
+and the fire's effect stops about 60 km out.
+
+## What you get
+
+**The data.** One file, exactly as EPA's
+[Download Daily Data](https://www.epa.gov/outdoor-air-quality-data/download-daily-data)
+tool ships it. Nothing has been cleaned or reformatted.
+
+> <https://arielortizbobea.github.io/assets/data/epa_pm25_la_fires_2024_2025.csv>
+
+Daily PM2.5 for every monitor within 150 km of the Eaton Fire, 1 December
+2024 to 28 February 2025. 3,995 rows, 1 MB. PM2.5 is fine particulate
+matter, in micrograms per cubic metre (µg/m³); EPA's 24-hour health
+standard is 35. The file also carries EPA's own `Daily AQI Value`, the
+number behind the colour categories you see on the news.
+
+**The fire.** The Eaton Fire's ignition point, from
+[CAL FIRE's incident record](https://www.fire.ca.gov/incidents/2025/1/7/eaton-fire/):
+
+> **34.2035 °N, −118.0692 °W**
+
+You will measure every monitor's distance from this point.
+
+**The starter.** Your private repo in the course GitHub organization
+contains `hw1.Rproj`, an empty `code/` folder, and this page. Click the
+green **Code** button, **Download ZIP**, unzip it somewhere you keep
+coursework, and open `hw1.Rproj`.
+
+## The rules the figure follows
+
+To rebuild the figure you need to know exactly what it encodes. None of
+this is hidden. The pipeline is the assignment; the choices were never the
+secret.
+
+1. **Window:** 1 December 2024 to 28 February 2025, inclusive.
+2. **A monitor is an instrument, not a place.** A site is a place. Several
+   sites run more than one instrument, each with its own `POC` number and
+   parameter code. Every instrument gets its own row in panel B. The key
+   `Site ID` + `POC` + `AQS Parameter Code` is unique on any given day, and
+   your script should check that it is.
+3. **Keep monitors that reported at least 60 of the 90 days.** Some
+   instruments sample one day in three or one in six; their rows would be
+   mostly gaps.
+4. **Distance from the fire**, in km, from each row's `Site Latitude` and
+   `Site Longitude`. A degree of latitude is about 111 km anywhere on
+   Earth. A degree of longitude is shorter, and shorter the further you are
+   from the equator; at Los Angeles it is about 92 km. Convert each
+   difference into km, then use Pythagoras.
+5. **Panel B rows** are sorted by that distance, nearest at the top. Where a
+   site runs more than one instrument, append the POC in brackets so the
+   rows stay distinguishable. One site in the file ships with a blank name;
+   label it by its ID.
+6. **Panel A:** for each day, the mean across the monitors that reported,
+   and the 10th and 90th percentile of those same readings.
+7. **Colour** is EPA's Air Quality Index: six categories, six colours, from
+   the file's own `Daily AQI Value`. Days a monitor did not report are
+   white. The key is drawn with `legend()` and lists all six categories,
+   whether or not they occur.
+8. **One red line** marks 7 January, running through both panels.
+9. **Output:** `figures/hw1_target.png`, 183 × 247 mm, 300 dpi.
+
+## How to organise it
+
+Two scripts and a master file, in `code/`:
+
+| file | job |
+|:--|:--|
+| `code/1_get_clean_data.R` | download the file, keep the window, build one row per monitor, compute distance, sort, save one clean object to `data_clean/` |
+| `code/2_plot_figure.R` | read that object, compute the daily summaries, draw the figure to `figures/` |
+| `code/run_everything.R` | `source()` the two, in order |
+
+Keep raw data in `data/` and anything you computed in `data_clean/`.
+Never mix them. Every path is relative to the project root, because you
+opened `hw1.Rproj` first: `"data/..."`, never `"/Users/you/..."`.
+
+Each script opens with a **parameters** block: the file names, the dates,
+the fire's coordinates, the km-per-degree constants, the six colours.
+Nothing that means something is typed twice.
+
+## Cheat sheet
+
+Everything you need was covered in sessions 2 to 6. Nothing else is
+required, and nothing else is expected.
+
+| task | functions | session |
 |:--|:--|:--|
-| `peak_pm25` | The highest daily PM2.5 reading in the window | 1 decimal, e.g. `47.3` |
-| `peak_date` | The day that peak fell on | `YYYY-MM-DD` |
-| `jan_mean` | Mean of the January 2025 readings | 2 decimals |
-| `days_above_35` | Days strictly above 35 µg/m³ | whole number |
-| `missing_days` | Calendar days in the window with no reading at all | whole number |
-| `peak_over_dec_mean` | `peak_pm25` divided by the December 2024 mean | 2 decimals |
+| get the file | `download.file()`, `file.exists()`, `dir.create()` | [3](https://arielortizbobea.github.io/aem6850/fall-2026/sessions/03-r-essentials-ii.html), [6](https://arielortizbobea.github.io/aem6850/fall-2026/sessions/06-how-to-code.html) |
+| read it, protecting `Site ID` | `read.csv()` with `colClasses` | [3](https://arielortizbobea.github.io/aem6850/fall-2026/sessions/03-r-essentials-ii.html) |
+| dates | `as.Date()` with `format =`, `seq()` by day, `format()` | [2](https://arielortizbobea.github.io/aem6850/fall-2026/sessions/02-r-essentials.html), [3](https://arielortizbobea.github.io/aem6850/fall-2026/sessions/03-r-essentials-ii.html) |
+| rename columns | `names()` | [1](https://arielortizbobea.github.io/aem6850/fall-2026/sessions/01-overview.html) |
+| subset and sort | logical indexing, `order()`, `%in%` | [2](https://arielortizbobea.github.io/aem6850/fall-2026/sessions/02-r-essentials.html), [4](https://arielortizbobea.github.io/aem6850/fall-2026/sessions/04-basic-plots.html) |
+| build the key, check it | `paste()`, `duplicated()`, `anyDuplicated()`, `stopifnot()` | [3](https://arielortizbobea.github.io/aem6850/fall-2026/sessions/03-r-essentials-ii.html), [6](https://arielortizbobea.github.io/aem6850/fall-2026/sessions/06-how-to-code.html) |
+| distance | arithmetic, `sqrt()` | [5](https://arielortizbobea.github.io/aem6850/fall-2026/sessions/05-basic-plots-ii.html) |
+| monitor × day grid | `factor()` with `levels =`, `tapply()` | [2](https://arielortizbobea.github.io/aem6850/fall-2026/sessions/02-r-essentials.html), [3](https://arielortizbobea.github.io/aem6850/fall-2026/sessions/03-r-essentials-ii.html) |
+| row and column summaries | `apply()`, `is.na()`, `sum()`, `mean()` | [2](https://arielortizbobea.github.io/aem6850/fall-2026/sessions/02-r-essentials.html), [3](https://arielortizbobea.github.io/aem6850/fall-2026/sessions/03-r-essentials-ii.html) |
+| percentiles | `sort()` and an index | [2](https://arielortizbobea.github.io/aem6850/fall-2026/sessions/02-r-essentials.html) |
+| hand the clean object over | `saveRDS()`, `readRDS()` | [3](https://arielortizbobea.github.io/aem6850/fall-2026/sessions/03-r-essentials-ii.html) |
+| a small function | `function()` | [6](https://arielortizbobea.github.io/aem6850/fall-2026/sessions/06-how-to-code.html) |
+| two panels, one file | `png()`, `layout()`, `par()`, `dev.off()` | [4](https://arielortizbobea.github.io/aem6850/fall-2026/sessions/04-basic-plots.html), [5](https://arielortizbobea.github.io/aem6850/fall-2026/sessions/05-basic-plots-ii.html) |
+| the lines | `plot()`, `lines()`, `axis()`, `box()`, `mtext()`, `legend()` | [4](https://arielortizbobea.github.io/aem6850/fall-2026/sessions/04-basic-plots.html) |
+| the heat map | `findInterval()`, `image()`, `rect()`, `t()` | [3](https://arielortizbobea.github.io/aem6850/fall-2026/sessions/03-r-essentials-ii.html), [5](https://arielortizbobea.github.io/aem6850/fall-2026/sessions/05-basic-plots-ii.html) |
+| drawing outside the plot | `par(xpd)` | [5](https://arielortizbobea.github.io/aem6850/fall-2026/sessions/05-basic-plots-ii.html) |
+| run it clean | Restart R, `source()` | [6](https://arielortizbobea.github.io/aem6850/fall-2026/sessions/06-how-to-code.html) |
 
-`results.csv` has exactly two columns, `quantity` and `value`, and exactly
-those six rows in that order. `results_spec.md` in your starter is the full
-contract, and the grader reads the file against it.
+## Tips
 
-PM2.5 is fine particulate matter, in micrograms per cubic meter (µg/m³).
-EPA's 24-hour health standard is 35 µg/m³.
+**The colours.** EPA publishes the exact colours of the AQI scale in its
+[AQI technical assistance document](https://www.airnow.gov/sites/default/files/2020-05/aqi-technical-assistance-document-sept2018.pdf),
+Table 2, as RGB triplets. In hex they are:
 
-## Do this one without AI {#no-ai}
+| category | AQI | colour |
+|:--|:--|:--|
+| Good | 0 to 50 | `#00E400` |
+| Moderate | 51 to 100 | `#FFFF00` |
+| Unhealthy for sensitive groups | 101 to 150 | `#FF7E00` |
+| Unhealthy | 151 to 200 | `#FF0000` |
+| Very unhealthy | 201 to 300 | `#8F3F97` |
+| Hazardous | 301 and above | `#7E0023` |
 
-The syllabus permits AI tools on homework by default. **This assignment is
-an exception**, and it is the only kind of exception the course makes: an
-assignment where the whole point is the vocabulary.
+R takes a hex code anywhere it takes a colour name.
 
-Everything you need is on the [R essentials](../sessions/02-r-essentials.qmd)
-page. Every function, every repair, every check. If you hand this to a
-chatbot it will produce six correct numbers in about nine seconds, and you
-will have learned nothing that the rest of the semester depends on. You
-cannot verify a model's work in a language you do not read, and verifying is
-what this course is for.
+**`read.csv()` damages a column.** `Site ID` is a label that happens to be
+spelled with digits, and `read.csv()` reads it as a number, so `060371103`
+becomes `60371103` with no warning. `colClasses` protects it at read time.
+Note that `colClasses` uses R's name for the column, `Site.ID`, not the
+file's header.
 
-Ask a classmate. Ask in office hours. Re-run the session script until the
-pieces stick. Then write it yourself.
+**`image()` draws row 1 at the bottom.** If you want the nearest monitor at
+the top, the matrix goes in upside down. `rev()` does it.
 
-## The data
+**Percentiles without `quantile()`.** You have not met `quantile()`. You do
+not need it: `sort()` the day's readings, which also drops the `NA`s, and
+pick the value by position.
 
-Two CSVs in `data/`, exactly as EPA's download tool ships them. Nothing has
-been cleaned, sorted, or reformatted. `data/SOURCE.md` records the source
-URL, the exact download selections, and file checksums, so you can
-re-download and compare.
+**Grey cells hide the pattern.** Paint the panel white with `rect()`
+*before* `image()` draws over it, so days with no reading show as white
+rather than as the background colour.
 
-Two things about the files that are not mistakes:
+**One site has no name.** Look at your row labels. If one is blank, find
+out why, and give it a label that says what it is.
 
-- **You get two files.** EPA's tool downloads one calendar year at a time,
-  and your window crosses the year boundary. The columns are identical.
-- **The site runs five instruments.** A site is a place; a monitor is one
-  instrument at that place. Keep all five and you get up to five rows for
-  the same day. The assignment tells you which one to keep.
-
-`read.csv()` also damages two columns on the way in, silently. Catching that
-is part of the work.
-
-## Reference checkpoints
-
-The expected values are disclosed on purpose. The pipeline from raw file to
-answer is the assignment; the numbers were never the secret.
-
-- EPA's 24-hour PM2.5 standard is 35 µg/m³.
-- The file carries EPA's own Air Quality Index in `Daily AQI Value`. On the
-  peak day it reads 182, which EPA labels "Unhealthy".
-- Four `stopifnot()` checks in `hw1.R` gate the stages. Uncomment each as
-  you reach it. **Editing a check so it passes scores worse than leaving it
-  failing honestly.**
+**Restart and source before you submit.** A script that only works because
+of what is already in your environment is the most common way to lose
+points here. Session > Restart R, then `source("code/run_everything.R")`.
+It must run top to bottom with no errors.
 
 ## What to submit
 
-Two files, due Thursday, September 17, 8:40 am:
+Four things, by browser upload to your repo (drag onto the repo page,
+commit; no git client needed this week):
 
-- `hw1.R` — your edited script
-- `results.csv` — written by that script
+- `code/1_get_clean_data.R`
+- `code/2_plot_figure.R`
+- `code/run_everything.R`
+- `figures/hw1_target.png`
 
-Open your private repo in the course GitHub organization, drag both files
-onto the repo page, and commit. No git client needed.
+Do not upload `data/` or `data_clean/`. The grader runs your scripts from a
+fresh clone and they download and rebuild everything.
 
-Before you upload, restart R and source your script from scratch. It must
-run top to bottom in a fresh session with no errors. The grader runs it
-exactly that way.
+## No AI on this one
 
-## Weighting
+The syllabus permits AI tools on homework by default. **This assignment is
+the exception.** Every function you need is on the session pages linked
+above. Hand this to a chatbot and it will produce the figure in a minute,
+and you will have learned nothing that the rest of the semester depends
+on. From HW4 onward you will be asked to verify code an AI wrote; you
+cannot verify in a language you do not read.
 
-| Dimension | Points | The question it asks |
-|:--|--:|:--|
-| Reproduces | 15 | Does the script run, start to finish, in a fresh session? |
-| Correct | 60 | Are the six numbers right, and does your script compute them? |
-| Verified | 15 | Did you check your own work? |
-| Craft | 10 | Can someone else read it? |
+Ask a classmate. Ask in office hours. Re-run the session scripts until the
+pieces stick. Then write it yourself.
 
-The question points inside `hw1.R` sum to 100 and scale by 0.6 into Correct.
-A `results.csv` with the right numbers and a script that does not compute
-them scores 0 on Correct. The full rubric ships in your starter as
-`rubric.md`; the course-wide scheme is in the
-[syllabus](../syllabus.qmd#homework).
+You do not need to write a disclosure block for HW1, because there is
+nothing to disclose. The formal disclosure convention starts with HW4.
+
+## Rubric
+
+
+**9 points.** Three dimensions, three points each. The grader opens your
+repo in a fresh R session, sources `code/run_everything.R`, and compares
+the figure it writes with the target.
+
+### Replicability (3 points)
+
+| | |
+|:--|:--|
+| **3** | The code runs start to finish, without any edits, and writes `figures/hw1_target.png`. Paths are relative to the project root. Nothing depends on objects left over from an earlier session. |
+| **2** | The code requires one minor edit to run: a stray absolute path, a folder it expected to exist, a `library()` call for something base R already does. |
+| **1** | The code requires several edits to run, or runs with errors, or does not produce the figure. |
+| **0** | The code does not run. |
+
+Two things that cost points here every year. **Absolute paths:**
+`read.csv("/Users/you/Desktop/hw1/data/...")` works on your laptop and
+nowhere else; open the `.Rproj` and use `"data/..."`. **Session leftovers:**
+a script that works because `x` is still in your environment from twenty
+minutes ago is not a script that works. Restart R and source it before you
+upload. Every time.
+
+### Similarity (3 points)
+
+| | |
+|:--|:--|
+| **3** | The figure is virtually identical to the target. One has to really pay attention to see any difference. |
+| **2** | The figure is similar but has some clear differences from the target: a panel missing an element, the wrong ordering, a colour scale that is not EPA's, the key missing categories. |
+| **1** | The figure is clearly different from the target. |
+| **0** | No figure. |
+
+Similarity is judged on what the figure encodes, not on pixel-level
+matching. Rows in the right order with the right labels, the right
+colour on the right day, both panels on one x axis with the red line
+through both: that is what "virtually identical" means. A slightly
+different font size is not a difference. A monitor missing from panel B
+is.
+
+### Coding (3 points)
+
+| | |
+|:--|:--|
+| **3** | The code (1) has clear and logical sections, (2) has a clearly identified parameter section that can be modified to produce slightly different versions of the output, (3) is well annotated, and (4) is concise but spacious. |
+| **2** | The code has at most one of the following: (1) no clear structure, (2) parameters hard-coded within the core of the script, (3) missing key annotations, (4) too dense or too verbose. |
+| **1** | The code has more than one of those. |
+| **0** | There is no code, or the code cannot perform the basic steps needed to generate the output. |
+
+"A clearly identified parameter section" means the dates, the file
+names, the fire's coordinates, the km-per-degree constants and the six
+colours live together at the top of each script, named, and are used by
+name below. A number that means something typed in six places is six
+chances to change five of them.
+
+### The one thing that scores below zero
+
+This is a **no-AI** assignment. Undisclosed AI use is misrepresentation
+under the syllabus and is treated as an integrity violation, not as a
+grading matter. If you used a chatbot or coding assistant on any part of
+this, say so at the top of `run_everything.R`; disclosed use will be
+discussed, not punished.
