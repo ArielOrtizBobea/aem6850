@@ -1,0 +1,306 @@
+---
+title: "HW2 · What was the wind doing?"
+subtitle: "Out Thu Sep 17 · due Thu Sep 24, 8:40 am"
+pagetitle: "AEM 6850 · HW2"
+---
+
+**AI assistance is recommended on this one.** See the rule near the
+bottom: use it, disclose it, and write the change note yourself.
+
+---
+
+## What happened
+
+HW1 ended on a puzzle. The air across the Los Angeles basin was worse in
+early December than in the week of the fires, on days when nothing was
+burning anywhere in the state. And the fire's own smoke, from two fires
+that burned for three weeks, was gone from the monitors within days.
+
+Both fires were driven by the
+[Santa Ana winds](https://en.wikipedia.org/wiki/Santa_Ana_winds), a dry
+wind that blows from the desert, over the mountains, and out to sea. On
+the night of 7 January 2025 it gusted past 100 km/h. The rest of the
+winter the basin's air mostly sat still, and Los Angeles in winter is
+famous for inversions: a lid of warm air that traps whatever is emitted
+underneath it.
+
+Many of the sites that measure PM2.5 also measure wind, and EPA publishes
+that record too, every day, for every instrument. This assignment puts
+the two records side by side and asks: **was it the wind?**
+
+## What you produce
+
+Two figures, and a note.
+
+**Figure 1** is your HW1 figure with one new panel. Panel **A** is
+unchanged. Panel **B** is new: wind speed across the wind monitors, each
+day, summarised exactly the way panel A summarises PM2.5. Panel **C** is
+HW1's heat map, unchanged.
+
+![Target figure 1](https://arielortizbobea.github.io/assets/data/hw2_target.png)
+
+**Figure 2** is one point per day: the network's average wind speed
+against the network's average PM2.5, with the six days after ignition in
+red and the days that stand out labelled.
+
+![Target figure 2](https://arielortizbobea.github.io/assets/data/hw2_scatter.png){width=60%}
+
+Study both before you write a line. Every one of December's bad days
+sits in the calm corner of figure 2. The fire days are the only days
+the basin was windy and dirty at once.
+
+**The note** is a short file, `CHANGES.md`, that says what you changed
+from your HW1 project and why, what you checked, and how you used AI.
+The format is below.
+
+## What you get
+
+**Your HW1 project.** This assignment builds on it. Copy the whole
+project, rename `hw1.Rproj` to `hw2.Rproj`, and work from there. If your
+HW1 did not run, start from the posted solution instead and say so in
+the first line of your note.
+
+**The wind data.** One file, cut from EPA's
+[pre-generated annual files](https://aqs.epa.gov/aqsweb/airdata/download_files.html)
+(`daily_WIND_2024.zip` and `daily_WIND_2025.zip`) to the same area and
+window as HW1's file: every wind monitor within 150 km of the Eaton Fire,
+1 December 2024 to 28 February 2025. The columns are exactly as EPA
+ships them.
+
+> <https://arielortizbobea.github.io/assets/data/epa_wind_la_fires_2024_2025.csv>
+
+6,702 rows, 38 sites, 2.2 MB. Two parameters share the file:
+`Parameter Code` **61103** is wind speed, **61104** is wind direction.
+This assignment uses speed; direction waits for HW3.
+
+The layout is not the one HW1's file used. EPA's download tool does not
+offer wind, so this file comes from a different EPA product with its own
+conventions:
+
+| what | HW1's PM2.5 file | this file |
+|:--|:--|:--|
+| site | `Site ID`, one column, `060371103` | three columns: `State Code` `06`, `County Code` `037`, `Site Num` `1103` |
+| instrument | `POC` | `POC` |
+| date | `Date`, `01/07/2025` | `Date Local`, `2025-01-07` |
+| the value | `Daily Mean PM2.5 Concentration` | `Arithmetic Mean`, the day's average |
+| units | µg/m³ | `Units of Measure` says **Knots**; 1 knot is 1.852 km/h |
+| the fastest hour | | `1st Max Value`, `1st Max Hour` |
+
+All three site columns are labels with leading zeros, so all three need
+protecting at read time, the way `Site ID` did in HW1.
+
+**The PM2.5 data** is HW1's file, at the same address:
+
+> <https://arielortizbobea.github.io/assets/data/epa_pm25_la_fires_2024_2025.csv>
+
+## The rules the figures follow
+
+1. **Everything HW1's figure encoded still holds:** the window, what a
+   monitor is, the 60-of-90-days rule, distance from the Eaton Fire, the
+   row order, EPA's six colours, the two summaries in panel A, the one
+   red line at 7 January.
+2. **A wind monitor is a site plus a `POC`.** Build the key from the
+   three site columns and the POC. It is unique on any given day within
+   parameter 61103, and your script checks that it is.
+3. **Keep the wind speed rows only**, parameter `61103`.
+4. **Convert knots to km/h**, multiplying by 1.852. The constant lives
+   in the parameters block, with its name.
+5. **Keep wind monitors that reported at least 60 of the 90 days**, the
+   same rule as for PM2.5.
+6. **Panel B:** for each day, the mean across the wind monitors that
+   reported, and the 10th and 90th percentile of those same readings.
+   Axis from 0 to 30 km/h. Same lines, same colours, same key as panel A.
+7. **Layout:** three rows, heights in the ratio 1 : 0.75 : 2.6, one
+   shared set of margins so the three x axes line up. The red line runs
+   from the top of A to the bottom of C.
+8. **Output:** `figures/hw2_target.png`, 183 × 270 mm, 300 dpi. The page
+   is taller than HW1's so the heat map keeps its row height.
+9. **Figure 2:** one point per day. x is the day's mean wind speed across
+   wind monitors, y its mean PM2.5 across PM2.5 monitors, the same two
+   series panels A and B draw in black. Axes 0 to 16 km/h and 0 to 30
+   µg/m³. The six days from 7 January to 12 January are red. Label, with
+   the date, every red day and every day above 21 µg/m³ or above 11 km/h.
+   `figures/hw2_scatter.png`, 100 × 100 mm, 300 dpi.
+
+## How to organise it
+
+Your HW1 layout, plus one script and the note:
+
+| file | job |
+|:--|:--|
+| `code/1_get_clean_data.R` | HW1's script, plus: download the wind file, keep the window and the speed rows, build one row per wind monitor, save **both** grids in the one clean object |
+| `code/2_plot_figure.R` | HW1's script, plus panel B |
+| `code/3_plot_scatter.R` | new: read the clean object, draw figure 2 |
+| `code/run_everything.R` | `source()` the three, in order |
+| `CHANGES.md` | the note |
+
+Raw data in `data/`, computed objects in `data_clean/`, figures in
+`figures/`, paths relative to the project root. As before.
+
+**Panels A and B are the same drawing on two grids.** Write it once as a
+function that takes a grid, a panel letter and an axis label, and call
+it twice. Session 6 was about this. It is not a rule, but the Coding score
+looks for it, and the alternative, a copy of panel A with edits, doubles
+the length of your diff.
+
+## The note
+
+`CHANGES.md`, at the project root, half a page at most, in three parts:
+
+```
+# What changed from HW1
+
+Base: my own HW1 submission | the posted solution.
+
+## code/1_get_clean_data.R
+- ...one bullet per change, with the reason...
+
+## code/2_plot_figure.R
+- ...
+
+## code/3_plot_scatter.R (new)
+- ...
+
+## What I checked
+- ...
+
+## AI disclosure
+- Tools: which ones, by name
+- Used for: what you asked them to do
+- Checked: what you verified, and how
+```
+
+The grader reads the note first, then compares your HW2 code with your
+HW1 code. Every change in the code should be in the note, and nothing in
+the note should be missing from the code.
+
+**Write the note yourself.** A chatbot will write a flawless one from a
+diff in ten seconds. The point of the note is that *you* read the change.
+Ask AI to explain a line you changed, by all means. The note describes
+what you did, in your words.
+
+## Cheat sheet
+
+Everything you need was covered in sessions 2 to 6, and the AI rule below
+covers the rest.
+
+| task | functions | session |
+|:--|:--|:--|
+| get the second file | `download.file()`, `file.exists()` | [3](https://arielortizbobea.github.io/aem6850/fall-2026/sessions/03-r-essentials-ii.html), [6](https://arielortizbobea.github.io/aem6850/fall-2026/sessions/06-how-to-code.html) |
+| read it, protecting three columns | `read.csv()` with `colClasses` | [3](https://arielortizbobea.github.io/aem6850/fall-2026/sessions/03-r-essentials-ii.html) |
+| an ISO date | `as.Date()` needs no `format` | [2](https://arielortizbobea.github.io/aem6850/fall-2026/sessions/02-r-essentials.html) |
+| build the key, check it | `paste()`, `anyDuplicated()`, `stopifnot()` | [3](https://arielortizbobea.github.io/aem6850/fall-2026/sessions/03-r-essentials-ii.html), [6](https://arielortizbobea.github.io/aem6850/fall-2026/sessions/06-how-to-code.html) |
+| monitor × day grid, again | `factor()` with `levels =`, `tapply()`, `apply()` | [3](https://arielortizbobea.github.io/aem6850/fall-2026/sessions/03-r-essentials-ii.html) |
+| one drawing, two panels | `function()` | [6](https://arielortizbobea.github.io/aem6850/fall-2026/sessions/06-how-to-code.html) |
+| three panels, one file | `layout()` with `heights =`, `par(cex = )` | [5](https://arielortizbobea.github.io/aem6850/fall-2026/sessions/05-basic-plots-ii.html) |
+| the scatter | `plot()` with `pch = 21` and `bg =`, `text()` with `pos =`, `legend()` | [4](https://arielortizbobea.github.io/aem6850/fall-2026/sessions/04-basic-plots.html) |
+
+## Tips
+
+**Three rows shrink your text.** `layout()` with three or more rows
+quietly sets `par("cex")` to 0.66, so every label and every margin is a
+third smaller than in HW1 and the site names no longer fit. Put
+`par(cex = 1)` right after `layout()`.
+
+**The red line has further to go.** Your HW1 geometry assumed one panel
+above the heat map. Now there are two. Derive the top of panel A from the
+three layout heights rather than from the single ratio 2.6.
+
+**What "resultant" means.** EPA's daily wind speed is a *vector* average
+over the 24 hours: a day when the wind blows one way in the morning and
+back in the afternoon averages close to zero. That is why an ordinary day
+reads 3 to 5 km/h and the Santa Ana reads 13. It is the right number for
+this question, because it measures how far the day's air actually moved.
+
+**The site ID in three pieces.** `paste0()` of the three columns gives
+HW1's `Site ID`. You do not need it this week, but it is how HW3 will
+match a wind monitor to a PM2.5 monitor at the same site.
+
+**Restart and source before you submit.** Session > Restart R, then
+`source("code/run_everything.R")`. It must run top to bottom, with both
+files absent from `data/`, and write both figures.
+
+## What to submit
+
+Seven files, committed to your HW2 repository:
+
+- `code/1_get_clean_data.R`
+- `code/2_plot_figure.R`
+- `code/3_plot_scatter.R`
+- `code/run_everything.R`
+- `figures/hw2_target.png`
+- `figures/hw2_scatter.png`
+- `CHANGES.md`
+
+Do not upload `data/` or `data_clean/`. The grader runs your scripts from
+a fresh clone and they download and rebuild everything.
+
+## AI on this one
+
+Recommended, from here on. The things it is good at this week, in the
+chat tier:
+
+- **Explain the wind file.** Paste the header line and the first three
+  rows and ask what each column is. Then check the answer against EPA's
+  [file format page](https://aqs.epa.gov/aqsweb/airdata/FileFormats.html).
+- **Turn panel A into a function.** Paste your panel A code and ask for a
+  function that draws it for any grid. Read every line it gives back
+  against the code you pasted.
+- **Debug the shrinking text.** Describe what you see. Ask why. Then check
+  the reason in `?layout`.
+- **Draft the README.** It can write prose from your code. Your note it
+  cannot write, see above.
+
+Three rules, from the syllabus and session 8. **Ask for the script, not
+the answer:** a number a chatbot typed is not a result. **Verify one
+claim per conversation**, on principle, and say which in the note.
+**Disclose.** The disclosure block in your note lists the tools, what you
+used them for, and what you checked. Disclosed use is never penalised.
+Undisclosed use is misrepresentation under the syllabus and is treated as
+an integrity violation.
+
+## Rubric
+
+**12 points.** Four dimensions, three points each. The grader opens your
+repo in a fresh R session, sources `code/run_everything.R`, compares the
+two figures with the targets, and reads your note against the difference
+between your HW1 and HW2 code.
+
+### Replicability (3 points)
+
+| | |
+|:--|:--|
+| **3** | The code runs start to finish, without any edits, and writes both figures. Paths are relative to the project root. Nothing depends on objects left over from an earlier session. |
+| **2** | The code requires one minor edit to run: a stray absolute path, a folder it expected to exist, a `library()` call for something base R already does. |
+| **1** | The code requires several edits to run, or runs with errors, or does not produce the figures. |
+| **0** | The code does not run. |
+
+### Similarity (3 points)
+
+| | |
+|:--|:--|
+| **3** | Both figures are virtually identical to the targets. One has to really pay attention to see any difference. |
+| **2** | The figures are similar but have some clear differences from the targets: panel B on the wrong scale or missing a summary, the red line stopping short, the wrong days red in figure 2, labels missing. |
+| **1** | The figures are clearly different from the targets, or one of them is missing. |
+| **0** | No figures. |
+
+Similarity is judged on what the figures encode, not on pixel-level
+matching. Panel C must still be HW1's panel B, cell for cell.
+
+### Coding (3 points)
+
+| | |
+|:--|:--|
+| **3** | The code (1) has clear and logical sections, (2) has a clearly identified parameter section that can be modified to produce slightly different versions of the output, including the new file, the parameter code and the unit conversion, (3) is well annotated, and (4) is concise but spacious: one drawing for panels A and B, not two. |
+| **2** | The code has at most one of the following: (1) no clear structure, (2) parameters hard-coded within the core of the script, (3) missing key annotations, (4) too dense or too verbose. |
+| **1** | The code has more than one of those. |
+| **0** | There is no code, or the code cannot perform the basic steps needed to generate the output. |
+
+### The note (3 points)
+
+| | |
+|:--|:--|
+| **3** | Every change in the code is in the note with its reason, and nothing in the note is absent from the code. What was checked is stated. The disclosure names the tools, the uses and the checks. |
+| **2** | One change missing or unexplained, or the checks vague. |
+| **1** | The note is present but does not describe the changes, or the disclosure is missing. |
+| **0** | No note. |
