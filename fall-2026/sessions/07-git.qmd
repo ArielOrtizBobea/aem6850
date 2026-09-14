@@ -70,8 +70,6 @@ see `git version 2.` and a number. The prompt should contain `MINGW64`; if
 it does not, redo the Global Options → Terminal step, because the next
 steps only work in Git Bash.
 
-![Windows only: the *New terminals open with* dropdown set to Git Bash. Nothing else on this screen changes.](figures/07-git/S14-windows-terminal-option.png){fig-align="center" fig-alt="RStudio's Global Options window on the Terminal page, with the New terminals open with dropdown showing Git Bash and circled in red."}
-
 **2. Tell RStudio where git is.** **Tools → Global Options → Git/SVN.** The
 *Git executable* box should show a path: `/usr/bin/git` on a Mac,
 `C:/Program Files/Git/bin/git.exe` on Windows. If it is empty, click
@@ -164,21 +162,23 @@ repository address you pasted into the poll on August 25.
 https://github.com/aem6850-cornell/onboarding-<your-username>.git
 ```
 
-![The dialog, filled in: the address in the top box, `~/github` in the bottom one, then Create Project.](figures/07-git/S06-rstudio-new-project.png){fig-align="center" fig-alt="RStudio's New Project dialog for a Git repository, with the Repository URL box filled, the subdirectory box showing ~/github, and the Create Project button circled in red."}
+![The dialog, filled in: the address in the top box, your `github` folder in the bottom one (set with Browse), then Create Project.](figures/07-git/S06-rstudio-new-project.png){fig-align="center" fig-alt="RStudio's New Project dialog for a Git repository, with the Repository URL box filled, the subdirectory box showing /Users/ao332/github, and the Create Project button circled in red."}
 
-*Create project as subdirectory of:* on a Mac, type `~/github` in the box.
-On Windows, type the path you wrote down in step 3 with forward slashes
-and `github` on the end: `C:/Users/<your Windows username>/github`. Do not
-use **Browse** on Windows: it opens in Documents, which is often OneDrive.
-**Create Project.** A window shows `Cloning into
+*Create project as subdirectory of:* this box cannot be typed in. Click
+**Browse…** and pick the `github` folder you made in step 3. On a Mac it
+is inside your home folder (the house icon, or **Go → Home** in the
+dialog). On Windows the dialog opens in *Documents*, which is often
+OneDrive; do not stop there. Go to **This PC → C: → Users → your name →
+github**, select it, and click **Open**. The box then shows the full
+path, ending in `github`. **Create Project.** A window shows `Cloning into
 'onboarding-<your-username>'...`. On a Mac, if a dialog asks whether
 *git-credential-osxkeychain* may use your confidential information, click
 **Always Allow**: that is git reading the token from step 4, not an error.
 RStudio restarts inside the new project, the Files pane lists `README.md`
 and `onboarding-<your-username>.Rproj`, and a **Git** tab appears top-right
-listing those two plus `.gitignore` (the Files pane hides it because its
-name starts with a dot). RStudio made the two new files and we deal with
-them in class.
+listing those two plus `.gitignore` (the Files pane usually hides it,
+because its name starts with a dot; the Git tab never does). RStudio made
+the two new files and we deal with them in class.
 
 **6. Test the rest.** In the new project, **Tools → Terminal → New
 Terminal**. The prompt shows `onboarding-<your-username>` just before the
@@ -816,7 +816,7 @@ about it.
 :::
 ::: {.column width="40%"}
 - File → New Project → **Version Control** → **Git**. Paste the URL.
-  Subdirectory: `~/github` on a Mac; `C:/Users/<you>/github` on Windows.
+  Subdirectory: **Browse…** to your `github` folder.
 - **Create Project.** RStudio runs one command, `git clone`. The clone
   lands in `github/onboarding-<user>`.
 :::
@@ -836,7 +836,7 @@ project are relative to the project's top folder — that is why
 
 ::: {.content-hidden when-format="revealjs"}
 
-![The New Project dialog, filled in. The address goes in the top box; the folder that will hold every repository goes in the bottom one.](figures/07-git/S06-rstudio-new-project.png){fig-align="center" fig-alt="RStudio's New Project dialog for a Git repository, with the Repository URL box filled, the subdirectory box showing ~/github, and the Create Project button circled in red."}
+![The New Project dialog, filled in. The address goes in the top box; the folder that will hold every repository goes in the bottom one, chosen with Browse.](figures/07-git/S06-rstudio-new-project.png){fig-align="center" fig-alt="RStudio's New Project dialog for a Git repository, with the Repository URL box filled, the subdirectory box showing /Users/ao332/github, and the Create Project button circled in red."}
 
 You did this before class, step 5. Read this section against the project
 you already have, and do not clone a second time: RStudio refuses a
@@ -848,8 +848,9 @@ In RStudio, **File → New Project → Version Control → Git**. Three boxes.
 1. **Repository URL.** Paste the address you copied.
 2. **Project directory name.** RStudio fills this in from the address:
    `onboarding-ArielOrtizBobea`. Leave it.
-3. **Create project as subdirectory of.** Type `~/github` on a Mac, or
-   `C:/Users/<you>/github` on Windows, with forward slashes.
+3. **Create project as subdirectory of.** The box cannot be typed in.
+   Click **Browse…** and pick your `github` folder: inside your home
+   folder on a Mac, `C:\Users\<you>\github` on Windows.
 
 Click **Create Project**. RStudio runs one command and shows its output
 in a small window:
@@ -938,8 +939,9 @@ command, so it can lag a few seconds; click its refresh icon when it does.
 Watch it for now; do not click in it.
 
 **The Files pane.** It lists `README.md` and `onboarding-<user>.Rproj`.
-It does not list `.gitignore`, because the Files pane hides any file whose
-name starts with a dot; the Git pane does not hide it.
+On most laptops it does not list `.gitignore`, because the Files pane
+hides any file whose name starts with a dot unless you tick *More → Show
+Hidden Files*; the Git pane never hides it.
 
 :::
 
@@ -1089,8 +1091,8 @@ browser fallback below.
 *Cloning now instead of before class:* File → New Project → Version
 Control → Git, paste
 `https://github.com/aem6850-cornell/onboarding-<your-username>.git`,
-subdirectory `~/github` (Mac) or `C:/Users/<you>/github` (Windows). This
-is here for tonight, not for the seven minutes of the exercise.
+**Browse…** to your `github` folder. This is here for tonight, not for
+the seven minutes of the exercise.
 
 :::
 
