@@ -156,3 +156,17 @@ rather than rounding up to zero. They are also why `breaks` that start at
 The same caution as the Compton file applies: AQS is revised after state
 quality assurance, so a re-download may not match these numbers. Work from
 the shipped file.
+
+## `gapminder.csv`
+
+The Gapminder excerpt shipped with the R package
+[`gapminder`](https://github.com/jennybc/gapminder) (Jennifer Bryan):
+142 countries, every fifth year from 1952 to 2007, 1,704 rows, six
+columns (`country`, `continent`, `year`, `lifeExp`, `pop`, `gdpPercap`).
+Downloaded 2026-09-14 from the package's `inst/extdata/gapminder.tsv` and
+written as CSV with `write.csv(row.names = FALSE)`; values unchanged.
+The data are from [gapminder.org](https://www.gapminder.org/data/),
+free to use under
+[CC BY 4.0](https://creativecommons.org/licenses/by/4.0/). Used in
+sessions 8 and 9 as a small table that has nothing to do with the
+homework thread.

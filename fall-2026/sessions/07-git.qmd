@@ -152,15 +152,38 @@ anywhere else.
 *If step 4 fails on Windows*, skip it. The first time git talks to GitHub,
 a sign-in window opens; sign in there once and it remembers.
 
-**5. Clone your onboarding repository.** It is private, so a successful
-clone proves the token can read it. Your username is the one in the
-repository address you pasted into the poll on August 25.
+**5. Make a repository, commit once in the browser, clone it.** A
+private repository under your own account; a successful clone then
+proves the token can read a private repository.
 
-**File → New Project → Version Control → Git.** Repository URL:
+*Make it.* On [github.com](https://github.com), click **+** at the top
+right → **New repository**. Repository name: `git-practice`. Select
+**Private**. Tick **Add a README file**. Click **Create repository**.
+The page that opens is the repository: one file, `README.md`.
+
+*Commit once in the browser.* Click `README.md`, then the pencil icon at
+the top right of the file. Add one line at the end, with your name and
+your program:
 
 ```
-https://github.com/aem6850-cornell/onboarding-<your-username>.git
+Your Name, PhD student in Applied Economics.
 ```
+
+Click the green **Commit changes…** button. In the dialog, replace the
+text in the message box with `add my intro`, leave *Commit directly to
+the main branch* selected, and click **Commit changes**. The front page
+now reads **2 Commits**. This is the last snapshot you take in the
+browser; on Tuesday you take them from your laptop.
+
+*Clone it.* On the front page click the green **Code** button and, on
+the **HTTPS** tab, click the copy icon beside the address. It reads
+
+```
+https://github.com/<your-username>/git-practice.git
+```
+
+**File → New Project → Version Control → Git.** Repository URL: paste
+the address.
 
 ![The dialog, filled in: the address in the top box, your `github` folder in the bottom one (set with Browse), then Create Project.](figures/07-git/S06-rstudio-new-project.png){fig-align="center" fig-alt="RStudio's New Project dialog for a Git repository, with the Repository URL box filled, the subdirectory box showing /Users/ao332/github, and the Create Project button circled in red."}
 
@@ -171,18 +194,22 @@ dialog). On Windows the dialog opens in *Documents*, which is often
 OneDrive; do not stop there. Go to **This PC → C: → Users → your name →
 github**, select it, and click **Open**. The box then shows the full
 path, ending in `github`. **Create Project.** A window shows `Cloning into
-'onboarding-<your-username>'...`. On a Mac, if a dialog asks whether
+'git-practice'...`. On a Mac, if a dialog asks whether
 *git-credential-osxkeychain* may use your confidential information, click
 **Always Allow**: that is git reading the token from step 4, not an error.
 RStudio restarts inside the new project, the Files pane lists `README.md`
-and `onboarding-<your-username>.Rproj`, and a **Git** tab appears top-right
-listing those two plus `.gitignore` (the Files pane usually hides it,
-because its name starts with a dot; the Git tab never does). RStudio made
-the two new files and we deal with them in class.
+and `git-practice.Rproj`, and a **Git** tab appears top-right listing
+those two plus `.gitignore` (the Files pane usually hides it, because its
+name starts with a dot; the Git tab never does). RStudio made the two new
+files and we deal with them in class.
+
+*Already cloned your onboarding repository from the course organization
+instead?* Keep it. It has the same two commits, `Initial commit` and
+`add my intro`, and everything on Tuesday works there the same way.
 
 **6. Test the rest.** In the new project, **Tools → Terminal → New
-Terminal**. The prompt shows `onboarding-<your-username>` just before the
-`%` (Mac) or on the line above the `$` (Windows). Type these two lines,
+Terminal**. The prompt shows `git-practice` just before the `%` (Mac) or
+on the line above the `$` (Windows). Type these two lines,
 Enter after each:
 
 ```bash
@@ -197,18 +224,15 @@ the first prints nothing, repeat step 3. Do nothing else in this project
 before Tuesday.
 
 `Repository not found`: repeat step 4 (`gitcreds::gitcreds_set()` again,
-and choose the option to replace the stored token), and check the username
-in the URL. *git not found* or no Git tab: repeat step 2. Never accepted
-the August invitation, so the repository does not open in your browser
-either? Make a private repository named `git-practice` under your own
-account (**+ → New repository**, tick **Add a README file**) and clone
-that instead. Anything else: bring the laptop to class; the first exercise
-has a browser-only path.
+and choose the option to replace the stored token), and check that the
+address is the one the Code button gave you. *git not found* or no Git
+tab: repeat step 2. Anything else: bring the laptop to class; the first
+exercise has a browser-only path.
 
 :::
 
 *Diagnostic:* in the Terminal,
-`git ls-remote https://github.com/aem6850-cornell/onboarding-<user>.git`
+`git ls-remote https://github.com/<your-username>/git-practice.git`
 prints two lines of hashes when the token reaches the private repository,
 `Repository not found` when a stored token cannot, and asks for a username
 when no token is stored at all (press Ctrl+C and repeat step 4).
@@ -428,7 +452,7 @@ memory, it is a guess.
 | What | a program on your laptop | a website |
 | Does | takes and keeps snapshots of a folder | keeps a copy of the snapshots and shows them in a browser |
 | Needs the internet | no | yes |
-| You have used it | not yet | once: `add my intro`. Twice, once you upload hw1 |
+| You have used it | not yet | once: `add my intro`, before class. Twice, once you upload hw1 |
 
 ::: {.content-visible when-format="revealjs"}
 
@@ -459,13 +483,13 @@ and you see what the button was doing.
 
 ::: {.content-visible when-format="revealjs"}
 
-![A repository is a folder plus a timeline of snapshots. Every git command either moves a change toward that timeline, or copies the timeline between your laptop and GitHub.](figures/07-git/D1-repo-folder-timeline.svg){fig-align="center" height="440" fig-alt="A folder labelled onboarding-<user>/ containing README.md and a dashed, hidden .git/ entry, beside a horizontal timeline with two circles labelled Initial commit and add my intro; a bracket spanning both halves is labelled repository."}
+![A repository is a folder plus a timeline of snapshots. Every git command either moves a change toward that timeline, or copies the timeline between your laptop and GitHub.](figures/07-git/D1-repo-folder-timeline.svg){fig-align="center" height="440" fig-alt="A folder labelled git-practice/ containing README.md and a dashed, hidden .git/ entry, beside a horizontal timeline with two circles labelled Initial commit and add my intro; a bracket spanning both halves is labelled repository."}
 
 ::: {.notes}
-Left is the folder you already know: your onboarding repository, one
-file, `README.md`. Right is the part that is new: a line of snapshots,
-oldest to newest, each with a message. Two of them, and you made the
-second. The timeline is stored inside the folder, in a hidden subfolder
+Left is the folder you already know: the repository you cloned before
+class, one file, `README.md`. Right is the part that is new: a line of
+snapshots, oldest to newest, each with a message. Two of them, and you
+made the second. The timeline is stored inside the folder, in a hidden subfolder
 called `.git`. Folder plus timeline. That is a repository. Everything
 today is a verb that acts on one or the other.
 :::
@@ -474,13 +498,14 @@ today is a verb that acts on one or the other.
 
 ::: {.content-hidden when-format="revealjs"}
 
-![A repository is a folder plus a timeline of snapshots. Every git command either moves a change toward that timeline, or copies the timeline between your laptop and GitHub.](figures/07-git/D1-repo-folder-timeline.svg){fig-align="center" fig-alt="A folder labelled onboarding-<user>/ containing README.md and a dashed, hidden .git/ entry, beside a horizontal timeline with two circles labelled Initial commit and add my intro; a bracket spanning both halves is labelled repository."}
+![A repository is a folder plus a timeline of snapshots. Every git command either moves a change toward that timeline, or copies the timeline between your laptop and GitHub.](figures/07-git/D1-repo-folder-timeline.svg){fig-align="center" fig-alt="A folder labelled git-practice/ containing README.md and a dashed, hidden .git/ entry, beside a horizontal timeline with two circles labelled Initial commit and add my intro; a bracket spanning both halves is labelled repository."}
 
 A **repository** is a folder plus a timeline of the snapshots taken of
-it. The left half of the picture is the folder you already know: your
-onboarding repository holds one file, `README.md`. The right half is the
-new part: a line of snapshots, oldest on the left, each with a message.
-There are two, and you made the second one in the browser.
+it. The left half of the picture is the folder you already know: the
+`git-practice` repository you made before class holds one file,
+`README.md`. The right half is the new part: a line of snapshots, oldest
+on the left, each with a message. There are two, and you made the second
+one in the browser.
 
 The timeline lives inside the folder, in a hidden subfolder called
 `.git`. Never open it. If you delete it, the files survive but the
@@ -495,7 +520,7 @@ without having planned for the question on Tuesday.
 
 :::
 
-## Your onboarding repository {#reveal-onboarding}
+## Your repository on GitHub {#reveal-repo}
 
 ::: {.content-visible when-format="revealjs"}
 
@@ -504,7 +529,7 @@ without having planned for the question on Tuesday.
 ![](figures/07-git/S01-repo-front.png){width="100%" fig-alt="The front page of the onboarding-ArielOrtizBobea repository on GitHub, with five numbered red circles on the repository name, the file list, the main dropdown, the 2 Commits link, and the green Code button."}
 :::
 ::: {.column width="40%"}
-1. **Name** — organization / repository
+1. **Name** — owner / repository
 2. **Files** — `README.md`, the only file
 3. **`main`** — the timeline's name
 4. **`2 Commits`** — two snapshots
@@ -513,9 +538,10 @@ without having planned for the question on Tuesday.
 ::::
 
 ::: {.notes}
-This is the repository you were given on August 25. Mine looks like
-yours. The name is the organization, a slash, the repository. Every
-repository starts with one timeline, and it is called `main`. You clicked
+This is my repository. Yours is `git-practice`, under your own account,
+and the page looks the same. The name is the owner, a slash, the
+repository; my owner is the course organization, yours is your username.
+Every repository starts with one timeline, and it is called `main`. You clicked
 the green button for the hw1 ZIP. Everything you have done with this page
 so far treated it as a folder on a website. Item 4 is what makes it not a
 folder.
@@ -525,14 +551,15 @@ folder.
 
 ::: {.content-hidden when-format="revealjs"}
 
-![The front page of one onboarding repository. Five things to find: the name, the file list, `main`, the commit count, and the green Code button.](figures/07-git/S01-repo-front.png){fig-align="center" fig-alt="The front page of the onboarding-ArielOrtizBobea repository on GitHub, with five numbered red circles on the repository name, the file list, the main dropdown, the 2 Commits link, and the green Code button."}
+![The front page of a repository, mine. Five things to find: the name, the file list, `main`, the commit count, and the green Code button.](figures/07-git/S01-repo-front.png){fig-align="center" fig-alt="The front page of the onboarding-ArielOrtizBobea repository on GitHub, with five numbered red circles on the repository name, the file list, the main dropdown, the 2 Commits link, and the green Code button."}
 
-Open your own onboarding repository in the browser:
-`github.com/aem6850-cornell/onboarding-<your-username>`. It looks like the
-picture. Five things on this page matter today.
+Open your `git-practice` repository in the browser:
+`github.com/<your-username>/git-practice`. It looks like the picture,
+which is mine. Five things on this page matter today.
 
-1. **The name.** `aem6850-cornell` is the organization, then a slash,
-   then the repository. Together they are the repository's full name, and
+1. **The name.** The owner, then a slash, then the repository. For yours
+   the owner is your username; for mine it is `aem6850-cornell`, the
+   course organization. Together they are the repository's full name, and
    they are the first part of its address.
 2. **The file list.** `README.md` is the only file. Until today, this
    list is all you have looked at, and you treated the page as a folder
@@ -565,8 +592,8 @@ picture. Five things on this page matter today.
 ::::
 
 ::: {.notes}
-Newest on top. Two snapshots. The bottom one we made when we created the
-repository. The top one is yours: you edited the README in the browser
+Newest on top. Two snapshots. The bottom one GitHub made when the
+repository was created. The top one is yours: you edited the README in the browser
 and clicked Commit changes. That click took a snapshot and wrote your
 message on it. Your hw1 repository has the same page, and the upload
 button did the same thing there, with a message GitHub wrote: `Add files
@@ -577,12 +604,12 @@ via upload`. From now on you write it.
 
 ::: {.content-hidden when-format="revealjs"}
 
-![The Commits page: two rows, newest on top. One row is circled with its four parts labelled: message, author and time, hash, and the `<>` icon.](figures/07-git/S02-commits-page.png){fig-align="center" fig-alt="The Commits page of the onboarding repository showing two rows, add my intro above Initial commit, with one row's message, author and time, seven-character hash, and angle-bracket icon circled in red."}
+![The Commits page of my repository: two rows, newest on top. One row is circled with its four parts labelled: message, author and time, hash, and the `<>` icon.](figures/07-git/S02-commits-page.png){fig-align="center" fig-alt="The Commits page of the onboarding repository showing two rows, add my intro above Initial commit, with one row's message, author and time, seven-character hash, and angle-bracket icon circled in red."}
 
 Click `2 Commits`. The page that opens is the **history**: the timeline
 as a list, newest on top. Each row is one **commit**, which is git's word
 for a snapshot together with who took it, when, and why. The bottom row,
-`Initial commit`, was made when the repository was created. The top row,
+`Initial commit`, was made by GitHub when the repository was created. The top row,
 `add my intro`, is yours: you edited the README in the browser and clicked
 *Commit changes*. That click took a snapshot and wrote your message on it.
 
@@ -621,9 +648,9 @@ Each row has four parts.
 ::: {.notes}
 This is the most important picture of the day. A commit is not a copy of
 the file; it is a snapshot you can compare to the one before. The
-comparison is a diff. The badge says +3 −3: you filled in three lines on
-August 25, so three red, three green. Yours may say three additions and
-no deletions if you typed on new lines. Both are right.
+comparison is a diff. The badge says +3 −3: I filled in three lines of
+my README in place, so three red, three green. Yours says +1: one line
+added at the end, nothing removed. Both are one edit, read as lines.
 :::
 
 :::
@@ -639,10 +666,11 @@ snapshot you can compare to the one before, and the comparison is what
 you read.
 
 - **`1 file changed`, `+3 −3`.** One file differs between the two
-  snapshots, and in it three lines were removed and three were added.
-  You filled in three lines of the README on August 25, in place, so each
-  old line is paired with a new one. If you typed on new lines instead,
-  your badge says three additions and no deletions. Both are right.
+  snapshots, and in it three lines were removed and three were added:
+  I filled in three lines of my README in place, so each old line is
+  paired with a new one. Your badge says `+1`: the line you added at the
+  end before class, and nothing removed. Both are one edit, read as
+  lines.
 - **Red `-` and green `+`.** A red line with `-` is the line as it was.
   A green line with `+` is the line as it is now. When a line was edited
   rather than added, the two sit together as a pair.
@@ -722,7 +750,7 @@ and commit second. The second order is the whole point.
 
 ::: {.content-visible when-format="revealjs"}
 
-![](figures/07-git/D4-local-remote.svg){fig-align="center" height="300" fig-alt="A laptop on the left and a box labelled GitHub (origin) on the right, each with an identical timeline of three circles beneath it; a wide dashed arrow from GitHub to the laptop labelled git clone, once; a thin arrow from laptop to GitHub labelled git push; a thin arrow from GitHub to laptop labelled git pull; a pencil on the GitHub box labelled browser edit or upload."}
+![](figures/07-git/D4-local-remote.svg){fig-align="center" height="270" fig-alt="A laptop on the left and a box labelled GitHub (origin) on the right, each with an identical timeline of three circles beneath it; a wide dashed arrow from GitHub to the laptop labelled git clone, once; a thin arrow from laptop to GitHub labelled git push; a thin arrow from GitHub to laptop labelled git pull; a pencil on the GitHub box labelled browser edit or upload."}
 
 - **Clone** makes the first copy, once.
 - **Push** sends your new snapshots up. **Pull** brings GitHub's down.
@@ -796,8 +824,9 @@ Click the copy icon at the right of the box. That address is what every
 clone, push and pull uses to find the remote copy. Three things to know
 about it.
 
-- It is the repository's full name, `aem6850-cornell/onboarding-<user>`,
-  with `https://github.com/` in front and `.git` on the end.
+- It is the repository's full name, owner and repository, with
+  `https://github.com/` in front and `.git` on the end. Yours reads
+  `https://github.com/<your-username>/git-practice.git`.
 - The `.git` is part of the address. It is not the hidden folder on your
   laptop, and you do not leave it off.
 - Use the **HTTPS** tab, not SSH and not GitHub CLI. HTTPS is the route
@@ -818,7 +847,7 @@ about it.
 - File → New Project → **Version Control** → **Git**. Paste the URL.
   Subdirectory: **Browse…** to your `github` folder.
 - **Create Project.** RStudio runs one command, `git clone`. The clone
-  lands in `github/onboarding-<user>`.
+  lands in `github/git-practice`.
 :::
 ::::
 
@@ -841,13 +870,14 @@ project are relative to the project's top folder — that is why
 You did this before class, step 5. Read this section against the project
 you already have, and do not clone a second time: RStudio refuses a
 folder that already exists. To reopen the project, **File → Recent
-Projects → onboarding-<your-username>**.
+Projects → git-practice**.
 
 In RStudio, **File → New Project → Version Control → Git**. Three boxes.
 
 1. **Repository URL.** Paste the address you copied.
 2. **Project directory name.** RStudio fills this in from the address:
-   `onboarding-ArielOrtizBobea`. Leave it.
+   `git-practice` for yours, `onboarding-ArielOrtizBobea` for mine in the
+   picture. Leave it.
 3. **Create project as subdirectory of.** The box cannot be typed in.
    Click **Browse…** and pick your `github` folder: inside your home
    folder on a Mac, `C:\Users\<you>\github` on Windows.
@@ -856,8 +886,8 @@ Click **Create Project**. RStudio runs one command and shows its output
 in a small window:
 
 ```bash
-git clone https://github.com/aem6850-cornell/onboarding-ArielOrtizBobea.git
-#> Cloning into 'onboarding-ArielOrtizBobea'...
+git clone https://github.com/<your-username>/git-practice.git
+#> Cloning into 'git-practice'...
 #> remote: Enumerating objects: 6, done.        # GitHub's lines; counts vary
 #> remote: Counting objects: 100% (6/6), done.
 #> ...
@@ -869,9 +899,9 @@ progress lines; later, lines you have already seen in an earlier block.*
 
 The dialog is a wrapper on that one line, `git clone` and the address,
 which every tutorial and every AI assistant will tell you to type. The
-clone lands in `github/onboarding-ArielOrtizBobea`: the files, plus the
-hidden `.git` that holds the timeline. RStudio adds a project file,
-`onboarding-ArielOrtizBobea.Rproj`, and restarts inside the new project.
+clone lands in `github/git-practice`: the files, plus the hidden `.git`
+that holds the timeline. RStudio adds a project file, `git-practice.Rproj`,
+and restarts inside the new project.
 
 Two things about where the folder lands. First, it can be anywhere on
 your disk and your scripts still run, because paths inside a project are
@@ -924,7 +954,7 @@ named *Terminal* next to the Console, already inside the project folder.
 Every git command is typed there: type after the prompt, press Enter, read
 what comes back. The prompt shows the project's name just before the `%`
 on a Mac, or on the line above the `$` on Windows. On Windows the prompt
-has two lines: the first ends in `MINGW64 …/onboarding-<user> (main)`, the
+has two lines: the first ends in `MINGW64 …/git-practice (main)`, the
 second is `$`. That is Git Bash, and it is correct.
 
 **The Git pane.** A tab named **Git** sits top-right, beside Environment.
@@ -932,13 +962,14 @@ It lists files whose state differs from the last snapshot, each with an
 icon. Right now it shows two rows with a yellow `?`: `.gitignore` (a list of
 files git should leave alone; explained under
 [.gitignore: what git should not track](#gitignore)) and
-`onboarding-<user>.Rproj`, the two files RStudio made when it built the
-project. The pane shows the same state a command reports, so you can read
+`git-practice.Rproj`, the two files RStudio made when it built the
+project (the picture shows mine, with my repository's name). The pane
+shows the same state a command reports, so you can read
 it as a mirror of what you typed. It refreshes on a timer, not after every
 command, so it can lag a few seconds; click its refresh icon when it does.
 Watch it for now; do not click in it.
 
-**The Files pane.** It lists `README.md` and `onboarding-<user>.Rproj`.
+**The Files pane.** It lists `README.md` and `git-practice.Rproj`.
 On most laptops it does not list `.gitignore`, because the Files pane
 hides any file whose name starts with a dot unless you tick *More → Show
 Hidden Files*; the Git pane never hides it.
@@ -1063,17 +1094,17 @@ press `q`.
 ### Exercise
 
 ```bash
-# Exercise 1 (7 minutes). Your onboarding repository, on your laptop.
+# Exercise 1 (7 minutes). Your git-practice repository, on your laptop.
 #
 # 1. Save your open hw1 scripts first: switching projects restarts R
 #    and empties the Environment. Then open the project you cloned
-#    before class: File > Recent Projects >
-#    onboarding-<your-username>.  Not cloned before class? Use the
-#    browser path under this box now; clone tonight with Before class
-#    step 5, and bring the laptop to office hours if it still fails.
+#    before class: File > Recent Projects > git-practice.
+#    Not cloned before class? Use the browser path under this box now;
+#    clone tonight with Before class step 5, and bring the laptop to
+#    office hours if it still fails.
 #
 # 2. Tools > Terminal > New Terminal, then:   git log --oneline
-#    How many commits? Which one did you make on August 25?
+#    How many commits? Which one did you make in the browser?
 #
 # 3. git status
 #    Under which heading are the two files RStudio made?
@@ -1084,15 +1115,15 @@ press `q`.
 
 ::: {.content-hidden when-format="revealjs"}
 
-*No onboarding repository?* Use the `git-practice` repository you made
-before class (Before class, last paragraph). No repository at all? Do the
-browser fallback below.
+*Cloned your onboarding repository from the course organization
+instead?* Same exercise, same answers: it has the same two commits.
+No repository at all? Do the browser fallback below.
 
 *Cloning now instead of before class:* File → New Project → Version
-Control → Git, paste
-`https://github.com/aem6850-cornell/onboarding-<your-username>.git`,
-**Browse…** to your `github` folder. This is here for tonight, not for
-the seven minutes of the exercise.
+Control → Git, paste the address from your repository's Code button,
+`https://github.com/<your-username>/git-practice.git`, **Browse…** to
+your `github` folder. This is here for tonight, not for the seven
+minutes of the exercise.
 
 :::
 
@@ -1109,7 +1140,7 @@ git status
 #> Untracked files:
 #>   (use "git add <file>..." to include in what will be committed)
 #>         .gitignore
-#>         onboarding-<user>.Rproj
+#>         git-practice.Rproj
 #>
 #> nothing added to commit but untracked files present (use "git add" to track)
 ```
@@ -1132,8 +1163,8 @@ What to do about that is the next section.
 
 ::: {.notes}
 Debrief (1 min). Three or four commits: they edited the README more than
-once on August 25, or committed the RStudio files before class. Fine; the
-count is theirs. Only the `.Rproj` listed: RStudio did not write a
+once in the browser, or committed the RStudio files before class. Fine;
+the count is theirs. Only the `.Rproj` listed: RStudio did not write a
 `.gitignore` on that laptop; one file, same heading.
 
 When it fails, say:
@@ -1158,11 +1189,13 @@ When it fails, say:
 ::: {.content-hidden when-format="revealjs"}
 
 **Fallback for laptops where git is not working.** Read-only, so nothing
-is committed on GitHub that a later clone would have to pull first. Open
-`github.com/aem6850-cornell/onboarding-<user>` and click the commit count
+is committed on GitHub that a later clone would have to pull first. No
+repository yet? Make it now: the first two parts of Before class step 5
+(make it, commit once in the browser) need no git and take two minutes.
+Open `github.com/<your-username>/git-practice` and click the commit count
 (the clock icon at the top right of the file list). Answer 1 is there.
 Then click `add my intro` and read the red and green lines: the same
-click you made on August 25, opened. Note what is *not* there: no
+click you made before class, opened. Note what is *not* there: no
 heading, no list of files waiting. The browser has no stop between the
 edit and the snapshot (the next section names that stop the staging
 area); the line went from the box straight to a snapshot. That missing
@@ -1226,7 +1259,7 @@ the other half later.
 
 The sections up to `git push` run the loop once on the two files RStudio made,
 then again on an edit and a new file. In class you watch these; at home
-you can type them in your own onboarding project. If you do, your counts
+you can type them in your own `git-practice` project. If you do, your counts
 differ later: Exercise 2 will show more than 3 commits, its two RStudio
 files will already be committed, and Practice 1 has nothing left to
 stage. That is fine; the answers in the room assume you only watched.
@@ -1265,9 +1298,9 @@ The verb for "this goes in the next snapshot" is `add`. You name the files. Nami
 
 In the Terminal tab, type `git add`, a space, and the names of the two
 files, then press Enter. On your laptop the second file is
-`onboarding-<user>.Rproj`; type the first few letters and press Tab, and
-the terminal completes the name. `add` prints nothing. Silence is
-success.
+`git-practice.Rproj` (the block shows mine); type the first few letters
+and press Tab, and the terminal completes the name. `add` prints nothing.
+Silence is success.
 
 Type `git status` and press Enter. The two files have moved from
 `Untracked files` to a new heading, `Changes to be committed`. That
@@ -1293,7 +1326,7 @@ of a repository: a file you never name never gets in.
 
 ### Terminal
 
-1. Type `git add .gitignore onboarding-<user>.Rproj` and press Enter. Nothing prints.
+1. Type `git add .gitignore git-practice.Rproj` and press Enter. Nothing prints.
 2. Type `git status` and press Enter. Both files sit under `Changes to be committed`.
 
 ### RStudio Git pane
@@ -1932,7 +1965,7 @@ in the same order, with the same hashes.
 
 :::: {.columns}
 ::: {.column width="60%"}
-![](figures/07-git/S09-commit-changes-dialog.png){width="100%" fig-alt="GitHub's Commit changes dialog after a pencil edit. The message box holds the default text Update README.md, the option Commit directly to the main branch is selected, and the green Commit changes button is at the bottom. The message box and the button are circled."}
+![](figures/07-git/S09-commit-changes-dialog.png){width="80%" fig-alt="GitHub's Commit changes dialog after a pencil edit. The message box holds the default text Update README.md, the option Commit directly to the main branch is selected, and the green Commit changes button is at the bottom. The message box and the button are circled."}
 :::
 ::: {.column width="40%"}
 - The pencil and the upload button both make a snapshot on GitHub's copy.
@@ -2156,7 +2189,7 @@ end of the page, under [A branch is a second timeline](#branch).
 This is the screen `git pull` opens in this situation:
 
 ```
-Merge branch 'main' of https://github.com/aem6850-cornell/onboarding-<user>
+Merge branch 'main' of https://github.com/<your-username>/git-practice
 # Please enter a commit message to explain why this merge is necessary,
 # especially if it merges an updated upstream into a topic branch.
 ```
@@ -2182,7 +2215,7 @@ block of `hint:` lines. Run
 ### Exercise
 
 ```bash
-# Exercise 2 (9 minutes). In your onboarding project, Terminal tab,
+# Exercise 2 (9 minutes). In your git-practice project, Terminal tab,
 # browser open on your repository.
 #
 # 1. Open README.md in RStudio. Add one line at the end:
@@ -2216,7 +2249,7 @@ git status
 #>
 #> Untracked files:
 #>         .gitignore
-#>         onboarding-<user>.Rproj
+#>         git-practice.Rproj
 git diff
 #> diff --git a/README.md b/README.md
 #> ...
@@ -2391,9 +2424,9 @@ git diff
 
 :::
 
-- Asked for: the `stopifnot`. Got: the `stopifnot`, and a different standard.
+- Asked for: the `stopifnot`. Got: that, and a different standard.
 - The `-` line is the tell. Read removals first.
-- The transcript would say "added a row check". The diff says what happened.
+- The transcript says what was meant. The diff says what happened.
 
 ::: {.content-visible when-format="revealjs"}
 
@@ -2734,7 +2767,7 @@ One caveat. `.gitignore` only stops files that have never been committed. A file
 
 ::: {.content-visible when-format="revealjs"}
 
-Ten exercises on the session page, with solutions behind a click. All of them run in your onboarding clone or a sandbox repository you make — never in hw1.
+Ten exercises on the session page, with solutions behind a click. All of them run in your `git-practice` clone or a sandbox repository you make — never in hw1.
 
 - **1–3** The loop: add, commit, push, and stage only part of a change
 - **4–6** Undoing: discard, unstage, amend
@@ -2751,7 +2784,7 @@ Ten exercises on the session page, with solutions behind a click. All of them ru
 
 ```bash
 # Practice
-# Everything below runs in your onboarding project, Terminal tab,
+# Everything below runs in your git-practice project, Terminal tab,
 # unless it says "sandbox" -- never in hw1.
 
 # The loop
@@ -2809,7 +2842,7 @@ Ten exercises on the session page, with solutions behind a click. All of them ru
 
 ```bash
 # 1
-git add .gitignore onboarding-<user>.Rproj
+git add .gitignore git-practice.Rproj
 git commit -m "Add the files RStudio made for the project"
 git push
 # expected: both files and your message on GitHub
@@ -2855,9 +2888,9 @@ git log --oneline          # same count; top message fixed, new hash
 
 # 8  the push is refused:
 git push
-#> To https://github.com/aem6850-cornell/onboarding-<user>.git
+#> To https://github.com/<user>/git-practice.git
 #>  ! [rejected]        main -> main (fetch first)
-#> error: failed to push some refs to 'https://github.com/.../onboarding-<user>.git'
+#> error: failed to push some refs to 'https://github.com/<user>/git-practice.git'
 #> hint: Updates were rejected because the remote contains work that you do not
 #> hint: have locally. This is usually caused by another repository pushing to
 #> hint: the same ref. If you want to integrate the remote changes, use
@@ -3013,7 +3046,7 @@ Every command from today, one line each, on the session page — with the three-
 | hash | The forty-character ID git names a commit by; seven characters are enough to type | [§](#reveal-commits) |
 | history | The timeline: every commit, newest first when `git log` prints it | [§](#reveal-commits) |
 | branch | Git's word for a timeline; a repository can have more than one | [§](#status) |
-| `main` | The name every repository's first branch gets | [§](#reveal-onboarding) |
+| `main` | The name every repository's first branch gets | [§](#reveal-repo) |
 | `origin` | Git's name for the copy a repository was cloned from, GitHub's | [§](#status) |
 | local | The copy of the repository on your laptop | [§](#two-copies) |
 | remote | A copy of the repository somewhere else, GitHub's | [§](#two-copies) |
