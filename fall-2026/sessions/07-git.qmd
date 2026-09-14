@@ -253,10 +253,11 @@ By the end of this session you can:
   (your laptop and GitHub), and the three places a change can be.
 - Say where a change is right now — working folder, staging area, or
   history — from `git status` alone.
-- Clone a repository into an RStudio project, commit a change with a
-  message that says why, push it, and pull a change made on GitHub.
-- Read a diff, including one a model wrote, and say in one sentence what
-  changed.
+- Make a repository on GitHub, clone it into an RStudio project, commit a
+  change with a message that says why, push it, and pull a change made on
+  GitHub.
+- Read a diff, including one a coding assistant wrote, and say in one
+  sentence what changed.
 - Undo at each place: discard an edit, unstage a file, fix the last
   commit's message.
 - Say what a branch and a pull request are, and when a solo project needs
@@ -267,10 +268,11 @@ By the end of this session you can:
 1. Why version control
 2. A repository is a folder plus a timeline
 3. Two copies: your laptop and GitHub
-4. Three places a change lives
-5. Push and pull
+4. One change, from your editor to GitHub
+5. Choosing what a snapshot contains
 6. Undoing at each place
-7. Branches, pull requests, and what stays out of a repository
+7. Pull, and the push that is refused
+8. Branches, pull requests, and what stays out of a repository
 
 ## A folder without version control {#chaos}
 
@@ -362,7 +364,7 @@ afternoon, not a project.
 
 :::
 
-## What a model's edit looks like {#model-edit}
+## What a coding assistant's edit looks like {#model-edit}
 
 ```{=html}
 <style>
@@ -370,6 +372,9 @@ code.diff span.st { color: #b31b1b; }
 code.diff span.va { color: #1a7f37; }
 </style>
 ```
+
+A coding assistant (Copilot, ChatGPT, Claude) was asked to add one check to
+a three-line script. This is what it did.
 
 ```diff
  # analysis.R -- days above the PM2.5 standard
@@ -381,12 +386,13 @@ code.diff span.va { color: #1a7f37; }
 
 - You asked for the last line.
 - Nobody asked for the `-`/`+` pair in the middle: 35 became 9.
-- **What did the model change?** That is the question for the rest of the
-  day.
+- **What did the assistant change?** That is the question for the rest of
+  the day.
 
 ::: {.content-visible when-format="revealjs"}
 
 ::: {.notes}
+By "the model" I mean the assistant; some of you have not used one yet.
 Green is added, red is removed. Git prints three more lines above this;
 they come when we run a diff ourselves. You asked for a check; you also
 got a different air-quality standard. Nine is a real EPA number, the
@@ -452,7 +458,7 @@ memory, it is a guess.
 | What | a program on your laptop | a website |
 | Does | takes and keeps snapshots of a folder | keeps a copy of the snapshots and shows them in a browser |
 | Needs the internet | no | yes |
-| You have used it | not yet | once: `add my intro`, before class. Twice, once you upload hw1 |
+| You have used it | not yet | once: `add my intro`, before class |
 
 ::: {.content-visible when-format="revealjs"}
 
@@ -486,12 +492,14 @@ and you see what the button was doing.
 ![A repository is a folder plus a timeline of snapshots. Every git command either moves a change toward that timeline, or copies the timeline between your laptop and GitHub.](figures/07-git/D1-repo-folder-timeline.svg){fig-align="center" height="440" fig-alt="A folder labelled git-practice/ containing README.md and a dashed, hidden .git/ entry, beside a horizontal timeline with two circles labelled Initial commit and add my intro; a bracket spanning both halves is labelled repository."}
 
 ::: {.notes}
-Left is the folder you already know: the repository you cloned before
-class, one file, `README.md`. Right is the part that is new: a line of
-snapshots, oldest to newest, each with a message. Two of them, and you
-made the second. The timeline is stored inside the folder, in a hidden subfolder
-called `.git`. Folder plus timeline. That is a repository. Everything
-today is a verb that acts on one or the other.
+Left is the folder you already know: `git-practice`, one file,
+`README.md`. Right is the part that is new: a line of snapshots, oldest to
+newest, each with a message. Two of them, and you made the second. Each
+snapshot is the whole folder at one moment, a photo of the desk, not a
+list of what moved; git works out the difference between any two when you
+ask. The timeline is stored inside the folder, in a hidden subfolder
+called `.git`. Folder plus timeline. That is a repository. Next: where
+those two snapshots came from.
 :::
 
 :::
@@ -520,6 +528,45 @@ without having planned for the question on Tuesday.
 
 :::
 
+## Make a repository {#make-repo}
+
+::: {.content-visible when-format="revealjs"}
+
+- **github.com → + → New repository.** Name `git-practice`. **Private.** Tick **Add a README file**. **Create repository.**
+- One file, one snapshot. GitHub wrote `Initial commit`. A repository is born with a timeline of length one.
+- **Pencil on `README.md`** → one line → **Commit changes…** → message `add my intro`. Two snapshots. You did exactly this before class.
+
+::: {.notes}
+Live, on my own account: Before class step 5 with the words on. Watch the front page after Create: one file, and a link that says 1 Commit. GitHub photographed a folder with one file in it and wrote the caption. Then the pencil, the line, Commit changes, my own caption: the second photo. That click is the only git you have used so far, and it was git. Next three slides: this repository, three ways.
+:::
+
+:::
+
+::: {.content-hidden when-format="revealjs"}
+
+A repository is born on GitHub in one form. On
+[github.com](https://github.com), click **+** at the top right → **New
+repository**, name it, select **Private**, tick **Add a README file**, and
+click **Create repository**. The page that opens is the front page of a
+repository with one file and one snapshot: GitHub created `README.md` and
+took the first snapshot itself, with the message `Initial commit`. A
+repository is born with a timeline of length one.
+
+The second snapshot is the one you took before class: the pencil on
+`README.md`, one line, **Commit changes** with the message `add my intro`.
+That click is git. GitHub took a snapshot of the whole folder and wrote
+your caption on it.
+
+Every tutorial and every assistant will also offer `git init`, which turns
+a folder on your laptop into a repository where it stands. It makes a
+timeline with no GitHub copy, and connecting one afterwards takes two more
+commands and an address typed by hand. Make the repository on GitHub first
+and clone it: the connection comes free, and the backup exists from the
+first minute. Putting a folder you already have under version control is
+the same route, shown under [Start a repository](#start-repo).
+
+:::
+
 ## Your repository on GitHub {#reveal-repo}
 
 ::: {.content-visible when-format="revealjs"}
@@ -538,13 +585,13 @@ without having planned for the question on Tuesday.
 ::::
 
 ::: {.notes}
-This is my repository. Yours is `git-practice`, under your own account,
-and the page looks the same. The name is the owner, a slash, the
-repository; my owner is the course organization, yours is your username.
-Every repository starts with one timeline, and it is called `main`. You clicked
-the green button for the hw1 ZIP. Everything you have done with this page
-so far treated it as a folder on a website. Item 4 is what makes it not a
-folder.
+The repository we just made, on its front page; reload the live page,
+the screenshot is the fallback. Yours looks the same. The name is the
+owner, a slash, the repository: your username, then `git-practice`.
+Every repository starts with one timeline, and it is called `main`. You
+clicked the green button before class, for the address. Everything you
+have done with this page so far treated it as a folder on a website. Item
+4 is what makes it not a folder.
 :::
 
 :::
@@ -554,13 +601,12 @@ folder.
 ![The front page of a repository, mine. Five things to find: the name, the file list, `main`, the commit count, and the green Code button.](figures/07-git/S01-repo-front.png){fig-align="center" fig-alt="The front page of the onboarding-ArielOrtizBobea repository on GitHub, with five numbered red circles on the repository name, the file list, the main dropdown, the 2 Commits link, and the green Code button."}
 
 Open your `git-practice` repository in the browser:
-`github.com/<your-username>/git-practice`. It looks like the picture,
-which is mine. Five things on this page matter today.
+`github.com/<your-username>/git-practice`. It looks like the picture.
+Five things on this page matter today.
 
-1. **The name.** The owner, then a slash, then the repository. For yours
-   the owner is your username; for mine it is `aem6850-cornell`, the
-   course organization. Together they are the repository's full name, and
-   they are the first part of its address.
+1. **The name.** The owner, then a slash, then the repository: your
+   username, then `git-practice`. Together they are the repository's full
+   name, and they are the first part of its address.
 2. **The file list.** `README.md` is the only file. Until today, this
    list is all you have looked at, and you treated the page as a folder
    on a website.
@@ -592,12 +638,10 @@ which is mine. Five things on this page matter today.
 ::::
 
 ::: {.notes}
-Newest on top. Two snapshots. The bottom one GitHub made when the
-repository was created. The top one is yours: you edited the README in the browser
-and clicked Commit changes. That click took a snapshot and wrote your
-message on it. Your hw1 repository has the same page, and the upload
-button did the same thing there, with a message GitHub wrote: `Add files
-via upload`. From now on you write it.
+Newest on top. Two snapshots. The bottom one GitHub made a minute ago,
+when the repository was created, and GitHub wrote its message. The top
+one is yours: the pencil, the line, Commit changes. That click took a
+snapshot and wrote your message on it. From now on you write every one.
 :::
 
 :::
@@ -638,44 +682,51 @@ Each row has four parts.
 ![](figures/07-git/S03-commit-diff.png){width="100%" fig-alt="The commit page for add my intro on GitHub, with the 1 file changed count and its +3 −3 badge, the grey @@ -9,9 +9,9 @@ row, and one red and green line pair circled in red."}
 :::
 ::: {.column width="40%"}
-- `+3 −3` — three lines changed
+- `+2 −1` — two lines added, one removed
 - red `-` / green `+` — the line as it was, as it is
-- `@@ -9,9 +9,9 @@` — where in the file
-- a **diff** — two snapshots, line by line
+- `@@` — where in the file
+- a **diff** — two snapshots, line by line. Spot the difference.
 :::
 ::::
 
 ::: {.notes}
-This is the most important picture of the day. A commit is not a copy of
-the file; it is a snapshot you can compare to the one before. The
-comparison is a diff. The badge says +3 −3: I filled in three lines of
-my README in place, so three red, three green. Yours says +1: one line
-added at the end, nothing removed. Both are one edit, read as lines.
+This is the most important picture of the day. A commit is a photo of
+the whole folder, not a note about what moved. GitHub shows the
+difference from the photo before, because the difference is what a person
+can read: spot the difference between two photos. Read this one. The
+title line shows once red and once green: nobody edited it; the file had
+no line ending, adding a line below gave it one, and git shows the old
+line and the new. Then the line you added. Yours says the same, or +1 if
+your editor kept the ending. Say what changed, then ask whether you meant
+it. The title pair you did not mean, and it is harmless.
 :::
 
 :::
 
 ::: {.content-hidden when-format="revealjs"}
 
-![The `add my intro` commit, opened. Circled: the `1 file changed` count with its `+3 −3` badge, the grey `@@` row, and one red/green pair.](figures/07-git/S03-commit-diff.png){fig-align="center" fig-alt="The commit page for add my intro on GitHub, with the 1 file changed count and its +3 −3 badge, the grey @@ -9,9 +9,9 @@ row, and one red and green line pair circled in red."}
+![The `add my intro` commit, opened. Circled: the `1 file changed` count with its badge, the grey `@@` row, and one red/green pair.](figures/07-git/S03-commit-diff.png){fig-align="center" fig-alt="The commit page for add my intro on GitHub, with the 1 file changed count and its +3 −3 badge, the grey @@ -9,9 +9,9 @@ row, and one red and green line pair circled in red."}
 
 Click the message `add my intro`. The page that opens is the commit
 itself, shown as a diff against the commit before it. This is the most
-important picture of the day: a commit is not a copy of the file, it is a
-snapshot you can compare to the one before, and the comparison is what
-you read.
+important picture of the day. A commit is a photo of the whole folder,
+not a note about what moved; GitHub shows the difference from the photo
+before, because the difference is what a person can read. Two photos side
+by side, spot the difference: that is a diff, and git works one out for
+any two snapshots you name.
 
-- **`1 file changed`, `+3 −3`.** One file differs between the two
-  snapshots, and in it three lines were removed and three were added:
-  I filled in three lines of my README in place, so each old line is
-  paired with a new one. Your badge says `+1`: the line you added at the
-  end before class, and nothing removed. Both are one edit, read as
-  lines.
+- **`1 file changed`, `+2 −1`.** One file differs between the two
+  snapshots; in it two lines were added and one removed. The title line,
+  `# git-practice`, shows once red and once green although nobody edited
+  it: GitHub's README had no line ending, adding a line below gave it
+  one, and git shows the old line and the new. The second green line is
+  the one you typed. Your badge says the same, or `+1` if your editor
+  kept the ending. Both are one edit, read as lines.
 - **Red `-` and green `+`.** A red line with `-` is the line as it was.
   A green line with `+` is the line as it is now. When a line was edited
   rather than added, the two sit together as a pair.
-- **`@@ -9,9 +9,9 @@`.** The grey row says where in the file you are: old
-  lines 9 to 17, new lines 9 to 17. You will rarely need the numbers.
+- **`@@ -1 +1,2 @@`.** The grey row says where in the file you are: old
+  line 1, new lines 1 to 2. You will rarely need the numbers.
 - **Unmarked lines.** Everything with no `-` or `+` is context: lines
   that did not change, shown so you can see where the change sits.
 
@@ -722,44 +773,22 @@ only that? If the answer is no, the snapshot waits until it is yes.
 
 :::
 
-::: {.content-hidden when-format="revealjs"}
-
-## Your hw1 repository {#reveal-hw1}
-
-![The Commits page of a hw1 repository after a browser upload. Circled: the message `Add files via upload`, which GitHub wrote, above `Initial commit`.](figures/07-git/S04-hw1-commits.png){fig-align="center" fig-alt="The Commits page of hw1-ArielOrtizBobea showing two rows, Add files via upload above Initial commit, with the message Add files via upload circled in red."}
-
-- Download ZIP copied the folder to your laptop, without the timeline.
-- Dragging files onto the page took a snapshot on GitHub.
-- GitHub wrote the message for you. From now on you write it.
-
-Your hw1 repository has the same Commits page, and the two routes you
-used on it are the two halves of today. *Download ZIP* copied the files as
-they were at one moment, with no timeline; that is why the folder on your
-laptop has no history to show. Dragging files onto the repository page
-took a snapshot on GitHub, and GitHub wrote the message for you:
-`Add files via upload`.
-
-The browser route still works for hw1 this week. The difference is where
-the snapshot is taken. In the browser, GitHub commits whatever you dropped
-and you read the diff afterwards. On your laptop, you read the diff first
-and commit second. The second order is the whole point.
-
-:::
-
 ## Local and remote: two copies of one timeline {#two-copies}
 
 ::: {.content-visible when-format="revealjs"}
 
-![](figures/07-git/D4-local-remote.svg){fig-align="center" height="270" fig-alt="A laptop on the left and a box labelled GitHub (origin) on the right, each with an identical timeline of three circles beneath it; a wide dashed arrow from GitHub to the laptop labelled git clone, once; a thin arrow from laptop to GitHub labelled git push; a thin arrow from GitHub to laptop labelled git pull; a pencil on the GitHub box labelled browser edit or upload."}
+![](figures/07-git/D4-local-remote.svg){fig-align="center" height="230" fig-alt="A laptop on the left and a box labelled GitHub (origin) on the right, each with an identical timeline of three circles beneath it; a wide dashed arrow from GitHub to the laptop labelled git clone, once; a thin arrow from laptop to GitHub labelled git push; a thin arrow from GitHub to laptop labelled git pull; a pencil on the GitHub box labelled browser edit or upload."}
 
-- **Clone** makes the first copy, once.
-- **Push** sends your new snapshots up. **Pull** brings GitHub's down.
-- A pencil edit or an upload in the browser is a snapshot on GitHub's
-  copy. Nothing arrives on your laptop until you pull.
+- **Clone** makes the first copy, once. Git calls the copy it came from **`origin`**.
+- **Push** hands your new snapshots to GitHub. **Pull** brings GitHub's down.
+- **Not Dropbox.** Nothing moves until you type `push` or `pull`, and `git status` never looks at GitHub.
 
 ::: {.notes}
-Two copies, same timeline, three verbs. There is no 'sync': you say which
-direction, every time. That is a feature.
+Two albums: yours and the shared one. Photos move only when you hand them
+over, push, or ask for them, pull. A pencil edit in the browser is a photo
+in the shared album; nothing arrives on your laptop until you pull. Name
+the thing everyone is picturing: this is not Dropbox. That is a feature,
+and it is the one that will surprise you at least once today.
 :::
 
 :::
@@ -780,11 +809,22 @@ same timeline, and three verbs move it between them.
 - **Pull** brings the snapshots that exist on GitHub down to your
   laptop.
 
-There is no "sync". You say which direction, every time, and nothing
-moves until you say so. That is a feature: a change on one copy never
-surprises you on the other. In particular, a pencil edit or a file upload
-in the browser is a snapshot taken on GitHub's copy only. Nothing arrives
-on your laptop until you pull.
+Git calls the copy a repository was cloned from **`origin`**; the word
+appears in `git status` from the first command. There is no "sync". You
+say which direction, every time, and nothing moves until you say so. The
+picture every student brings to this is Dropbox, and it is the wrong
+one: Dropbox copies every save, both ways, by itself, and one folder is
+in two places. Git keeps two albums, yours and the shared one, and a
+photo moves only when you hand it over or ask for it. A change on one
+copy never surprises you on the other. In particular, a pencil edit or a
+file upload in the browser is a snapshot taken on GitHub's copy only.
+Nothing arrives on your laptop until you pull, and `git status`, which
+never asks GitHub, will not tell you it is there.
+
+One more contrast. GitHub's **Download ZIP** button gives you a print of
+the newest photo: the files as they are now, and no album. A clone is the
+whole album, every snapshot, and it remembers which shared album it came
+from.
 
 :::
 
@@ -817,7 +857,7 @@ opens on its **Local** tab; under *Clone* are three small tabs, and
 beneath shows the repository's address:
 
 ```
-https://github.com/aem6850-cornell/onboarding-ArielOrtizBobea.git
+https://github.com/ArielOrtizBobea/git-practice.git
 ```
 
 Click the copy icon at the right of the box. That address is what every
@@ -825,8 +865,8 @@ clone, push and pull uses to find the remote copy. Three things to know
 about it.
 
 - It is the repository's full name, owner and repository, with
-  `https://github.com/` in front and `.git` on the end. Yours reads
-  `https://github.com/<your-username>/git-practice.git`.
+  `https://github.com/` in front and `.git` on the end. Yours has your
+  username where mine has `ArielOrtizBobea`.
 - The `.git` is part of the address. It is not the hidden folder on your
   laptop, and you do not leave it off.
 - Use the **HTTPS** tab, not SSH and not GitHub CLI. HTTPS is the route
@@ -844,28 +884,28 @@ about it.
 ![](figures/07-git/S06-rstudio-new-project.png){width="100%" fig-alt="RStudio's New Project dialog for a Git repository, with the Repository URL box filled, the subdirectory box showing ~/github, and the Create Project button circled in red."}
 :::
 ::: {.column width="40%"}
-- File → New Project → **Version Control** → **Git**. Paste the URL.
-  Subdirectory: **Browse…** to your `github` folder.
-- **Create Project.** RStudio runs one command, `git clone`. The clone
-  lands in `github/git-practice`.
+- File → New Project → **Version Control** → **Git**. Paste the URL. Subdirectory: **Browse…** to `github`.
+- **Create Project** runs one command, `git clone`. The clone lands in `github/git-practice`.
+- The `.Rproj` marks the top folder; R reads paths from there.
 :::
 ::::
 
 ::: {.notes}
-Clone means: download the whole repository, timeline included, and
-remember where it came from. The dialog is a wrapper on one command, `git
-clone` and the address, which every tutorial and every AI assistant will
-tell you to type; it is printed on the page. And notice: the folder can
-land anywhere on your disk. Your scripts still run, because paths inside a
-project are relative to the project's top folder — that is why
-`hw1.Rproj` sits at the top of hw1.
+Live: paste the address, Browse to the github folder, Create Project.
+Clone means: download the whole album, and remember which shared album
+it came from. The dialog is a wrapper on one command, `git clone` and
+the address, which every tutorial and every AI assistant will tell you to
+type; it is printed on the page. You did this before class; do not do it
+again now, RStudio refuses a folder that exists. And notice: the folder
+can land anywhere on your disk. Your scripts still run, because the
+`.Rproj` marks the top folder and R reads paths from there.
 :::
 
 :::
 
 ::: {.content-hidden when-format="revealjs"}
 
-![The New Project dialog, filled in. The address goes in the top box; the folder that will hold every repository goes in the bottom one, chosen with Browse.](figures/07-git/S06-rstudio-new-project.png){fig-align="center" fig-alt="RStudio's New Project dialog for a Git repository, with the Repository URL box filled, the subdirectory box showing /Users/ao332/github, and the Create Project button circled in red."}
+![The New Project dialog, filled in (the picture shows an earlier repository's address; the boxes are the same). The address goes in the top box; the folder that will hold every repository goes in the bottom one, chosen with Browse.](figures/07-git/S06-rstudio-new-project.png){fig-align="center" fig-alt="RStudio's New Project dialog for a Git repository, with the Repository URL box filled, the subdirectory box showing /Users/ao332/github, and the Create Project button circled in red."}
 
 You did this before class, step 5. Read this section against the project
 you already have, and do not clone a second time: RStudio refuses a
@@ -876,8 +916,7 @@ In RStudio, **File → New Project → Version Control → Git**. Three boxes.
 
 1. **Repository URL.** Paste the address you copied.
 2. **Project directory name.** RStudio fills this in from the address:
-   `git-practice` for yours, `onboarding-ArielOrtizBobea` for mine in the
-   picture. Leave it.
+   `git-practice`. Leave it.
 3. **Create project as subdirectory of.** The box cannot be typed in.
    Click **Browse…** and pick your `github` folder: inside your home
    folder on a Mac, `C:\Users\<you>\github` on Windows.
@@ -904,8 +943,10 @@ that holds the timeline. RStudio adds a project file, `git-practice.Rproj`,
 and restarts inside the new project.
 
 Two things about where the folder lands. First, it can be anywhere on
-your disk and your scripts still run, because paths inside a project are
-relative to the project's top folder. Second, `~` is your home folder on
+your disk and your scripts still run. The `.Rproj` file RStudio added
+marks the top folder of the project: RStudio opens the Terminal there,
+and R reads a path like `data/file.csv` from there, so a script never
+needs to know where on the disk the folder sits. Second, `~` is your home folder on
 a Mac. On Windows, RStudio's `~` is *Documents*, which is why the box gets
 the full path `C:/Users/<you>/github` with forward slashes. The github
 folder is where every repository goes, and it must not be inside Dropbox,
@@ -963,8 +1004,8 @@ icon. Right now it shows two rows with a yellow `?`: `.gitignore` (a list of
 files git should leave alone; explained under
 [.gitignore: what git should not track](#gitignore)) and
 `git-practice.Rproj`, the two files RStudio made when it built the
-project (the picture shows mine, with my repository's name). The pane
-shows the same state a command reports, so you can read
+project (the picture is from an earlier repository; the names differ).
+The pane shows the same state a command reports, so you can read
 it as a mirror of what you typed. It refreshes on a timer, not after every
 command, so it can lag a few seconds; click its refresh icon when it does.
 Watch it for now; do not click in it.
@@ -986,7 +1027,7 @@ git status
 #> Untracked files:
 #>   (use "git add <file>..." to include in what will be committed)
 #>         .gitignore
-#>         onboarding-ArielOrtizBobea.Rproj
+#>         git-practice.Rproj
 #>
 #> nothing added to commit but untracked files present (use "git add" to track)
 ```
@@ -995,12 +1036,9 @@ git status
 
 ::: {.content-visible when-format="revealjs"}
 
-- Line 1: the branch, `main`. Line 2: your copy versus GitHub's
-  (`origin`).
-- **Untracked**: git sees the file; the timeline never has. RStudio made
-  both.
-- The parentheses name the command that moves each file. Read them; they
-  are the manual.
+- Line 1: the branch. Line 2: yours versus GitHub's (`origin`).
+- **Untracked**: git sees the file; the timeline never has. `.gitignore` lists files git should never track (last slide).
+- The parentheses name the command that moves each file: the manual.
 
 ::: {.notes}
 `status` is the one command that can never hurt you. It reads, it never
@@ -1041,8 +1079,8 @@ it is the thing to type. Read its reply line by line.
 
 ```bash
 git log --oneline
-#> d7033eb (HEAD -> main, origin/main, origin/HEAD) add my intro
-#> 2df62e3 Initial commit
+#> 6a952cb (HEAD -> main, origin/main, origin/HEAD) add my intro
+#> 6a25190 Initial commit
 ```
 
 ::: {.content-visible when-format="revealjs"}
@@ -1056,7 +1094,7 @@ git log --oneline
   Press `q`.
 
 ::: {.notes}
-This is the picture from slide 2.1 as text. The verb for 'show me the
+This is the folder-plus-timeline picture from slide 8, as text. The verb for 'show me the
 timeline' is `log`. Same hashes as the browser: that is the proof a clone
 is the timeline, not a download.
 :::
@@ -1096,7 +1134,7 @@ press `q`.
 ```bash
 # Exercise 1 (7 minutes). Your git-practice repository, on your laptop.
 #
-# 1. Save your open hw1 scripts first: switching projects restarts R
+# 1. Save any open scripts first: switching projects restarts R
 #    and empties the Environment. Then open the project you cloned
 #    before class: File > Recent Projects > git-practice.
 #    Not cloned before class? Use the browser path under this box now;
@@ -1131,8 +1169,8 @@ minutes of the exercise.
 
 ```bash
 git log --oneline
-#> d7033eb (HEAD -> main, origin/main, origin/HEAD) add my intro
-#> 2df62e3 Initial commit
+#> 6a952cb (HEAD -> main, origin/main, origin/HEAD) add my intro    # your hashes differ
+#> 6a25190 Initial commit
 git status
 #> On branch main
 #> Your branch is up to date with 'origin/main'.
@@ -1208,17 +1246,17 @@ with a working clone and read their `git status` once.
 
 ::: {.content-visible when-format="revealjs"}
 
-![](figures/07-git/D3-three-places.svg){fig-align="center" height="470" fig-alt="Three columns labelled Working folder, Staging area and History. An arrow labelled git add runs from the first column to the second and an arrow labelled git commit -m from the second to the third. Brackets beneath mark git diff between the first two columns and git diff --staged between the last two. A bar along the bottom reads git status: reads all three, changes nothing."}
+![](figures/07-git/D3d-four-places.svg){fig-align="center" height="440" fig-alt="Four columns: Working folder, the desk; Staging area, what is in the frame; History, the album; and a dashed fourth column, GitHub, the shared album. Arrows along the top read git add, into the frame; git commit -m, press the shutter; git push, hand over the new photos. An arrow back from GitHub to History reads git pull. Brackets beneath mark git diff between the first two columns and git diff --staged between the next two. A bar along the bottom reads git status: reads these three, changes nothing, never asks GitHub."}
 
 ::: {.notes}
-A change is in exactly one of three places. The working folder: the files as you see them in RStudio. The staging area: the list of what the next snapshot will include. History: the timeline. Two verbs move a change to the right: `add`, then `commit`. `status` reads all three and changes nothing. `diff` compares the first two; `diff --staged` compares the last two. Think of it as a shopping cart: the working folder is the store, staging is the cart, commit is *Place order*. Place order does not ship anything. The order sits on your laptop until `git push`, which is the delivery. That is the whole model. Every command in the next ten minutes is one arrow on this picture. Same rule as before: watch now, type in the exercise.
+A change is in exactly one of three places on your laptop. Think of a camera. The working folder is your desk as it is right now: the files as you see them in RStudio. The staging area is what you have put in the frame. `git commit -m` presses the shutter: one photo of the whole folder, with a caption on the back. History is the album. Two verbs move a change to the right: `add`, then `commit`. `diff` is desk against frame; `diff --staged` is frame against the last photo, what the shutter will see. `status` looks at all three and touches nothing. The fourth column is not on your laptop: `push` hands the new photos to the shared album on GitHub, `pull` brings down the ones you do not have, and `status` never looks there. That is the whole model. Every command in the next ten minutes is one arrow on this picture. Same rule as before: watch now, type in the exercise.
 :::
 
 :::
 
 ::: {.content-hidden when-format="revealjs"}
 
-![A change sits in one of the three columns. The two arrows along the top move it right; the two brackets beneath compare neighbouring columns; the bar at the bottom reads everything and changes nothing.](figures/07-git/D3-three-places.svg){fig-align="center" fig-alt="Three columns labelled Working folder, Staging area and History. An arrow labelled git add runs from the first column to the second and an arrow labelled git commit -m from the second to the third. Brackets beneath mark git diff between the first two columns and git diff --staged between the last two. A bar along the bottom reads git status: reads all three, changes nothing."}
+![A change sits in one of the three columns on your laptop. The arrows along the top move it right; the brackets beneath compare neighbouring columns; the bar at the bottom reads the three and changes nothing. The dashed fourth column is GitHub's copy, reached only by push and pull.](figures/07-git/D3d-four-places.svg){fig-align="center" fig-alt="Four columns: Working folder, the desk; Staging area, what is in the frame; History, the album; and a dashed fourth column, GitHub, the shared album. Arrows along the top read git add, into the frame; git commit -m, press the shutter; git push, hand over the new photos. An arrow back from GitHub to History reads git pull. Brackets beneath mark git diff between the first two columns and git diff --staged between the next two. A bar along the bottom reads git status: reads these three, changes nothing, never asks GitHub."}
 
 A change is in exactly one of three places, and every command in this
 section moves it from one to the next or reports where it is.
@@ -1229,9 +1267,12 @@ the **working tree**, and that is the word `git status` prints. When you
 save a file, the change is here and nowhere else.
 
 The **staging area** is the list of changes that the next snapshot will
-include. It is a list, not a copy of the folder: you put a change on it
-with `git add`, and until you do, the change is not going into the next
-commit. History is the timeline itself, the snapshots that already exist.
+include. `git add` puts a file on it as the file is at that moment: git
+copies the file into the staging area when you type `add`, and the next
+commit records that copy. Edit the file again after `add` and the staged
+copy is the old one until you `add` it again. Until you add a change, it
+is not going into the next commit. **History** is the timeline itself,
+the snapshots that already exist.
 
 Two verbs move a change to the right. `git add` moves it from the working
 folder to the staging area. `git commit -m` moves everything on the
@@ -1246,68 +1287,230 @@ again. That is the dashed arrow from history back to the working folder
 on the picture, and that is the state git calls clean, defined two
 sections down.
 
-::: {.callout-note title="The shopping cart"}
-The working folder is the store: everything you could buy is on the
-shelf. Staging is the cart at checkout, where you can still take things
-out. Commit is *Place order*; the confirmation number is the hash, and
-`git log` is your order history. Place order does not ship anything: the
-order sits on your laptop until `git push`, which is the delivery. The
-checkout step exists so you can look at exactly what you are about to
-make permanent, and so you can order half of what is in the cart now and
-the other half later.
+::: {.callout-note title="The camera"}
+The working folder is your desk as it is right now. The staging area is
+what you have put in the frame. `git commit -m` presses the shutter: one
+photo of the whole desk, with a caption on the back, and the album is
+the history. `git diff` is the desk against the frame; `git diff --staged`
+is the frame against the last photo, exactly what the shutter will see,
+so look before you press. You can frame half of what is on the desk now
+and photograph the rest later, and you can take something out of the
+frame without touching the desk. The fourth column is not on your laptop:
+`git push` hands your new photos to the shared album on GitHub, and
+`git pull` brings down the photos you do not have yet. `git status` looks
+at the three columns on your desk and never at the shared album.
 :::
 
-The sections up to `git push` run the loop once on the two files RStudio made,
-then again on an edit and a new file. In class you watch these; at home
-you can type them in your own `git-practice` project. If you do, your counts
-differ later: Exercise 2 will show more than 3 commits, its two RStudio
-files will already be committed, and Practice 1 has nothing left to
-stage. That is fine; the answers in the room assume you only watched.
-Read each `git status` before the next command; it tells you which column
-you are in.
+The sections up to `git push` run the loop once, on one change to
+`README.md`, and Exercise 2 asks you to do the same. After the exercise
+the loop runs again on a new file, where the staging area earns its keep.
+In class you watch the first loop and type it in the exercise; at home
+you can type all of it in your own `git-practice` project. If you do,
+your counts differ: Exercise 2 will show more than 3 commits, and
+Practice 1 may have nothing left to stage. That is fine; the answers in
+the room assume you only watched. Read each `git status` before the next
+command; it tells you which column you are in.
 
 :::
 
-## git add: put a change in the staging area {#add}
-
-```bash
-git add .gitignore onboarding-ArielOrtizBobea.Rproj
-git status
-#> On branch main
-#> Your branch is up to date with 'origin/main'.
-#>
-#> Changes to be committed:
-#>   (use "git restore --staged <file>..." to unstage)
-#>         new file:   .gitignore
-#>         new file:   onboarding-ArielOrtizBobea.Rproj
-```
+## Edit a file: git status {#edit}
 
 ::: {.content-visible when-format="revealjs"}
 
-- `add` prints nothing. Silence is success.
-- One heading now: `Changes to be committed`. That is the staging area. The hint names the undo for this step; it comes at the end of the hour.
-- Nothing is permanent yet. The timeline has not moved. In the Git pane both rows show a green **A** with the *Staged* box ticked.
+```bash
+git status
+#> ...
+#> Changes not staged for commit:
+#>   (use "git add <file>..." to update what will be committed)
+#>   (use "git restore <file>..." to discard changes in working directory)
+#>         modified:   README.md
+#>
+#> Untracked files:
+#>         .gitignore
+#>         git-practice.Rproj
+```
+
+- `modified`: a file the timeline knows, changed on disk. On the desk and nowhere else. (`...`: lines seen on an earlier slide.)
+- The two untracked files are still listed. Git names everything undecided, every time, and does nothing about it.
+- The hints name the verb for each move. Git pane: a blue **M** beside the two yellow **?**.
 
 ::: {.notes}
-The verb for "this goes in the next snapshot" is `add`. You name the files. Naming them is the habit that keeps data out of a repository.
+Live: in RStudio open `README.md`, add the line `I cloned this repository to my laptop.` at the end, save. Then `git status`. One change, one place. Nothing is in the frame yet, nothing is in the album. Read the hints: git prints the verb for each move right next to the file. The page shows one more hint line with `-a` in it; ignore `-a` today, it skips the step we are here to learn.
 :::
 
 :::
 
 ::: {.content-hidden when-format="revealjs"}
 
-In the Terminal tab, type `git add`, a space, and the names of the two
-files, then press Enter. On your laptop the second file is
-`git-practice.Rproj` (the block shows mine); type the first few letters
-and press Tab, and the terminal completes the name. `add` prints nothing.
-Silence is success.
+An edit to a file the timeline already has. In the Files pane click
+`README.md`; it opens in the editor. Go to the end of the file, add the
+line
 
-Type `git status` and press Enter. The two files have moved from
-`Untracked files` to a new heading, `Changes to be committed`. That
-heading is the staging area. A change listed there is **staged**: it is
-on the list for the next snapshot, and nothing else has happened to it.
-Each row now starts with `new file:` instead of nothing, because git is
-telling you what kind of change it will record.
+```
+I cloned this repository to my laptop.
+```
+
+and save (Cmd+S on a Mac, Ctrl+S on Windows). Now type `git status` in
+the Terminal tab and press Enter.
+
+```bash
+git status
+#> On branch main
+#> Your branch is up to date with 'origin/main'.
+#>
+#> Changes not staged for commit:
+#>   (use "git add <file>..." to update what will be committed)
+#>   (use "git restore <file>..." to discard changes in working directory)
+#>         modified:   README.md
+#>
+#> Untracked files:
+#>   (use "git add <file>..." to include in what will be committed)
+#>         .gitignore
+#>         git-practice.Rproj
+#>
+#> no changes added to commit (use "git add" and/or "git commit -a")
+```
+
+A new heading, `Changes not staged for commit`. `README.md` is
+**modified**: a file the timeline knows, changed on disk since the newest
+snapshot. The change is in the working folder and only there: it is not
+staged, and it is not in history. The two files RStudio made are still
+under `Untracked files`, where they were before. Git lists everything you
+have not decided about, every time you ask, and never does anything about
+them on its own.
+
+Read the hints in parentheses. Git prints the verb for each move right
+next to the file: `git add` to stage the edit, `git restore` to throw it
+away. The last line mentions `git commit -a`. Ignore `-a` today; it stages
+every modified file and commits in one step, which skips the step this
+section is about.
+
+In the Git pane, `README.md` shows a blue **M** beside the two yellow
+**?**. The pane and the command read the same state.
+
+:::
+
+## git diff: what changed in the working folder {#diff}
+
+```bash
+git diff
+#> diff --git a/README.md b/README.md
+#> index 863ff77..57434f7 100644
+#> --- a/README.md
+#> +++ b/README.md
+#> @@ -1,2 +1,3 @@
+#>  # git-practice
+#>  Ariel Ortiz-Bobea, Dyson School, Cornell.
+#> +I cloned this repository to my laptop.
+```
+
+::: {.content-visible when-format="revealjs"}
+
+- Start reading at `---`; the two lines above are bookkeeping. Two lines of context, then one `+` and no `-`.
+- Say it in one sentence: *one line added, none removed, at the end of the file.* That sentence is the whole review.
+- In the Terminal git colours `-` red and `+` green; the slide cannot, so read the first character of each line.
+
+::: {.notes}
+`diff` is the desk against the frame. Nothing is in the frame, so the frame equals the last photo, and this is everything that changed since that photo. Read it once, out loud: one line added, none removed, at the end of the file. If you cannot say that sentence about a diff, do not commit it.
+:::
+
+:::
+
+::: {.content-hidden when-format="revealjs"}
+
+Type `git diff` and press Enter. It compares the working folder with the
+staging area. Nothing is staged right now, so the staging area equals the
+newest snapshot, and what prints is the change since that snapshot.
+
+Start reading at `---`. The two lines above it name the file, the two
+versions being compared and a permission code; skip them. `--- a/` is the
+old version and `+++ b/` the new one. The `@@` line says where in the
+file: old lines 1 to 2, new lines 1 to 3. The two lines that begin with a
+space are context, unchanged. The last line begins with `+`: one line
+added, at the end of the file. No line begins with `-`, so nothing was
+removed.
+
+Say that sentence back: one line added, none removed, at the end of the
+file. That sentence is the whole review. If you cannot say it about a
+diff, do not commit the diff.
+
+In the Terminal, git colours a `-` line red and a `+` line green; the
+block above cannot, so read the first character of each line. If the
+screen fills and the prompt disappears, that is the pager. Press `q` to
+get the prompt back.
+
+::: {.panel-tabset}
+
+### Terminal
+
+1. Type `git diff` and press Enter.
+2. Find the lines that begin with `-` or `+`. Say in one sentence what changed.
+3. If the prompt is gone and the last line shows `:`, press `q`.
+
+### RStudio Git pane
+
+1. In the Git pane, click `README.md`, then click **Diff** in the toolbar.
+2. The *Review Changes* window opens with the file's diff on the right: the added line in green, two lines of context above it, and no red line, because nothing was removed.
+3. At the top of the diff, *Show: Unstaged* is `git diff`; switch it to *Staged* and the window shows `git diff --staged` instead.
+
+:::
+
+:::
+
+## git add: put a change in the frame {#add}
+
+::: {.content-visible when-format="revealjs"}
+
+```bash
+git add README.md
+git status
+#> ...
+#> Changes to be committed:
+#>   (use "git restore --staged <file>..." to unstage)
+#>         modified:   README.md
+#>
+#> Untracked files:
+#>         .gitignore
+#>         git-practice.Rproj
+```
+
+- `add` prints nothing. Silence is success.
+- `Changes to be committed`: the staging area. `README.md` is in the frame; the two untracked files are not, because you did not name them.
+- Nothing is permanent yet. The hint names the undo for this step. Git pane: the *Staged* box beside `README.md` is ticked.
+
+::: {.notes}
+The verb for "this goes in the next photo" is `add`. You name the file. Naming files is the habit that keeps data out of a repository: a file you never name never gets in. Nothing has been photographed; the frame is set, that is all.
+:::
+
+:::
+
+::: {.content-hidden when-format="revealjs"}
+
+```bash
+git add README.md
+git status
+#> On branch main
+#> Your branch is up to date with 'origin/main'.
+#>
+#> Changes to be committed:
+#>   (use "git restore --staged <file>..." to unstage)
+#>         modified:   README.md
+#>
+#> Untracked files:
+#>   (use "git add <file>..." to include in what will be committed)
+#>         .gitignore
+#>         git-practice.Rproj
+```
+
+In the Terminal tab, type `git add README.md` and press Enter. `add`
+prints nothing. Silence is success.
+
+Type `git status` and press Enter. `README.md` has moved from
+`Changes not staged for commit` to a new heading, `Changes to be
+committed`. That heading is the staging area. A change listed there is
+**staged**: it is in the frame for the next snapshot, and nothing else
+has happened to it. The two files RStudio made are still untracked: you
+did not name them, so they stay where they were.
 
 Nothing is permanent yet. The timeline has not moved, and the line under
 `On branch main` still says you are up to date with GitHub's copy. The
@@ -1326,14 +1529,14 @@ of a repository: a file you never name never gets in.
 
 ### Terminal
 
-1. Type `git add .gitignore git-practice.Rproj` and press Enter. Nothing prints.
-2. Type `git status` and press Enter. Both files sit under `Changes to be committed`.
+1. Type `git add README.md` and press Enter. Nothing prints.
+2. Type `git status` and press Enter. `README.md` sits under `Changes to be committed`.
 
 ### RStudio Git pane
 
-1. In the Git pane (top right), find the two rows. Each shows a yellow `?` in the *Status* column.
-2. Tick the box in the *Staged* column beside each file. The `?` becomes a green **A**.
-3. That tick is `git add`. Run `git status` in the Terminal and the two files sit under `Changes to be committed`.
+1. In the Git pane (top right), find the row for `README.md`. It shows a blue **M** in the *Status* column.
+2. Tick the box in the *Staged* column beside it.
+3. That tick is `git add`. Run `git status` in the Terminal and `README.md` sits under `Changes to be committed`.
 
 ![The Staged column on the left is the git add checkbox; the diff on the right of the Review Changes window is what git diff prints.](figures/07-git/S15-rstudio-git-pane-diff.png){fig-align="center" fig-alt="RStudio's Git pane listing one modified file and one untracked file, and the Review Changes window open beside it with a diff showing red and green lines. The Staged checkbox column and the diff pane are circled."}
 
@@ -1346,23 +1549,23 @@ of a repository: a file you never name never gets in.
 ::: {.content-visible when-format="revealjs"}
 
 ```bash
-git commit -m "Add the files RStudio made for the project"
-#> [main edd5c7f] Add the files RStudio made for the project
-#>  2 files changed, 18 insertions(+)
+git commit -m "Note the clone in README"
+#> [main 8dd074b] Note the clone in README
+#>  1 file changed, 1 insertion(+)
 git status
 #> On branch main
 #> Your branch is ahead of 'origin/main' by 1 commit.
 #>   (use "git push" to publish your local commits)
-#>
-#> nothing to commit, working tree clean
+#> ...
 ```
 
-- `-m` is the message. Every commit has one. It says **why**.
-- The reply names the timeline, the new ID, and what went in.
-- `working tree clean`: the working folder matches the newest snapshot. And a new line: *ahead of origin/main by 1*.
+- `-m` is the caption. Every commit has one. It says **why**.
+- The receipt: the timeline, the new ID, what went in. One file, one line: the diff, counted.
+- *Ahead of origin/main by 1*: your timeline is one photo longer than GitHub's.
+- Forgot `-m`? A screen asks for the caption: `Esc`, `:q!`, Enter backs out (Windows: close Notepad); then `-m`.
 
 ::: {.notes}
-Place order. The receipt has the hash and a count of what changed. And status now says two things: nothing pending here, and GitHub is behind. That second line is the cue for a command we get to after the exercise. Forget `-m` and git opens an editor to ask for the message; the next slide shows that screen.
+Press the shutter. The receipt has the hash and a count of what changed; if the count ever surprises you, you skipped the diff. Status now says two things: nothing pending on the desk except the two files we never framed, and GitHub is behind by one. That second line is the cue for the next command. The page shows the screen you get when you forget `-m`.
 :::
 
 :::
@@ -1370,36 +1573,43 @@ Place order. The receipt has the hash and a count of what changed. And status no
 ::: {.content-hidden when-format="revealjs"}
 
 ```bash
-git commit -m "Add the files RStudio made for the project"
-#> [main edd5c7f] Add the files RStudio made for the project
-#>  2 files changed, 18 insertions(+)
-#>  create mode 100644 .gitignore
-#>  create mode 100644 onboarding-ArielOrtizBobea.Rproj
+git commit -m "Note the clone in README"
+#> [main 8dd074b] Note the clone in README
+#>  1 file changed, 1 insertion(+)
 git status
 #> On branch main
 #> Your branch is ahead of 'origin/main' by 1 commit.
 #>   (use "git push" to publish your local commits)
 #>
-#> nothing to commit, working tree clean
+#> Untracked files:
+#>   (use "git add <file>..." to include in what will be committed)
+#>         .gitignore
+#>         git-practice.Rproj
+#>
+#> nothing added to commit but untracked files present (use "git add" to track)
 ```
 
 Type `git commit -m`, a space, and a message in double quotes, then
-press Enter. `-m` stands for message. Every commit has one, and it says
-why the change was made, not what file it touched: git already knows the
-file.
+press Enter. `-m` stands for message: the caption on the back of the
+photo. Every commit has one, and it says why the change was made, not
+what file it touched: git already knows the file.
 
 Git replies with a receipt. The first line names the timeline (`main`),
 the new commit's hash (yours will differ), and your message. The second
-line counts what went in: two files, eighteen added lines. The
-`create mode` lines are bookkeeping about file permissions; skip them.
+line counts what went in: one file, one added line, which is the diff you
+just read, counted. If the count ever surprises you, you skipped the
+diff.
 
-Type `git status` again. Two things changed. The last line now reads
-`nothing to commit, working tree clean`. A working folder is **clean**
-when it matches the newest snapshot exactly: no edited file, nothing on
-the staging list, nothing waiting. And a new line appeared under `On branch main`:
+Type `git status` again. `README.md` has left the list: the edit is in
+history, and the working copy of the file matches the newest snapshot.
+The two untracked files are still there, and git still does nothing
+about them. A new line appeared under `On branch main`:
 `Your branch is ahead of 'origin/main' by 1 commit.` Your timeline is one
 snapshot longer than GitHub's copy. The hint beneath it names the command
-that fixes that; it comes after the exercise.
+that fixes that; it comes two sections down. (A working folder with
+nothing modified and nothing staged is what git calls **clean**; with the
+two untracked files still present, git says so in the last line rather
+than printing `working tree clean`. They are not in the way.)
 
 Two symptoms mean the identity step was skipped (the two
 `git config --global` lines in Before class, step 3). The first is the
@@ -1414,19 +1624,21 @@ the next commits carry your name. Leave the existing commit alone.
 
 ### Terminal
 
-1. Type `git commit -m "Add the files RStudio made for the project"` and press Enter. Read the second line of the reply: `2 files changed`.
-2. Type `git status` and press Enter. The last line says `working tree clean`; the second line says `ahead of 'origin/main' by 1 commit`.
+1. Type `git commit -m "Note the clone in README"` and press Enter. Read the second line of the reply: `1 file changed, 1 insertion(+)`.
+2. Type `git status` and press Enter. The second line says `ahead of 'origin/main' by 1 commit`.
 
 ### RStudio Git pane
 
-1. With both boxes ticked in the *Staged* column, click **Commit** in the Git pane toolbar.
+1. With the *Staged* box ticked beside `README.md`, click **Commit** in the Git pane toolbar.
 2. The *Review Changes* window opens: the file list on the left, the diff on the right, and a *Commit message* box at the top right. Type the message in that box.
 3. Click **Commit** under the box. A small window prints the same receipt as the Terminal; close it.
-4. The Git pane is empty now. Open **Commit** again and the Review Changes window's top line reads *Your branch is ahead of 'origin/main' by 1 commit.*
+4. `README.md` has left the Git pane. Open **Commit** again and the Review Changes window's top line reads *Your branch is ahead of 'origin/main' by 1 commit.*
 
 :::
 
 :::
+
+::: {.content-hidden when-format="revealjs"}
 
 ## A screen that asks for a message {#editor}
 
@@ -1439,16 +1651,6 @@ the next commits carry your name. Leave the existing commit alone.
 - **Mac (vim), back out and use `-m` instead:** `Esc`, then `:q!`, Enter. Git prints `Aborting commit due to empty commit message.`; nothing is lost. Then `git commit -m "…"`.
 - **Mac (vim), type the message here:** press `i`, type it on the first line, `Esc`, then `:wq`, Enter.
 - **Windows (Notepad):** type the message on the first line, save, close the window. Close it empty and git aborts the commit; nothing is lost.
-
-::: {.content-visible when-format="revealjs"}
-
-::: {.notes}
-This is not an error and nothing is broken. Git wants a message. The simplest way out: Escape, colon, q, exclamation mark, Enter backs out with nothing lost, then commit again with `-m`. Or press i, type the message, Escape, colon, w, q, Enter. On Windows it is Notepad: type, save, close.
-:::
-
-:::
-
-::: {.content-hidden when-format="revealjs"}
 
 Forget `-m` and git opens an editor to ask for the message. The screen
 above is the top of it. Nothing is broken; git is waiting for you to
@@ -1476,412 +1678,27 @@ triggered.
 
 :::
 
-## Edit a file, save a new one: git status {#edit}
-
-::: {.content-visible when-format="revealjs"}
-
-```bash
-git status
-#> ...
-#> Changes not staged for commit:
-#>   (use "git add <file>..." to update what will be committed)
-#>   (use "git restore <file>..." to discard changes in working directory)
-#>         modified:   README.md
-#>
-#> Untracked files:
-#>   (use "git add <file>..." to include in what will be committed)
-#>         analysis.R
-```
-
-*`...` stands for lines you have already seen on an earlier slide.*
-
-- Two headings. `modified`: a file the timeline knows, changed on disk. `Untracked`: a file the timeline has never seen.
-- Both are in the working folder and only there.
-- The Git pane shows a blue **M** and a yellow **?**.
-
-::: {.notes}
-Live: in RStudio open `README.md`, add the line `I cloned this repository to my laptop.` at the end, save. Then File → New File → R Script, paste the three lines of `analysis.R` from the clipboard, never typed, Cmd+S, name it `analysis.R` in the project. Three lines, printed on the page.
-
-Two kinds of change, two headings, one place. Neither is staged, neither is in history. Read the hints: git prints the verb for each move right next to the file. The page shows one more hint line with `-a` in it; ignore `-a` today, it skips the step we are here to learn.
-:::
-
-:::
-
-::: {.content-hidden when-format="revealjs"}
-
-Two changes, of two kinds. First an edit to a file the timeline already
-has. In the Files pane click `README.md`; it opens in the editor. Go to
-the end of the file, add the line
-
-```
-I cloned this repository to my laptop.
-```
-
-and save (Cmd+S on a Mac, Ctrl+S on Windows). Second, a new file the
-timeline has never seen. *File → New File → R Script* opens an empty
-editor tab. Paste these three lines:
-
-```r
-# analysis.R -- days above the PM2.5 standard
-STANDARD <- 35
-pm <- read.csv("data/epa_pm25_la_fires_2024_2025.csv")
-```
-
-Save with Cmd+S or Ctrl+S; the save dialog opens in the project folder,
-which is where the file belongs. Name it `analysis.R`. Now type
-`git status` in the Terminal tab and press Enter.
-
-```bash
-git status
-#> On branch main
-#> Your branch is ahead of 'origin/main' by 1 commit.
-#>   (use "git push" to publish your local commits)
-#>
-#> Changes not staged for commit:
-#>   (use "git add <file>..." to update what will be committed)
-#>   (use "git restore <file>..." to discard changes in working directory)
-#>         modified:   README.md
-#>
-#> Untracked files:
-#>   (use "git add <file>..." to include in what will be committed)
-#>         analysis.R
-#>
-#> no changes added to commit (use "git add" and/or "git commit -a")
-```
-
-Two headings, two kinds of change, one place. `README.md` is
-**modified**: a file the timeline knows, changed on disk since the newest
-snapshot. `analysis.R` is untracked: the timeline has never seen it. Both
-changes are in the working folder and only there. Neither is staged, and
-neither is in history.
-
-Read the hints in parentheses. Git prints the verb for each move right
-next to the file: `git add` to stage either one, `git restore` to throw
-the README edit away. The last line mentions `git commit -a`. Ignore `-a`
-today; it stages every modified file and commits in one step, which skips
-the step this section is about.
-
-In the Git pane, `README.md` shows a blue **M** and `analysis.R` a yellow
-**?**. The pane and the command read the same state.
-
-:::
-
-## git diff: what changed in the working folder {#diff}
-
-::: {.content-visible when-format="revealjs"}
-
-```bash
-git diff
-#> diff --git a/README.md b/README.md
-#> index 42709cc..ea4cd2e 100644
-#> --- a/README.md
-#> +++ b/README.md
-#> @@ -17,3 +17,4 @@ One dataset or question …
-#>  When your text shows on the repository's front page with your commit
-#>  message above it, you are done. Paste the repository's URL into the
-#>  poll on screen.
-#> +I cloned this repository to my laptop.
-```
-
-- Start reading at `---`; the two lines above are bookkeeping. One `+`, no `-`: one line added at the end.
-- `analysis.R` is missing: untracked files are not diffed. `git status` lists them.
-- In the Terminal git colours `-` red and `+` green; the slide cannot, so read the first character of each line.
-
-::: {.notes}
-`diff` compares the working folder with staging. Nothing is staged, so staging equals the newest snapshot, and this is the change since that snapshot. Read it once, out loud: one line added, none removed, at the end of the file. That sentence is the whole review. If you cannot say that sentence about a diff, do not commit it.
-:::
-
-:::
-
-::: {.content-hidden when-format="revealjs"}
-
-```bash
-git diff
-#> diff --git a/README.md b/README.md
-#> index 42709cc..ea4cd2e 100644
-#> --- a/README.md
-#> +++ b/README.md
-#> @@ -17,3 +17,4 @@ One dataset or question I would like to be able to handle by December: PM2.5 dur
-#>  When your text shows on the repository's front page with your commit
-#>  message above it, you are done. Paste the repository's URL into the
-#>  poll on screen.
-#> +I cloned this repository to my laptop.
-```
-
-Type `git diff` and press Enter. It compares the working folder with the
-staging area. Nothing is staged right now, so the staging area equals the
-newest snapshot, and what prints is the change since that snapshot.
-
-Start reading at `---`. The two lines above it name the file, the two
-versions being compared and a permission code; skip them. `--- a/` is the
-old version and `+++ b/` the new one. The `@@` line says where in the
-file: old lines 17 to 19, new lines 17 to 20, and after the second `@@`
-git prints the nearest line above the change so you know where you are
-(here it is the start of the README's last question, cut at 80
-characters). The three lines that begin with a space are context,
-unchanged. The last line begins with `+`: one line added, at the end of
-the file. No line begins with `-`, so nothing was removed.
-
-Say that sentence back: one line added, none removed, at the end of the
-file. That sentence is the whole review. If you cannot say it about a
-diff, do not commit the diff.
-
-`analysis.R` does not appear. Untracked files are not diffed: there is no
-old version of a file the timeline has never seen, so there is nothing to
-compare it with. `git status` is where untracked files are listed. In the
-Terminal, git colours a `-` line red and a `+` line green; the block
-above cannot, so read the first character of each line.
-
-If the screen fills and the prompt disappears, that is the pager. Press
-`q` to get the prompt back.
-
-::: {.panel-tabset}
-
-### Terminal
-
-1. Type `git diff` and press Enter.
-2. Find the lines that begin with `-` or `+`. Say in one sentence what changed.
-3. If the prompt is gone and the last line shows `:`, press `q`.
-
-### RStudio Git pane
-
-1. In the Git pane, click `README.md`, then click **Diff** in the toolbar.
-2. The *Review Changes* window opens with the file's diff on the right: the added line in green, three lines of context above it, and no red line, because nothing was removed.
-3. At the top of the diff, *Show: Unstaged* is `git diff`; switch it to *Staged* and the window shows `git diff --staged` instead.
-
-:::
-
-:::
-
-## git diff --staged: the next commit, exactly {#diff-staged}
-
-```bash
-git add analysis.R
-git diff --staged
-#> diff --git a/analysis.R b/analysis.R
-#> new file mode 100644
-#> index 0000000..a3eb8fb
-#> --- /dev/null
-#> +++ b/analysis.R
-#> @@ -0,0 +1,3 @@
-#> +# analysis.R -- days above the PM2.5 standard
-#> +STANDARD <- 35
-#> +pm <- read.csv("data/epa_pm25_la_fires_2024_2025.csv")
-```
-
-::: {.content-visible when-format="revealjs"}
-
-- `git diff --staged` compares staging with the newest snapshot: the next commit, exactly. `/dev/null` is the old version of a file that did not exist.
-- Read `--staged` before every `commit`.
-
-::: {.notes}
-I staged one of the two changes: `analysis.R` is in the cart, the README edit is still on the shelf. Same picture, different column. `diff` is the arrow between columns one and two; `diff --staged` is the arrow between two and three. The second one is the last look before you place the order.
-:::
-
-:::
-
-::: {.content-hidden when-format="revealjs"}
-
-Type `git add analysis.R` and press Enter. Nothing prints. Only one of the
-two changes is staged now: `analysis.R` is in the cart, and the README
-edit is still on the shelf.
-
-Type `git diff --staged` and press Enter. This compares the staging area
-with the newest snapshot, so what prints is the next commit, exactly.
-The old version is `/dev/null`: the file did not exist before, so every
-one of its three lines is a `+`. The `@@` line says the same thing in
-numbers: zero old lines, three new ones.
-
-If you run `git status` at this point, it lists a file under each
-heading: `analysis.R` under `Changes to be committed`, and `README.md`
-under `Changes not staged for commit`. That is what the staging area is
-for. You choose what the next snapshot contains, and the rest waits.
-Practice 3 makes you do this on purpose.
-
-Read `git diff --staged` before every commit. It is the last look before
-you place the order, and it is the one that shows exactly what you are
-about to make permanent.
-
-:::
-
-## git commit: one change per commit {#commit-2}
-
-::: {.content-visible when-format="revealjs"}
-
-```bash
-git commit -m "Add analysis.R with the standard"
-#> [main 83123a4] Add analysis.R with the standard
-#>  1 file changed, 3 insertions(+)
-#>  create mode 100644 analysis.R
-git status
-#> On branch main
-#> Your branch is ahead of 'origin/main' by 2 commits.
-#>   (use "git push" to publish your local commits)
-#>
-#> Changes not staged for commit:
-#>         modified:   README.md
-```
-
-- One file, three lines: the diff on the last slide, counted. If the number surprises you, you skipped the diff.
-- `README.md` is still modified and still unstaged. The commit took only what was in the cart. Ahead by 2 now.
-
-::: {.notes}
-README is still on the shelf; the commit took only what was in the cart. Two changes, two commits. The README edit is its own snapshot with its own message. If a message needs the word "and", it is two commits.
-:::
-
-:::
-
-::: {.content-hidden when-format="revealjs"}
-
-```bash
-git commit -m "Add analysis.R with the standard"
-#> [main 83123a4] Add analysis.R with the standard
-#>  1 file changed, 3 insertions(+)
-#>  create mode 100644 analysis.R
-git status
-#> On branch main
-#> Your branch is ahead of 'origin/main' by 2 commits.
-#>   (use "git push" to publish your local commits)
-#>
-#> Changes not staged for commit:
-#>   (use "git add <file>..." to update what will be committed)
-#>   (use "git restore <file>..." to discard changes in working directory)
-#>         modified:   README.md
-#>
-#> no changes added to commit (use "git add" and/or "git commit -a")
-```
-
-Type `git commit -m "Add analysis.R with the standard"` and press Enter.
-The receipt says one file changed, three insertions. That is the diff you
-just read, counted. If the count ever surprises you, you skipped the
-diff.
-
-Type `git status`. `README.md` is still modified and still unstaged. The
-commit took only what was in the cart, and the README edit was never put
-there. The line under `On branch main` now says ahead by 2 commits: two
-snapshots on your timeline that GitHub does not have.
-
-Two changes, two commits. The README edit gets its own snapshot with its
-own message. If a message would need the word "and", it is two commits.
-
-:::
-
-## The second commit, and the timeline so far {#commit-3}
-
-```bash
-git add README.md
-git commit -m "Note the clone in README"
-#> [main c14d3a8] Note the clone in README
-#>  1 file changed, 1 insertion(+)
-git log --oneline
-#> c14d3a8 (HEAD -> main) Note the clone in README
-#> 83123a4 Add analysis.R with the standard
-#> edd5c7f Add the files RStudio made for the project
-#> d7033eb (origin/main, origin/HEAD) add my intro
-#> 2df62e3 Initial commit
-```
-
-::: {.content-visible when-format="revealjs"}
-
-- Five snapshots. Three are new and GitHub has none of them: `origin/main` still sits on `add my intro`.
-- Read the messages bottom to top and you have the story of the project. That only works if the sentences say something.
-
-::: {.notes}
-Same four commands, three times now. It will be the same four commands in December. Read the messages bottom to top: they are the diary of this project. One logical change per commit, and if the message needs the word "and", it is two commits. The page has a table of messages that say why and messages that say nothing. And say the picture back to me: save puts a change in column one, `add` moves it to column two, `commit` moves it to column three and the working folder is clean again.
-:::
-
-:::
-
-::: {.content-hidden when-format="revealjs"}
-
-Type `git add README.md`, Enter, then
-`git commit -m "Note the clone in README"`, Enter. One file, one
-insertion: the README line from the diff you read two sections ago. Then
-`git log --oneline`.
-
-Five snapshots, newest first. `HEAD -> main` sits on the top line: that
-is where your timeline ends. `origin/main` sits four lines down, on
-`add my intro`: that is where GitHub's copy ends. The three commits
-between them are new, and GitHub has none of them yet.
-
-Read the messages bottom to top and you have the story of the project in
-five lines. That only works if each sentence says something. The next
-section is about writing ones that do.
-
-Say the picture back to yourself before moving on. Saving a file puts a
-change in the working folder. `git add` moves it to the staging area.
-`git commit` moves it into history, and the working folder is clean
-again. Same four commands, three times now, and the same four in
-December.
-
-:::
-
-::: {.content-hidden when-format="revealjs"}
-
-## A commit message says why {#messages}
-
-| Says why | Says nothing |
-|:--|:--|
-| `Drop the two monitors outside the county` | `fix` |
-| `Switch to the 24-hour standard, 35 ug/m3` | `changes` |
-| `Add the distance calculation` | `update code` |
-| `Fix the date parse: month came first` | `final` |
-
-- One logical change per commit. If the message needs "and", it is two.
-- Commit when the script runs and does what you meant. Also before you try something risky, and before you stop for the day.
-
-The left column answers the question you will ask in December: why did
-this change happen? The right column answers nothing. `Add files via
-upload` is a message nobody chose; `stuff`, `WIP` and `.` are messages
-nobody thought about.
-
-How often to commit has three answers. Every small change: the log is
-long and each diff is tiny. One per finished task: each commit is a
-sentence in a research diary, and the diff is the paragraph behind it.
-One per day: each diff is a page, and the message cannot say why for all
-of it. Aim between the first two, about one commit per line of a research
-diary. A good time to commit is when the script runs and does what you
-meant. Two more: right before you try something you might want to throw
-away, and before you stop for the day.
-
-:::
-
-::: {.content-hidden when-format="revealjs"}
-
-## The same picture after each command {#three-places-states}
-
-![Four copies of the three-places picture. The file token moves one column right with each command; in the last copy the working folder is clean and the token sits in history.](figures/07-git/D3b-three-places-states.svg){fig-align="center" fig-alt="Four small copies of the three-column diagram in a row. A token labelled README.md sits in the Working folder column in the first copy, the Staging area column in the second, and the History column in the third; in the fourth it sits in History and the Working folder column is marked clean. Labels beneath read: after you save, after git add, after git commit, clean."}
-
-Save puts a change in the first column. `git add` moves it to the
-second. `git commit` moves it to the third, and the first column is
-clean again. Run `git status` between any two of these and it names the
-column.
-
-:::
-
 ## git push: send your snapshots to GitHub {#push}
 
 ```bash
 git push
-#> Enumerating objects: 11, done.                 # progress lines vary
+#> Enumerating objects: 5, done.                  # progress lines vary
 #> ...
-#> To https://github.com/aem6850-cornell/onboarding-ArielOrtizBobea.git
-#>    d7033eb..c14d3a8  main -> main
+#> To https://github.com/ArielOrtizBobea/git-practice.git
+#>    6a952cb..8dd074b  main -> main
 git status
 #> On branch main
 #> Your branch is up to date with 'origin/main'.
-#>
-#> nothing to commit, working tree clean
 ```
 
 ::: {.content-visible when-format="revealjs"}
 
-- `push` sends every snapshot GitHub does not have. The last line reads *from this hash to that hash*.
-- *Your branch is ahead of origin/main* is gone: GitHub now shows exactly what `git log` shows.
-- **This is the upload button, from the other side.**
+- `push` hands GitHub every photo it does not have. The last line reads *from this hash to that hash*.
+- *Ahead of origin/main* is gone. GitHub now shows exactly what `git log` shows.
+- **This is the Commit changes button, from the other side.** One click before class; three steps now, each one read.
 
 ::: {.notes}
-Three weeks ago the browser committed and stored in one click. Now you did it in three steps, and you could read each one. From now on, push is how you hand in.
+Before class the browser took the photo and put it straight in the shared album, in one click. Now you framed it, pressed the shutter, and handed it over, and you could read each step before taking the next. From now on, push is how work leaves your laptop.
 :::
 
 :::
@@ -1889,28 +1706,29 @@ Three weeks ago the browser committed and stored in one click. Now you did it in
 ::: {.content-hidden when-format="revealjs"}
 
 Type `git push` and press Enter. Git sends every snapshot GitHub's copy
-does not have: the three new commits. The progress lines vary from push
-to push and can be ignored. The last two lines are the receipt: the
-address the snapshots went to, and `d7033eb..c14d3a8  main -> main`,
-which reads *GitHub's `main` moved from this hash to that hash*. The
-first hash is where GitHub's copy was, the second is where it is now,
-and both are hashes you saw in `git log`.
+does not have: here, one commit. The progress lines vary from push to
+push and can be ignored. The last two lines are the receipt: the address
+the snapshots went to, and `6a952cb..8dd074b  main -> main`, which reads
+*GitHub's `main` moved from this hash to that hash*. The first hash is
+where GitHub's copy was, the second is where it is now, and both are
+hashes you saw in `git log`.
 
 On a Mac, if the dialog asking whether *git-credential-osxkeychain* may
 use your confidential information did not appear when you cloned before
-class, it may appear now. Click **Always Allow**: that is git reading the token you
-stored in Before class, not an error. On Windows, a browser sign-in
-window means the credential manager is asking once; sign in and the push
-continues.
+class, it may appear now. Click **Always Allow**: that is git reading the
+token you stored in Before class, not an error. On Windows, a browser
+sign-in window means the credential manager is asking once; sign in and
+the push continues.
 
 Type `git status`. The line *Your branch is ahead of 'origin/main'* is
 gone, replaced by *up to date*. GitHub's copy now shows exactly what
-`git log` shows on your laptop, and the working folder is still clean.
+`git log` shows on your laptop; the two untracked files are still listed,
+and still not in the way.
 
-This is the upload button, from the other side. In the browser, one click
-took a snapshot and stored it on GitHub. Here you did the same thing in
-three steps, `add`, `commit`, `push`, and you could read each one before
-taking the next. Push is how work leaves your laptop.
+This is the Commit changes button, from the other side. In the browser,
+one click took a snapshot and stored it on GitHub. Here you did the same
+thing in three steps, `add`, `commit`, `push`, and you could read each one
+before taking the next. Push is how work leaves your laptop.
 
 ::: {.panel-tabset}
 
@@ -1934,9 +1752,9 @@ taking the next. Push is how work leaves your laptop.
 
 ::: {.content-visible when-format="revealjs"}
 
-![](figures/07-git/S08-repo-after-push.png){fig-align="center" height="420" fig-alt="The repository's front page on GitHub after the push. The commit count reads 5 Commits and is circled. analysis.R appears in the file list with the message Add analysis.R with the standard beside it, also circled. The rendered README below ends with the line I cloned this repository to my laptop."}
+![](figures/07-git/S08-repo-after-push.png){fig-align="center" height="420" fig-alt="The repository's front page on GitHub after the push. The commit count reads 3 Commits and is circled. README.md carries the message Note the clone in README beside it, also circled. The rendered README below ends with the line I cloned this repository to my laptop."}
 
-*Five commits, the new file, the new README line: what `git log` shows, in the browser.*
+*Three commits, and the README ends with your line: what `git log` shows, in the browser.*
 
 ::: {.notes}
 Reload. (Reload the real page live; the screenshot is the fallback if the wifi is slow.)
@@ -1946,265 +1764,16 @@ Reload. (Reload the real page live; the screenshot is the fallback if the wifi i
 
 ::: {.content-hidden when-format="revealjs"}
 
-![The commit count went from 2 to 5, and `analysis.R` sits in the file list with your message beside it.](figures/07-git/S08-repo-after-push.png){fig-align="center" fig-alt="The repository's front page on GitHub after the push. The commit count reads 5 Commits and is circled. analysis.R appears in the file list with the message Add analysis.R with the standard beside it, also circled. The rendered README below ends with the line I cloned this repository to my laptop."}
+![The commit count went from 2 to 3, and your message sits beside `README.md` in the file list.](figures/07-git/S08-repo-after-push.png){fig-align="center" fig-alt="The repository's front page on GitHub after the push. The commit count reads 3 Commits and is circled. README.md carries the message Note the clone in README beside it, also circled. The rendered README below ends with the line I cloned this repository to my laptop."}
 
 Reload the repository's front page in the browser. Three things changed.
-The commit count at the top right of the file list reads `5 Commits`.
-`analysis.R` is in the file list, with the message of the commit that
-last touched it beside it. And the README rendered beneath the file list
-ends with the line you added. Five commits, the new file, the new README
-line: what `git log --oneline` shows on your laptop, in the browser.
-Click the commit count and the Commits page lists the same five messages
-in the same order, with the same hashes.
-
-:::
-
-## A commit made on GitHub {#browser-commit}
-
-::: {.content-visible when-format="revealjs"}
-
-:::: {.columns}
-::: {.column width="60%"}
-![](figures/07-git/S09-commit-changes-dialog.png){width="80%" fig-alt="GitHub's Commit changes dialog after a pencil edit. The message box holds the default text Update README.md, the option Commit directly to the main branch is selected, and the green Commit changes button is at the bottom. The message box and the button are circled."}
-:::
-::: {.column width="40%"}
-- The pencil and the upload button both make a snapshot on GitHub's copy.
-- GitHub wrote `Update README.md`. A message nobody chose, again.
-- Your laptop does not know yet.
-:::
-::::
-
-::: {.notes}
-Live, on GitHub: click `README.md`, then the pencil. Add the line `Edited in the browser.` at the end. Click **Commit changes…**, keep the default message `Update README.md`, leave *Commit directly to the main branch* selected, click **Commit changes**. This is the coauthor, or the other laptop, or the upload button. GitHub's copy is one snapshot ahead of mine, and mine has no idea.
-:::
-
-:::
-
-::: {.content-hidden when-format="revealjs"}
-
-![The message box holds a message GitHub wrote; the green button takes the snapshot on GitHub's copy.](figures/07-git/S09-commit-changes-dialog.png){fig-align="center" fig-alt="GitHub's Commit changes dialog after a pencil edit. The message box holds the default text Update README.md, the option Commit directly to the main branch is selected, and the green Commit changes button is at the bottom. The message box and the button are circled."}
-
-Now make a change on GitHub's copy, the way a coauthor or your other
-laptop would. On the repository's front page click `README.md`. The file
-opens in a viewer; click the pencil icon at the top right of it to edit.
-Go to the end of the file and add the line
-
-```
-Edited in the browser.
-```
-
-Click the green **Commit changes…** button at the top right. The dialog
-in the screenshot opens. The message box already holds
-`Update README.md`; keep it this once. Leave *Commit directly to the main
-branch* selected and click **Commit changes**. The page returns to the
-file, and the front page's commit count reads `6 Commits`.
-
-The pencil and the upload button do the same thing: they take a snapshot
-on GitHub's copy of the timeline. The message GitHub wrote,
-`Update README.md`, is a message nobody chose, the same as
-`Add files via upload`. When you edit in the browser, replace it with one
-that says why.
-
-Your laptop does not know yet. Nothing on GitHub reaches your copy until
-you ask for it, and the next section asks.
-
-:::
-
-## git pull: bring GitHub's snapshots down {#pull}
-
-::: {.content-visible when-format="revealjs"}
-
-```bash
-git status
-#> ...
-#> nothing to commit, working tree clean
-git pull
-#> ...
-#> From https://github.com/aem6850-cornell/onboarding-ArielOrtizBobea
-#> Updating c14d3a8..316baee
-#> Fast-forward
-#>  README.md | 1 +
-#>  1 file changed, 1 insertion(+)
-```
-
-- `git status` said *up to date* and was wrong. **status never asks GitHub.**
-- `pull` downloads what GitHub has that you do not, and applies it. `Fast-forward`: your timeline was a prefix of GitHub's.
-- Open `README.md` in RStudio: the line is there. **Pull when you sit down, push when you stand up.**
-
-::: {.notes}
-A commit made in the browser, on your other laptop, or by a coauthor comes down the same way. Then you read it: `git log --oneline` has a line you did not write.
-:::
-
-:::
-
-::: {.content-hidden when-format="revealjs"}
-
-```bash
-git status
-#> On branch main
-#> Your branch is up to date with 'origin/main'.
-#>
-#> nothing to commit, working tree clean
-git pull
-#> remote: Enumerating objects: 5, done.          # GitHub's lines; counts vary
-#> remote: Counting objects: 100% (5/5), done.
-#> remote: Compressing objects: 100% (2/2), done.
-#> remote: Total 3 (delta 1), reused 0 (delta 0), pack-reused 0 (from 0)
-#> Unpacking objects: 100% (3/3), 301 bytes | 150.00 KiB/s, done.
-#> From https://github.com/aem6850-cornell/onboarding-ArielOrtizBobea
-#>    c14d3a8..316baee  main       -> origin/main
-#> Updating c14d3a8..316baee
-#> Fast-forward
-#>  README.md | 1 +
-#>  1 file changed, 1 insertion(+)
-```
-
-Back in the Terminal, type `git status` first. It says
-`Your branch is up to date with 'origin/main'.` That is wrong, and it is
-wrong for a reason worth remembering: `git status` never asks GitHub. It
-reports what it knew about GitHub's copy at the last push or pull, and
-nothing has happened on your laptop since. The browser commit is
-invisible from here.
-
-Type `git pull` and press Enter. Git asks GitHub what it has that you do
-not, downloads it (the `remote:` lines are GitHub counting what it
-sends; they vary), and applies it. The line
-`c14d3a8..316baee  main -> origin/main` says git's record of GitHub's
-copy moved forward by one snapshot. Then `Updating c14d3a8..316baee` and
-`Fast-forward`: your own timeline moved forward to match. A
-**fast-forward** is a pull where your timeline was a prefix of GitHub's:
-every snapshot you had, GitHub had too, so git only has to move your end
-of the line forward. Nothing is joined and nothing can conflict. The
-last two lines are the receipt: one file, one line added.
-
-Open `README.md` in RStudio. The line `Edited in the browser.` is there,
-and the editor reloaded it without being asked. Type
-`git log --oneline` and the top line is `Update README.md`, a commit you
-did not write, with `HEAD -> main` and `origin/main` on it together
-again.
-
-A commit made in the browser, on your other laptop, or by a coauthor
-comes down the same way. The habit that keeps the two copies from
-drifting apart is one sentence: pull when you sit down, push when you
-stand up.
-
-::: {.panel-tabset}
-
-### Terminal
-
-1. Type `git status` and press Enter. Note that it says *up to date*.
-2. Type `git pull` and press Enter. Read the last line: `1 file changed, 1 insertion(+)`.
-3. Type `git log --oneline`. The top line is the browser commit.
-
-### RStudio Git pane
-
-1. Click the blue down arrow, **Pull**, in the Git pane toolbar.
-2. A small window prints the same lines as the Terminal, ending in `1 file changed`. Close it.
-3. Click `README.md` in the Files pane; the new line is at the end.
-
-:::
-
-:::
-
-## When push is refused {#push-rejected}
-
-::: {.content-visible when-format="revealjs"}
-
-```bash
-git push
-#> To https://github.com/aem6850-cornell/onboarding-ArielOrtizBobea.git
-#>  ! [rejected]        main -> main (fetch first)
-#> error: failed to push some refs to 'https://github.com/…/onboarding-ArielOrtizBobea.git'
-#> hint: Updates were rejected because the remote contains work that you do not
-#> hint: have locally. This is usually caused by another repository pushing to
-#> hint: the same ref. If you want to integrate the remote changes, use
-#> hint: 'git pull' before pushing again.
-```
-
-- GitHub has a snapshot you do not: a browser upload, a coauthor, your other laptop.
-- The fix is two words: **pull, then push.** Git may open an editor for a message; keep the suggested one.
-- If `pull` says `CONFLICT`: stop and ask. Rare in a solo project, and not a disaster.
-
-::: {.notes}
-Anyone who uploads hw1 in the browser on Thursday and pushes from a clone on Friday meets this line. Read it; it names its own fix: pull, then push.
-:::
-
-:::
-
-::: {.content-hidden when-format="revealjs"}
-
-```bash
-git push
-#> To https://github.com/aem6850-cornell/onboarding-ArielOrtizBobea.git
-#>  ! [rejected]        main -> main (fetch first)
-#> error: failed to push some refs to 'https://github.com/aem6850-cornell/onboarding-ArielOrtizBobea.git'
-#> hint: Updates were rejected because the remote contains work that you do not
-#> hint: have locally. This is usually caused by another repository pushing to
-#> hint: the same ref. If you want to integrate the remote changes, use
-#> hint: 'git pull' before pushing again.
-#> hint: See the 'Note about fast-forwards' in 'git push --help' for details.
-```
-
-*(Printed, not run: this is what you see the first time it happens.)*
-Older git words the four `hint:` lines differently
-(`You may want to first integrate the remote changes (e.g., 'git pull ...') before pushing again.`;
-Apple's git 2.39 does). Same meaning, same fix.
-
-This is what `git push` prints when GitHub's copy has a snapshot yours
-does not, and you push without pulling first. A **rejected push** is one
-that git refuses because your timeline is not a prefix of GitHub's: an
-upload or a pencil edit in the browser, a coauthor's push, or a commit
-from your other laptop put something on GitHub's copy that your copy has
-never seen, and git will not overwrite it. Nothing is lost on either
-side. Your commit is still on your laptop, and the browser commit is
-still on GitHub.
-
-Read the message; it names its own fix in the `hint:` lines: use
-`git pull` before pushing again. Type `git pull`, then `git push`. The pull joins GitHub's snapshot to yours,
-and the push then goes through. Because both copies had a new snapshot,
-the pull is not a fast-forward this time, and git may open an editor
-asking for a message for the join. Keep the message it suggests: `Esc`,
-`:wq`, Enter on a Mac; on Windows, close the Notepad window. The next
-section shows that screen.
-
-If `git pull` instead prints a line with `CONFLICT` in capitals, stop and
-ask. It means the two snapshots changed the same line of the same file
-and git cannot choose. It is rare in a solo project, and it is not a
-disaster; it is a question git is asking you.
-
-:::
-
-::: {.content-hidden when-format="revealjs"}
-
-## After a browser commit and a laptop commit {#diverged}
-
-![After a browser commit and a local commit the copies differ; pull, then push, makes them equal again.](figures/07-git/D4b-local-remote-diverged.svg){fig-align="center" fig-alt="A laptop on the left and a box labelled GitHub (origin) on the right, each with a timeline of circles beneath it. The first three circles match. GitHub's timeline has a fourth circle labelled browser commit; the laptop's has a fourth circle labelled your commit. Arrows between the two are labelled git pull and git push."}
-
-The two copies share the first three snapshots. GitHub's has a fourth,
-the browser commit; yours has a different fourth, your commit. Neither
-copy is a prefix of the other, so a push is refused and a pull has to
-join the two lines. Git's word for that join is defined and drawn at the
-end of the page, under [A branch is a second timeline](#branch).
-
-This is the screen `git pull` opens in this situation:
-
-```
-Merge branch 'main' of https://github.com/<your-username>/git-practice
-# Please enter a commit message to explain why this merge is necessary,
-# especially if it merges an updated upstream into a topic branch.
-```
-
-Keep the suggested message. On a Mac: `Esc`, then `:wq`, then Enter. On
-Windows, close the Notepad window. A pull has no `-m`, and the suggested
-message is fine. After the editor closes, git prints
-`Merge made by the 'ort' strategy.` and a receipt; then `git push` goes
-through, and both copies are equal again.
-
-Without `pull.rebase false` (Before class, step 3), the pull stops
-instead with
-`fatal: Need to specify how to reconcile divergent branches.` after a
-block of `hint:` lines. Run
-`git config --global pull.rebase false` once, then `git pull` again.
+The commit count at the top right of the file list reads `3 Commits`.
+Beside `README.md` in the file list sits the message of the commit that
+last touched it, yours. And the README rendered beneath the file list
+ends with the line you added. Three commits and the new README line: what
+`git log --oneline` shows on your laptop, in the browser. Click the commit
+count and the Commits page lists the same three messages in the same
+order, with the same hashes.
 
 :::
 
@@ -2223,7 +1792,7 @@ block of `hint:` lines. Run
 #    Save.
 #
 # 2. git status. Under which heading is README.md?
-#    (Your two RStudio files are still untracked; ignore them today.)
+#    (The two RStudio files stay untracked; Practice 1 commits them.)
 #
 # 3. git diff. How many added lines (a single + at the left edge,
 #    green)? (If the prompt disappears, press q.)
@@ -2290,16 +1859,17 @@ before class), and your message sits beside `README.md`. In
 ::: {.content-visible when-format="revealjs"}
 
 ::: {.notes}
-Debrief (1 min). One file, one commit, one push: your snapshot went up, and the browser shows it. The two RStudio files are still untracked; git does not nag, and Practice 1 commits them. The message on top of your log is one you wrote. The other half of the loop, a snapshot coming down, is what you watched me do before the exercise; Practice 7 is where you do it.
+Debrief (1 min). One file, one commit, one push: your snapshot went up, and the browser shows it. The two RStudio files are still untracked; git does not nag, and Practice 1 commits them. The message on top of your log is one you wrote. The other half of the loop, a snapshot coming down, comes after the next pass; Practice 7 is where you do it.
 
 When it fails, say:
 
 - `nothing to commit` after `git add`: the file was never saved in RStudio.
+- A screen of text and no prompt after `git commit`: they forgot `-m`. `Esc`, `:q!`, Enter, then `git commit -m "…"` (Notepad: close the window empty).
 - `*** Please tell me who you are.`: Before class step 3 was skipped. In the same Terminal: `git config --global user.name "Your Name"` and `git config --global user.email "you@cornell.edu"`, then run the commit again.
 - A paragraph starting `Your name and email address were configured automatically`: the commit went through under a made-up address. Run the two `git config --global` lines; the next commits carry your name. Leave this one alone.
 - `git push` asks for a username and password: stop here. Your commit is safe on the laptop and pushes once the token is stored (Before class step 4 tonight). Press Ctrl+C if the prompt is still waiting. Do not type your GitHub password; it fails with `Authentication failed`.
 - A browser sign-in window opens during `git push` (Windows): that is the credential manager; sign in once and the push continues.
-- `! [rejected] … (fetch first)`: they edited in the browser earlier today. `git pull`, then `git push`: the slide before this exercise. If an editor screen opens, keep the message (`Esc`, `:wq`, Enter; Notepad: close the window).
+- `! [rejected] … (fetch first)`: they edited in the browser earlier today. `git pull`, then `git push`: shown a few slides on. If an editor screen opens, keep the message (`Esc`, `:wq`, Enter; Notepad: close the window).
 - `fatal: Need to specify how to reconcile divergent branches.`: Before class step 3 was skipped: `git config --global pull.rebase false`, then `git pull` again.
 :::
 
@@ -2331,55 +1901,238 @@ and tonight's clone brings all of it down.
 
 :::
 
-## Three undo verbs, one per place {#undo}
+## A new file: git diff --staged {#diff-staged}
+
+```bash
+git add analysis.R
+git diff --staged
+#> diff --git a/analysis.R b/analysis.R
+#> new file mode 100644
+#> index 0000000..a3eb8fb
+#> --- /dev/null
+#> +++ b/analysis.R
+#> @@ -0,0 +1,3 @@
+#> +# analysis.R -- days above the PM2.5 standard
+#> +STANDARD <- 35
+#> +pm <- read.csv("data/epa_pm25_la_fires_2024_2025.csv")
+```
 
 ::: {.content-visible when-format="revealjs"}
 
-![](figures/07-git/D3c-three-places-undo.svg){fig-align="center" height="250" fig-alt="The three-places diagram with the forward arrows greyed out and three reverse arrows in colour: git restore from the working folder down to a bin, git restore --staged from the staging area back to the working folder, and git commit --amend curling from the last commit back onto itself."}
-
-:::
-
-::: {.content-hidden when-format="revealjs"}
-
-![The same three columns as before, with the forward arrows greyed out. Each column has one reverse arrow, and each reverse arrow is one row of the table beneath.](figures/07-git/D3c-three-places-undo.svg){fig-align="center" fig-alt="The three-places diagram with the forward arrows greyed out and three reverse arrows in colour: git restore from the working folder down to a bin labelled throw the edit away, git restore --staged from the staging area back to the working folder labelled edit kept, and git commit --amend curling from the last commit back onto itself labelled message only, before push."}
-
-:::
-
-| The change is in | To undo | Command |
-|:--|:--|:--|
-| the working folder | throw the edit away | `git restore <file>` |
-| the staging area | take it back out, keep the edit | `git restore --staged <file>` |
-| the last commit, not pushed | fix the message | `git commit --amend -m "…"` |
-
-`<file>` is the file's name, no brackets: `git restore analysis.R`.
-
-::: {.content-visible when-format="revealjs"}
+- A new file is **untracked**, and untracked files are not diffed. `status` lists it; `add` frames it.
+- `diff --staged`: the frame against the last photo, the next commit exactly. `/dev/null` is the old version of a file that did not exist.
+- Read `--staged` before every commit: what the shutter will see.
 
 ::: {.notes}
-
-One undo per column. `restore` is the one that destroys; git only remembers what you committed. Amend only before you push. Anything else, stop and ask. We run the first one now; the other two are on the page and in the practice set.
-
+Live: File → New File → R Script, paste the three lines of `analysis.R` from the clipboard, never typed, Cmd+S, name it `analysis.R` in the project. `git status` lists it under Untracked with the other two; `git diff` shows nothing for it, because there is no old version. Stage it, then look at the frame. `diff` is the arrow between columns one and two; `diff --staged` is the arrow between two and three. The second one is the last look before you press.
 :::
 
 :::
 
 ::: {.content-hidden when-format="revealjs"}
 
-A change sits in exactly one of the three places, so undoing it is a matter of asking which place it is in and running the one command for that place. `git status` tells you the place. The table tells you the command. There are three, and they are not interchangeable.
+A second kind of change: a new file the timeline has never seen. *File →
+New File → R Script* opens an empty editor tab. Paste these three lines:
 
-- `restore` is the one that destroys. Git only remembers what you committed.
-- The third is safe only **before you push**. After a push, leave the commit alone and make a new one.
-- Everything else exists. If you are in a state not on this table, stop and ask.
+```r
+# analysis.R -- days above the PM2.5 standard
+STANDARD <- 35
+pm <- read.csv("data/epa_pm25_la_fires_2024_2025.csv")
+```
 
-What follows is the situation the printed diff at the start of the session promised: a model edits your script, you read the diff, and you throw the edit away in one line. The two commands after it are on this page only, and the practice set makes you run them.
+Save with Cmd+S or Ctrl+S; the save dialog opens in the project folder,
+which is where the file belongs. Name it `analysis.R`. Type `git status`
+in the Terminal tab:
+
+```bash
+git status
+#> On branch main
+#> Your branch is up to date with 'origin/main'.
+#>
+#> Untracked files:
+#>   (use "git add <file>..." to include in what will be committed)
+#>         .gitignore
+#>         analysis.R
+#>         git-practice.Rproj
+#>
+#> nothing added to commit but untracked files present (use "git add" to track)
+```
+
+`analysis.R` is untracked, like the two files RStudio made: the timeline
+has never seen it. Type `git diff` and nothing prints for it. Untracked
+files are not diffed: there is no old version of a file the timeline has
+never had, so there is nothing to compare it with. `git status` is where
+untracked files are listed.
+
+Type `git add analysis.R` and press Enter. Nothing prints; the file is in
+the frame. Then `git diff --staged`. This compares the staging area with
+the newest snapshot, so what prints is the next commit, exactly. The old
+version is `/dev/null`: the file did not exist before, so every one of its
+three lines is a `+`. The `@@` line says the same thing in numbers: zero
+old lines, three new ones.
+
+Read `git diff --staged` before every commit. It is the last look before
+you press the shutter, and it shows exactly what you are about to make
+permanent. In the Git pane, `analysis.R` shows a green **A** with the
+*Staged* box ticked, and **Diff** with *Show: Staged* prints the same
+three green lines.
 
 :::
 
-## A model edited your script: read the diff {#model-edit-live}
+## git commit: one change per commit {#commit-2}
+
+```bash
+git commit -m "Add analysis.R with the standard"
+#> [main 4977c8d] Add analysis.R with the standard
+#>  1 file changed, 3 insertions(+)
+git add .gitignore git-practice.Rproj
+git diff --staged
+#> ...
+#> +.Rproj.user
+#> +.Rhistory
+#> +.RData
+#> +.Ruserdata
+#> ...                                     # the .Rproj: fourteen lines of settings
+```
+
+::: {.content-visible when-format="revealjs"}
+
+- One file, three lines: the last diff, counted.
+- The two RStudio files, as their own commit. `.gitignore` is four patterns: files git should never track (last slide).
+- Two logical changes, two photos. If a caption needs the word "and", it is two.
+
+::: {.notes}
+`analysis.R` first, alone. Then the two RStudio files together: they are one logical change, the project's scaffolding. Look at what is in the frame before pressing: four patterns and fourteen lines of settings, nothing else, and now you have read the mystery file with the yellow question mark. Yours stay untracked until Practice 1; nothing breaks in the meantime.
+:::
+
+:::
 
 ::: {.content-hidden when-format="revealjs"}
 
-The brief was "add a check that the file has rows". To follow along at home, play the model yourself. If you only watched the three-places section and have no `analysis.R`, make it first: File → New File → R Script, paste the three lines from [Edit a file, save a new one](#edit), save as `analysis.R`, then `git add analysis.R` and `git commit -m "Add analysis.R with the standard"`, so there is a snapshot for the diff to compare with. Open `analysis.R` in RStudio, change `STANDARD <- 35` to `STANDARD <- 9`, add `stopifnot(nrow(pm) > 0)` as the last line, and save. Then, in the Terminal tab, ask git what changed.
+Type `git commit -m "Add analysis.R with the standard"` and press Enter.
+The receipt says one file changed, three insertions: the diff you just
+read, counted. `git status` now says ahead by 1 again, with the two
+RStudio files still untracked.
+
+Those two files are one logical change, the project's scaffolding, so
+they go in together and on their own. Type `git add .gitignore
+git-practice.Rproj` (type the first letters of the second name and press
+Tab; the Terminal completes it), then `git diff --staged` to read what is
+in the frame. `.gitignore` is four lines: the patterns RStudio wrote for
+files git should never track, explained under
+[.gitignore: what git should not track](#gitignore). The `.Rproj` is
+fourteen lines of RStudio's project settings. Nothing else is in the
+frame; the `#> ...` on the slide stands for those lines.
+
+Two changes, two commits. The new script gets its own snapshot with its
+own message, and so does the scaffolding. If a message would need the
+word "and", it is two commits.
+
+:::
+
+## The timeline so far, and the second push {#commit-3}
+
+```bash
+git commit -m "Add the files RStudio made for the project"
+#> [main 7c91799] Add the files RStudio made for the project
+#>  2 files changed, 18 insertions(+)
+git log --oneline
+#> 7c91799 (HEAD -> main) Add the files RStudio made for the project
+#> 4977c8d Add analysis.R with the standard
+#> 8dd074b (origin/main, origin/HEAD) Note the clone in README
+#> 6a952cb add my intro
+#> 6a25190 Initial commit
+git push
+#> ...
+#>    8dd074b..7c91799  main -> main
+```
+
+::: {.content-visible when-format="revealjs"}
+
+- Five photos. `HEAD -> main` is where you are; `origin/main` sat two below it until the push.
+- Read the captions bottom to top and you have the story of the project. That only works if the sentences say something.
+
+::: {.notes}
+Same commands, three times now. It will be the same commands in December. Read the captions bottom to top: the diary of this project. The page has a table of captions that say why and captions that say nothing. And say the picture back to me: save puts a change on the desk, `add` frames it, `commit` presses the shutter, `push` hands the photo over.
+:::
+
+:::
+
+::: {.content-hidden when-format="revealjs"}
+
+Type `git commit -m "Add the files RStudio made for the project"`, Enter.
+Two files, eighteen added lines: the four patterns and the fourteen
+settings. Then `git log --oneline`.
+
+Five snapshots, newest first. `HEAD -> main` sits on the top line: that
+is where your timeline ends. `origin/main` sits two lines down, on
+`Note the clone in README`: that is where GitHub's copy ends. The two
+commits between them are new, and GitHub has none of them yet. `git
+push` sends them, and the receipt reads from the old end of GitHub's
+copy to the new one. After it, `git status` says up to date and, for the
+first time today, `nothing to commit, working tree clean`: nothing
+modified, nothing staged, nothing untracked.
+
+Read the messages bottom to top and you have the story of the project in
+five lines. That only works if each sentence says something. The next
+section is about writing ones that do.
+
+Say the picture back to yourself before moving on. Saving a file puts a
+change on the desk. `git add` puts it in the frame. `git commit` presses
+the shutter, and the desk matches the newest photo again. `git push`
+hands the new photos to the shared album. Same commands, three times now,
+and the same commands in December.
+
+:::
+
+::: {.content-hidden when-format="revealjs"}
+
+## A commit message says why {#messages}
+
+| Says why | Says nothing |
+|:--|:--|
+| `Drop the two monitors outside the county` | `fix` |
+| `Switch to the 24-hour standard, 35 ug/m3` | `changes` |
+| `Add the distance calculation` | `update code` |
+| `Fix the date parse: month came first` | `final` |
+
+- One logical change per commit. If the message needs "and", it is two.
+- Commit when the script runs and does what you meant. Also before you try something risky, and before you stop for the day.
+
+The left column answers the question you will ask in December: why did
+this change happen? The right column answers nothing. `Add files via
+upload` is a message nobody chose; `stuff`, `WIP` and `.` are messages
+nobody thought about.
+
+How often to commit has three answers. Every small change: the log is
+long and each diff is tiny. One per finished task: each commit is a
+sentence in a research diary, and the diff is the paragraph behind it.
+One per day: each diff is a page, and the message cannot say why for all
+of it. Aim between the first two, about one commit per line of a research
+diary. A good time to commit is when the script runs and does what you
+meant. Two more: right before you try something you might want to throw
+away, and before you stop for the day.
+
+:::
+
+::: {.content-hidden when-format="revealjs"}
+
+## The same picture after each command {#three-places-states}
+
+![Four copies of the three-places picture. The file token moves one column right with each command; in the last copy the working folder is clean and the token sits in history.](figures/07-git/D3b-three-places-states.svg){fig-align="center" fig-alt="Four small copies of the three-column diagram in a row. A token labelled README.md sits in the Working folder column in the first copy, the Staging area column in the second, and the History column in the third; in the fourth it sits in History and the Working folder column is marked clean. Labels beneath read: after you save, after git add, after git commit, clean."}
+
+Save puts a change in the first column. `git add` moves it to the
+second. `git commit` moves it to the third, and the first column is
+clean again. Run `git status` between any two of these and it names the
+column.
+
+:::
+
+## The assistant edited your script: read the diff {#model-edit-live}
+
+::: {.content-hidden when-format="revealjs"}
+
+The brief was "add a check that the file has rows". To follow along at home, play the assistant yourself. If you only watched and have no `analysis.R`, make it first: File → New File → R Script, paste the three lines from [A new file: git diff --staged](#diff-staged), save as `analysis.R`, then `git add analysis.R` and `git commit -m "Add analysis.R with the standard"`, so there is a snapshot for the diff to compare with. Open `analysis.R` in RStudio, change `STANDARD <- 35` to `STANDARD <- 9`, add `stopifnot(nrow(pm) > 0)` as the last line, and save. Then, in the Terminal tab, ask git what changed.
 
 :::
 
@@ -2432,7 +2185,7 @@ git diff
 
 ::: {.notes}
 
-This is slide 1.3, in my own repository, twenty seconds after the edit. Nobody found it by reading the transcript, because there is no transcript. There is a diff.
+This is the diff from slide 6, in my own repository, twenty seconds after the edit. Live: change the 35 to a 9, add the `stopifnot` line, save, then `git status` and `git diff`. Nobody found it by reading the transcript, because there is no transcript. There is a diff.
 
 :::
 
@@ -2464,7 +2217,7 @@ git status
 
 ::: {.notes}
 
-Throw the whole edit away. That is the undo the first slide promised, and it took ten seconds. Then you redo the one good line by hand; the page shows it.
+Put the desk back the way the last photo shows it. That is the undo slide 6 promised, and it took ten seconds. Then you redo the one good line by hand; the page shows it, after the pull section.
 
 :::
 
@@ -2494,11 +2247,324 @@ Type `git restore analysis.R` and press Enter. Nothing prints; silence is succes
 
 :::
 
+## Three undo verbs, one per place {#undo}
+
+::: {.content-visible when-format="revealjs"}
+
+![](figures/07-git/D3c-three-places-undo.svg){fig-align="center" height="200" fig-alt="The three-places diagram with the forward arrows greyed out and three reverse arrows in colour: git restore from the working folder down to a bin, git restore --staged from the staging area back to the working folder, and git commit --amend curling from the last commit back onto itself."}
+
+:::
+
+::: {.content-hidden when-format="revealjs"}
+
+![The same three columns as before, with the forward arrows greyed out. Each column has one reverse arrow, and each reverse arrow is one row of the table beneath.](figures/07-git/D3c-three-places-undo.svg){fig-align="center" fig-alt="The three-places diagram with the forward arrows greyed out and three reverse arrows in colour: git restore from the working folder down to a bin labelled throw the edit away, git restore --staged from the staging area back to the working folder labelled edit kept, and git commit --amend curling from the last commit back onto itself labelled message only, before push."}
+
+:::
+
+| The change is in | To undo | Command |
+|:--|:--|:--|
+| the working folder | put the desk back to the last photo; the edit is gone | `git restore <file>` |
+| the staging area | take it out of the frame; it stays on the desk | `git restore --staged <file>` |
+| the last commit, not pushed | rewrite the caption, before it reaches the shared album | `git commit --amend -m "…"` |
+
+`<file>` is the file's name, no brackets: `git restore analysis.R`.
+
+::: {.content-visible when-format="revealjs"}
+
+::: {.notes}
+
+One undo per column. The first row you just watched. `restore` is the one that destroys; git only remembers what you photographed. `restore` and `restore --staged` share a word: read the line back before Enter. `--staged` keeps your edit; no flag throws it away. Amend only before you push. Anything else, stop and ask. The other two rows are on the page and in the practice set.
+
+:::
+
+:::
+
+::: {.content-hidden when-format="revealjs"}
+
+A change sits in exactly one of the three places, so undoing it is a matter of asking which place it is in and running the one command for that place. `git status` tells you the place. The table tells you the command. There are three, and they are not interchangeable.
+
+- `restore` is the one that destroys. Git only remembers what you committed.
+- The third is safe only **before you push**. After a push, leave the commit alone and make a new one.
+- Everything else exists. If you are in a state not on this table, stop and ask.
+
+The first row is the command you just watched. The other two are on this page only, after the pull section, starting from the state the restore left, and the practice set makes you run them.
+
+:::
+
+## A commit made on GitHub {#browser-commit}
+
+::: {.content-visible when-format="revealjs"}
+
+:::: {.columns}
+::: {.column width="60%"}
+![](figures/07-git/S09-commit-changes-dialog.png){width="80%" fig-alt="GitHub's Commit changes dialog after a pencil edit. The message box holds the default text Update README.md, the option Commit directly to the main branch is selected, and the green Commit changes button is at the bottom. The message box and the button are circled."}
+:::
+::: {.column width="40%"}
+- The pencil and the upload button both make a snapshot on GitHub's copy.
+- GitHub wrote `Update README.md`. A message nobody chose, again.
+- Your laptop does not know yet.
+:::
+::::
+
+::: {.notes}
+Live, on GitHub: click `README.md`, then the pencil. Add the line `Edited in the browser.` at the end. Click **Commit changes…**, keep the default message `Update README.md`, leave *Commit directly to the main branch* selected, click **Commit changes**. This is the coauthor, or the other laptop, or the upload button. GitHub's copy is one snapshot ahead of mine, and mine has no idea.
+:::
+
+:::
+
+::: {.content-hidden when-format="revealjs"}
+
+![The message box holds a message GitHub wrote; the green button takes the snapshot on GitHub's copy.](figures/07-git/S09-commit-changes-dialog.png){fig-align="center" fig-alt="GitHub's Commit changes dialog after a pencil edit. The message box holds the default text Update README.md, the option Commit directly to the main branch is selected, and the green Commit changes button is at the bottom. The message box and the button are circled."}
+
+Now make a change on GitHub's copy, the way a coauthor or your other
+laptop would. On the repository's front page click `README.md`. The file
+opens in a viewer; click the pencil icon at the top right of it to edit.
+Go to the end of the file and add the line
+
+```
+Edited in the browser.
+```
+
+Click the green **Commit changes…** button at the top right. The dialog
+in the screenshot opens. The message box already holds
+`Update README.md`; keep it this once. Leave *Commit directly to the main
+branch* selected and click **Commit changes**. The page returns to the
+file, and the front page's commit count reads `6 Commits`.
+
+The pencil and the upload button do the same thing: they take a snapshot
+on GitHub's copy of the timeline. The message GitHub wrote,
+`Update README.md`, is a message nobody chose, the same as
+`Add files via upload`. When you edit in the browser, replace it with one
+that says why.
+
+Your laptop does not know yet. Nothing on GitHub reaches your copy until
+you ask for it, and the next section asks.
+
+:::
+
+## git pull: bring GitHub's snapshots down {#pull}
+
+::: {.content-visible when-format="revealjs"}
+
+```bash
+git status
+#> ...
+#> nothing to commit, working tree clean
+git pull
+#> ...
+#> From https://github.com/ArielOrtizBobea/git-practice
+#> Updating 7c91799..a7c1838
+#> Fast-forward
+#>  README.md | 1 +
+#>  1 file changed, 1 insertion(+)
+```
+
+- `git status` said *up to date* and was wrong. **status never asks GitHub.**
+- `pull` downloads what GitHub has that you do not, and applies it. `Fast-forward`: GitHub's album was yours plus one photo, so git added it to the end of yours.
+- Open `README.md` in RStudio: the line is there. **Pull when you sit down, push when you stand up.**
+
+::: {.notes}
+A commit made in the browser, on your other laptop, or by a coauthor comes down the same way. Then you read it: `git log --oneline` has a line you did not write.
+:::
+
+:::
+
+::: {.content-hidden when-format="revealjs"}
+
+```bash
+git status
+#> On branch main
+#> Your branch is up to date with 'origin/main'.
+#>
+#> nothing to commit, working tree clean
+git pull
+#> remote: Enumerating objects: 5, done.          # GitHub's lines; counts vary
+#> remote: Counting objects: 100% (5/5), done.
+#> remote: Compressing objects: 100% (2/2), done.
+#> remote: Total 3 (delta 1), reused 0 (delta 0), pack-reused 0 (from 0)
+#> Unpacking objects: 100% (3/3), 301 bytes | 150.00 KiB/s, done.
+#> From https://github.com/ArielOrtizBobea/git-practice
+#>    7c91799..a7c1838  main       -> origin/main
+#> Updating 7c91799..a7c1838
+#> Fast-forward
+#>  README.md | 1 +
+#>  1 file changed, 1 insertion(+)
+```
+
+Back in the Terminal, type `git status` first. It says
+`Your branch is up to date with 'origin/main'.` That is wrong, and it is
+wrong for a reason worth remembering: `git status` never asks GitHub. It
+reports what it knew about GitHub's copy at the last push or pull, and
+nothing has happened on your laptop since. The browser commit is
+invisible from here.
+
+Type `git pull` and press Enter. Git asks GitHub what it has that you do
+not, downloads it (the `remote:` lines are GitHub counting what it
+sends; they vary), and applies it. The line
+`7c91799..a7c1838  main -> origin/main` says git's record of GitHub's
+copy moved forward by one snapshot. Then `Updating 7c91799..a7c1838` and
+`Fast-forward`: your own timeline moved forward to match. A
+**fast-forward** is a pull where GitHub's album was yours plus more:
+every snapshot you had, GitHub had too, so git only has to add the new
+ones to the end of your line. Nothing is joined and nothing can
+conflict. The last two lines are the receipt: one file, one line added.
+
+Open `README.md` in RStudio. The line `Edited in the browser.` is there,
+and the editor reloaded it without being asked. Type
+`git log --oneline` and the top line is `Update README.md`, a commit you
+did not write, with `HEAD -> main` and `origin/main` on it together
+again.
+
+A commit made in the browser, on your other laptop, or by a coauthor
+comes down the same way. The habit that keeps the two copies from
+drifting apart is one sentence: pull when you sit down, push when you
+stand up.
+
+::: {.panel-tabset}
+
+### Terminal
+
+1. Type `git status` and press Enter. Note that it says *up to date*.
+2. Type `git pull` and press Enter. Read the last line: `1 file changed, 1 insertion(+)`.
+3. Type `git log --oneline`. The top line is the browser commit.
+
+### RStudio Git pane
+
+1. Click the blue down arrow, **Pull**, in the Git pane toolbar.
+2. A small window prints the same lines as the Terminal, ending in `1 file changed`. Close it.
+3. Click `README.md` in the Files pane; the new line is at the end.
+
+:::
+
+:::
+
+## When push is refused {#push-rejected}
+
+::: {.content-visible when-format="revealjs"}
+
+```bash
+git push
+#> To https://github.com/ArielOrtizBobea/git-practice.git
+#>  ! [rejected]        main -> main (fetch first)
+#> error: failed to push some refs to 'https://github.com/ArielOrtizBobea/git-practice.git'
+#> hint: Updates were rejected because the remote contains work that you do not
+#> hint: have locally. This is usually caused by another repository pushing to
+#> hint: the same ref. If you want to integrate the remote changes, use
+#> hint: 'git pull' before pushing again.
+```
+
+- GitHub has a photo you do not: a browser edit, a coauthor, your other laptop. Each album has one the other lacks.
+- The fix is two words: **pull, then push.** Git may open an editor for a message; keep the suggested one.
+- If `pull` says `CONFLICT`: stop and ask. Rare in a solo project, and not a disaster.
+
+::: {.notes}
+Anyone who edits in the browser one day and pushes from the laptop the next meets this line. Read it; it names its own fix: pull, then push.
+:::
+
+:::
+
+::: {.content-hidden when-format="revealjs"}
+
+```bash
+git push
+#> To https://github.com/ArielOrtizBobea/git-practice.git
+#>  ! [rejected]        main -> main (fetch first)
+#> error: failed to push some refs to 'https://github.com/ArielOrtizBobea/git-practice.git'
+#> hint: Updates were rejected because the remote contains work that you do not
+#> hint: have locally. This is usually caused by another repository pushing to
+#> hint: the same ref. If you want to integrate the remote changes, use
+#> hint: 'git pull' before pushing again.
+#> hint: See the 'Note about fast-forwards' in 'git push --help' for details.
+```
+
+*(Printed, not run: this is what you see the first time it happens.)*
+Older git words the four `hint:` lines differently
+(`You may want to first integrate the remote changes (e.g., 'git pull ...') before pushing again.`;
+Apple's git 2.39 does). Same meaning, same fix.
+
+This is what `git push` prints when GitHub's copy has a snapshot yours
+does not, and you push without pulling first. A **rejected push** is one
+that git refuses because each copy has a snapshot the other lacks: an
+upload or a pencil edit in the browser, a coauthor's push, or a commit
+from your other laptop put something on GitHub's copy that your copy has
+never seen, and git will not overwrite it. Nothing is lost on either
+side. Your commit is still on your laptop, and the browser commit is
+still on GitHub.
+
+Read the message; it names its own fix in the `hint:` lines: use
+`git pull` before pushing again. Type `git pull`, then `git push`. The pull joins GitHub's snapshot to yours,
+and the push then goes through. Because both copies had a new snapshot,
+the pull is not a fast-forward this time, and git may open an editor
+asking for a message for the join. Keep the message it suggests: `Esc`,
+`:wq`, Enter on a Mac; on Windows, close the Notepad window. The next
+section shows that screen.
+
+If `git pull` instead prints a line with `CONFLICT` in capitals, stop and
+ask. It means the two snapshots changed the same line of the same file
+and git cannot choose. It is rare in a solo project, and it is not a
+disaster; it is a question git is asking you.
+
+:::
+
+::: {.content-hidden when-format="revealjs"}
+
+## After a browser commit and a laptop commit {#diverged}
+
+![After a browser commit and a local commit the copies differ; pull, then push, makes them equal again.](figures/07-git/D4b-local-remote-diverged.svg){fig-align="center" fig-alt="A laptop on the left and a box labelled GitHub (origin) on the right, each with a timeline of circles beneath it. The first three circles match. GitHub's timeline has a fourth circle labelled browser commit; the laptop's has a fourth circle labelled your commit. Arrows between the two are labelled git pull and git push."}
+
+The two copies share the first three snapshots. GitHub's has a fourth,
+the browser commit; yours has a different fourth, your commit. Each album
+has a photo the other lacks, so a push is refused and a pull has to join
+the two lines. Git's word for that join is defined and drawn at the
+end of the page, under [A branch is a second timeline](#branch).
+
+This is the screen `git pull` opens in this situation:
+
+```
+Merge branch 'main' of https://github.com/ArielOrtizBobea/git-practice
+# Please enter a commit message to explain why this merge is necessary,
+# especially if it merges an updated upstream into a topic branch.
+```
+
+Keep the suggested message. On a Mac: `Esc`, then `:wq`, then Enter. On
+Windows, close the Notepad window. A pull has no `-m`, and the suggested
+message is fine. After the editor closes, git prints a receipt, and
+`git log --oneline` shows the join on top of both fourth commits:
+
+```bash
+git pull
+#> ...
+#> Merge made by the 'ort' strategy.
+#>  README.md | 1 +
+#>  1 file changed, 1 insertion(+)
+git log --oneline
+#> 100835e (HEAD -> main) Merge branch 'main' of https://github.com/ArielOrtizBobea/git-practice
+#> 183282f Add a TODO
+#> f6f4e1d (origin/main, origin/HEAD) Update README.md
+#> ...
+git push
+#> ...
+#>    f6f4e1d..100835e  main -> main
+```
+
+Then `git push` goes through, and both copies are equal again. Between
+the refused push and the pull, `git status` describes the situation in
+one line, `Your branch and 'origin/main' have diverged`, with a count of
+the commits on each side.
+
+Without `pull.rebase false` (Before class, step 3), the pull stops
+instead with
+`fatal: Need to specify how to reconcile divergent branches.` after a
+block of `hint:` lines. Run
+`git config --global pull.rebase false` once, then `git pull` again.
+
+:::
+
 ::: {.content-hidden when-format="revealjs"}
 
 ## Redo the good part by hand {#restore-redo}
 
-The model's edit is gone, and one of its two lines was the one you asked for. Put that one back yourself. In RStudio, add `stopifnot(nrow(pm) > 0)` as the last line of `analysis.R`. Save. Then read the diff and stage it.
+Starting point: after the pull, the folder is clean and up to date with GitHub. The assistant's edit is gone, and one of its two lines was the one you asked for. Put that one back yourself. In RStudio, add `stopifnot(nrow(pm) > 0)` as the last line of `analysis.R`. Save. Then read the diff and stage it.
 
 ```bash
 git diff
@@ -2509,11 +2575,11 @@ git add analysis.R
 ```
 
 - Redo the wanted line by hand. One `+`, no `-`. Staged.
-- The model's edit is gone; the check you asked for is in the cart. That is the whole loop: read the diff, keep what you meant.
+- The assistant's edit is gone; the check you asked for is in the frame. That is the whole loop: read the diff, keep what you meant.
 
 The diff now has one `+` and no `-`: the standard is untouched and the check is there. That is the sentence you could not say about the model's version. `git add analysis.R` moves the change into the staging area, and `git status` would list it under `Changes to be committed`. Stop here for a moment, because the next two sections start from exactly this state: one staged edit in `analysis.R`, nothing else pending.
 
-The loop you just ran is the one to keep: a model edits, you read the diff, you discard what you did not mean and redo what you did. It costs a minute. Reading forty lines for the one that moved costs longer and finds less.
+The loop you just ran is the one to keep: an assistant edits, you read the diff, you discard what you did not mean and redo what you did. It costs a minute. Reading forty lines for the one that moved costs longer and finds less.
 
 :::
 
@@ -2537,13 +2603,13 @@ git status
 #> no changes added to commit (use "git add" and/or "git commit -a")
 ```
 
-- Nothing is lost. The file moved from column two back to column one; the edit is still on disk.
+- Nothing is lost. The file left the frame; the edit is still on the desk.
 - Use it when `git diff --staged` shows something you want to look at again. In the Git pane: untick the *Staged* box.
 - Then `git add analysis.R` again.
 
 To **unstage** a file is to take it back out of the staging area while leaving the edit on disk; `git restore --staged <file>` does it, and nothing is lost. The word `restore` is the same as in the destructive command, and the flag `--staged` is the whole difference, so read the line back before you press Enter.
 
-Type `git restore --staged analysis.R`. Nothing prints. Then `git status`: `analysis.R` has moved from `Changes to be committed` to `Changes not staged for commit`. Open the file in the editor: the `stopifnot` line is still there. The staging area is the cart, and this is taking something out of the cart to look at it again. The two hint lines under the heading name both moves you can make from here: `git add` to put it back in the cart, `git restore` to throw the edit away. When you are satisfied, `git add analysis.R` again, and `git status` shows it staged as before. Staged, then doubted. Unstage, read, stage again. The cart is for changing your mind.
+Type `git restore --staged analysis.R`. Nothing prints. Then `git status`: `analysis.R` has moved from `Changes to be committed` to `Changes not staged for commit`. Open the file in the editor: the `stopifnot` line is still there. This is taking something out of the frame to look at it again, without touching the desk. The two hint lines under the heading name both moves you can make from here: `git add` to put it back in the frame, `git restore` to throw the edit away. When you are satisfied, `git add analysis.R` again, and `git status` shows it staged as before. Staged, then doubted. Unstage, read, stage again. The frame is for changing your mind.
 
 ::: {.panel-tabset}
 
@@ -2570,30 +2636,30 @@ Starting point: the edit is staged again after the previous section. Commit it w
 ```bash
 git add analysis.R
 git commit -m "Check the file has rowz"
-#> [main 7455467] Check the file has rowz
+#> [main 63afda4] Check the file has rowz
 #>  1 file changed, 1 insertion(+)
 git commit --amend -m "Check the file has rows"
-#> [main 5ae7730] Check the file has rows
-#>  Date: Tue Sep 15 09:31:00 2026 -0400
+#> [main 546b504] Check the file has rows
+#>  Date: Mon Sep 14 15:09:11 2026 -0400
 #>  1 file changed, 1 insertion(+)
 git log --oneline
-#> 5ae7730 (HEAD -> main) Check the file has rows
-#> 316baee (origin/main, origin/HEAD) Update README.md
+#> 546b504 (HEAD -> main) Check the file has rows
+#> a7c1838 (origin/main, origin/HEAD) Update README.md
 #> ...
 git push
 #> ...
-#>    316baee..5ae7730  main -> main
+#>    a7c1838..546b504  main -> main
 ```
 
 - One commit, not two. The hash changed: an amended commit is a new commit. `rowz` is gone from the timeline.
 - **Only before you push.** After a push the snapshot is on GitHub's copy too, and your next push is refused.
 - Then push, so GitHub is current.
 
-To **amend** a commit is to replace the last commit with a corrected one; `git commit --amend -m "…"` does it for the message, and it is safe only while the commit exists on your laptop alone. Read the first reply: `[main 7455467]`, with the typo. Read the second: `[main 5ae7730]`, a different hash, and the `Date:` line shows git kept the original time. `git log --oneline` has one new line on top of `Update README.md`, not two, and the message is the fixed one. The commit with `rowz` is not in the timeline any more. Then `git push` sends it up, and the last line reads from the browser commit's hash to the amended one.
+To **amend** a commit is to replace the last commit with a corrected one; `git commit --amend -m "…"` does it for the message, and it is safe only while the commit exists on your laptop alone. Read the first reply: `[main 63afda4]`, with the typo. Read the second: `[main 546b504]`, a different hash, and the `Date:` line shows git kept the original time. `git log --oneline` has one new line on top of `Update README.md`, not two, and the message is the fixed one. The commit with `rowz` is not in the timeline any more. Then `git push` sends it up, and the last line reads from the browser commit's hash to the amended one.
 
 Why only before pushing: once a commit is on GitHub's copy, an amended one is a different commit with the same parent, and git refuses the push because the two copies disagree about what the newest snapshot is. A pushed commit is a shared fact, and you fix shared facts with a new commit. After a push, leave the commit alone and make a new one that says what it fixes. History grows forward, and that is fine.
 
-The other amend you will want: `git commit --amend --no-edit` adds whatever is staged to the last commit and keeps its message. That is the forgotten-file case: you committed, then noticed one file was not in the cart. Stage it, amend with `--no-edit`, and the last commit has both. Same rule, before pushing only. Amend will not help when the content of a commit is wrong; make a new commit that says what it fixes.
+The other amend you will want: `git commit --amend --no-edit` adds whatever is staged to the last commit and keeps its message. That is the forgotten-file case: you committed, then noticed one file was not in the frame. Stage it, amend with `--no-edit`, and the last commit has both. Same rule, before pushing only. Amend will not help when the content of a commit is wrong; make a new commit that says what it fixes.
 
 :::
 
@@ -2601,7 +2667,7 @@ The other amend you will want: `git commit --amend --no-edit` adds whatever is s
 
 ::: {.content-visible when-format="revealjs"}
 
-![](figures/07-git/D6-branch-merge.svg){fig-align="center" height="240" fig-alt="A horizontal timeline labelled main with commits A, B, C and F. From B a second line labelled try-new-standard runs parallel with commits D and E, then angles back into F, labelled merge. A dashed X over the branch line notes: or delete it, and main never knew."}
+![](figures/07-git/D6-branch-merge.svg){fig-align="center" height="195" fig-alt="A horizontal timeline labelled main with commits A, B, C and F. From B a second line labelled try-new-standard runs parallel with commits D and E, then angles back into F, labelled merge. A dashed X over the branch line notes: or delete it, and main never knew."}
 
 :::
 
@@ -2615,13 +2681,11 @@ The other amend you will want: `git commit --amend --no-edit` adds whatever is s
 
 - A branch starts at a snapshot and grows its own snapshots. `main` keeps working while you experiment.
 - Merge joins the branch back. Delete it instead and `main` never knew.
-- Solo, rarely: an experiment, a risky rewrite, anything a coauthor should read first. Not for a one-line fix.
+- `analysis_v2.R`, done right: the experiment lives beside the working version. Solo, rarely: an experiment, a rewrite, anything a coauthor should read first.
 
 ::: {.notes}
 
-The timeline can fork. Nothing on the branch touches `main` until you merge. You will not need this for homework. You need to recognise the word when a coauthor or a tool makes one.
-
-A pull request is that merge with a comment box next to it: a place to read a change before it lands. Not `git pull`; shared word, different thing.
+The timeline can fork. Nothing on the branch touches `main` until you merge. This is the folder from slide 4 without the file names: the experiment gets its own line, and when it works you merge it instead of renaming it FINAL. You will not need this for homework. You need to recognise the word when a coauthor or a tool makes one.
 
 :::
 
@@ -2648,15 +2712,28 @@ A **merge conflict** is what happens when two snapshots changed the same line an
 
 :::
 
-::: {.content-hidden when-format="revealjs"}
-
 ## A pull request is a merge with a review attached {#pull-request}
 
-A **pull request** is a request, made on GitHub, to merge one branch into another, with a page where a reader sees the diff and comments on lines before the merge happens. It is GitHub's feature, not git's, and it is the way most code written by more than one person gets reviewed.
+::: {.content-visible when-format="revealjs"}
+
+![](figures/07-git/S10a-pr-files-changed.png){fig-align="center" height="235" fig-alt="GitHub pull request page on the Files changed tab. The header shows the branch try-new-standard being merged into main. Below it a small diff with one red line and one green line, and an inline comment box attached to one line. The diff is circled in red."}
+
+- A manuscript under review. The branch is the submission; comments on lines are the referee's; **Merge pull request** is the editor's accept. Only then does it land on `main`.
+- Not `git pull`. `git pull` downloads the issue after it is out. A pull request proposes, and waits for a person.
+
+::: {.notes}
+GitHub's feature, not git's, and the way most code written by more than one person gets reviewed. You will not open one for homework; you need the word when a coauthor or a tool does. Shared word, opposite ends of the process.
+:::
+
+:::
+
+::: {.content-hidden when-format="revealjs"}
+
+A **pull request** is a request, made on GitHub, to merge one branch into another, with a page where a reader sees the diff and comments on lines before the merge happens. It is GitHub's feature, not git's, and it is the way most code written by more than one person gets reviewed. Think of a manuscript under review: the branch is the submission, a coauthor comments on lines the way a referee does, and **Merge pull request** is the editor's accept; only then does it land on `main`. `git pull` is downloading the issue after it is out. Same word, opposite ends of the process.
 
 - Push the branch. Open a pull request. A reader sees the diff and comments on lines.
 - **Merge pull request** does the merge on GitHub's copy; `git pull` brings it down.
-- Not the same as `git pull`. Shared word, different thing: `git pull` downloads, a pull request proposes.
+- Not the same as `git pull`. `git pull` downloads, a pull request proposes.
 
 ![A pull request's Files changed tab. The header reads `try-new-standard` into `main`; the diff below it is the same red and green as a commit page, and the comment sits on one line of it.](figures/07-git/S10a-pr-files-changed.png){fig-align="center" fig-alt="GitHub pull request page on the Files changed tab. The header shows the branch try-new-standard being merged into main. Below it a small diff with one red line and one green line, and an inline comment box attached to one line. The diff is circled in red."}
 
@@ -2675,24 +2752,20 @@ The second screenshot is the end of the review. **Merge pull request** runs the 
 ```
 # Data is downloaded by your script; never upload it.
 data/
-data_clean/
 
 # R session artifacts
 .Rhistory
 .RData
 .Rproj.user/
-
-# OS junk
-.DS_Store
 ```
 
-- One pattern per line. A trailing `/` is a folder and everything in it; `*.csv` would be every CSV anywhere.
-- An ignored file never appears in `git status`. That is why `data/` never reached GitHub from hw1.
-- `.gitignore` is itself committed. Every clone gets the same rules. RStudio wrote the four-line one we committed earlier.
+- The do-not-photograph list. A file on it never reaches the frame, the album, or GitHub. Data goes on the list; the script that downloads the data goes in the album.
+- One pattern per line; a trailing `/` is a folder and everything in it. An ignored file never appears in `git status`.
+- `.gitignore` is itself committed, so every clone gets the same rules. RStudio wrote the four-line one I committed; yours sits in the Git pane with a yellow `?` until Practice 1.
 
 ::: {.notes}
 
-This is why the grader can clone hw1 and rebuild everything: the data is not in the timeline, the script that fetches it is. Large data lives next to the repository, not in it, and the scripts find it because their paths are relative to the project. And one rule with no command: never keep a repository inside Dropbox, iCloud Drive, OneDrive or Google Drive.
+This is why a reader can clone a repository and rebuild everything: the data is not in the timeline, the script that fetches it is. Data lives in `data/` inside the project, and this file keeps it out of the album. And one rule with no command: never keep a repository inside Dropbox, iCloud Drive, OneDrive or Google Drive.
 
 :::
 
@@ -2700,7 +2773,7 @@ This is why the grader can clone hw1 and rebuild everything: the data is not in 
 
 ::: {.content-hidden when-format="revealjs"}
 
-An **ignored** file is one git refuses to track: it never appears in `git status`, `git add` will not take it, and it never reaches GitHub. The list of what to ignore lives in a file named **`.gitignore`** at the top of the repository, one pattern per line, and that file is itself committed, so every clone follows the same rules. This is hw1's `.gitignore`, all eleven lines:
+An **ignored** file is one git refuses to track: it never appears in `git status`, `git add` will not take it, and it never reaches GitHub. The list of what to ignore lives in a file named **`.gitignore`** at the top of the repository, one pattern per line, and that file is itself committed, so every clone follows the same rules. It is the do-not-photograph list: a file on it never reaches the frame, the album, or GitHub. Here is one for an R project that downloads its data, eleven lines:
 
 ```
 # Data is downloaded by your script; never upload it.
@@ -2719,11 +2792,11 @@ Thumbs.db
 ```
 
 - One pattern per line. A trailing `/` is a folder and everything in it; `*.csv` would be every CSV anywhere.
-- An ignored file never appears in `git status`. That is why `data/` never reached GitHub from hw1: the script downloads the data, and the timeline holds the script.
-- `.gitignore` is itself committed. Every clone gets the same rules. RStudio wrote the four-line one we committed earlier.
+- An ignored file never appears in `git status`. That is how a data folder stays out of a repository: the script downloads the data, and the timeline holds the script.
+- `.gitignore` is itself committed. Every clone gets the same rules. RStudio wrote the four-line one committed in class; yours is still untracked until Practice 1.
 - Never keep a repository inside Dropbox, iCloud Drive, OneDrive or Google Drive. Two sync tools fighting over `.git` corrupt it silently, and GitHub is already the cloud copy. `~/github` on a Mac and `C:/Users/<you>/github` on Windows are outside all of them.
 
-Large data lives next to the repository, not in it. The scripts still find it, because their paths are relative to the project's top folder, and the grader can clone the repository and rebuild everything from the script that fetches the data.
+Data lives inside the project, in `data/`, and `.gitignore` keeps it out of the timeline. The script that downloads it is what gets committed, so anyone can clone the repository and rebuild everything from the script that fetches the data.
 
 Three syntax rules cover every line you will write:
 
@@ -2763,16 +2836,50 @@ One caveat. `.gitignore` only stops files that have never been committed. A file
 
 :::
 
+::: {.content-hidden when-format="revealjs"}
+
+## Start a repository: a new project, or an existing folder {#start-repo}
+
+A brand-new project is steps 1 and 2 below, then work in the folder; that
+is Before class step 5 with a new name, and Practice 9 does it once more.
+A folder you already have, with scripts and data in it, is all seven
+steps. Write the do-not-photograph list before you take the first photo.
+
+1. On GitHub, **+ → New repository**. Name it, select **Private**, tick
+   **Add a README file**, **Create repository**.
+2. Clone it into your `github` folder as an RStudio project: **Code →
+   HTTPS → copy**, then **File → New Project → Version Control → Git**.
+3. Copy, do not move, your project's files into the new folder. If the
+   old folder had an `.Rproj`, leave it behind; RStudio made a new one.
+4. Before the first `git add`, open `.gitignore` (the Git pane lists it;
+   the Files pane hides it) and add the R-project block from the section
+   above under the four lines RStudio wrote, so `data/`, `*.csv`, `*.dta`,
+   `*.rds` and `output/` never reach the timeline.
+5. `git status`. Read the list. If a data file is on it, fix `.gitignore`
+   first and read it again.
+6. `git add .`, then `git status` once more, `git commit -m "Import the
+   project"`, `git push`. Reload GitHub and check that no data file is
+   there.
+7. Only now delete the old folder.
+
+Every tutorial and assistant will also offer `git init`, which turns the
+old folder into a repository where it stands. It makes a timeline with no
+GitHub copy; connecting one afterwards takes two more commands and an
+address typed by hand. The route above reuses the twelve commands of the
+day, and the backup exists from the first minute.
+
+:::
+
 ## Practice {#practice}
 
 ::: {.content-visible when-format="revealjs"}
 
-Ten exercises on the session page, with solutions behind a click. All of them run in your `git-practice` clone or a sandbox repository you make — never in hw1.
+Ten exercises on the session page, with solutions behind a click. All of them run in your `git-practice` clone or a sandbox repository you make — never in a homework repository.
 
 - **1–3** The loop: add, commit, push, and stage only part of a change
 - **4–6** Undoing: discard, unstage, amend
 - **7–8** Pull and read: a browser commit, and the push that is refused
-- **9–10** A new project with its `.gitignore`; a model's diff, printed
+- **9–10** A new project with its `.gitignore`; an assistant's diff, printed
 
 :::
 
@@ -2785,7 +2892,7 @@ Ten exercises on the session page, with solutions behind a click. All of them ru
 ```bash
 # Practice
 # Everything below runs in your git-practice project, Terminal tab,
-# unless it says "sandbox" -- never in hw1.
+# unless it says "sandbox" -- never in a homework repository.
 
 # The loop
 #  1. git status still lists .gitignore and your .Rproj as untracked.
@@ -2825,13 +2932,13 @@ Ten exercises on the session page, with solutions behind a click. All of them ru
 #     should not list it. Try  git add data/junk.csv  and read what git
 #     says. Do not do what it hints. Commit .gitignore and push.
 
-# A model's diff
-# 10. You asked a model to "add a check that the date column parsed".
+# An assistant's diff
+# 10. You asked an assistant to "add a check that the date column parsed".
 #     It returned this diff. Which line did nobody ask for, and what
-#     would it do to the hw1 figure?
+#     does it do to the sample?
 #
 #        pm$date <- as.Date(pm$Date, format = "%m/%d/%Y")
-#       -pm <- pm[pm$n_days >= 60, ]
+#       -pm <- pm[!is.na(pm$pm25), ]
 #       +stopifnot(!any(is.na(pm$date)))
 ```
 
@@ -2920,11 +3027,11 @@ git commit -m "Ignore the data folder"
 git push
 # expected: junk.csv never listed, -f never typed
 
-# 10  -pm <- pm[pm$n_days >= 60, ]   The model removed the 60-of-90-days
-#     filter while adding the check. Every one-in-three and one-in-six
-#     instrument comes back as a mostly-empty row in panel B. Read
+# 10  -pm <- pm[!is.na(pm$pm25), ]   The assistant deleted the filter
+#     that dropped missing readings while adding the check. Rows the
+#     analysis was never meant to count are back in the sample. Read
 #     every - first.
-# expected: the n_days line
+# expected: the is.na line
 ```
 
 :::
@@ -2972,7 +3079,7 @@ Every command from today, one line each, on the session page — with the three-
 
 ::: {.column width="38%"}
 
-![The three places a change lives, with the command that moves it along each arrow and the two comparisons beneath.](figures/07-git/D3-three-places.svg){fig-alt="Three columns labelled working folder, staging area and history. Arrows along the top read git add from the first to the second and git commit -m from the second to the third. Brackets beneath read git diff between the first two and git diff --staged between the last two. A wide bar at the bottom reads git status: reads all three, changes nothing."}
+![The three places a change lives on your laptop and the fourth on GitHub, with the command that moves it along each arrow and the two comparisons beneath.](figures/07-git/D3d-four-places.svg){fig-alt="Four columns: Working folder, the desk; Staging area, what is in the frame; History, the album; and a dashed fourth column, GitHub, the shared album. Arrows along the top read git add, into the frame; git commit -m, press the shutter; git push, hand over the new photos. An arrow back from GitHub to History reads git pull. Brackets beneath mark git diff between the first two columns and git diff --staged between the next two. A bar along the bottom reads git status: reads these three, changes nothing, never asks GitHub."}
 
 :::
 
@@ -3024,6 +3131,7 @@ Every command from today, one line each, on the session page — with the three-
 | `Your branch is ahead of 'origin/main'` | You have commits GitHub does not; `git push` |
 | `git status` says up to date, GitHub has a newer commit | status never asks GitHub; `git pull` |
 | `! [rejected] main -> main (fetch first)` | GitHub has commits you do not; `git pull`, then push |
+| `Your branch and 'origin/main' have diverged` | The same situation, as `git status` reports it; `git pull`, then push |
 | `fatal: Need to specify how to reconcile divergent branches.` | Before class step 3 was skipped: `git config --global pull.rebase false`, then `git pull` again |
 | Push rejected right after `--amend` | You amended a pushed commit; `git pull`, push, and amend only before pushing next time |
 | `The following paths are ignored` | `.gitignore` is doing its job; do not `-f` |
@@ -3046,7 +3154,7 @@ Every command from today, one line each, on the session page — with the three-
 | hash | The forty-character ID git names a commit by; seven characters are enough to type | [§](#reveal-commits) |
 | history | The timeline: every commit, newest first when `git log` prints it | [§](#reveal-commits) |
 | branch | Git's word for a timeline; a repository can have more than one | [§](#status) |
-| `main` | The name every repository's first branch gets | [§](#reveal-repo) |
+| `main` | The name every repository's first branch gets | [§](#make-repo) |
 | `origin` | Git's name for the copy a repository was cloned from, GitHub's | [§](#status) |
 | local | The copy of the repository on your laptop | [§](#two-copies) |
 | remote | A copy of the repository somewhere else, GitHub's | [§](#two-copies) |
@@ -3054,13 +3162,13 @@ Every command from today, one line each, on the session page — with the three-
 | push | Send the snapshots GitHub's copy does not have | [§](#two-copies) |
 | pull | Bring down the snapshots your copy does not have | [§](#two-copies) |
 | working folder (working tree) | The files as you see them in RStudio | [§](#three-places) |
-| staging area | The list of what the next snapshot will include | [§](#three-places) |
+| staging area | The list of what the next snapshot will include, each file as it was when you typed `add` | [§](#three-places) |
 | staged | In the staging area; part of the next commit | [§](#add) |
 | untracked | A file git sees that the timeline has never had | [§](#status) |
 | modified | A tracked file that differs on disk from the newest snapshot | [§](#edit) |
 | tracked | A file the timeline has | [§](#status) |
 | clean | The working folder matches the newest snapshot; nothing pending | [§](#commit-cmd) |
-| fast-forward | A pull that only had to move your timeline forward, because yours was a prefix of GitHub's | [§](#pull) |
+| fast-forward | A pull that only had to add GitHub's new snapshots to the end of your timeline, because GitHub's was yours plus more | [§](#pull) |
 | rejected push | GitHub has a snapshot you do not; pull, then push | [§](#push-rejected) |
 | merge | Join a branch back into the one it came from | [§](#branch) |
 | pull request | A request on GitHub to merge one branch into another, with a review page attached | [§](#pull-request) |
@@ -3076,3 +3184,4 @@ Every command from today, one line each, on the session page — with the three-
 **Links** — [slides](07-git-slides.html) · [Syllabus](../syllabus.qmd) · [Happy Git with R](https://happygitwithr.com) · [Pro Git, chapter 2](https://git-scm.com/book/en/v2/Git-Basics-Getting-a-Git-Repository)
 
 :::
+
