@@ -84,14 +84,14 @@ OneDrive often syncs. Then, in RStudio's **Console** (not the Terminal),
 Enter after each line:
 
 ```r
+install.packages("gapminder")
 dir.create("data")
-download.file("https://arielortizbobea.github.io/aem6850/fall-2026/sessions/data/gapminder.csv", "data/gapminder.csv")
+write.csv(gapminder::gapminder, "data/gapminder.csv", row.names = FALSE)
 nrow(read.csv("data/gapminder.csv"))
 #> [1] 1704
 ```
 
-`download.file()` prints a few lines about the download first; the
-`1704` is the test.
+`install.packages()` prints a few lines first; the `1704` is the test.
 
 **5. Commit once.** **Tools → Terminal → New Terminal**; the prompt ends
 in `gapminder-practice`. Enter after each line:

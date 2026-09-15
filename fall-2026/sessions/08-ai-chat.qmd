@@ -442,7 +442,7 @@ reads the same as a real one. Nothing in the reply marks the difference.
 
 ## The practice folder {#practice-folder}
 
-Make the folder now; five minutes. Everything today reads one file,
+Make the folder now (~ a couple of mins). Everything today reads one file,
 `gapminder.csv`.
 
 1. RStudio: **File → New Project → New Directory → New Project**.
@@ -452,10 +452,10 @@ Make the folder now; five minutes. Everything today reads one file,
    last line is the test:
 
 ```r
+install.packages("gapminder")
 dir.create("data")
 dir.create("code")
-url <- "https://arielortizbobea.github.io/aem6850/fall-2026/sessions/data/gapminder.csv"
-download.file(url, "data/gapminder.csv")
+write.csv(gapminder::gapminder, "data/gapminder.csv", row.names = FALSE)
 nrow(read.csv("data/gapminder.csv"))
 #> [1] 1704
 ```
@@ -464,11 +464,11 @@ nrow(read.csv("data/gapminder.csv"))
 
 ::: {.notes}
 Everything today happens in this folder: one input file and a code
-folder the exercises fill. Wait for the 1704 around the room. Nobody
-retypes the URL: copy the line from the slide or the page.
-`download.file()` prints a few lines about the download first.
-`cannot open file` means the CSV is not in `data/`: run the download
-line again. Windows: the parent folder is typed as
+folder the exercises fill. Wait for the 1704 around the room.
+`install.packages()` prints a few lines first. `cannot open file` means
+the CSV is not in `data/`: run the `write.csv()` line again. A laptop
+where the install fails: the page has a download link for the same
+file. Windows: the parent folder is typed as
 `C:/Users/<username>/github`, not picked with Browse, which opens
 Documents.
 :::
@@ -480,13 +480,16 @@ Documents.
 Step 1 makes the RStudio project and opens it. Pick the `github` folder
 with Browse (never Desktop or Documents if those sync to a cloud drive);
 on Windows type `C:/Users/<your Windows username>/github` as the parent
-folder instead. Step 2 makes the two folders and fetches the CSV from
-the course site into `data/`. `download.file()` prints a few lines about
-the download first; the `1704` is the test. If the download line fails
-(no network, a proxy), download [gapminder.csv](data/gapminder.csv) with
-the browser (right-click the link: *Save link as*, or in Safari
-*Download Linked File*) into `github/gapminder-practice/data/`, then run
-the last line again. `cannot open file` means the CSV is not in `data/`.
+folder instead. Step 2 installs the `gapminder` package, makes the two
+folders, and writes the package's table to `data/gapminder.csv`;
+`install.packages()` prints a few lines first, and the `1704` is the
+test. The table goes on disk because everything today reads a file: the
+scripts, the attach step in claude.ai, and the folder Cowork connects.
+If the install fails (no network, a proxy), download
+[gapminder.csv](data/gapminder.csv), the same table, with the browser
+(right-click the link: *Save link as*, or in Safari *Download Linked
+File*) into `github/gapminder-practice/data/`, then run the last line
+again. `cannot open file` means the CSV is not in `data/`.
 
 :::
 
@@ -535,7 +538,7 @@ something a README should settle from the file.
 
 ```{.markdown filename="notes.md"}
 gapminder notes
-- csv from the course site, 1704 rows? check
+- csv written from the gapminder package, 1704 rows? check
 - mean lifeExp by continent 2007: code/1_lifeexp_2007.R (Oceania 80.72)
 - todo: weighted version (by pop), trend plot 1952 to 2007
 - q: why does Oceania have only 2 countries
@@ -782,8 +785,8 @@ method matters more than the example.
 the script on the page, and do steps 3 and 4 on it. *`cannot open file
 'data/gapminder.csv'`?* The project is not open, or the file is not in
 `data/`: File → Open Project → `gapminder-practice.Rproj`; check the
-Files pane; [The practice folder](#practice-folder) has the download
-line.
+Files pane; [The practice folder](#practice-folder) has the line
+that writes it.
 
 :::
 
@@ -858,7 +861,7 @@ When it fails, say:
 - `Error in file(file, "rt") : cannot open the connection`: the working
   directory is not the project. File → Open Project, then Source again.
 - `Error: nrow(d) == 1704 is not TRUE`: the CSV in `data/` is not the
-  course file (a partial download). Run the `download.file()` line again.
+  course file. Run the `write.csv()` line again.
 - "You've reached your usage limit": the plan's five-hour window. Read a
   neighbour's reply for steps 3 and 4.
 - The paste lost its line breaks: paste into the message box, not the
