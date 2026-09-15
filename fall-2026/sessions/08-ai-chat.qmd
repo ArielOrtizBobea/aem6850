@@ -90,14 +90,12 @@ By the end of this session you can:
 6. An assistant that reaches your files: live demo
 7. The disclosure block
 
-## Four facts about how a model works {#four-facts}
+## A few facts about how an LLM works {#four-facts}
 
-- It predicts the next word. Plausible is not the same as correct.
-- It generates; it does not look anything up. That is where invented
-  references come from.
-- It is not deterministic. A transcript is not something anyone can
-  re-run.
-- Its memory of a conversation is finite. Long chats degrade without
+- A Large Language Model (LLM) predicts the next word. Plausible is not the same as correct.
+- It generates; it does not look anything up (unless it uses a tool). This is where "hallucinated" references come from.
+- It is not deterministic. The same prompt can generate different results.
+- Its memory of a conversation is finite (context window). So long chats "degrade" without
   saying so.
 
 ::: {.content-visible when-format="revealjs"}
@@ -159,14 +157,13 @@ Your job is to tell the two apart.
 
 ## Fact 2: it generates, it does not look up {#generate}
 
-- A reference, a function argument, a number: it produces text shaped
-  like the thing.
-- Often the text matches something real. Sometimes it matches nothing.
+- e.g. A journal reference, a function argument, a number are just text spit out by the LLM.
+- Often that text matches the true or correct value. Sometimes it does not.
 - [*Mata v. Avianca*](https://storage.courtlistener.com/recap/gov.uscourts.nysd.575368/gov.uscourts.nysd.575368.54.0.pdf)
   (2023): six court decisions in a legal brief, none real, a $5,000 fine.
 - A [2023 audit](https://doi.org/10.1038/s41598-023-41032-5): 18 % to
   55 % of references fabricated, depending on the model.
-- A reference from a chatbot is a lead to check, not a citation.
+- A reference from a chatbot is a lead to check, not a confirmed citation.
 
 ::: {.content-visible when-format="revealjs"}
 
@@ -210,12 +207,10 @@ a lead to check, not a citation.
 
 ## Fact 3: it is not deterministic {#not-deterministic}
 
-- The next word is sampled from the list. Chat apps fix how much; you
-  cannot turn it off.
-- Same prompt, same tool, same minute: two students, two replies.
-- Exercise 1 shows this in the room.
-- A transcript is not a record anyone can re-run. The script you saved
-  is.
+- The next word is sampled from the list. Chatbot apps have their own internal parametrization unavailable to you the user.
+- So same prompt, same LLM, same moment could yield different replies. You cannot reproduce a transcript from an LLM.
+- However, the analysis done by a script file is deterministic and can be reproduced.
+- Using LLMs for research erquires using them for writing code (reproducible), not generateing output directly (not reproducible) 
 
 ::: {.content-visible when-format="revealjs"}
 
@@ -248,10 +243,9 @@ script you saved and ran.
   files.
 - As it fills, the app compresses earlier messages into a summary, with
   no notice.
-- At message thirty the tool has not got worse; the code you pasted at
-  the top is no longer there verbatim.
-- One task per chat. Paste the code again; do not write "the code from
-  before".
+- Late in the chat, it's not the model that is getting worse, it's that it's "
+forgetting" part of what you specified earlier in the chat.
+- Lesson: one task per chat. Plan sessions where you do not run out of context window.
 
 ::: {.content-visible when-format="revealjs"}
 
@@ -281,10 +275,10 @@ paste the code again rather than writing "the script from before".
 
 | Fact | Consequence | Habit | The check you perform |
 |:--|:--|:--|:--|
-| Predicts the next word | Plausible before correct | Check the claim against the thing | Read the explanation against the code |
-| Generates, does not look up | Invented references and arguments | Verify before you use | Paste the DOI; run the line |
+| Predicts the next word | Plausible but incorrect | Check claim against truth | Read the explanation against the code |
+| Generates, does not look up | Made up references and arguments | Double check | Check DOI link |
 | Not deterministic | Two runs, two answers; nothing to re-run | Ask for the script, not the answer | Run the script; read what it prints |
-| Finite memory of a chat | Long chats degrade | One task per chat; paste again | A new chat for each task |
+| Finite memory of a chat | Long chats degrade | One task per chat; plan | A new chat for each task |
 
 ::: {.content-visible when-format="revealjs"}
 
@@ -311,7 +305,7 @@ own every number in your submission.
 |:--|:--|:--|:--|
 | Chat | claude.ai, ChatGPT, Gemini | what you paste; returns text | the script you pasted and ran |
 | Assistant | Cowork (desktop app) | a folder; reads, runs, writes files | `git status`, `git diff` |
-| Coding agent | Claude Code | a repository; edits as diffs | each diff before you accept it |
+| Coding agent | Claude Code, Codex | a repository; edits as diffs | each diff before you accept it |
 
 ::: {.content-visible when-format="revealjs"}
 
@@ -397,7 +391,7 @@ things to find.
 
 :::
 
-## What chat is for, and what it cannot do {#chat-uses}
+## What chatbot can (and cannot) do {#chat-uses}
 
 ::: {.content-visible when-format="revealjs"}
 
@@ -446,81 +440,85 @@ reads the same as a real one. Nothing in the reply marks the difference.
 
 :::
 
-## Explaining an error message {#explain-error}
-
-```{.markdown filename="Prompt to paste into Claude"}
-I ran the R line below and got the error under it. Tell me what the
-error means and which part of my line caused it. Do not give me a
-different approach. Fix only the line I wrote.
-
-tapply(d07$lifeexp, d07$continent, mean)
-Error in tapply(d07$lifeexp, d07$continent, mean) :
-  arguments must have same length
-```
-
-::: {.content-visible when-format="revealjs"}
-
-- The line and the error, pasted exactly. Retyped errors lose the clue.
-- "Fix only the line I wrote" closes the scope: one line, not a new
-  approach.
-- Check: run the fixed line. `lifeExp`, capital E.
-
-::: {.notes}
-Every prompt has the same shape: what you want, the exact context, and
-what not to do. The check is the same as always: run it.
-:::
-
-:::
-
-::: {.content-hidden when-format="revealjs"}
-
-The first use, worked: paste the line you ran and the exact error under
-it. Retyped errors lose the clue. Here `d07$lifeexp`
-(lower-case e) is not a column, so R returns `NULL` for it and the first
-argument of `tapply()` has length zero. A good reply names the
-column-name case and changes one letter. A reply that proposes a
-different approach did not do what the prompt asked. The check is the
-same as always: run the fixed line.
-
-:::
-
 ## The practice folder {#practice-folder}
 
-```
-gapminder-practice/
-  gapminder-practice.Rproj
-  data/gapminder.csv          1704 rows, 6 columns
-  code/                       one script per task (empty for now)
-  notes.md                    added later, from the page
+Make the folder now; five minutes. Everything today reads one file,
+`gapminder.csv`.
+
+1. RStudio: **File → New Project → New Directory → New Project**.
+   Directory name `gapminder-practice`, as a subdirectory of your
+   `github` folder. **Create Project**.
+2. In the Console, with the new project open, one line at a time. The
+   last line is the test:
+
+```r
+dir.create("data")
+dir.create("code")
+url <- "https://arielortizbobea.github.io/aem6850/fall-2026/sessions/data/gapminder.csv"
+download.file(url, "data/gapminder.csv")
+nrow(read.csv("data/gapminder.csv"))
+#> [1] 1704
 ```
 
 ::: {.content-visible when-format="revealjs"}
 
-- Open the `.Rproj`, so `data/gapminder.csv` resolves.
-- The CSV is the only input. Nothing ever edits it.
-- `output/` appears when a script writes there.
-
 ::: {.notes}
-This folder is where everything today happens: one input file, a notes
-file, and a code folder the exercises fill.
+Everything today happens in this folder: one input file and a code
+folder the exercises fill. Wait for the 1704 around the room. Nobody
+retypes the URL: copy the line from the slide or the page.
+`download.file()` prints a few lines about the download first.
+`cannot open file` means the CSV is not in `data/`: run the download
+line again. Windows: the parent folder is typed as
+`C:/Users/<username>/github`, not picked with Browse, which opens
+Documents.
 :::
 
 :::
 
 ::: {.content-hidden when-format="revealjs"}
 
-Make the folder now; five minutes. In RStudio: **File → New Project →
-New Directory → New Project**. Directory name `gapminder-practice`, as a
-subdirectory of your `github` folder (never Desktop or Documents if those
-sync to a cloud drive). **Create Project**. In the Files pane click
-**New Folder** twice: `data` and `code`. Download [gapminder.csv](data/gapminder.csv) (right-click the
-link: *Save link as*, or in Safari *Download Linked File*) into
-`github/gapminder-practice/data/`; if the browser put it in Downloads,
-drag it there. The test, in RStudio's Console with the project open:
-`nrow(read.csv("data/gapminder.csv"))` prints `[1] 1704`. `cannot open
-file` means the CSV is not in `data/`.
+Step 1 makes the RStudio project and opens it. Pick the `github` folder
+with Browse (never Desktop or Documents if those sync to a cloud drive);
+on Windows type `C:/Users/<your Windows username>/github` as the parent
+folder instead. Step 2 makes the two folders and fetches the CSV from
+the course site into `data/`. `download.file()` prints a few lines about
+the download first; the `1704` is the test. If the download line fails
+(no network, a proxy), download [gapminder.csv](data/gapminder.csv) with
+the browser (right-click the link: *Save link as*, or in Safari
+*Download Linked File*) into `github/gapminder-practice/data/`, then run
+the last line again. `cannot open file` means the CSV is not in `data/`.
 
-`gapminder-practice/` is an RStudio project in your `github` folder.
+:::
+
+## gapminder.csv, the one input file {#practice-folder-contents}
+
+```
+gapminder-practice/           an RStudio project in your github folder
+  gapminder-practice.Rproj    open this, so data/gapminder.csv resolves
+  data/gapminder.csv          the one input: 1704 rows, 6 columns
+  code/                       one script per task (empty for now)
+  output/                     appears when a script writes there
+```
+
+::: {.content-visible when-format="revealjs"}
+
+- Gapminder: one row per country and year. 142 countries, 1952 to 2007
+  every five years. From the `gapminder` R package (Jenny Bryan), data
+  from gapminder.org, CC BY 4.0.
+- Columns: `country`, `continent`, `year`, `lifeExp`, `pop`, `gdpPercap`.
+- Every script starts with `d <- read.csv("data/gapminder.csv")`. Nothing
+  ever edits the file; scripts write to `output/`.
+
+::: {.notes}
+The column names matter: `lifeExp`, capital E, is the one everyone
+mistypes. The file is public, CC BY 4.0, which is why it is the one
+file you may attach or connect today.
+:::
+
+:::
+
+::: {.content-hidden when-format="revealjs"}
+
 `data/gapminder.csv` is the input: 1,704 rows; the columns `country`,
 `continent`, `year` (1952 to 2007 every five years), `lifeExp`, `pop`,
 `gdpPercap`; 142 countries, five continents. It comes from the
@@ -543,6 +541,46 @@ gapminder notes
 - q: why does Oceania have only 2 countries
 - q: does the gap between Europe and Africa close or widen
 ```
+
+:::
+
+## Explaining an error message {#explain-error}
+
+```{.markdown filename="Prompt to paste into Claude"}
+I ran the R line below and got the error under it. Tell me what the
+error means and which part of my line caused it. Do not give me a
+different approach. Fix only the line I wrote.
+
+tapply(d07$lifeexp, d07$continent, mean)
+Error in tapply(d07$lifeexp, d07$continent, mean) :
+  arguments must have same length
+```
+
+::: {.content-visible when-format="revealjs"}
+
+- The line and the error, pasted exactly. Retyped errors lose the clue.
+- "Fix only the line I wrote" closes the scope: one line, not a new
+  approach.
+- `d07` holds the 2007 rows of `gapminder.csv`. Its column is
+  `lifeExp`, capital E.
+- Check: run the fixed line.
+
+::: {.notes}
+Every prompt has the same shape: what you want, the exact context, and
+what not to do. The check is the same as always: run it.
+:::
+
+:::
+
+::: {.content-hidden when-format="revealjs"}
+
+The first use, worked: paste the line you ran and the exact error under
+it. Retyped errors lose the clue. Here `d07$lifeexp`
+(lower-case e) is not a column, so R returns `NULL` for it and the first
+argument of `tapply()` has length zero. A good reply names the
+column-name case and changes one letter. A reply that proposes a
+different approach did not do what the prompt asked. The check is the
+same as always: run the fixed line.
 
 :::
 
@@ -717,9 +755,9 @@ method matters more than the example.
 # in your browser, a new chat.
 #
 # 1. RStudio: File > New File > R Script. Paste the script from the
-#    page (code/1_lifeexp_2007.R). File > Save As, into the code
-#    folder, named 1_lifeexp_2007.R. Click Source. Read the five
-#    numbers in the Console.
+#    slide "code/1_lifeexp_2007.R, the given script". File > Save As,
+#    into the code folder, named 1_lifeexp_2007.R. Click Source. Read
+#    the five numbers in the Console.
 #
 # 2. claude.ai: paste the explain prompt from the slide "Asking for an
 #    explanation of code". Shift+Enter. Paste the whole script under
@@ -745,7 +783,7 @@ the script on the page, and do steps 3 and 4 on it. *`cannot open file
 'data/gapminder.csv'`?* The project is not open, or the file is not in
 `data/`: File → Open Project → `gapminder-practice.Rproj`; check the
 Files pane; [The practice folder](#practice-folder) has the download
-link.
+line.
 
 :::
 
@@ -820,7 +858,7 @@ When it fails, say:
 - `Error in file(file, "rt") : cannot open the connection`: the working
   directory is not the project. File → Open Project, then Source again.
 - `Error: nrow(d) == 1704 is not TRUE`: the CSV in `data/` is not the
-  course file (a partial download). Download it again from the page.
+  course file (a partial download). Run the `download.file()` line again.
 - "You've reached your usage limit": the plan's five-hour window. Read a
   neighbour's reply for steps 3 and 4.
 - The paste lost its line breaks: paste into the message box, not the
