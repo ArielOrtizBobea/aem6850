@@ -2,8 +2,11 @@
 
 Captured 2026-09-14/15 and removed from this list: S01, S02, S03, S04, S05,
 S06, S07, S10, S14 and the transcripts T01, T04, T05 (see CAPTURED.md); the
-page quotes them. Every file below is still a grey placeholder (the S-number
-printed on it) so the page renders. Capture at ~1600 px wide, light theme,
+page quotes them. The three remaining shots (S11, S12, S13) were page-only and their
+grey placeholders were removed from the page on 2026-09-15, so the page
+has no placeholder left; capture them only if the instructor wants the
+figures back, and re-add the figure line to the section named in the
+Slide column. Capture at ~1600 px wide, light theme,
 cropped tight, circles and numbers in `#b31b1b`; landscape (height / width
 <= 0.7) for every shot that sits in a two-column slide. Replace the
 placeholder at the same path and delete the row. The Slide column names

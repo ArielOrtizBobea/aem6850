@@ -24,11 +24,12 @@ Replies vary between runs: the page must say so.
 | `S10-doi-not-found.png` | doi.org: "DOI NOT FOUND · 10.1016/S0954-349X(02)00049-7 · This DOI cannot be found in the DOI System" | The check that catches the wrong DOI (see T04). |
 | `S14-references-reply.png` | The reply to the references prompt with web search off: the refusal to invent, the three hedged references with DOIs | Optional slide/page figure beside S10. |
 
-## Still placeholders (grey PNGs; see SHOPPING-LIST.md)
+## No placeholders left
 
-S11 (Settings > Capabilities), S12 (free account: Chat only), S13 (chore
-prompt in chat). S12 needs a free account; S11 and S13 are page-only and
-two-minute captures in claude.ai.
+S11 (Settings > Capabilities), S12 (free account: Chat only) and S13
+(chore prompt in chat) were page-only figures; their placeholder PNGs
+and figure lines were removed on 2026-09-15 (see SHOPPING-LIST.md to
+re-add them).
 
 ## Transcripts (in `captured/`)
 
