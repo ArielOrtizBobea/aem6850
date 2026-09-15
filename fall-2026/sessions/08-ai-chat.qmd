@@ -681,8 +681,8 @@ the last line.
 ::: {.content-visible when-format="revealjs"}
 
 - Paste the prompt, Shift+Enter, paste the script, Enter.
-- Goal, failure mode, artifact, what not to do: every prompt today has
-  the four.
+- What you want, what it will get wrong, what to give back, what not to
+  do: every prompt today has the four parts.
 - The model has not run this script. It has only the text you pasted.
 
 ::: {.notes}
@@ -696,10 +696,11 @@ script, because rewriting is the most likely continuation.
 
 The prompt you paste in Exercise 1, and how: copy the block, paste it
 into the message box, press Shift+Enter, paste the script under it,
-press Enter. The prompt has the four parts. The goal: an explanation,
-one line at a time, at your level. The failure mode to avoid: a rewrite
-instead of an explanation. The artifact: a quoted line followed by a
-sentence. What not to do: suggest changes. "For someone new to R" is in
+press Enter. The prompt has the four parts. What you want: an
+explanation, one line at a time, at your level. What it will probably
+get wrong: rewrite the script instead of explaining it. What to give
+back: each line quoted, then a sentence. What not to do: suggest
+changes. "For someone new to R" is in
 the prompt because the level of the explanation is context too.
 
 :::
@@ -1132,7 +1133,7 @@ stated with its filter.
 |:--|:--|
 | Basic: the question alone | five numbers, from memory |
 | With pasted context: `str(d)`, `head(d, 3)`, "base R only" | one line of code that fits your columns |
-| With the artifact declared: a script at `code/...`, what it reads, what it prints | a file you can run and keep |
+| Asking for a script at `code/...`, saying what it reads and what it prints | a file you can run and keep |
 
 The third one is the only one you can re-run tomorrow.
 
@@ -1151,10 +1152,9 @@ are on the page in full.
 The same question three ways. Basic ("What is the mean life expectancy
 by continent in 2007 in the Gapminder data?") returns numbers from
 memory. With pasted context (`str(d)` and `head(d, 3)` under the prompt,
-base R named) it returns a line of code that fits your columns. With the
-artifact declared (a script at `code/...`, what it reads, what it
-prints, "do not compute it here") it returns a file you can run and
-keep. Same question, three different objects come back. The three
+base R named) it returns a line of code that fits your columns. Asking
+for a script (at `code/...`, what it reads, what it prints, "do not
+compute it here") returns a file you can run and keep. Same question, three different objects come back. The three
 prompts in full are in the next section.
 
 :::
@@ -1188,7 +1188,7 @@ the year 2007 only, so that each country counts once?
 What to expect: a line of code that names your columns as they are
 spelled, with the 2007 filter, because the filter was in the prompt.
 
-The prompt with the artifact declared.
+The prompt that asks for the script.
 
 ```{.markdown filename="Prompt to paste into Claude"}
 Write an R script I will save as code/1_lifeexp_2007.R. It reads
@@ -1261,31 +1261,37 @@ CC BY 4.0, which is why it is the practice file.
 
 ## The four parts of a prompt that works {#prompt-shape}
 
-- **Goal**: the number or file you want, stated once.
-- **Failure mode to avoid**: the mistake a plausible answer makes here.
-- **Artifact and path**: a script at `code/...`, what it reads, writes,
-  prints.
-- **What not to do**: no numbers in the chat; no invented columns; stop
-  if the file differs.
+1. **Say what you want.** "The population-weighted mean life expectancy
+   for each continent in 2007."
+2. **Say what it will probably get wrong.** It has not seen your file.
+   "The file has twelve years per country: use only 2007. Weight by
+   population, not a simple mean."
+3. **Ask for a script, not the answer.** Name the file and say what it
+   reads, writes and prints.
+4. **Say what not to do.** "Do not compute the numbers here. Do not invent
+   columns. If the file is not as described, stop."
 
 ::: {.content-visible when-format="revealjs"}
 
 ::: {.notes}
-A prompt has four parts. The second one is the one nobody writes, and it
-is the one that saves you the wrong-years recipe.
+Every prompt today has these four parts. Part 2 is the one nobody
+writes, and it is the one that would have prevented the script that
+averaged all twelve years. The full prompt is on the next slide.
 :::
 
 :::
 
 ::: {.content-hidden when-format="revealjs"}
 
-The anatomy every prompt on this page follows, each part with the
-example from the Exercise 2 prompt. The goal: the population-weighted
-mean of `lifeExp` by continent in 2007. The failure mode to avoid: twelve
-years per country, so filter first; do not take the simple mean. The
-artifact and its path: an R script at `code/2_lifeexp_weighted_2007.R`,
-what it reads, what it writes, what it prints. What not to do: no numbers
-in the chat, no invented columns, stop if the file does not match.
+Every prompt on this page has these four parts, and the next section
+shows them assembled into the Exercise 2 prompt. Part 1 says what you
+want, in one sentence. Part 2 says what the model will probably get
+wrong, because it has not seen your file: here, that the file holds
+twelve years per country, so only 2007 counts, and that the mean must be
+weighted by population. Part 3 asks for a script rather than the answer,
+names the file, and says what the script reads, writes and prints. Part
+4 says what not to do: no numbers in the chat, no invented columns, and
+stop if the file does not match the description.
 
 The shortest useful context paragraph names the file, its columns, its
 size, and where it sits in your project.
@@ -1329,9 +1335,9 @@ table.
 
 The Exercise 2 prompt, part by part. The first paragraph is context: the
 file, its columns, its size, its path in your project. The second is the
-goal. The third names the failure mode twice (filter to 2007 first;
-weight by `pop`, not the simple mean) and the artifact with its path,
-what it reads, writes and prints. The last paragraph says what not to
+goal. The third says what the model would get wrong, twice (filter to
+2007 first; weight by `pop`, not the simple mean), and asks for the
+script at its path, with what it reads, writes and prints. The last paragraph says what not to
 do, and it is the one that matters most. Left alone, a tool that can
 read the attached file will compute the numbers and show them, and you
 will have an answer instead of a script.
