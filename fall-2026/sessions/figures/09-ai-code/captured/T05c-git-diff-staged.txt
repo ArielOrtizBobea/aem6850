@@ -1,0 +1,15 @@
+diff --git a/code/lifeexp_by_continent.R b/code/lifeexp_by_continent.R
+new file mode 100644
+index 0000000..751a6b8
+--- /dev/null
++++ b/code/lifeexp_by_continent.R
+@@ -0,0 +1,9 @@
++# Mean life expectancy by continent for a given year (base R only)
++
++lifeexp_by_continent <- function(d, yr) {
++  sub <- d[d$year == yr, ]
++  tapply(sub$lifeExp, sub$continent, mean)
++}
++
++d <- read.csv("data/gapminder.csv", stringsAsFactors = FALSE)
++print(lifeexp_by_continent(d, 2007))

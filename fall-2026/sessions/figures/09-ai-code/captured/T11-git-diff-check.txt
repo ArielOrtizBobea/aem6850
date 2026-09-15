@@ -1,0 +1,14 @@
+diff --git a/code/lifeexp_by_continent.R b/code/lifeexp_by_continent.R
+--- a/code/lifeexp_by_continent.R
++++ b/code/lifeexp_by_continent.R
+@@ -7,4 +7,9 @@ lifeexp_by_continent <- function(d, yr) {
+ }
+ 
+ d <- read.csv("data/gapminder.csv", stringsAsFactors = FALSE)
+-print(lifeexp_by_continent(d, 2007))
++res <- lifeexp_by_continent(d, 2007)
++print(res)
++
++# Check: Oceania 2007 by hand. Australia 81.235 (20,434,176 people) and
++# New Zealand 80.204 (4,115,771 people) give 81.06.
++stopifnot(abs(res["Oceania"] - 81.06) < 0.01)

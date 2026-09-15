@@ -1,0 +1,16 @@
+# captured 2026-09-14 23:55, claude.ai (web), model picker "Opus 5 · High" (Max plan), gapminder.csv attached, code execution on
+# Prompt: prompts/T05.txt (Exercise 2 prompt P5). The reply began with a tool step shown as
+# "Ran 2 commands, read a file, and 2 more tools", then this text, then an artifact card
+# "2 lifeexp weighted 2007 · Code · R" with a Download button; the script (T05-weighted-script.R)
+# opens in a side panel with a Copy button when the card is clicked.
+
+I checked the file before writing the script, and it matches your description. It has 1704 rows and the six columns in the order you listed. It covers 142 countries, each with 12 years from 1952 to 2007 in five-year steps, across five continents. There are no missing values, and 2007 has 142 rows. I did not compute any results.
+
+One detail matters for correctness. read.csv stores pop as integer. The largest single country is about 1.3 billion, which fits. A continental sum does not fit, because R's integer maximum is about 2.1 billion. Summing the integer column would return NA with an overflow warning. The script converts pop to double before aggregating.
+
+The script also begins with stopifnot() checks on columns, row count, countries, and years. If the file in data/ ever changes, it stops instead of writing wrong output. It creates output/ if that folder does not exist. It prints one cat() line per continent, rounded to two decimals.
+
+# Verification note (R 4.3.1, 2026-09-14): the overflow claim is out of date. Since R 3.5.0, sum() of an
+# integer vector returns a double when the total exceeds the integer range: sum(pop) for Asia 2007 gives
+# 3811953827 with no NA and no warning. The conversion is harmless; the stated reason is wrong.
+# A model's explanation is checked against what R does, not against how confident it sounds.

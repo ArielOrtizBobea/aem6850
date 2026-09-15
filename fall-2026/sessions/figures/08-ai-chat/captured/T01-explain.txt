@@ -1,0 +1,49 @@
+# captured 2026-09-14 23:40, claude.ai (web), model picker "Opus 5 · High" (Max plan), web search default, no attachment
+# Prompt: prompts/T01.txt (the explain request plus the 11-line script)
+
+Line 1
+# 1_lifeexp_2007.R: mean life expectancy by continent in 2007.
+This is a comment. R ignores any line that starts with #. It exists for humans. It gives the file name and says what the script computes. It produces nothing.
+
+Line 2
+# Reads data/gapminder.csv; writes output/lifeexp_2007.csv.
+Another comment. It tells the reader which file the script needs as input and which file it creates as output. It also produces nothing.
+
+Line 3
+YEAR <- 2007
+The arrow <- stores a value under a name. Here the number 2007 is stored in an object called YEAR. The capital letters are just a naming habit that signals "this is a setting." The line produces an object YEAR in memory. Nothing prints to the screen.
+
+Line 4
+d <- read.csv("data/gapminder.csv")
+read.csv() opens a comma-separated text file and turns it into a data frame. A data frame is a table: rows are observations and columns are variables. The path "data/gapminder.csv" is relative. R looks for a folder called data inside the current working directory. The table is stored as d. In this dataset each row is one country in one year, with columns such as country, continent, year, and lifeExp.
+
+Line 5
+stopifnot(nrow(d) == 1704)
+nrow(d) counts the rows in d. The == operator asks "is this equal to?" and returns TRUE or FALSE. stopifnot() checks that condition. If it is TRUE, nothing happens and the script continues. If it is FALSE, R stops with an error. This is a safety check that the file loaded completely. It produces no output when the check passes.
+
+Line 6
+d07 <- d[d$year == YEAR, ]
+d$year pulls out the year column. d$year == YEAR compares every value to 2007 and returns a long vector of TRUE and FALSE. Square brackets select parts of a data frame using [rows, columns]. The logical vector goes in the rows slot, so R keeps only rows marked TRUE. The empty columns slot means "keep all columns." The result is a smaller data frame, d07, with only the 2007 rows.
+
+Line 7
+m <- tapply(d07$lifeExp, d07$continent, mean)
+tapply() splits one variable into groups and applies a function to each group. The first argument is the values: life expectancy. The second is the grouping variable: continent. The third is the function to apply: mean. So R computes the average life expectancy for each continent. The result, m, is a vector of numbers where each number carries a name, the continent it belongs to.
+
+Line 8
+print(round(m, 2))
+round(m, 2) rounds each mean to two decimal places. print() shows the result in the console. You see the continent names above their rounded means. This line does not change m. It only displays a rounded copy.
+
+Line 9
+out <- data.frame(continent = names(m), mean_lifeExp = round(m, 2))
+data.frame() builds a new table from columns. names(m) extracts the continent names from m as text. That becomes a column called continent. round(m, 2) gives the rounded means, which become a column called mean_lifeExp. The result is a small data frame, out, with one row per continent and two columns.
+
+Line 10
+dir.create("output", showWarnings = FALSE)
+dir.create() makes a new folder called output in the working directory. If the folder already exists, R would normally print a warning. showWarnings = FALSE silences that warning. The line produces a folder on your disk, or does nothing if the folder is already there.
+
+Line 11
+write.csv(out, "output/lifeexp_2007.csv", row.names = FALSE)
+write.csv() saves a data frame to a CSV file. The first argument is the table to save, out. The second is the file path. By default R would add an extra first column of row labels. row.names = FALSE prevents that, so the file contains only the continent and mean_lifeExp columns. The line produces the file output/lifeexp_2007.csv on your disk.
+
+# Note for the exercise: line 7's sentence "the average life expectancy for each continent" does not say
+# that every country counts once (an average of countries, not of people). That is the thing to question.

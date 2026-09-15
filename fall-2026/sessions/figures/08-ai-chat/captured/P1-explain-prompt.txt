@@ -1,0 +1,13 @@
+Explain the R script pasted below one line at a time, in plain words, for someone who learned R three weeks ago. Quote each line, then say what it does and what it produces. Do not rewrite the script and do not suggest changes. Stop after the last line.
+
+# 1_lifeexp_2007.R: mean life expectancy by continent in 2007.
+# Reads data/gapminder.csv; writes output/lifeexp_2007.csv.
+YEAR <- 2007
+d <- read.csv("data/gapminder.csv")
+stopifnot(nrow(d) == 1704)
+d07 <- d[d$year == YEAR, ]
+m <- tapply(d07$lifeExp, d07$continent, mean)
+print(round(m, 2))
+out <- data.frame(continent = names(m), mean_lifeExp = round(m, 2))
+dir.create("output", showWarnings = FALSE)
+write.csv(out, "output/lifeexp_2007.csv", row.names = FALSE)
