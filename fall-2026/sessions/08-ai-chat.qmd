@@ -144,25 +144,23 @@ holds for all of them.
   that follows instructions.
 - **Cutoff**: training stops on a date. Later events reach the model
   only through the conversation or a tool.
-- The result is a fixed file of numbers. Using it does not change it:
-  your chats do not update the parameters.
+- **Frozen**: once training ends, the model stops learning. Your chats
+  do not teach it anything. Every new chat starts from the same model.
 
 ::: {.notes}
 Two stages. Pre-training is the expensive one and gives the model
 everything it knows about language, code and the world, up to a date.
 Post-training is what makes it answer you instead of continuing your
-sentence. The last bullet is the one students get wrong: the model
-does not learn from your chat. Whatever it seems to remember is in the
-conversation in front of it, or in a note the app saved and pasted
-back in.
+sentence. Frozen is the one students get wrong: the model does not learn from
+your chat. Whatever it seems to remember is in the conversation in
+front of it, or in a note the app saved and pasted back in.
 :::
 
 :::
 
 ::: {.content-hidden when-format="revealjs"}
 
-Two stages of training produce the model. Both change only the
-parameters.
+Two stages of training produce the model.
 
 **Pre-training.** The network reads a very large body of text and, at
 every token, guesses the next one. Each wrong guess moves the
@@ -194,11 +192,13 @@ Anything after the cutoff reaches the model only through the
 conversation: you paste it, you attach it, or the app fetches it with a
 tool.
 
-**The result is a file.** A trained model is a fixed set of numbers,
-copied onto servers. Using it does not change it. A chat does not
-update the parameters, and nothing you tell it in one conversation is
-there in the next, unless the app saved a note and pastes it back in.
-The next section explains that "unless".
+**Frozen.** Once training ends, the model stops learning. It is copied
+onto servers and answers millions of chats without changing. Nothing
+you tell it in one conversation is there in the next, unless the app
+saved a note and pastes it back in; the next section explains that
+"unless". Whether a vendor uses your chats to train a later model
+depends on your account settings; the model answering you today does
+not change.
 
 :::
 
@@ -206,15 +206,15 @@ The next section explains that "unless".
 
 ::: {.content-visible when-format="revealjs"}
 
-- **Model**: the file of numbers. Nobody types into it directly.
-- **Harness**: the program around the model. It assembles what the
-  model sees (a hidden **system prompt**, your messages, the attached
-  file), sends it, and shows you the reply.
+- **Model**: the trained network from the last slide. It takes text
+  and returns text, nothing else: no screen, no buttons, no files.
+- **Harness**: the app you use. It assembles what the model reads (a
+  hidden **system prompt**, your messages, the attached file), sends
+  that to the model, and shows you the reply.
 - **Tools**: a harness can let the model call programs: web search, a
   sandbox that runs code, your folder, a terminal. The model asks; the
-  harness runs it and pastes the result back in.
-- **Agent**: a harness that lets the model call tools in a loop until
-  the task is done.
+  harness runs the program and pastes the result back in.
+- **Agent**: a harness that lets the model call tools in a loop until done.
 - claude.ai, ChatGPT and Gemini are harnesses. Cowork and Claude Code
   are harnesses around the same Claude models, with more tools.
 
@@ -230,9 +230,11 @@ harness lets the model touch.
 
 ::: {.content-hidden when-format="revealjs"}
 
-You never talk to a model. You talk to a **harness**: the program that
-wraps the model and turns it into a product. The harness writes a
-hidden **system prompt** (instructions on how to behave, today's date,
+The model is the trained network of the previous section. It takes
+text and returns text, and nothing else: it has no screen, no buttons
+and no files. You never talk to it directly. You talk to a **harness**:
+the app that wraps the model and turns it into a product. The harness
+writes a hidden **system prompt** (instructions on how to behave, today's date,
 which tools exist), puts your messages and the file you attached after
 it, sends the whole thing to the model, and shows you the reply. Two
 apps on the same model can behave differently because their system
@@ -267,10 +269,10 @@ with more tools than the last.
 
 ## Key features of LLMs {#four-facts}
 
-- An LLM predicts the next word. Plausible is not the same as correct.
-- It generates; it does not look anything up (unless it uses a tool). This explains "hallucinations".
-- It is not deterministic. i.e. the same prompt can generate different results.
-- Its memory of a conversation is finite (context window). So long chats "degrade".
+1. An LLM predicts the next word. Plausible is not the same as correct.
+2. It generates; it does not look anything up (unless it uses a tool). This explains "hallucinations".
+3. It is not deterministic, i.e. the same prompt can generate different results.
+4. Its memory of a conversation is finite (context window). So long chats "degrade".
 
 ::: {.content-visible when-format="revealjs"}
 
