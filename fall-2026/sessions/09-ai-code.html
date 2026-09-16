@@ -1,0 +1,2293 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.37">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>AEM 6850 · 9 AI II: coding agents at the command line – AEM 6850</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-7f8f88aac4f3542376d5c11b86a4c14d.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-9e1fa279bf766a6aa9044cbdb2ba542d.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="../../styles.css">
+</head>
+
+<body class="nav-sidebar docked quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../fall-2026/sessions/01-overview.html">Part I — Foundations</a></li><li class="breadcrumb-item"><a href="../../fall-2026/sessions/09-ai-code.html"> 9 AI II: the coding loop</a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="../../">AEM 6850</a> 
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Home</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/syllabus.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Syllabus</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">Part I — Foundations</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/01-overview.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"> 1 Overview</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/02-r-essentials.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"> 2 R essentials I</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/03-r-essentials-ii.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"> 3 R essentials II</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/03b-wrangling.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">   Wrangling: dplyr</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/04-basic-plots.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"> 4 Basic plots I</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/05-basic-plots-ii.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"> 5 Basic plots II</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/06-how-to-code.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"> 6 How to code</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/07-git.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"> 7 Version control with git</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/08-ai-chat.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"> 8 AI I: chatbots</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/09-ai-code.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"> 9 AI II: the coding loop</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/10-verification.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">10 Verification</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/11-reproducible-project.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">11 Reproducible projects</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/12-ggplot.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">12 Publication graphics</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
+ <span class="menu-text">Part II — Applications</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/13-landscape.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">13 The data landscape</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/14-apis.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">14 Channels I: APIs</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/15-scraping.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">15 Channels II: scraping</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/16-text-regex.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">16 Text I: regex</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/17-text-llms.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">17 Text II: LLMs</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/18-documents.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">18 Documents &amp; scans</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/19-images-photos.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">19 Images: photographs</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/20-satellite-local.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">20 Satellite I: local</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/21-satellite-gee.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">21 Satellite II: Earth Engine</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/22-audio.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">22 Audio</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/23-time.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">23 Time &amp; time zones</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/24-spatial-vector.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">24 Spatial I: vector</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/25-spatial-rasters.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">25 Spatial II: rasters</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/26-spatial-exposures.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">26 Spatial III: exposures</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/27-ai-ethics.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">27 AI ethics</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/28-moving-forward.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">28 Moving forward</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../../fall-2026/assignments.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Homework</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/assignments/hw01-air.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">1 How bad was the air?</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../../fall-2026/resources.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Resources</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/resources.html#stata" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Coming from Stata</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/resources.html#r" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Learning R</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/resources.html#economists" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Coding guides</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/resources.html#unstuck" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Getting unstuck</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul class="collapse">
+  <li><a href="#objectives" id="toc-objectives" class="nav-link active" data-scroll-target="#objectives">Objectives</a></li>
+  <li><a href="#plan" id="toc-plan" class="nav-link" data-scroll-target="#plan">Plan for today</a></li>
+  <li><a href="#coding-tools" id="toc-coding-tools" class="nav-link" data-scroll-target="#coding-tools">Inline and agentic coding tools</a></li>
+  <li><a href="#what-changes" id="toc-what-changes" class="nav-link" data-scroll-target="#what-changes">What changes when a tool can edit your files</a></li>
+  <li><a href="#where-it-lives" id="toc-where-it-lives" class="nav-link" data-scroll-target="#where-it-lives">Claude Code in RStudio’s Terminal tab</a></li>
+  <li><a href="#five-steps" id="toc-five-steps" class="nav-link" data-scroll-target="#five-steps">The five-step delegation loop</a></li>
+  <li><a href="#two-rules" id="toc-two-rules" class="nav-link" data-scroll-target="#two-rules">Two rules for letting a model touch your files</a></li>
+  <li><a href="#prompt-shape" id="toc-prompt-shape" class="nav-link" data-scroll-target="#prompt-shape">The four parts of a delegation prompt</a></li>
+  <li><a href="#clean-start" id="toc-clean-start" class="nav-link" data-scroll-target="#clean-start">git status before you start</a></li>
+  <li><a href="#launch" id="toc-launch" class="nav-link" data-scroll-target="#launch">Launching Claude Code in manual mode</a></li>
+  <li><a href="#trust" id="toc-trust" class="nav-link" data-scroll-target="#trust">The trust question</a></li>
+  <li><a href="#welcome" id="toc-welcome" class="nav-link" data-scroll-target="#welcome">Reading the welcome screen</a></li>
+  <li><a href="#first-prompt" id="toc-first-prompt" class="nav-link" data-scroll-target="#first-prompt">A read-only first prompt</a></li>
+  <li><a href="#keys" id="toc-keys" class="nav-link" data-scroll-target="#keys">Keys, commands, and a second Terminal tab</a></li>
+  <li><a href="#the-task" id="toc-the-task" class="nav-link" data-scroll-target="#the-task">The function to delegate, and its failure mode</a></li>
+  <li><a href="#by-hand" id="toc-by-hand" class="nav-link" data-scroll-target="#by-hand">Working out the expected value by hand: Oceania 2007</a></li>
+  <li><a href="#delegation-prompt" id="toc-delegation-prompt" class="nav-link" data-scroll-target="#delegation-prompt">The prompt as sent</a></li>
+  <li><a href="#approve-create" id="toc-approve-create" class="nav-link" data-scroll-target="#approve-create">The approval box for a new file</a></li>
+  <li><a href="#transcript-says" id="toc-transcript-says" class="nav-link" data-scroll-target="#transcript-says">What the transcript says it did</a></li>
+  <li><a href="#run-disagree" id="toc-run-disagree" class="nav-link" data-scroll-target="#run-disagree">Source the script: expected 81.06, printed 80.72</a></li>
+  <li><a href="#exercise-1-prompt" id="toc-exercise-1-prompt" class="nav-link" data-scroll-target="#exercise-1-prompt">The prompt for Exercise 1: lifeexp_gain()</a></li>
+  <li><a href="#exercise-1" id="toc-exercise-1" class="nav-link" data-scroll-target="#exercise-1">Exercise 1</a></li>
+  <li><a href="#scoping" id="toc-scoping" class="nav-link" data-scroll-target="#scoping">Scoping a delegation: one function, one file</a></li>
+  <li><a href="#three-tests" id="toc-three-tests" class="nav-link" data-scroll-target="#three-tests">Three tests of a delegation</a></li>
+  <li><a href="#diff-new-file" id="toc-diff-new-file" class="nav-link" data-scroll-target="#diff-new-file">git diff --staged: what the model wrote</a></li>
+  <li><a href="#the-line" id="toc-the-line" class="nav-link" data-scroll-target="#the-line">Line 5 averages countries, not people</a></li>
+  <li><a href="#patch-prompt" id="toc-patch-prompt" class="nav-link" data-scroll-target="#patch-prompt">Asking for a patch, not a rewrite</a></li>
+  <li><a href="#approve-edit" id="toc-approve-edit" class="nav-link" data-scroll-target="#approve-edit">The approval box for an edit: red and green lines</a></li>
+  <li><a href="#judge-diff" id="toc-judge-diff" class="nav-link" data-scroll-target="#judge-diff">How to judge a model’s diff: five questions</a></li>
+  <li><a href="#diff-after-patch" id="toc-diff-after-patch" class="nav-link" data-scroll-target="#diff-after-patch">git diff after the patch, and the second run</a></li>
+  <li><a href="#institutionalize" id="toc-institutionalize" class="nav-link" data-scroll-target="#institutionalize">stopifnot(): the check stays in the script</a></li>
+  <li><a href="#commit" id="toc-commit" class="nav-link" data-scroll-target="#commit">Commit after reading</a></li>
+  <li><a href="#exercise-2" id="toc-exercise-2" class="nav-link" data-scroll-target="#exercise-2">Exercise 2</a></li>
+  <li><a href="#diff-on-screen" id="toc-diff-on-screen" class="nav-link" data-scroll-target="#diff-on-screen">The diff is on screen before the file changes</a></li>
+  <li><a href="#agent-git" id="toc-agent-git" class="nav-link" data-scroll-target="#agent-git">The agent runs git when you ask</a></li>
+  <li><a href="#claude-md" id="toc-claude-md" class="nav-link" data-scroll-target="#claude-md">CLAUDE.md: read at every launch</a></li>
+  <li><a href="#init" id="toc-init" class="nav-link" data-scroll-target="#init">/init: a first draft of CLAUDE.md</a></li>
+  <li><a href="#claude-md-seed" id="toc-claude-md-seed" class="nav-link" data-scroll-target="#claude-md-seed">The CLAUDE.md for gapminder-practice</a></li>
+  <li><a href="#style-in-claude-md" id="toc-style-in-claude-md" class="nav-link" data-scroll-target="#style-in-claude-md">Style habits in CLAUDE.md: naming, structure, constants, comments</a></li>
+  <li><a href="#short-prompt" id="toc-short-prompt" class="nav-link" data-scroll-target="#short-prompt">A two-sentence prompt after CLAUDE.md</a></li>
+  <li><a href="#short-prompt-file" id="toc-short-prompt-file" class="nav-link" data-scroll-target="#short-prompt-file">The file it produced: conventions applied unasked</a></li>
+  <li><a href="#bad-at" id="toc-bad-at" class="nav-link" data-scroll-target="#bad-at">What Claude Code is bad at</a></li>
+  <li><a href="#runs-clean" id="toc-runs-clean" class="nav-link" data-scroll-target="#runs-clean">“Runs clean” is not “is right”</a></li>
+  <li><a href="#practice" id="toc-practice" class="nav-link" data-scroll-target="#practice">Practice</a></li>
+  <li><a href="#quick-reference" id="toc-quick-reference" class="nav-link" data-scroll-target="#quick-reference">Quick reference</a></li>
+  </ul>
+<div class="quarto-alternate-formats"><h2>Other Formats</h2><ul><li><a href="09-ai-code-slides.html"><i class="bi bi-file-slides"></i>RevealJS</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../fall-2026/sessions/01-overview.html">Part I — Foundations</a></li><li class="breadcrumb-item"><a href="../../fall-2026/sessions/09-ai-code.html"> 9 AI II: the coding loop</a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title">9 · AI II — coding agents at the command line</h1>
+<p class="subtitle lead">Tuesday, September 22, 2026</p>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p><a href="09-ai-code-slides.html">Slides</a> · <a href="https://github.com/ArielOrtizBobea/aem6850/blob/main/fall-2026/sessions/09-ai-code.qmd">Source</a></p>
+<p>How to hand one function to a coding tool that edits files in your repository, and how to know whether what came back is right. State the goal and the mistake to avoid; work out the answer by hand on a small case; run it, read the diff, and leave the check in the script. Every step runs in RStudio’s Terminal tab inside a git repository.</p>
+<div id="before-class" class="callout callout-style-default callout-important callout-titled" title="Before class: install Claude Code, log in, and make the practice repository">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Important</span>Before class: install Claude Code, log in, and make the practice repository
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>About twenty-five minutes, once, on the laptop you bring. Claude Code needs a Claude Pro subscription; the free plan does not include it. Do all six steps; step 6 is the test.</p>
+<p><strong>1. Subscribe to Claude Pro</strong> ($20 a month). You will get a lot out of it this semester; it is worth the investment. Cornell is working on access for students, but nothing is in place as of September 2026, so plan on Pro for now: choose Pro on the <a href="https://claude.com/pricing">pricing page</a>. If you decide not to subscribe, follow the captured run on the slides in class and pair with a neighbour for the two exercises.</p>
+<p><strong>2. Install Claude Code.</strong> <em>Mac:</em> in RStudio, <strong>Tools → Terminal → New Terminal</strong>, paste this line, Enter:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">curl</span> <span class="at">-fsSL</span> https://claude.ai/install.sh <span class="kw">|</span> <span class="fu">bash</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><em>Windows:</em> use PowerShell, not RStudio (Start, type <code>PowerShell</code>, open it), paste this line, Enter:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode powershell code-with-copy"><code class="sourceCode powershell"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">irm</span> https<span class="op">://</span>claude<span class="op">.</span><span class="fu">ai</span><span class="op">/</span>install<span class="op">.</span><span class="fu">ps1</span> <span class="op">|</span> <span class="fu">iex</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>When it finishes, <strong>quit and reopen RStudio</strong>: the terminal you installed from does not see the new program.</p>
+<p><strong>3. Check the install.</strong> <strong>Tools → Terminal → New Terminal</strong>, type <code>claude --version</code>, Enter. It prints a version number ending in <code>(Claude Code)</code>, like <code>2.1.258 (Claude Code)</code>. <code>command not found</code>: quit and reopen RStudio. Windows, still not found: add <code>%USERPROFILE%\.local\bin</code> to your user PATH, then quit and reopen RStudio. Windows, and <code>claude</code> opens the Claude desktop app instead: update the desktop app, then retry.</p>
+<p><strong>4. Open or make the practice repository.</strong> If a folder <code>github/gapminder-practice</code> already exists on your laptop, open it (<strong>File → Open Project</strong>, then its <code>.Rproj</code> file) and go to step 5. Otherwise make it: <strong>File → New Project → New Directory → New Project.</strong> Directory name <code>gapminder-practice</code>; <em>Create project as subdirectory of</em> <code>~/github</code>; tick <strong>Create a git repository</strong>; <strong>Create Project</strong>. On Windows type <code>C:/Users/&lt;your Windows username&gt;/github</code> for the parent folder; do not click Browse, which opens Documents, a folder OneDrive often syncs. Then, in RStudio’s <strong>Console</strong> (not the Terminal), Enter after each line:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"gapminder"</span>)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">dir.create</span>(<span class="st">"data"</span>)</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="fu">write.csv</span>(gapminder<span class="sc">::</span>gapminder, <span class="st">"data/gapminder.csv"</span>, <span class="at">row.names =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(<span class="fu">read.csv</span>(<span class="st">"data/gapminder.csv"</span>))</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 1704</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><code>install.packages()</code> prints a few lines first; the <code>1704</code> is the test.</p>
+<p><strong>5. Commit once.</strong> <strong>Tools → Terminal → New Terminal</strong>; the prompt ends in <code>gapminder-practice</code>. Enter after each line:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> status</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Untracked files:</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;         .gitignore</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;         data/</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;         gapminder-practice.Rproj</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> add <span class="at">-A</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> commit <span class="at">-m</span> <span class="st">"Add the Gapminder table"</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> status</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; On branch main</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; nothing to commit, working tree clean</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>If the first <code>git status</code> says <code>fatal: not a git repository</code>, run <code>git init</code> and start the block again. If it prints <code>nothing to commit, working tree clean</code>, the folder is already committed: go to step 6.</p>
+<p><em>Lines without <code>#&gt;</code> you type. Lines with <code>#&gt;</code> are what the program prints.</em> <code>main</code> may read <code>master</code> on your laptop; both are fine. If git asks who you are, run <code>git config --global user.name "Your Name"</code> and <code>git config --global user.email "netid@cornell.edu"</code>, then commit again.</p>
+<p><strong>6. Log in (the test).</strong> In the same Terminal tab, type <code>claude</code>, Enter. The first run asks a few set-up questions; take the default text style. When it asks how to log in, choose the subscription login. Your browser opens a Claude sign-in page: sign in with the account from step 1 and follow the prompts back to the Terminal. When it asks whether you trust this folder, <strong>No, exit</strong> is highlighted: press the down arrow once to <em>Yes, I trust this folder</em>, Enter. A welcome screen names the version, the model and your plan, and a folder ending in <code>gapminder-practice</code>. Type <code>/exit</code>, Enter. That is a pass. Anything else: the “Things that bite” table at the end of this page lists the fixes; still stuck, bring the laptop to class ten minutes early. Commit anything else you add to the folder before class, so that <code>git status</code> prints clean.</p>
+</div>
+</div>
+<section id="objectives" class="level2">
+<h2 class="anchored" data-anchor-id="objectives">Objectives</h2>
+<p>By the end of this session you can:</p>
+<ul>
+<li>Run the five-step delegation loop end to end.</li>
+<li>Scope a delegation: “write this function,” not “do my homework.”</li>
+<li>Read a model’s diff and judge it.</li>
+<li>Convert a one-off verification into a permanent check.</li>
+</ul>
+</section>
+<section id="plan" class="level2">
+<h2 class="anchored" data-anchor-id="plan">Plan for today</h2>
+<ol type="1">
+<li>Coding tools that read your files</li>
+<li>The five-step loop and two rules</li>
+<li>Starting Claude Code in the repository</li>
+<li>Delegating one function</li>
+<li>Reading the diff, the patch, the check</li>
+<li>Version control from inside the agent</li>
+<li>CLAUDE.md: standing context and your style</li>
+<li>“Runs clean” is not “is right”</li>
+</ol>
+</section>
+<section id="coding-tools" class="level2">
+<h2 class="anchored" data-anchor-id="coding-tools">Inline and agentic coding tools</h2>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;"></th>
+<th style="text-align: left;">Inline</th>
+<th style="text-align: left;">Agentic</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Where</td>
+<td style="text-align: left;">in the editor, as you type</td>
+<td style="text-align: left;">in the Terminal tab, in a folder</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Sees</td>
+<td style="text-align: left;">the open file</td>
+<td style="text-align: left;">every file in the repository</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Does</td>
+<td style="text-align: left;">suggests the next lines</td>
+<td style="text-align: left;">writes files, runs commands, asks first</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Examples</td>
+<td style="text-align: left;">Copilot in RStudio</td>
+<td style="text-align: left;">Claude Code, Codex CLI, Gemini CLI, Cursor</td>
+</tr>
+</tbody>
+</table>
+<p>Two kinds of coding tool exist today, and they behave differently. An inline tool lives in the editor and proposes the next few lines as grey text while you type; <a href="https://docs.posit.co/ide/user/ide/guide/tools/copilot.html">GitHub Copilot inside RStudio</a> is one. An agentic tool lives in a terminal. It reads the folder you start it in, writes files, runs commands, and asks before each change. Claude Code is one; Codex CLI, Gemini CLI and Cursor’s agent are peers. This page shows Claude Code because every screenshot and every prompt here is one real run of one tool. The habits transfer to the category.</p>
+</section>
+<section id="what-changes" class="level2">
+<h2 class="anchored" data-anchor-id="what-changes">What changes when a tool can edit your files</h2>
+<ul>
+<li>It can read any file in the repository. Nothing private goes in that folder.</li>
+<li>Its edits land on disk, not in a chat.</li>
+<li>It can run commands, including git.</li>
+<li>It shows every edit as a diff before it lands. You accept or refuse.</li>
+<li>What is right is still your call.</li>
+</ul>
+<p>Four things change. It can read any file in the repository, so what it sees is not what you pasted but what is on disk. Its edits land on disk, not in a chat window. It can run commands, including scripts and git. Every edit appears as a diff before it lands; that diff is the one thing you must read. The verification is yours; the tool has no way to compare the number it produced with the number you meant.</p>
+</section>
+<section id="where-it-lives" class="level2">
+<h2 class="anchored" data-anchor-id="where-it-lives">Claude Code in RStudio’s Terminal tab</h2>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="figures/09-ai-code/S12-rstudio-terminal-claude.png" class="img-fluid figure-img" alt="The RStudio window with the gapminder-practice project open: the Terminal tab showing the Claude Code welcome screen, the Console beside it, and the Files pane, each circled in red."></p>
+<figcaption>One RStudio window: Claude Code in the Terminal tab, the Console free for running scripts, the Files pane showing what was written.</figcaption>
+</figure>
+</div>
+<p>Claude Code runs in RStudio’s Terminal tab, the tab where git commands go, opened inside the project so the folder it sees is the repository. The Console stays free, so the script it writes runs where scripts always run: Session → Restart R, then Source. The Files pane shows what it wrote. Enlarge the Terminal pane before a prompt: drag the divider up, or use the maximize icon in the pane’s corner. An approval box for a twenty-line file does not fit the default pane.</p>
+</section>
+<section id="five-steps" class="level2">
+<h2 class="anchored" data-anchor-id="five-steps">The five-step delegation loop</h2>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="figures/09-ai-code/D1-five-step-loop.svg" class="img-fluid figure-img" alt="Five boxes left to right: 1 Explain, the goal and the failure mode; 2 Delegate, one function, one file; 3 Work it out, one small case by hand; 4 Verify, run, compare, read the diff; 5 Keep it, a stopifnot() line in the script. A dashed red arrow from box 4 back to box 2 reads: they disagree, ask for a patch, then verify again."></p>
+<figcaption>The five-step delegation loop. When the value on paper and the printed value disagree, the arrow goes back to step 2 as a patch request.</figcaption>
+</figure>
+</div>
+<p>Every delegation runs the same five steps. State the goal and the mistake you do not want (the failure mode). Delegate one function. Work out by hand what it must return on a case small enough to check, from rows you can see, before anything runs. Run it and compare the printed value with the one on paper; if they disagree, read the diff, ask for a patch, run again. Then write the hand check into the script as a <code>stopifnot()</code> line, so the next run checks itself. The value on paper comes from the data, not from a guess; that is what makes step 4 a comparison and not an impression.</p>
+</section>
+<section id="two-rules" class="level2">
+<h2 class="anchored" data-anchor-id="two-rules">Two rules for letting a model touch your files</h2>
+<ul>
+<li><strong>Start from a clean git state.</strong> <code>git status</code> clean before the prompt; afterwards the diff is exactly what the model did.</li>
+<li><strong>Trust the diff, not the transcript.</strong> What it did, not what it says it did.</li>
+<li>You read every diff before you commit.</li>
+</ul>
+<p>Rule one: start from a clean git state. <code>git status</code> prints <code>nothing to commit, working tree clean</code> before you type a prompt; then every line the diff shows afterwards is the model’s, and none is yours. Rule two: trust the diff, not the transcript. The transcript says what the tool claims it did. The diff shows what it did. When they disagree, the diff wins.</p>
+</section>
+<section id="prompt-shape" class="level2">
+<h2 class="anchored" data-anchor-id="prompt-shape">The four parts of a delegation prompt</h2>
+<ul>
+<li><strong>Goal</strong>: the function’s name, inputs, and what it returns.</li>
+<li><strong>Failure mode</strong>: the mistake to avoid, named.</li>
+<li><strong>Artifact and path</strong>: <code>code/&lt;name&gt;.R</code>.</li>
+<li><strong>What not to do</strong>: no run, no other files, no git.</li>
+<li>Paste it exactly. Do not paraphrase.</li>
+</ul>
+<p>A prompt to a coding tool has four parts, in any order. The goal: what the function takes and returns, with names. The failure mode: the mistake a reasonable reader could make, named. The artifact and its path: which file, where. What not to do: do not run it, do not create other files, do not use git. The fourth part is what keeps the diff small enough to read. Every prompt on this page is the exact text; paste it, do not paraphrase it.</p>
+</section>
+<section id="clean-start" class="level2">
+<h2 class="anchored" data-anchor-id="clean-start">git status before you start</h2>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> status</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; On branch main</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; nothing to commit, working tree clean</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> log <span class="at">--oneline</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4993e56 Add the Gapminder table</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Open the project (File → Recent Projects → <code>gapminder-practice</code>), then Tools → Terminal → New Terminal. The prompt ends in the project name. <code>git status</code> must be clean, and <code>git log --oneline</code> shows the commits made so far (the hashes on your laptop differ). If <code>git status</code> lists anything, commit it first; a prompt sent to a dirty tree means you cannot tell later which lines were yours.</p>
+<p>The folder is the tool’s entire view, and it can read everything in it. The syllabus rule applies with no exceptions: no licensed data, no other students’ work, no personal information in a folder you open Claude Code in. A practice repository with a public file is the right place to learn. <code>gapminder.csv</code> is CC BY 4.0 (gapminder.org via the <a href="https://cran.r-project.org/package=gapminder"><code>gapminder</code></a> R package); anyone may read it. A graded repository is the right place only once the routine is automatic and the data is public.</p>
+</section>
+<section id="launch" class="level2">
+<h2 class="anchored" data-anchor-id="launch">Launching Claude Code in manual mode</h2>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="ex">claude</span> <span class="at">--permission-mode</span> manual</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>One line in the Terminal tab launches it in manual mode, where it reads freely but asks before every edit and every command that changes something. A Pro account may otherwise start in auto mode, where a second model approves edits instead of you. The status line above the prompt says which mode you are in; it must read <code>⏸ manual mode on</code> for everything today. Shift+Tab cycles the modes; if the keystroke does not reach the tool inside RStudio’s terminal, quit with <code>/exit</code> and relaunch with the line above. An older install that rejects <code>manual</code> accepts <code>--permission-mode default</code>, which is the same mode.</p>
+</section>
+<section id="trust" class="level2">
+<h2 class="anchored" data-anchor-id="trust">The trust question</h2>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="figures/09-ai-code/S01-trust-folder.png" class="img-fluid figure-img" alt="Claude Code's first screen in a folder: Accessing workspace, the folder path /Users/ao332/github/gapminder-practice, a quick safety check paragraph, and the two answers No, exit (highlighted) and Yes, I trust this folder."></p>
+<figcaption>The trust question. Read the path; the highlighted answer is No, exit.</figcaption>
+</figure>
+</div>
+<p>The first launch in a folder asks whether you trust it. The highlighted answer is <strong>No, exit</strong>. Press the down arrow once to <strong>Yes, I trust this folder</strong>, then Enter. It asks once per folder. If it asks on every launch, you opened the terminal outside the project; Tools → Terminal → New Terminal from inside the project fixes it.</p>
+</section>
+<section id="welcome" class="level2">
+<h2 class="anchored" data-anchor-id="welcome">Reading the welcome screen</h2>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="figures/09-ai-code/S02-welcome.png" class="img-fluid figure-img" alt="The Claude Code welcome screen: Claude Code v2.1.258, the model and plan line, the folder ~/github/gapminder-practice, the prompt box, and the status line reading manual mode on."></p>
+<figcaption>The welcome screen, with the empty middle of the terminal cut out. The captured account is not a student account; on a Pro account the second line names Sonnet 5 and Claude Pro, in wording that varies.</figcaption>
+</figure>
+</div>
+<p>Four lines matter: the version; the model and plan (a Pro account names Sonnet 5 and Claude Pro; the captured account differs); the folder; and the status line, <code>⏸ manual mode on</code>. The folder must end in <code>gapminder-practice</code> (on Windows it starts with <code>C:/Users/</code>). The <code>❯</code> is where a prompt goes; Enter sends it.</p>
+<p>Every Claude Code screen on this page comes from real runs of version 2.1.258, captured on 2026-09-14; the RStudio screens are separate captures. Replies vary from run to run: the wording of a summary, sometimes the code. The steps do not.</p>
+</section>
+<section id="first-prompt" class="level2">
+<h2 class="anchored" data-anchor-id="first-prompt">A read-only first prompt</h2>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>Prompt to paste into Claude Code</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7" data-filename="Prompt to paste into Claude Code"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>List every file in this repository, folder by folder, with its size.</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>Do not edit anything.</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>The first prompt changes nothing; it proves the tool sees the repository. A prompt that ends with “Do not edit anything” does not trigger an edit box, because reading is free in manual mode. A box may still appear for a listing command such as <code>ls</code> or <code>find</code>; read the command, then <code>1. Yes</code>. The reply lists at least <code>.gitignore</code>, <code>gapminder-practice.Rproj</code> and <code>data/gapminder.csv</code> with their sizes (often <code>.git/</code> and <code>.Rproj.user/</code> too), in whatever layout that run chose. Paste into the Terminal tab with Cmd+V on a Mac, Ctrl+V on Windows. A long prompt may collapse to one line, <code>[Pasted text #1 +N lines]</code>; that is the whole prompt. Compare the reply with the Files pane: same files, same folders. Then <code>git status</code> in a second Terminal tab (next section) prints clean, which is the proof that a read-only prompt read only.</p>
+</section>
+<section id="keys" class="level2">
+<h2 class="anchored" data-anchor-id="keys">Keys, commands, and a second Terminal tab</h2>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th style="text-align: left;">Key or command</th>
+<th style="text-align: left;">Does</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Enter</td>
+<td style="text-align: left;">sends the prompt</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Esc</td>
+<td style="text-align: left;">interrupts; on a question, declines</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">↑</td>
+<td style="text-align: left;">brings back the previous prompt</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>/clear</code></td>
+<td style="text-align: left;">new conversation, same folder</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>/exit</code> (or Ctrl+C twice)</td>
+<td style="text-align: left;">leaves Claude Code</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Tools → Terminal → New Terminal</td>
+<td style="text-align: left;">a second tab for git</td>
+</tr>
+</tbody>
+</table>
+<p>Five keys a novice needs, and one RStudio habit: Claude Code occupies its Terminal tab, so git commands go in a second one. Tools → Terminal → New Terminal opens <em>Terminal 2</em>; the dropdown at the top of the Terminal pane switches between them. Leave Claude Code in Terminal 1 and type git in Terminal 2. If the Terminal shows R’s <code>&gt;</code> prompt instead of <code>❯</code>, you typed <code>claude</code> in the Console: Tools → Terminal → New Terminal, then again.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="figures/09-ai-code/S13-terminal-dropdown.png" class="img-fluid figure-img" alt="RStudio's Terminal pane with its dropdown open, listing Terminal 1 running Claude Code and Terminal 2 at the shell prompt, both circled in red."></p>
+<figcaption>Two Terminal tabs: Claude Code stays in Terminal 1, git goes in Terminal 2. The dropdown switches between them.</figcaption>
+</figure>
+</div>
+</section>
+<section id="the-task" class="level2">
+<h2 class="anchored" data-anchor-id="the-task">The function to delegate, and its failure mode</h2>
+<ul>
+<li><strong>Goal</strong>: <code>lifeexp_by_continent(d, yr)</code>: one number per continent, the mean <code>lifeExp</code> of the people living there in year <code>yr</code>.</li>
+<li><strong>Failure mode</strong>: averaging countries, not people. Each country counts once instead of once per person.</li>
+<li>Both run clean. Only one answers the question.</li>
+</ul>
+<p>The goal: <code>lifeexp_by_continent(d, yr)</code> takes the Gapminder data frame and one year and returns one number per continent, the population-weighted mean of <code>lifeExp</code>. The failure mode: averaging countries instead of people. “Mean life expectancy by continent” has two readings: average the countries, or average the people. The tool resolves an ambiguous instruction toward the common reading and does not say which it chose. Both run clean. The simple mean of five numbers answers “what is the typical country”; the weighted mean answers “what is the typical person”. That is what makes it a failure mode worth naming: a careful reader could pick either, so the prompt has to say which. The value in step 3 is worked out under your reading, so a silent switch shows up as a number.</p>
+</section>
+<section id="by-hand" class="level2">
+<h2 class="anchored" data-anchor-id="by-hand">Working out the expected value by hand: Oceania 2007</h2>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th style="text-align: left;"></th>
+<th style="text-align: right;"><code>lifeExp</code></th>
+<th style="text-align: right;"><code>pop</code></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Australia</td>
+<td style="text-align: right;">81.235</td>
+<td style="text-align: right;">20,434,176</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">New Zealand</td>
+<td style="text-align: right;">80.204</td>
+<td style="text-align: right;">4,115,771</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>Weighted by people (pop in millions): (81.235 × 20.43 + 80.204 × 4.12) / 24.55 = <strong>81.06</strong></li>
+<li>Simple mean of two countries: <strong>80.72</strong></li>
+<li>Write <strong>81.06</strong> down now. 80.72 is the failure mode.</li>
+</ul>
+<p>Oceania in 2007 has two rows, so you can work the answer out on paper from the data itself. Australia has 83 % of the people (20.43 of 24.55 million). The weighted mean therefore sits 83 % of the way from 80.204 to 81.235: 80.204 + 0.83 × 1.031 = 81.06. The simple mean of the two numbers is 80.72. Write 81.06 down before anything runs. If the script prints 80.72, it averaged countries.</p>
+</section>
+<section id="delegation-prompt" class="level2">
+<h2 class="anchored" data-anchor-id="delegation-prompt">The prompt as sent</h2>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>Prompt to paste into Claude Code (captured run)</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8" data-filename="Prompt to paste into Claude Code (captured run)"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>Write code/lifeexp_by_continent.R. It defines a function</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>lifeexp_by_continent(d, yr) that takes the Gapminder data frame d and a</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>year yr and returns the mean life expectancy of each continent in that</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>year, as a named vector with one number per continent. Base R only, no</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>packages. At the bottom of the script, read data/gapminder.csv into d and</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>print lifeexp_by_continent(d, 2007). Do not run the script; I will run it</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>myself. Do not create any other file and do not use git.</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>This is the exact prompt of the captured run. Read it against the four parts: the goal is there, the artifact and path are there, what not to do is there. The failure mode is not. The run on this page is what a prompt without part two produces, and the loop still catches it, because 81.06 was on paper.</p>
+</section>
+<section id="approve-create" class="level2">
+<h2 class="anchored" data-anchor-id="approve-create">The approval box for a new file</h2>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="figures/09-ai-code/S03-create-file-dialog.png" class="img-fluid figure-img" alt="Claude Code's approval box: Write(code/lifeexp_by_continent.R), Create file, the nine-line script with line 5 reading tapply(sub$lifeExp, sub$continent, mean), and the question Do you want to create lifeexp_by_continent.R? with the answers 1. Yes, 2. Yes, and switch to accept edits, 3. No."></p>
+<figcaption>The approval box for a new file. The whole file is on screen before it exists; line 5 is the one to read.</figcaption>
+</figure>
+</div>
+<p>In manual mode the tool shows the file before it exists. The box names the action (<em>Create file</em>), the path, every line of the file, and a question with three answers. <code>1. Yes</code> (Enter) writes the file. <code>2. Yes, and switch to accept edits</code> turns the edit questions off for the session; leave it today. <code>3. No</code>, or Esc, refuses and lets you say why. Read line 5 before pressing anything: <code>tapply(sub$lifeExp, sub$continent, mean)</code>. Then accept it anyway; the loop is about to test it.</p>
+</section>
+<section id="transcript-says" class="level2">
+<h2 class="anchored" data-anchor-id="transcript-says">What the transcript says it did</h2>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="figures/09-ai-code/S04-written-summary.png" class="img-fluid figure-img" alt="Claude Code after accepting: Wrote 9 lines to code/lifeexp_by_continent.R, the nine lines, and a summary paragraph ending Not run, no other files touched."></p>
+<figcaption>After the write: the file again, then the summary paragraph, which says it “uses tapply(sub<span class="math inline">\(lifeExp, sub\)</span>continent, mean)”.</figcaption>
+</figure>
+</div>
+<p>After the write, the transcript summarizes: it filters <code>d</code> to the requested year and uses <code>tapply(sub$lifeExp, sub$continent, mean)</code>, which returns a named numeric vector. That summary is accurate here. It is still a claim about a file; the file on disk is the fact. That is why the diff section opens the file through <code>git diff</code>.</p>
+</section>
+<section id="run-disagree" class="level2">
+<h2 class="anchored" data-anchor-id="run-disagree">Source the script: expected 81.06, printed 80.72</h2>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">"code/lifeexp_by_continent.R"</span>)</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   Africa Americas     Asia   Europe  Oceania </span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 54.80604 73.60812 70.72848 77.64860 80.71950 </span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Run it where scripts always run: Session → Restart R, then open <code>code/lifeexp_by_continent.R</code> from the Files pane and click Source (or <code>source("code/lifeexp_by_continent.R")</code> in the Console). It runs without an error and prints five numbers. Oceania reads 80.7195. The paper says 81.06. The script ran clean and answered the other question, and the only reason that is visible is the number written down in step 3.</p>
+</section>
+<section id="exercise-1-prompt" class="level2">
+<h2 class="anchored" data-anchor-id="exercise-1-prompt">The prompt for Exercise 1: lifeexp_gain()</h2>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>Prompt to paste into Claude Code</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10" data-filename="Prompt to paste into Claude Code"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>Write code/lifeexp_gain.R. It defines a function lifeexp_gain(d, from, to)</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>that takes the Gapminder data frame d and two years, and returns, for each</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>continent, the name of the country whose lifeExp rose the most between the</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>years from and to, as a named character vector with the continent names as</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>names. A gain is a country's lifeExp in year to minus its lifeExp in year</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>from, matched by country name, never by row position; a fall counts as a</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>negative gain and stays in. Base R only, no packages. At the bottom of the</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>script, read data/gapminder.csv into d and print lifeexp_gain(d, 1952, 2007).</span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>Do not run the script; I will run it myself. Do not create any other file</span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>and do not use git.</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>The second function is yours to delegate, with all four parts present this time. <code>lifeexp_gain(d, from, to)</code> returns, for each continent, the name of the country whose <code>lifeExp</code> rose the most between two years. The failure mode has three shapes. A gain is the value in <code>to</code> minus the value in <code>from</code>, matched by country name. Matching by row position, subtracting the other way, or dropping a country whose life expectancy fell each produces a plausible name. Oceania is again the case you can check: Australia went from 69.12 to 81.235, New Zealand from 69.39 to 80.204.</p>
+</section>
+<section id="exercise-1" class="level2 smaller">
+<h2 class="smaller anchored" data-anchor-id="exercise-1">Exercise 1</h2>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true" href="">Exercise</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false" href="">Solution</a></li></ul>
+<div class="tab-content">
+<div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Exercise 1 (8 minutes). RStudio, your gapminder-practice project.</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="co">#</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="co"># 1. Tools &gt; Terminal &gt; New Terminal:  git status  (clean), then</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="co">#    claude --permission-mode manual. Status line: manual mode on.</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a><span class="co">#    Enlarge the Terminal pane so the approval box will fit.</span></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a><span class="co">#</span></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a><span class="co"># 2. On paper first. Australia: 69.12 in 1952, 81.235 in 2007.</span></span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a><span class="co">#    New Zealand: 69.39 in 1952, 80.204 in 2007. Subtract twice.</span></span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a><span class="co">#    Which country gained more? Write its name down.</span></span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a><span class="co">#</span></span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a><span class="co"># 3. Paste the prompt from the slide before this one. Do not edit it.</span></span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a><span class="co">#    Enter. Wait for the box that shows the file.</span></span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a><span class="co">#</span></span>
+<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a><span class="co"># 4. In the box, find the line that subtracts the two years. Is it</span></span>
+<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a><span class="co">#    "to minus from"? Then 1. Yes. If not: Esc, then type "The gain</span></span>
+<span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a><span class="co">#    must be lifeExp in year to minus lifeExp in year from, matched by</span></span>
+<span id="cb11-17"><a href="#cb11-17" aria-hidden="true" tabindex="-1"></a><span class="co">#    country name. Change only that line." Read the new box, then 1. Yes.</span></span>
+<span id="cb11-18"><a href="#cb11-18" aria-hidden="true" tabindex="-1"></a><span class="co">#</span></span>
+<span id="cb11-19"><a href="#cb11-19" aria-hidden="true" tabindex="-1"></a><span class="co"># 5. Session &gt; Restart R. Open code/lifeexp_gain.R, click Source.</span></span>
+<span id="cb11-20"><a href="#cb11-20" aria-hidden="true" tabindex="-1"></a><span class="co">#    Compare the Oceania name with the one on your paper.</span></span>
+<span id="cb11-21"><a href="#cb11-21" aria-hidden="true" tabindex="-1"></a><span class="co">#</span></span>
+<span id="cb11-22"><a href="#cb11-22" aria-hidden="true" tabindex="-1"></a><span class="co"># Two answers to compare with the room: the Oceania name your script</span></span>
+<span id="cb11-23"><a href="#cb11-23" aria-hidden="true" tabindex="-1"></a><span class="co"># printed, and whether the other four names match your neighbour's.</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><em>Paired with a neighbour?</em> One laptop, two readers: the one not typing reads the approval box aloud, including the subtraction line. The prompt is in the section above, with a copy button. A box titled <em>Bash command</em> asking to run <code>mkdir code</code> or <code>ls</code> only makes the folder or looks: <code>1. Yes</code>. One that contains <code>Rscript</code> or <code>R -e</code>: Esc; you run the script yourself in step 5.</p>
+</div>
+<div id="tabset-1-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-2-tab">
+<p>On paper: Australia 81.235 − 69.12 = 12.115; New Zealand 80.204 − 69.39 = 10.814. <strong>Australia.</strong></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">"code/lifeexp_gain.R"</span>)</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;      Africa    Americas        Asia      Europe     Oceania </span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;     "Libya" "Nicaragua"      "Oman"    "Turkey" "Australia" </span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>One shape a correct function takes (captured 2026-09-14 from a shorter prompt for the same function; yours differs in wording and possibly in method):</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>lifeexp_gain <span class="ot">&lt;-</span> <span class="cf">function</span>(d, from, to) {</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  start <span class="ot">&lt;-</span> d[d<span class="sc">$</span>year <span class="sc">==</span> from, <span class="fu">c</span>(<span class="st">"country"</span>, <span class="st">"continent"</span>, <span class="st">"lifeExp"</span>)]</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>  end <span class="ot">&lt;-</span> d[d<span class="sc">$</span>year <span class="sc">==</span> to, <span class="fu">c</span>(<span class="st">"country"</span>, <span class="st">"lifeExp"</span>)]</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Merge on country so a country missing in either year drops out</span></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>  <span class="co"># instead of misaligning the subtraction.</span></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>  both <span class="ot">&lt;-</span> <span class="fu">merge</span>(start, end, <span class="at">by =</span> <span class="st">"country"</span>, <span class="at">suffixes =</span> <span class="fu">c</span>(<span class="st">"_from"</span>, <span class="st">"_to"</span>))</span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>  both<span class="sc">$</span>gain <span class="ot">&lt;-</span> both<span class="sc">$</span>lifeExp_to <span class="sc">-</span> both<span class="sc">$</span>lifeExp_from</span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tapply</span>(<span class="fu">seq_len</span>(<span class="fu">nrow</span>(both)), both<span class="sc">$</span>continent, <span class="cf">function</span>(i) {</span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>    both<span class="sc">$</span>country[i][<span class="fu">which.max</span>(both<span class="sc">$</span>gain[i])]</span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>  })</span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>A <code>merge()</code> by country or a <code>match()</code> by country both satisfy the failure mode. A file that subtracts two <code>lifeExp</code> vectors straight from two subsets relies on row order. The order happens to match in this file and would not in another. That is the line to read in step 4. Three functions a model is likely to use:</p>
+<ul>
+<li><code>merge(a, b, by = "country")</code> joins two tables on a shared column.</li>
+<li><code>which.max(x)</code> is the position of the largest value in <code>x</code>.</li>
+<li><code>seq_len(n)</code> is <code>1, 2, ..., n</code>.</li>
+</ul>
+<p>A line you cannot explain is question 5 of the five questions later on this page. Ask for an explanation, or for a version that uses only <code>split()</code>, <code>sapply()</code> and square brackets. Two prompts pasted identically produce two different files; the Oceania name does not differ if both are right.</p>
+</div>
+</div>
+</div>
+</section>
+<section id="scoping" class="level2">
+<h2 class="anchored" data-anchor-id="scoping">Scoping a delegation: one function, one file</h2>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Too big to check</th>
+<th style="text-align: left;">Right-sized</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">“Do my analysis of the Gapminder data.”</td>
+<td style="text-align: left;">“Write <code>lifeexp_gain(d, from, to)</code> in <code>code/lifeexp_gain.R</code>.”</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">“Make a report on life expectancy.”</td>
+<td style="text-align: left;">“Write <code>lifeexp_by_continent(d, yr)</code>; weighted by <code>pop</code>.”</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">“Fix my script.”</td>
+<td style="text-align: left;">“Only the Oceania number is wrong; change the line that computes the mean.”</td>
+</tr>
+</tbody>
+</table>
+<p>You cannot check “Do my analysis of the Gapminder data”, because nothing about it has a value you can work out by hand. “Write <code>lifeexp_gain(d, from, to)</code> in <code>code/lifeexp_gain.R</code>” can, in two subtractions. The unit of delegation is one function with one output and one small case, in one file. A bigger task is several of these in a row, each checked before the next.</p>
+</section>
+<section id="three-tests" class="level2">
+<h2 class="anchored" data-anchor-id="three-tests">Three tests of a delegation</h2>
+<ol type="1">
+<li>Can you name the failure mode?</li>
+<li>Can you work out one case by hand, from rows you can see?</li>
+<li>Can you read the whole diff in five minutes?</li>
+</ol>
+<ul>
+<li>Any no: split the task.</li>
+</ul>
+<p>Before pasting, three questions. Can you name the failure mode? Can you work out one case by hand, from rows you can see? Can you read the diff in five minutes? A no to any of them means the task is too large; split it until all three are yes.</p>
+</section>
+<section id="diff-new-file" class="level2">
+<h2 class="anchored" data-anchor-id="diff-new-file">git diff --staged: what the model wrote</h2>
+<style>
+code.diff span.st { color: #b31b1b; }
+code.diff span.va { color: #1a7f37; }
+</style>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb14"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> status</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Untracked files:</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;         code/</span></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> add code/lifeexp_by_continent.R</span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> diff <span class="at">--staged</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb15"><pre class="sourceCode diff code-with-copy"><code class="sourceCode diff"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="va">+lifeexp_by_continent &lt;- function(d, yr) {</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="va">+  sub &lt;- d[d$year == yr, ]</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="va">+  tapply(sub$lifeExp, sub$continent, mean)</span></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a><span class="va">+}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>In Terminal 2, <code>git status</code> lists the new file under <code>code/</code> as untracked (the folder itself, if it is new); a new file has no earlier version, so <code>git diff</code> alone shows nothing. <code>git add</code> the file, then <code>git diff --staged</code> prints every line with a <code>+</code>. That is the whole of what the model did, and the transcript is not needed to know it. The block above shows the four lines that matter; the full output of <code>git diff --staged</code> is below.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb16"><pre class="sourceCode diff code-with-copy"><code class="sourceCode diff"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="kw">diff --git a/code/lifeexp_by_continent.R b/code/lifeexp_by_continent.R</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>new file mode 100644</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>index 0000000..751a6b8</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a><span class="dt">--- /dev/null</span></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a><span class="dt">+++ b/code/lifeexp_by_continent.R</span></span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a><span class="dt">@@ -0,0 +1,9 @@</span></span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a><span class="va">+# Mean life expectancy by continent for a given year (base R only)</span></span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a><span class="va">+</span></span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a><span class="va">+lifeexp_by_continent &lt;- function(d, yr) {</span></span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a><span class="va">+  sub &lt;- d[d$year == yr, ]</span></span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a><span class="va">+  tapply(sub$lifeExp, sub$continent, mean)</span></span>
+<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a><span class="va">+}</span></span>
+<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a><span class="va">+</span></span>
+<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a><span class="va">+d &lt;- read.csv("data/gapminder.csv", stringsAsFactors = FALSE)</span></span>
+<span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a><span class="va">+print(lifeexp_by_continent(d, 2007))</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="the-line" class="level2">
+<h2 class="anchored" data-anchor-id="the-line">Line 5 averages countries, not people</h2>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tapply</span>(sub<span class="sc">$</span>lifeExp, sub<span class="sc">$</span>continent, mean)                 <span class="co"># each country once</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tapply</span>(sub<span class="sc">$</span>lifeExp <span class="sc">*</span> sub<span class="sc">$</span>pop, sub<span class="sc">$</span>continent, sum) <span class="sc">/</span></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tapply</span>(sub<span class="sc">$</span>pop, sub<span class="sc">$</span>continent, sum)                    <span class="co"># each person once</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><code>tapply(sub$lifeExp, sub$continent, mean)</code> takes the mean of one number per country. The question asked for the mean over people, <code>sum(lifeExp × pop) / sum(pop)</code> within each continent. Both are “the mean life expectancy of each continent”, which is why the prompt should have said which. The fix is one expression, so the request is a patch, not a rewrite.</p>
+</section>
+<section id="patch-prompt" class="level2">
+<h2 class="anchored" data-anchor-id="patch-prompt">Asking for a patch, not a rewrite</h2>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>Prompt to paste into Claude Code</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb18" data-filename="Prompt to paste into Claude Code"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>I ran the script. Oceania prints 80.72. By hand I get 81.06: Australia,</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>81.235, has 20,434,176 people and New Zealand, 80.204, has 4,115,771, so</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>the mean over people is 81.06. Your function averages countries, not</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>people. Change lifeexp_by_continent() so each country's life expectancy is</span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>weighted by its population, the pop column. Change nothing else. Do not</span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>run the script.</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>The patch request says what you expected, what the script printed, why they differ, and the one change wanted. “Change nothing else” is the scope. Paste it exactly. The captured run’s prompt, sent in the same conversation as the first prompt, differed from this one in one clause; the edit it produced is in the next section.</p>
+</section>
+<section id="approve-edit" class="level2">
+<h2 class="anchored" data-anchor-id="approve-edit">The approval box for an edit: red and green lines</h2>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="figures/09-ai-code/S05-edit-dialog-diff.png" class="img-fluid figure-img" alt="Claude Code's edit approval box: Update(code/lifeexp_by_continent.R), Edit file, a diff with line 1 removed in red and rewritten in green, line 5 removed in red and replaced by two green lines using sum, and the question Do you want to make this edit? with the answers 1. Yes, 2. Yes, and switch to accept edits, 3. No."></p>
+<figcaption>The approval box for an edit. Two red lines: the mean line you asked about, and the header comment, rewritten without being asked.</figcaption>
+</figure>
+</div>
+<p>The tool shows an edit as a diff before it lands: removed lines in red with <code>-</code>, added lines in green with <code>+</code>. Read every red line first. Here two lines go: the <code>mean</code> line, and the header comment, which the tool rewrote to say “population-weighted” although nobody asked. It is harmless, and it is the kind of extra change the red lines exist to show. <code>1. Yes</code> accepts.</p>
+</section>
+<section id="judge-diff" class="level2">
+<h2 class="anchored" data-anchor-id="judge-diff">How to judge a model’s diff: five questions</h2>
+<ol type="1">
+<li><strong>Files</strong>: only the ones you named? (<code>git status</code>)</li>
+<li><strong>Removals</strong>: every <code>-</code> line asked for? Read these first.</li>
+<li><strong>The math line</strong>: does it do what the failure mode said?</li>
+<li><strong>Names and constants</strong>: yours, no bare numbers?</li>
+<li><strong>A line you cannot explain</strong>: ask before you accept, or ask for one you can read.</li>
+</ol>
+<p>Five questions, in order, every time, whether the diff is in the approval box or in <code>git diff</code>. Are the only changed files the ones you named (<code>git status</code>)? Are there <code>-</code> lines, and did you ask for each removal? Which line does the math, and does it match the failure mode you named? Are the names and constants yours (the argument names, no bare numbers)? Is there a line you cannot explain? For the last one, ask for an explanation before accepting, or ask for a version that uses only functions you know. Removals first: a removal you did not ask for is the dangerous kind. Applied to the edit above: one file (yes); two removals, one asked for and one a comment; the math line weights by <code>pop</code> (yes); the names are the prompt’s (yes); no line unexplained. Exercise 2 walks these five on your own file.</p>
+</section>
+<section id="diff-after-patch" class="level2">
+<h2 class="anchored" data-anchor-id="diff-after-patch">git diff after the patch, and the second run</h2>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb19"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> diff</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb20"><pre class="sourceCode diff code-with-copy"><code class="sourceCode diff"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="kw">diff --git a/code/lifeexp_by_continent.R b/code/lifeexp_by_continent.R</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>index 751a6b8..7687c9d 100644</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a><span class="dt">--- a/code/lifeexp_by_continent.R</span></span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a><span class="dt">+++ b/code/lifeexp_by_continent.R</span></span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a><span class="dt">@@ -1,8 +1,9 @@</span></span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a><span class="st">-# Mean life expectancy by continent for a given year (base R only)</span></span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a><span class="va">+# Population-weighted mean life expectancy by continent for a given year (base R only)</span></span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a> </span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a> lifeexp_by_continent &lt;- function(d, yr) {</span>
+<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a>   sub &lt;- d[d$year == yr, ]</span>
+<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a><span class="st">-  tapply(sub$lifeExp, sub$continent, mean)</span></span>
+<span id="cb20-12"><a href="#cb20-12" aria-hidden="true" tabindex="-1"></a><span class="va">+  tapply(sub$lifeExp * sub$pop, sub$continent, sum) /</span></span>
+<span id="cb20-13"><a href="#cb20-13" aria-hidden="true" tabindex="-1"></a><span class="va">+    tapply(sub$pop, sub$continent, sum)</span></span>
+<span id="cb20-14"><a href="#cb20-14" aria-hidden="true" tabindex="-1"></a> }</span>
+<span id="cb20-15"><a href="#cb20-15" aria-hidden="true" tabindex="-1"></a> </span>
+<span id="cb20-16"><a href="#cb20-16" aria-hidden="true" tabindex="-1"></a> d &lt;- read.csv("data/gapminder.csv", stringsAsFactors = FALSE)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><code>git diff</code> in Terminal 2 shows the same change git’s way: one comment line and one expression replaced, nothing else in the file touched. Session → Restart R, Source:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">"code/lifeexp_by_continent.R"</span>)</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   Africa Americas     Asia   Europe  Oceania </span></span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 54.56441 75.35668 69.44386 77.89057 81.06215 </span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Oceania prints 81.06215. Expected 81.06. Step 4 passes.</p>
+</section>
+<section id="institutionalize" class="level2">
+<h2 class="anchored" data-anchor-id="institutionalize">stopifnot(): the check stays in the script</h2>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb22"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> diff                          <span class="co"># after typing the check in RStudio</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb23"><pre class="sourceCode diff code-with-copy"><code class="sourceCode diff"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="st">-print(lifeexp_by_continent(d, 2007))</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="va">+res &lt;- lifeexp_by_continent(d, 2007)</span></span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a><span class="va">+print(res)</span></span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a><span class="va">+</span></span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a><span class="va">+# Check: Oceania 2007 by hand. Australia 81.235 (20,434,176 people) and</span></span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a><span class="va">+# New Zealand 80.204 (4,115,771 people) give 81.06.</span></span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a><span class="va">+stopifnot(abs(res["Oceania"] - 81.06) &lt; 0.01)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>A person did the hand check once. It becomes a line the script runs every time. Type it yourself in RStudio: open <code>code/lifeexp_by_continent.R</code>, replace the last line with the three lines and the comment above, save. The checker is not the thing being checked, and in a graded repository typing it yourself is the default. Stage the patch first (<code>git add code/lifeexp_by_continent.R</code> in Terminal 2), so <code>git diff</code> afterwards shows only the check.</p>
+<p>The tolerance is 0.01 because 81.06 is a rounded number; compare decimals with a tolerance, never with <code>==</code>. In R, <code>81.235 - 69.120</code> is <code>12.114999...</code>, so <code>== 12.115</code> is <code>FALSE</code> on correct code and <code>round(81.235 - 69.120, 2)</code> prints <code>12.11</code>. If anyone later changes the function back to the simple mean, the script prints the table and then stops with <code>Error: abs(res["Oceania"] - 81.06) &lt; 0.01 is not TRUE</code>.</p>
+<p>The full file, as it stands after the check:</p>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>code/lifeexp_by_continent.R</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb24" data-filename="code/lifeexp_by_continent.R"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Population-weighted mean life expectancy by continent for a given year (base R only)</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>lifeexp_by_continent <span class="ot">&lt;-</span> <span class="cf">function</span>(d, yr) {</span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>  sub <span class="ot">&lt;-</span> d[d<span class="sc">$</span>year <span class="sc">==</span> yr, ]</span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tapply</span>(sub<span class="sc">$</span>lifeExp <span class="sc">*</span> sub<span class="sc">$</span>pop, sub<span class="sc">$</span>continent, sum) <span class="sc">/</span></span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">tapply</span>(sub<span class="sc">$</span>pop, sub<span class="sc">$</span>continent, sum)</span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"data/gapminder.csv"</span>, <span class="at">stringsAsFactors =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a>res <span class="ot">&lt;-</span> <span class="fu">lifeexp_by_continent</span>(d, <span class="dv">2007</span>)</span>
+<span id="cb24-11"><a href="#cb24-11" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(res)</span>
+<span id="cb24-12"><a href="#cb24-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-13"><a href="#cb24-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Check: Oceania 2007 by hand. Australia 81.235 (20,434,176 people) and</span></span>
+<span id="cb24-14"><a href="#cb24-14" aria-hidden="true" tabindex="-1"></a><span class="co"># New Zealand 80.204 (4,115,771 people) give 81.06.</span></span>
+<span id="cb24-15"><a href="#cb24-15" aria-hidden="true" tabindex="-1"></a><span class="fu">stopifnot</span>(<span class="fu">abs</span>(res[<span class="st">"Oceania"</span>] <span class="sc">-</span> <span class="fl">81.06</span>) <span class="sc">&lt;</span> <span class="fl">0.01</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>The alternative is to ask for the check as a patch. If you use it, read the <code>stopifnot()</code> line in the box against the two Oceania rows before <code>1. Yes</code>. Then read the red lines; the only one should be the <code>print</code>.</p>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>Prompt to paste into Claude Code (the alternative: ask for the check)</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb25" data-filename="Prompt to paste into Claude Code (the alternative: ask for the check)"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>Add a check to code/lifeexp_by_continent.R: after the result is computed and</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>printed, stopifnot() that the Oceania value is within 0.01 of 81.06. Put a</span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>comment above it giving the two rows the number comes from. Change nothing</span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>else. Do not run the script.</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="commit" class="level2">
+<h2 class="anchored" data-anchor-id="commit">Commit after reading</h2>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb26"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> add code/lifeexp_by_continent.R</span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> commit <span class="at">-m</span> <span class="st">"Weighted life expectancy by continent, with the Oceania check"</span></span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> log <span class="at">--oneline</span></span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; c0dd7ee Weighted life expectancy by continent, with the Oceania check</span></span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4993e56 Add the Gapminder table</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Commit after you have read the diff and the run agrees, never before. The message above is the captured one. A better one says who wrote what: <code>Weighted life expectancy by continent (Claude Code, patched), with the Oceania check</code>. The next reader needs to know which lines came from where. The same sentence fills the disclosure block in every submission’s note:</p>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>AI disclosure, for this commit</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb27" data-filename="AI disclosure, for this commit"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">## AI disclosure</span></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Tools: Claude Code</span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Used for: lifeexp_by_continent(), then a patch to weight by pop</span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Checked: Oceania 2007 by hand, 81.06; stopifnot() in the script</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>The transcript is not in the repository; the script, the check and the message are, and that is the record. Hashes differ on every laptop; messages match.</p>
+</section>
+<section id="exercise-2" class="level2 smaller">
+<h2 class="smaller anchored" data-anchor-id="exercise-2">Exercise 2</h2>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-2-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-1" role="tab" aria-controls="tabset-2-1" aria-selected="true" href="">Exercise</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-2" role="tab" aria-controls="tabset-2-2" aria-selected="false" href="">Solution</a></li></ul>
+<div class="tab-content">
+<div id="tabset-2-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-2-1-tab">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb28"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Exercise 2 (7 minutes). Same project. Claude Code stays in Terminal 1;</span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a><span class="co"># git goes in Terminal 2 (Tools &gt; Terminal &gt; New Terminal).</span></span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a><span class="co">#</span></span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a><span class="co"># 1. Terminal 2:  git status</span></span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a><span class="co">#                 git add code/lifeexp_gain.R</span></span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a><span class="co">#                 git diff --staged</span></span>
+<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a><span class="co">#    The five questions: only that file? any - lines? the subtraction</span></span>
+<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a><span class="co">#    line (to minus from)? the names yours? a line you cannot explain?</span></span>
+<span id="cb28-9"><a href="#cb28-9" aria-hidden="true" tabindex="-1"></a><span class="co">#</span></span>
+<span id="cb28-10"><a href="#cb28-10" aria-hidden="true" tabindex="-1"></a><span class="co"># 2. RStudio: open code/lifeexp_gain.R. Replace the print line at the</span></span>
+<span id="cb28-11"><a href="#cb28-11" aria-hidden="true" tabindex="-1"></a><span class="co">#    bottom with these three lines, then save:</span></span>
+<span id="cb28-12"><a href="#cb28-12" aria-hidden="true" tabindex="-1"></a><span class="co">#      res &lt;- lifeexp_gain(d, 1952, 2007)</span></span>
+<span id="cb28-13"><a href="#cb28-13" aria-hidden="true" tabindex="-1"></a><span class="co">#      print(res)</span></span>
+<span id="cb28-14"><a href="#cb28-14" aria-hidden="true" tabindex="-1"></a><span class="co">#      stopifnot(res["Oceania"] == "Australia")</span></span>
+<span id="cb28-15"><a href="#cb28-15" aria-hidden="true" tabindex="-1"></a><span class="co">#</span></span>
+<span id="cb28-16"><a href="#cb28-16" aria-hidden="true" tabindex="-1"></a><span class="co"># 3. Terminal 2:  git diff     How many - lines? How many + lines?</span></span>
+<span id="cb28-17"><a href="#cb28-17" aria-hidden="true" tabindex="-1"></a><span class="co">#</span></span>
+<span id="cb28-18"><a href="#cb28-18" aria-hidden="true" tabindex="-1"></a><span class="co"># 4. Session &gt; Restart R, Source. Five names, no error.</span></span>
+<span id="cb28-19"><a href="#cb28-19" aria-hidden="true" tabindex="-1"></a><span class="co">#</span></span>
+<span id="cb28-20"><a href="#cb28-20" aria-hidden="true" tabindex="-1"></a><span class="co"># 5. Terminal 2:  git add code/lifeexp_gain.R</span></span>
+<span id="cb28-21"><a href="#cb28-21" aria-hidden="true" tabindex="-1"></a><span class="co">#    git commit -m "Add lifeexp_gain (Claude Code) and its hand check"</span></span>
+<span id="cb28-22"><a href="#cb28-22" aria-hidden="true" tabindex="-1"></a><span class="co">#</span></span>
+<span id="cb28-23"><a href="#cb28-23" aria-hidden="true" tabindex="-1"></a><span class="co"># Two answers to compare with the room: the number of - lines in git diff,</span></span>
+<span id="cb28-24"><a href="#cb28-24" aria-hidden="true" tabindex="-1"></a><span class="co"># and the first line of git log --oneline.</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><em>Paired up?</em> Swap roles: the reader from Exercise 1 types now. <em>Prefer to ask the tool for the check?</em> The prompt is under the <code>stopifnot()</code> section above. Read the <code>stopifnot()</code> line in the box against your paper before <code>1. Yes</code>. The only red line should be the <code>print</code>.</p>
+</div>
+<div id="tabset-2-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-2-2-tab">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb29"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> diff</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb30"><pre class="sourceCode diff code-with-copy"><code class="sourceCode diff"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="st">-print(lifeexp_gain(d, 1952, 2007))</span></span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a><span class="va">+res &lt;- lifeexp_gain(d, 1952, 2007)</span></span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a><span class="va">+print(res)</span></span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a><span class="va">+stopifnot(res["Oceania"] == "Australia")</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb31"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> log <span class="at">--oneline</span></span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; &lt;your hash&gt; Add lifeexp_gain (Claude Code) and its hand check</span></span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; &lt;your hash&gt; ...                       # your earlier commits</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Step 1, the five questions on <code>git diff --staged</code>. Question 1: <code>git status</code> lists one new file under <code>code/</code> and nothing else. Question 2: a new file has no <code>-</code> lines. Question 3: the subtraction is <code>_to</code> minus <code>_from</code>, matched by <code>merge()</code> (or <code>match()</code>). Question 4: the function and argument names are the prompt’s; <code>1952</code> and <code>2007</code> appear only in the bottom line, where the prompt put them. Question 5: Exercise 1’s solution explains <code>merge()</code>, <code>which.max()</code> and <code>seq_len()</code>.</p>
+<p>Step 3: two or more <code>-</code> lines mean something else changed while you typed. Read them. If one is the subtraction, <code>git restore code/lifeexp_gain.R</code> and type the check again. A check that names a country is a check on the whole chain: the subtraction, the matching, and <code>which.max</code>. It compares a string with <code>==</code>, which is exact; a decimal check uses a tolerance, as in the <code>stopifnot()</code> section.</p>
+</div>
+</div>
+</div>
+</section>
+<section id="diff-on-screen" class="level2">
+<h2 class="anchored" data-anchor-id="diff-on-screen">The diff is on screen before the file changes</h2>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="figures/09-ai-code/S08-edit-dialog-check.png" class="img-fluid figure-img" alt="Claude Code's edit approval box for code/lifeexp_gain.R: line 20, print(lifeexp_gain(d, FROM, TO)), in red; four green lines, result <- lifeexp_gain(d, FROM, TO), print(result), a hand-checked-case comment, and stopifnot(result['Oceania'] == 'Australia'); then the question with the answers 1. Yes, 2. Yes, and switch to accept edits, 3. No."></p>
+<figcaption>The edit approval box is a diff. One line out, four in, before the file changes.</figcaption>
+</figure>
+</div>
+<p>Version control is not only something you do after the tool has finished. The approval box is a diff: removed lines in red with <code>-</code>, added lines in green with <code>+</code>, shown before the file changes. The one above came from this prompt, sent in a new conversation with <code>code/lifeexp_gain.R</code> committed and a rules file, <code>CLAUDE.md</code>, in place. The section after next introduces that file; its rules are where the <code>FROM</code> and <code>TO</code> constants come from.</p>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>Prompt to paste into Claude Code (captured run)</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb32" data-filename="Prompt to paste into Claude Code (captured run)"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>In code/lifeexp_gain.R, store the printed result in a variable and add a</span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>check after it: stopifnot(result<span class="co">[</span><span class="ot">"Oceania"</span><span class="co">]</span> == "Australia"), with a</span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>one-line comment saying it is the hand-checked case. Change nothing</span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a>else. Do not run it and do not commit.</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>After <code>1. Yes</code>, type <code>/diff</code> at the <code>❯</code> prompt. It opens the uncommitted changes as git sees them, inside the tool: one file, <code>+4 -1</code>. Enter views the lines; Esc closes. The Claude desktop app’s Code tab shows the same diffs in a window, with Accept and Reject buttons. Whichever window you read it in, the diff is the same object <code>git diff</code> prints in Terminal 2.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="figures/09-ai-code/S09-slash-diff.png" class="img-fluid figure-img" alt="Claude Code after the edit, with the /diff panel open: Uncommitted changes (git diff HEAD), 1 file changed +4 -1, code/lifeexp_gain.R selected, and the keys to switch, select, view and close."></p>
+<figcaption><code>/diff</code> after the edit: the uncommitted changes, from git, inside Claude Code.</figcaption>
+</figure>
+</div>
+</section>
+<section id="agent-git" class="level2">
+<h2 class="anchored" data-anchor-id="agent-git">The agent runs git when you ask</h2>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="figures/09-ai-code/S10-git-commit-dialog.png" class="img-fluid figure-img" alt="Claude Code asked to commit: its line that CLAUDE.md says not to use git but the request is explicit, then a Bash command box with the exact git add, git commit -m and git status command, the line This command requires approval, and the question Do you want to proceed? with the answers 1. Yes, 2. Yes, and don't ask again for git, 3. Yes, and switch to auto mode, 4. No."></p>
+<figcaption>Asked for a commit, the agent shows the exact git command and waits. The line above the box says the standing rule in CLAUDE.md yielded to the explicit request.</figcaption>
+</figure>
+</div>
+<p>The agent can run git for you. Asked to, it stages, commits, pushes and branches. The prompt of the captured run:</p>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>Prompt to paste into Claude Code (captured run)</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb33" data-filename="Prompt to paste into Claude Code (captured run)"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>Commit code/lifeexp_gain.R with the message: Add the Oceania check to</span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>lifeexp_gain</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Three things to read on the screen. First, the exact command, <code>git add</code> then <code>git commit -m</code> then <code>git status --short</code>, shown in full before it runs. The box is titled <em>Bash command</em>: a command for the terminal, here git. In manual mode every git command that changes the repository is such a command and asks. <code>1. Yes</code> runs it; <code>2.</code> and <code>3.</code> turn the asking off, for git or for everything; leave both. Second, the model’s own line. The <code>CLAUDE.md</code> in this repository (a rules file, introduced in the next section) says “Do not use git. I commit.”, and the tool said so and went ahead because the prompt asked explicitly. A rule in the file is a default; a sentence in the prompt overrides it. Third, what Auto mode would have done. A Pro session may start in Auto mode. There, commits and pushes to the repository you are working in run without a prompt. That is one more reason to check the status line and stay in manual mode until reading diffs is a habit.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="figures/09-ai-code/S11-after-commit.png" class="img-fluid figure-img" alt="Claude Code after the commit: Committed f0f9a04, then a line saying Committed as f0f9a04 on main, Add the Oceania check to lifeexp_gain, one file changed, working tree is clean, and the status line reading manual mode on."></p>
+<figcaption>After <code>1. Yes</code>: Committed as f0f9a04 on main, one file changed, working tree clean.</figcaption>
+</figure>
+</div>
+<p>Check the result in Terminal 2, as for any commit:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb34"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> log <span class="at">--oneline</span></span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; f0f9a04 Add the Oceania check to lifeexp_gain</span></span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; d479286 Largest life-expectancy gain per continent</span></span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; a216a2c Add CLAUDE.md with the project's conventions</span></span>
+<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; c0dd7ee Weighted life expectancy by continent, with the Oceania check</span></span>
+<span id="cb34-6"><a href="#cb34-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4993e56 Add the Gapminder table</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>The transcript says what it did. The diff shows what it did. Git keeps it.</p>
+</section>
+<section id="claude-md" class="level2">
+<h2 class="anchored" data-anchor-id="claude-md">CLAUDE.md: read at every launch</h2>
+<ul>
+<li>A markdown file at the root, read at every launch.</li>
+<li>Layout, style, working rules. Nothing that changes per task.</li>
+<li>Short: 28 lines here. The docs’ target is under 200.</li>
+<li>Committed. It is part of the record.</li>
+</ul>
+<p><a href="https://code.claude.com/docs/en/memory"><code>CLAUDE.md</code></a> is a markdown file at the repository root that Claude Code reads at the start of every session in that folder. It holds what every prompt would otherwise repeat: the layout, the coding conventions, the working rules. Keep it short; the one here is 28 lines, and the docs’ target is under 200. You commit it with the repository, so it shows in <code>git diff</code> and travels with the code.</p>
+</section>
+<section id="init" class="level2">
+<h2 class="anchored" data-anchor-id="init">/init: a first draft of CLAUDE.md</h2>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="figures/09-ai-code/S14-init-create-box.png" class="img-fluid figure-img" alt="Claude Code's approval box after /init: Create file, CLAUDE.md, the first lines of the draft, and the 1. Yes row, with the file name and the 1. Yes row circled in red."></p>
+<figcaption><code>/init</code> proposes a CLAUDE.md in the same approval box as any new file.</figcaption>
+</figure>
+</div>
+<p>Type <code>/init</code> at the prompt. It reads the folder and proposes a <code>CLAUDE.md</code>, shown in the same approval box as any new file. Accept it, read it, and treat it as a draft: it describes what it found, not what you want. The next section replaces it.</p>
+</section>
+<section id="claude-md-seed" class="level2">
+<h2 class="anchored" data-anchor-id="claude-md-seed">The CLAUDE.md for gapminder-practice</h2>
+<p>The full file, with a copy button. In RStudio, click <code>CLAUDE.md</code> in the Files pane, select all, paste this over the draft, save. Commit it: <code>git add CLAUDE.md</code>, then <code>git commit -m "Add CLAUDE.md with the project's conventions"</code>. Quit Claude Code and relaunch so it reads the new file.</p>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>CLAUDE.md</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb35" data-filename="CLAUDE.md"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="fu"># gapminder-practice</span></span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>Conventions for any code written in this repository.</span>
+<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a><span class="fu">## Layout</span></span>
+<span id="cb35-6"><a href="#cb35-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-7"><a href="#cb35-7" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span><span class="in">`code/`</span> holds one script per task. <span class="in">`data/`</span> holds inputs and is never</span>
+<span id="cb35-8"><a href="#cb35-8" aria-hidden="true" tabindex="-1"></a>  edited by hand. <span class="in">`output/`</span> holds what the scripts write.</span>
+<span id="cb35-9"><a href="#cb35-9" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Scripts run from the project root, so paths look like</span>
+<span id="cb35-10"><a href="#cb35-10" aria-hidden="true" tabindex="-1"></a>  <span class="in">`"data/gapminder.csv"`</span>.</span>
+<span id="cb35-11"><a href="#cb35-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-12"><a href="#cb35-12" aria-hidden="true" tabindex="-1"></a><span class="fu">## Style</span></span>
+<span id="cb35-13"><a href="#cb35-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-14"><a href="#cb35-14" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Base R only. No packages.</span>
+<span id="cb35-15"><a href="#cb35-15" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Short lower-case names with underscores: <span class="in">`life_exp`</span>, <span class="in">`by_continent`</span>.</span>
+<span id="cb35-16"><a href="#cb35-16" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>A number that could change sits at the top of the script as a named</span>
+<span id="cb35-17"><a href="#cb35-17" aria-hidden="true" tabindex="-1"></a>  constant in capitals: <span class="in">`YEAR &lt;- 2007`</span>.</span>
+<span id="cb35-18"><a href="#cb35-18" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Every script starts with a comment saying what it does and what it</span>
+<span id="cb35-19"><a href="#cb35-19" aria-hidden="true" tabindex="-1"></a>  produces.</span>
+<span id="cb35-20"><a href="#cb35-20" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Comments say why, not what.</span>
+<span id="cb35-21"><a href="#cb35-21" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>A function does one job and returns a value; the script calls it.</span>
+<span id="cb35-22"><a href="#cb35-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-23"><a href="#cb35-23" aria-hidden="true" tabindex="-1"></a><span class="fu">## Working rules</span></span>
+<span id="cb35-24"><a href="#cb35-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-25"><a href="#cb35-25" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Do not run scripts. I run them in RStudio.</span>
+<span id="cb35-26"><a href="#cb35-26" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Do not create files I did not ask for. Do not edit <span class="in">`.gitignore`</span> or the</span>
+<span id="cb35-27"><a href="#cb35-27" aria-hidden="true" tabindex="-1"></a>  <span class="in">`.Rproj`</span> file.</span>
+<span id="cb35-28"><a href="#cb35-28" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Do not use git. I commit.</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="style-in-claude-md" class="level2">
+<h2 class="anchored" data-anchor-id="style-in-claude-md">Style habits in CLAUDE.md: naming, structure, constants, comments</h2>
+<ul>
+<li><strong>Naming</strong>: <code>snake_case</code>; file names say what the script does.</li>
+<li><strong>Structure</strong>: one script per task; a function does one job.</li>
+<li><strong>Named constants</strong>: <code>YEAR &lt;- 2007</code> at the top, never a bare number below.</li>
+<li><strong>Comments say why</strong>, not what. A header on every script.</li>
+<li>Written once. Read at every launch. Copy it to the next repository.</li>
+</ul>
+<p>The Style section is the personal part. Names in <code>snake_case</code>, file names that say what the script does. One script per task; a function does one job and the script calls it. Numbers that could change sit at the top as named constants in capitals. Comments say why, not what. These are the habits you use when you write code yourself; written down, they are the brief an assistant reads at every launch. Copy the Style section from one repository to the next.</p>
+</section>
+<section id="short-prompt" class="level2">
+<h2 class="anchored" data-anchor-id="short-prompt">A two-sentence prompt after CLAUDE.md</h2>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>Prompt to paste into Claude Code (captured run)</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb36" data-filename="Prompt to paste into Claude Code (captured run)"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>Write code/lifeexp_gain.R: a function lifeexp_gain(d, from, to) that</span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>returns, for each continent, the name of the country whose life</span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>expectancy rose the most between the years from and to. At the bottom,</span>
+<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a>read the data and print the result for 1952 to 2007.</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>With <code>CLAUDE.md</code> in place, this prompt asked for the same function as Exercise 1 in two sentences. What is not in the prompt: the data’s path, the base-R rule, the constants rule, the working rules. All of it is in <code>CLAUDE.md</code>. Failure modes still belong in the prompt; the standing context carries the conventions, not the task. This prompt names no failure mode. It is the short form, shown to make the point about conventions, not the form to use for a function you have not checked.</p>
+</section>
+<section id="short-prompt-file" class="level2">
+<h2 class="anchored" data-anchor-id="short-prompt-file">The file it produced: conventions applied unasked</h2>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="figures/09-ai-code/S06-gain-create-dialog.png" class="img-fluid figure-img" alt="Claude Code's approval box for code/lifeexp_gain.R, twenty lines: a two-line header comment, FROM <- 1952 and TO <- 2007, the function with a why-comment above merge(), and the question Do you want to create lifeexp_gain.R? with three answers."></p>
+<figcaption>The file that came back: a header, named constants, a why-comment. None of it was in the prompt.</figcaption>
+</figure>
+</div>
+<p>The file that came back has a header comment, the named constants <code>FROM</code> and <code>TO</code>, and a comment above <code>merge()</code> saying why rows are matched by country. The tool did not run it. The transcript’s last sentence, “Not run, per the project rules.”, shows that it read the standing rules.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="figures/09-ai-code/S07-gain-written-summary.png" class="img-fluid figure-img" alt="Claude Code after accepting: Wrote 20 lines to code/lifeexp_gain.R, the file, and a summary paragraph ending Not run, per the project rules."></p>
+<figcaption>After the write: the summary ends “Not run, per the project rules.”</figcaption>
+</figure>
+</div>
+<p>Sourced, it prints five names:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">"code/lifeexp_gain.R"</span>)</span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;      Africa    Americas        Asia      Europe     Oceania </span></span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;     "Libya" "Nicaragua"      "Oman"    "Turkey" "Australia" </span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>The full file, for a laptop that fell behind:</p>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>code/lifeexp_gain.R</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb38" data-filename="code/lifeexp_gain.R"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="co"># For each continent, the country whose life expectancy rose the most</span></span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a><span class="co"># between two years. Prints a named character vector (continent -&gt; country).</span></span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a>FROM <span class="ot">&lt;-</span> <span class="dv">1952</span></span>
+<span id="cb38-5"><a href="#cb38-5" aria-hidden="true" tabindex="-1"></a>TO <span class="ot">&lt;-</span> <span class="dv">2007</span></span>
+<span id="cb38-6"><a href="#cb38-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-7"><a href="#cb38-7" aria-hidden="true" tabindex="-1"></a>lifeexp_gain <span class="ot">&lt;-</span> <span class="cf">function</span>(d, from, to) {</span>
+<span id="cb38-8"><a href="#cb38-8" aria-hidden="true" tabindex="-1"></a>  start <span class="ot">&lt;-</span> d[d<span class="sc">$</span>year <span class="sc">==</span> from, <span class="fu">c</span>(<span class="st">"country"</span>, <span class="st">"continent"</span>, <span class="st">"lifeExp"</span>)]</span>
+<span id="cb38-9"><a href="#cb38-9" aria-hidden="true" tabindex="-1"></a>  end <span class="ot">&lt;-</span> d[d<span class="sc">$</span>year <span class="sc">==</span> to, <span class="fu">c</span>(<span class="st">"country"</span>, <span class="st">"lifeExp"</span>)]</span>
+<span id="cb38-10"><a href="#cb38-10" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Merge on country so a country missing in either year drops out</span></span>
+<span id="cb38-11"><a href="#cb38-11" aria-hidden="true" tabindex="-1"></a>  <span class="co"># instead of misaligning the subtraction.</span></span>
+<span id="cb38-12"><a href="#cb38-12" aria-hidden="true" tabindex="-1"></a>  both <span class="ot">&lt;-</span> <span class="fu">merge</span>(start, end, <span class="at">by =</span> <span class="st">"country"</span>, <span class="at">suffixes =</span> <span class="fu">c</span>(<span class="st">"_from"</span>, <span class="st">"_to"</span>))</span>
+<span id="cb38-13"><a href="#cb38-13" aria-hidden="true" tabindex="-1"></a>  both<span class="sc">$</span>gain <span class="ot">&lt;-</span> both<span class="sc">$</span>lifeExp_to <span class="sc">-</span> both<span class="sc">$</span>lifeExp_from</span>
+<span id="cb38-14"><a href="#cb38-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tapply</span>(<span class="fu">seq_len</span>(<span class="fu">nrow</span>(both)), both<span class="sc">$</span>continent, <span class="cf">function</span>(i) {</span>
+<span id="cb38-15"><a href="#cb38-15" aria-hidden="true" tabindex="-1"></a>    both<span class="sc">$</span>country[i][<span class="fu">which.max</span>(both<span class="sc">$</span>gain[i])]</span>
+<span id="cb38-16"><a href="#cb38-16" aria-hidden="true" tabindex="-1"></a>  })</span>
+<span id="cb38-17"><a href="#cb38-17" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb38-18"><a href="#cb38-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-19"><a href="#cb38-19" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"data/gapminder.csv"</span>, <span class="at">stringsAsFactors =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb38-20"><a href="#cb38-20" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">lifeexp_gain</span>(d, FROM, TO))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="bad-at" class="level2">
+<h2 class="anchored" data-anchor-id="bad-at">What Claude Code is bad at</h2>
+<ul>
+<li>Outputs you cannot check by hand.</li>
+<li>Questions that do not touch the repository. Use a chat.</li>
+<li>A folder with data you must not share. It can read everything.</li>
+<li>Long stretches without reading. Accept-edits mode is not for this month.</li>
+</ul>
+<p>Four kinds of work do not belong in it. Outputs you cannot check by eye or by hand; it will produce a plausible number in a script that runs. Questions that do not touch the repository; open a chat instead. A folder holding data you must not share; it can read everything. Long stretches without reading; accept-edits mode exists and is not for this month.</p>
+<p>If a model ever produces a value inside a script rather than writing the script, five more duties apply. Write down the model and its version (pin it). Set its randomness, the temperature, to zero. Call the model once and reuse the saved replies on later runs (cache them). Save every raw reply to a file and commit it, not only the label you took from it. Write the model and the prompt in the README. If you cannot do all five, use a rule you can write down instead.</p>
+</section>
+<section id="runs-clean" class="level2">
+<h2 class="anchored" data-anchor-id="runs-clean">“Runs clean” is not “is right”</h2>
+<ul>
+<li>The first script ran clean, printed five plausible numbers, and answered the wrong question.</li>
+<li>The number on paper caught it and the diff showed why; the <code>stopifnot()</code> line keeps it caught.</li>
+<li>The bottleneck is verification, not typing. Faster tools move it to where it is easiest to skip.</li>
+</ul>
+<p>The first script ran without an error and printed five reasonable numbers. It answered a different question. Only the value on paper and the diff made that visible, and only the <code>stopifnot()</code> line keeps it visible. The bottleneck is no longer typing; it is verification. Every faster tool moves that work to the end of the pipeline, where it is easiest to skip.</p>
+</section>
+<section id="practice" class="level2">
+<h2 class="anchored" data-anchor-id="practice">Practice</h2>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-3-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-1" role="tab" aria-controls="tabset-3-1" aria-selected="true" href="">Practice</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-3-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-2" role="tab" aria-controls="tabset-3-2" aria-selected="false" href="">Solutions</a></li></ul>
+<div class="tab-content">
+<div id="tabset-3-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-3-1-tab">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb39"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Practice</span></span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Everything below runs in gapminder-practice, Claude Code in manual</span></span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a><span class="co"># mode, git status clean before each task. Never in a graded repository.</span></span>
+<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-5"><a href="#cb39-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Read-only prompts, and scoping</span></span>
+<span id="cb39-6"><a href="#cb39-6" aria-hidden="true" tabindex="-1"></a><span class="co">#  1. Ask for a line-by-line explanation of code/lifeexp_gain.R with</span></span>
+<span id="cb39-7"><a href="#cb39-7" aria-hidden="true" tabindex="-1"></a><span class="co">#     "Do not edit anything." Read it against the file. Mark every line</span></span>
+<span id="cb39-8"><a href="#cb39-8" aria-hidden="true" tabindex="-1"></a><span class="co">#     where the explanation is a description ("computes the gain") rather</span></span>
+<span id="cb39-9"><a href="#cb39-9" aria-hidden="true" tabindex="-1"></a><span class="co">#     than a fact ("lifeExp_to minus lifeExp_from").</span></span>
+<span id="cb39-10"><a href="#cb39-10" aria-hidden="true" tabindex="-1"></a><span class="co">#  2. Ask what code/lifeexp_gain.R prints for Oceania, "without running</span></span>
+<span id="cb39-11"><a href="#cb39-11" aria-hidden="true" tabindex="-1"></a><span class="co">#     it". Does the reply give a name, a method, or both? Which can you</span></span>
+<span id="cb39-12"><a href="#cb39-12" aria-hidden="true" tabindex="-1"></a><span class="co">#     trust?</span></span>
+<span id="cb39-13"><a href="#cb39-13" aria-hidden="true" tabindex="-1"></a><span class="co">#  3. Ask, without editing anything, which files it WOULD create to</span></span>
+<span id="cb39-14"><a href="#cb39-14" aria-hidden="true" tabindex="-1"></a><span class="co">#     "analyze the Gapminder data". Count them. Then write the scoped</span></span>
+<span id="cb39-15"><a href="#cb39-15" aria-hidden="true" tabindex="-1"></a><span class="co">#     version of the first one as a delegation in the four-part shape</span></span>
+<span id="cb39-16"><a href="#cb39-16" aria-hidden="true" tabindex="-1"></a><span class="co">#     (goal, failure mode, artifact and path, what not to do). Do not</span></span>
+<span id="cb39-17"><a href="#cb39-17" aria-hidden="true" tabindex="-1"></a><span class="co">#     send it yet.</span></span>
+<span id="cb39-18"><a href="#cb39-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-19"><a href="#cb39-19" aria-hidden="true" tabindex="-1"></a><span class="co"># The loop again</span></span>
+<span id="cb39-20"><a href="#cb39-20" aria-hidden="true" tabindex="-1"></a><span class="co">#  4. Delegate gdp_by_continent(d, yr): the population-weighted mean of</span></span>
+<span id="cb39-21"><a href="#cb39-21" aria-hidden="true" tabindex="-1"></a><span class="co">#     gdpPercap by continent. Oceania 2007 on paper first (Australia</span></span>
+<span id="cb39-22"><a href="#cb39-22" aria-hidden="true" tabindex="-1"></a><span class="co">#     34,435.37, New Zealand 25,185.01; the two pop values are in the</span></span>
+<span id="cb39-23"><a href="#cb39-23" aria-hidden="true" tabindex="-1"></a><span class="co">#     "by hand" section). Run, compare, type the check, commit.</span></span>
+<span id="cb39-24"><a href="#cb39-24" aria-hidden="true" tabindex="-1"></a><span class="co">#  5. Delegate n_countries(d, yr): the number of countries per continent</span></span>
+<span id="cb39-25"><a href="#cb39-25" aria-hidden="true" tabindex="-1"></a><span class="co">#     in year yr. On paper: Oceania is 2 and the five numbers sum to 142.</span></span>
+<span id="cb39-26"><a href="#cb39-26" aria-hidden="true" tabindex="-1"></a><span class="co">#     Type both as stopifnot() conditions. Commit.</span></span>
+<span id="cb39-27"><a href="#cb39-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-28"><a href="#cb39-28" aria-hidden="true" tabindex="-1"></a><span class="co"># Breaking the check</span></span>
+<span id="cb39-29"><a href="#cb39-29" aria-hidden="true" tabindex="-1"></a><span class="co">#  6. In RStudio, reverse the subtraction in code/lifeexp_gain.R (swap</span></span>
+<span id="cb39-30"><a href="#cb39-30" aria-hidden="true" tabindex="-1"></a><span class="co">#     the two names, whatever they are). Source. Read the error. Then</span></span>
+<span id="cb39-31"><a href="#cb39-31" aria-hidden="true" tabindex="-1"></a><span class="co">#     git restore code/lifeexp_gain.R and git status.</span></span>
+<span id="cb39-32"><a href="#cb39-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-33"><a href="#cb39-33" aria-hidden="true" tabindex="-1"></a><span class="co"># CLAUDE.md</span></span>
+<span id="cb39-34"><a href="#cb39-34" aria-hidden="true" tabindex="-1"></a><span class="co">#  7. Add one Style rule to CLAUDE.md: "Every function starts with</span></span>
+<span id="cb39-35"><a href="#cb39-35" aria-hidden="true" tabindex="-1"></a><span class="co">#     stopifnot() on the columns it uses." Commit. Relaunch. Ask for a</span></span>
+<span id="cb39-36"><a href="#cb39-36" aria-hidden="true" tabindex="-1"></a><span class="co">#     small function (median lifeExp by continent in a year). Was the</span></span>
+<span id="cb39-37"><a href="#cb39-37" aria-hidden="true" tabindex="-1"></a><span class="co">#     rule followed? Where in the diff?</span></span>
+<span id="cb39-38"><a href="#cb39-38" aria-hidden="true" tabindex="-1"></a><span class="co">#  8. Ask: "Add a comment header to code/lifeexp_gain.R saying what it</span></span>
+<span id="cb39-39"><a href="#cb39-39" aria-hidden="true" tabindex="-1"></a><span class="co">#     reads and what it prints. Change nothing else." Read the approval</span></span>
+<span id="cb39-40"><a href="#cb39-40" aria-hidden="true" tabindex="-1"></a><span class="co">#     box: any red line? Accept. Then git diff. Do the box and git diff</span></span>
+<span id="cb39-41"><a href="#cb39-41" aria-hidden="true" tabindex="-1"></a><span class="co">#     agree line for line?</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div id="tabset-3-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-3-2-tab">
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Solutions
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-2" class="callout-2-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb40"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 1</span></span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a><span class="co">#   The which.max line is where explanations go vague: "picks the</span></span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a><span class="co">#   country with the largest gain" is a fact; "finds the best country"</span></span>
+<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a><span class="co">#   is a description. Mark any line where you could not redo the step</span></span>
+<span id="cb40-5"><a href="#cb40-5" aria-hidden="true" tabindex="-1"></a><span class="co">#   from the explanation alone.</span></span>
+<span id="cb40-6"><a href="#cb40-6" aria-hidden="true" tabindex="-1"></a><span class="co"># expected: at least one line marked; the merge() line is the usual one</span></span>
+<span id="cb40-7"><a href="#cb40-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-8"><a href="#cb40-8" aria-hidden="true" tabindex="-1"></a><span class="co"># 2</span></span>
+<span id="cb40-9"><a href="#cb40-9" aria-hidden="true" tabindex="-1"></a><span class="co">#   Without running it the tool has only the code to go on; it may</span></span>
+<span id="cb40-10"><a href="#cb40-10" aria-hidden="true" tabindex="-1"></a><span class="co">#   give "Australia" with the method (largest gain of two). Trust the</span></span>
+<span id="cb40-11"><a href="#cb40-11" aria-hidden="true" tabindex="-1"></a><span class="co">#   method you can follow; the name only after Source prints it.</span></span>
+<span id="cb40-12"><a href="#cb40-12" aria-hidden="true" tabindex="-1"></a><span class="co"># expected: a method you can check against the four rows; a name you then verify</span></span>
+<span id="cb40-13"><a href="#cb40-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-14"><a href="#cb40-14" aria-hidden="true" tabindex="-1"></a><span class="co"># 3</span></span>
+<span id="cb40-15"><a href="#cb40-15" aria-hidden="true" tabindex="-1"></a><span class="co">#   A typical answer lists three to six files (a script, a figure, a</span></span>
+<span id="cb40-16"><a href="#cb40-16" aria-hidden="true" tabindex="-1"></a><span class="co">#   summary, sometimes a README). None of them has a value you can work</span></span>
+<span id="cb40-17"><a href="#cb40-17" aria-hidden="true" tabindex="-1"></a><span class="co">#   out by hand. The scoped version names one function, one failure</span></span>
+<span id="cb40-18"><a href="#cb40-18" aria-hidden="true" tabindex="-1"></a><span class="co">#   mode, one path, and what not to do. One shape is below.</span></span>
+<span id="cb40-19"><a href="#cb40-19" aria-hidden="true" tabindex="-1"></a><span class="co"># expected: a count, and one prompt in the four-part shape; Oceania on</span></span>
+<span id="cb40-20"><a href="#cb40-20" aria-hidden="true" tabindex="-1"></a><span class="co">#           paper: 80.72 in 2007 and 69.255 in 1952 (simple means)</span></span>
+<span id="cb40-21"><a href="#cb40-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-22"><a href="#cb40-22" aria-hidden="true" tabindex="-1"></a><span class="co"># 4</span></span>
+<span id="cb40-23"><a href="#cb40-23" aria-hidden="true" tabindex="-1"></a><span class="co">#   On paper, the same form as the lifeExp case (pop in millions):</span></span>
+<span id="cb40-24"><a href="#cb40-24" aria-hidden="true" tabindex="-1"></a><span class="co">#   (34,435 x 20.43 + 25,185 x 4.12) / 24.55 = 32,883 (unweighted:</span></span>
+<span id="cb40-25"><a href="#cb40-25" aria-hidden="true" tabindex="-1"></a><span class="co">#   29,810). A hand result from rounded inputs needs a loose tolerance:</span></span>
+<span id="cb40-26"><a href="#cb40-26" aria-hidden="true" tabindex="-1"></a><span class="co">#   stopifnot(abs(res["Oceania"] - 32883) &lt; 50)</span></span>
+<span id="cb40-27"><a href="#cb40-27" aria-hidden="true" tabindex="-1"></a><span class="co"># expected: Oceania 32884.56 printed; 29810.19 means countries were averaged</span></span>
+<span id="cb40-28"><a href="#cb40-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-29"><a href="#cb40-29" aria-hidden="true" tabindex="-1"></a><span class="co"># 5</span></span>
+<span id="cb40-30"><a href="#cb40-30" aria-hidden="true" tabindex="-1"></a><span class="co">#   tapply(sub$country, sub$continent, length) or table(sub$continent).</span></span>
+<span id="cb40-31"><a href="#cb40-31" aria-hidden="true" tabindex="-1"></a><span class="co">#   stopifnot(res["Oceania"] == 2, sum(res) == 142)</span></span>
+<span id="cb40-32"><a href="#cb40-32" aria-hidden="true" tabindex="-1"></a><span class="co"># expected: Africa 52, Americas 25, Asia 33, Europe 30, Oceania 2</span></span>
+<span id="cb40-33"><a href="#cb40-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-34"><a href="#cb40-34" aria-hidden="true" tabindex="-1"></a><span class="co"># 6</span></span>
+<span id="cb40-35"><a href="#cb40-35" aria-hidden="true" tabindex="-1"></a><span class="co">#   Error: res["Oceania"] == "Australia" is not TRUE</span></span>
+<span id="cb40-36"><a href="#cb40-36" aria-hidden="true" tabindex="-1"></a><span class="co">#   (the reversed subtraction makes New Zealand the largest). Then</span></span>
+<span id="cb40-37"><a href="#cb40-37" aria-hidden="true" tabindex="-1"></a><span class="co">#   git restore code/lifeexp_gain.R; git status prints clean.</span></span>
+<span id="cb40-38"><a href="#cb40-38" aria-hidden="true" tabindex="-1"></a><span class="co"># expected: five names printed, then the stop; git restore puts the</span></span>
+<span id="cb40-39"><a href="#cb40-39" aria-hidden="true" tabindex="-1"></a><span class="co">#           committed file back</span></span>
+<span id="cb40-40"><a href="#cb40-40" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-41"><a href="#cb40-41" aria-hidden="true" tabindex="-1"></a><span class="co"># 7</span></span>
+<span id="cb40-42"><a href="#cb40-42" aria-hidden="true" tabindex="-1"></a><span class="co">#   The new function begins with</span></span>
+<span id="cb40-43"><a href="#cb40-43" aria-hidden="true" tabindex="-1"></a><span class="co">#   stopifnot(c("continent", "year", "lifeExp") %in% names(d))</span></span>
+<span id="cb40-44"><a href="#cb40-44" aria-hidden="true" tabindex="-1"></a><span class="co">#   or similar, in the first lines of the + block.</span></span>
+<span id="cb40-45"><a href="#cb40-45" aria-hidden="true" tabindex="-1"></a><span class="co"># expected: the rule appears in the diff without being in the prompt</span></span>
+<span id="cb40-46"><a href="#cb40-46" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-47"><a href="#cb40-47" aria-hidden="true" tabindex="-1"></a><span class="co"># 8</span></span>
+<span id="cb40-48"><a href="#cb40-48" aria-hidden="true" tabindex="-1"></a><span class="co">#   The approval box shows only + lines above the function; git diff</span></span>
+<span id="cb40-49"><a href="#cb40-49" aria-hidden="true" tabindex="-1"></a><span class="co">#   shows the same lines. A red line in either means the scope was not</span></span>
+<span id="cb40-50"><a href="#cb40-50" aria-hidden="true" tabindex="-1"></a><span class="co">#   held: Esc, or git restore, and ask again.</span></span>
+<span id="cb40-51"><a href="#cb40-51" aria-hidden="true" tabindex="-1"></a><span class="co"># expected: box and git diff agree line for line</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>Prompt to paste into Claude Code (task 3, one scoped delegation)</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb41" data-filename="Prompt to paste into Claude Code (task 3, one scoped delegation)"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>Write code/lifeexp_trend.R. It defines lifeexp_trend(d, cont): for one</span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>continent cont, the simple mean of lifeExp across its countries in each</span>
+<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a>year, as a named numeric vector with the years as names. Each country</span>
+<span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a>counts once; do not weight by population. Base R only. At the bottom,</span>
+<span id="cb41-5"><a href="#cb41-5" aria-hidden="true" tabindex="-1"></a>read data/gapminder.csv into d and print lifeexp_trend(d, "Oceania").</span>
+<span id="cb41-6"><a href="#cb41-6" aria-hidden="true" tabindex="-1"></a>Do not run it. No other files. Do not use git.</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>Prompt to paste into Claude Code (task 4)</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb42" data-filename="Prompt to paste into Claude Code (task 4)"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>Write code/gdp_by_continent.R. It defines gdp_by_continent(d, yr): for each</span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>continent, the population-weighted mean of gdpPercap in year yr, as a named</span>
+<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a>numeric vector. Weight by the pop column; do not average countries. Base R</span>
+<span id="cb42-4"><a href="#cb42-4" aria-hidden="true" tabindex="-1"></a>only. At the bottom, read data/gapminder.csv into d and print</span>
+<span id="cb42-5"><a href="#cb42-5" aria-hidden="true" tabindex="-1"></a>gdp_by_continent(d, 2007). Do not run it. No other files. Do not use git.</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="quick-reference" class="level2">
+<h2 class="anchored" data-anchor-id="quick-reference">Quick reference</h2>
+<p><strong>Know the value before you run it, read the diff before you accept it, and keep the check in the script.</strong></p>
+<p><strong>Commands and keys</strong></p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Do</th>
+<th style="text-align: left;">Type</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Launch, asking before every edit</td>
+<td style="text-align: left;"><code>claude --permission-mode manual</code> (Terminal tab, inside the project)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">The trust question</td>
+<td style="text-align: left;">↓ once to <em>Yes, I trust this folder</em>, Enter; once per folder</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Check the mode</td>
+<td style="text-align: left;">the status line reads <code>⏸ manual mode on</code></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Send a prompt</td>
+<td style="text-align: left;">type at <code>❯</code>, Enter</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Accept an edit / refuse it</td>
+<td style="text-align: left;"><code>1</code> then Enter / Esc</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Interrupt</td>
+<td style="text-align: left;">Esc</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Previous prompt</td>
+<td style="text-align: left;">↑</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">New conversation, same folder</td>
+<td style="text-align: left;"><code>/clear</code></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">The uncommitted changes, inside the tool</td>
+<td style="text-align: left;"><code>/diff</code></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">First draft of CLAUDE.md</td>
+<td style="text-align: left;"><code>/init</code></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Leave</td>
+<td style="text-align: left;"><code>/exit</code>, or Ctrl+C twice</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Git while it runs</td>
+<td style="text-align: left;">Tools → Terminal → New Terminal (Terminal 2)</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Diff of a new file</td>
+<td style="text-align: left;"><code>git add code/x.R</code>, then <code>git diff --staged</code></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Diff of an edited file</td>
+<td style="text-align: left;"><code>git diff</code></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Run the script</td>
+<td style="text-align: left;">Session → Restart R, then Source</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Prompt shapes</strong></p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Ask for</th>
+<th style="text-align: left;">Say</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">A look, no change</td>
+<td style="text-align: left;">“… Do not edit anything.”</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">One function</td>
+<td style="text-align: left;">goal with names; the failure mode; <code>code/&lt;name&gt;.R</code>; “Do not run it. No other files. Do not use git.”</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">A patch</td>
+<td style="text-align: left;">“X prints A; by hand I get B because …; change the line that …; change nothing else.”</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">The permanent check</td>
+<td style="text-align: left;">type it yourself; or “Add a check: stopifnot() that …; change nothing else.” and read the line before <code>1. Yes</code></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">A commit by the agent</td>
+<td style="text-align: left;">“Commit code/x.R with the message: …”; read the command in the box before <code>1. Yes</code>; manual mode only</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">A function under CLAUDE.md</td>
+<td style="text-align: left;">two or three sentences: name, what it returns, what to print at the bottom; the failure mode still stated</td>
+</tr>
+</tbody>
+</table>
+<p><strong>The loop</strong></p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Step</th>
+<th style="text-align: left;">You do</th>
+<th style="text-align: left;">It looks like</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">1</td>
+<td style="text-align: left;">state the goal and the failure mode</td>
+<td style="text-align: left;">the prompt’s first and second parts</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">2</td>
+<td style="text-align: left;">delegate one function</td>
+<td style="text-align: left;"><code>1. Yes</code> on an approval box you read</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">3</td>
+<td style="text-align: left;">work out one case by hand</td>
+<td style="text-align: left;">81.06 on paper, from two rows</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">4</td>
+<td style="text-align: left;">verify</td>
+<td style="text-align: left;">Source; compare; <code>git diff --staged</code>; the five questions</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">5</td>
+<td style="text-align: left;">keep the check</td>
+<td style="text-align: left;"><code>stopifnot(abs(res["Oceania"] - 81.06) &lt; 0.01)</code>; decimals with a tolerance, never <code>==</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>The five questions for any diff</strong></p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">#</th>
+<th style="text-align: left;">Question</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">1</td>
+<td style="text-align: left;">Files: only the ones you named? (<code>git status</code>)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">2</td>
+<td style="text-align: left;">Removals: every <code>-</code> line asked for? Read these first.</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">3</td>
+<td style="text-align: left;">The math line: does it do what the failure mode said?</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">4</td>
+<td style="text-align: left;">Names and constants: yours, no bare numbers?</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">5</td>
+<td style="text-align: left;">A line you cannot explain: ask before you accept, or ask for one you can read.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Things that bite</strong></p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Symptom</th>
+<th style="text-align: left;">Cause, fix</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><code>command not found: claude</code></td>
+<td style="text-align: left;">the terminal predates the install; quit and reopen RStudio</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">the Terminal shows <code>&gt;</code> instead of <code>❯</code></td>
+<td style="text-align: left;">you typed <code>claude</code> in the Console; Tools → Terminal → New Terminal</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">the trust question on every launch</td>
+<td style="text-align: left;">the terminal opened outside the project; New Terminal from inside it</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">status line says <code>auto mode</code></td>
+<td style="text-align: left;"><code>/exit</code>, then relaunch with <code>--permission-mode manual</code></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>--permission-mode manual</code> is rejected</td>
+<td style="text-align: left;">an older install; <code>--permission-mode default</code> is the same mode</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>git diff</code> shows nothing after a new file</td>
+<td style="text-align: left;">untracked; <code>git add</code> it, then <code>git diff --staged</code></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">it wrote a file and ran it</td>
+<td style="text-align: left;">not manual mode; <code>/exit</code>, relaunch, read <code>git status</code></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">it committed or pushed without asking</td>
+<td style="text-align: left;">Auto mode; <code>git log --oneline</code> to see what, then relaunch in manual mode</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">it asks to run <code>Rscript</code> or <code>R -e</code></td>
+<td style="text-align: left;">Esc (the last option, No); you run the script yourself in RStudio</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">the reply is a code block, no approval box</td>
+<td style="text-align: left;">it did not write a file; say “Write code/x.R” first</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">a clean run, a wrong number</td>
+<td style="text-align: left;">the prompt left a reading open; name the failure mode; the value on paper is what caught it</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>stopifnot(x == 12.115)</code> fails on correct code</td>
+<td style="text-align: left;">decimals: <code>round(81.235 - 69.120, 2)</code> is <code>12.11</code> in R; compare with <code>abs(x - 12.115) &lt; 0.01</code></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">a red line you did not ask for</td>
+<td style="text-align: left;">read it; Esc if it matters; put “change nothing else” in the next prompt</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>git commit</code> asks who you are</td>
+<td style="text-align: left;"><code>git config --global user.name "Your Name"</code> and <code>git config --global user.email "netid@cornell.edu"</code>, then commit again</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Windows: <code>claude</code> opens the desktop app</td>
+<td style="text-align: left;">an old desktop app; update it, retry</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Windows: <code>command not found</code> after reopening RStudio</td>
+<td style="text-align: left;">add <code>%USERPROFILE%\.local\bin</code> to your user PATH; quit and reopen RStudio</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">the login browser page did not open</td>
+<td style="text-align: left;">press <code>c</code> in the Terminal to copy the link; paste it into a browser</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">the login says <code>403</code>, or that your plan does not include Claude Code</td>
+<td style="text-align: left;">the Pro subscription is not active; claude.ai → Settings → Billing, then <code>/login</code></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">you chose the Console login by mistake</td>
+<td style="text-align: left;"><code>/login</code>, then the subscription login</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">a <em>Bash command</em> box for <code>mkdir code</code> or <code>ls</code></td>
+<td style="text-align: left;">it only makes the folder or looks; <code>1. Yes</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Terms</strong></p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th style="text-align: left;">Term</th>
+<th style="text-align: left;">One line</th>
+<th style="text-align: left;">Where</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">delegation</td>
+<td style="text-align: left;">one function handed to the tool, with a case you can check</td>
+<td style="text-align: left;"><a href="#scoping">§</a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">failure mode</td>
+<td style="text-align: left;">the plausible mistake, named in the prompt</td>
+<td style="text-align: left;"><a href="#the-task">§</a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">expected value</td>
+<td style="text-align: left;">the value worked out by hand before the run</td>
+<td style="text-align: left;"><a href="#by-hand">§</a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">manual mode</td>
+<td style="text-align: left;">it asks before every edit and every command that changes something</td>
+<td style="text-align: left;"><a href="#launch">§</a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">approval box</td>
+<td style="text-align: left;">the diff shown before it lands; <code>1. Yes</code> or Esc</td>
+<td style="text-align: left;"><a href="#approve-create">§</a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">the five questions</td>
+<td style="text-align: left;">files, removals, the math line, names, a line you cannot explain</td>
+<td style="text-align: left;"><a href="#judge-diff">§</a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">patch</td>
+<td style="text-align: left;">the smallest change that fixes the one failure</td>
+<td style="text-align: left;"><a href="#patch-prompt">§</a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">the check</td>
+<td style="text-align: left;">the hand check written as <code>stopifnot()</code> in the script</td>
+<td style="text-align: left;"><a href="#institutionalize">§</a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>/diff</code></td>
+<td style="text-align: left;">the uncommitted changes, from git, inside the tool</td>
+<td style="text-align: left;"><a href="#diff-on-screen">§</a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">standing context</td>
+<td style="text-align: left;"><code>CLAUDE.md</code>, read at every launch</td>
+<td style="text-align: left;"><a href="#claude-md">§</a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">scope</td>
+<td style="text-align: left;">what the prompt says not to do</td>
+<td style="text-align: left;"><a href="#prompt-shape">§</a></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Links:</strong> <a href="09-ai-code-slides.html">slides</a> · <a href="https://code.claude.com/docs/en/quickstart">Claude Code docs</a> · <a href="../../fall-2026/syllabus.html">Syllabus</a> · <a href="data/gapminder.csv">data/gapminder.csv</a></p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/arielortizbobea\.github\.io\/aem6850\/");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+            // target, if specified
+            link.setAttribute("target", "_blank");
+            if (link.getAttribute("rel") === null) {
+              link.setAttribute("rel", "noopener");
+            }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
