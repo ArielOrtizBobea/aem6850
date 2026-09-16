@@ -35,33 +35,20 @@ one check against the file.
 
 ::: {#before-class .callout-important title="Before class: a Claude account and the Claude desktop app"}
 
-Ten minutes, once. The last line is the test.
+Ten minutes, once.
 
-**1. Make a Claude account.** At [claude.ai](https://claude.ai), use the
-sign-up button and any email you read. You must be 18 or over; a code
-arrives by text message. No card is needed for the free plan.
+**1. Make a Claude account.** At [claude.ai](https://claude.ai). You must be 18 or over. No card is needed for the free plan.
 
 **2. Subscribe to Pro.** Pro is $20 a month
-([claude.com/pricing](https://claude.com/pricing)), and I strongly
-recommend it: you will get a lot out of it, and it is worth the
-investment. The chat half of this page works on the free plan. Cowork
-(the second half of this page) and Claude Code need Pro. If you are going
-to subscribe, do it now: choose Pro on the pricing page. Cornell is
-working on access for students; nothing is in place as of September
-2026, so plan on Pro for now. If you do not subscribe, follow the Cowork
-demo on the projector and pair with a neighbour for anything that needs
-Cowork.
+([claude.com/pricing](https://claude.com/pricing)). I
+recommend it. I think it is worth the investment. 
+The "chat" half of this lecture works on the free plan. However, Claude "Cowork"
+and Claude "Code" need at least a Pro. Please note that Cornell is
+working on access for students.
 
 **3. Install the desktop app.** Download it at
-[claude.com/download](https://claude.com/download). Mac: open the `.dmg`,
-drag **Claude** into Applications, open it from there (macOS 11 or
-later). Windows: run the installer, open **Claude** from the Start menu
-(Windows 10 or later). Sign in with the account from step 1. On the free
-plan the app shows **Chat**; with Pro it also shows **Cowork** and
-**Code**.
+[claude.com/download](https://claude.com/download).
 
-**Test.** In claude.ai, a new chat: type `Reply with one word: ready.`
-and press Enter. Any reply means the account works.
 
 :::
 
@@ -71,32 +58,219 @@ and press Enter. Any reply means the account works.
 
 By the end of this session you can:
 
-- Pick the right AI tier for a task.
+- Pick the right AI modality for a task.
 - Write a context-rich prompt.
 - Critique a model's explanation against the code it explains.
-- Name the canonical failure modes, and the fact about how models work
-  that each one comes from.
-- Say why the deliverable of AI-assisted research is a script, not an
-  answer.
-- Write the disclosure block.
+- Understand types of failure modes and their reason.
+- Understand why one should favor obtaining scripts rather than outputs as deliverable from AI assistants.
+- Write an AI disclosure.
 
 ## Plan for today {#plan}
 
 1. A few facts about how an LLM works
-2. The chat tier: what it is for
-3. Failure modes, and the fact each comes from
+2. Chatbots and use cases
+3. Types of failures
 4. Context is most of the game
 5. Ask for the script, not the answer
 6. An assistant that reaches your files: live demo
 7. The disclosure block
 
-## A few facts about how an LLM works {#four-facts}
+## What is an LLM? {#what}
 
-- A Large Language Model (LLM) predicts the next word. Plausible is not the same as correct.
-- It generates; it does not look anything up (unless it uses a tool). This is where "hallucinated" references come from.
-- It is not deterministic. The same prompt can generate different results.
-- Its memory of a conversation is finite (context window). So long chats "degrade" without
-  saying so.
+::: {.content-visible when-format="revealjs"}
+
+- A **large language model** (LLM) is a program that takes text in and
+  returns text out, one **token** at a time.
+- **Token**: the unit it reads and writes. A short word, a piece of a
+  longer word, or a few digits.
+- **Parameters**: the billions of numbers inside it. Given the text so
+  far, they score every possible next token.
+- **Transformer**: the design of that network (2017). It weighs every
+  token in front of it before it scores the next one.
+- Claude, GPT, Gemini, Llama: all LLMs of this kind. They differ in
+  size, training text and training choices.
+
+::: {.notes}
+One sentence of definition, then four words you will hear all semester.
+Token: the model never sees letters or words, only tokens; "2007" is
+more than one of them, which is one reason arithmetic inside a chat is
+unreliable. Parameters: the model is a file of numbers, nothing else.
+Transformer: the name of the design; you do not need the mathematics.
+The last bullet: the brand names differ, the kind of program does not.
+:::
+
+:::
+
+::: {.content-hidden when-format="revealjs"}
+
+A large language model is a program that takes text in and returns
+text out. It works one **token** at a time. A token is the unit the
+model reads and writes: a short word, a piece of a longer word, a
+punctuation mark, or a few digits. "The", "mean" and "life" are one
+token each; "expectancy" may be two; "2007" is split into pieces. On
+Claude's current tokenizer a million tokens is about 555,000 English
+words ([model overview](https://platform.claude.com/docs/en/models/overview)).
+Tokens are what the model counts, and what plans and limits are
+measured in.
+
+Inside the program is a **neural network**: billions of numbers, the
+**parameters**, that turn the tokens so far into a score for every
+possible next token. Meta's Llama 3 comes in sizes of 8, 70 and 405
+billion parameters
+([Grattafiori et al., 2024](https://arxiv.org/abs/2407.21783)); most
+vendors, Anthropic included, do not publish the count. The design of
+the network is the **transformer**, from
+[Vaswani et al. (2017)](https://arxiv.org/abs/1706.03762). The one
+idea in it worth knowing is **attention**: when the network scores the
+next token, it weighs every token already in front of it, near or far.
+That is what lets it keep track of a long prompt and a long script.
+
+Claude (Anthropic), GPT (OpenAI), Gemini (Google) and Llama (Meta) are
+all LLMs of this kind. They differ in size, in the text they were
+trained on, and in the choices made after training. Everything below
+holds for all of them.
+
+:::
+
+## How an LLM is made {#how-made}
+
+::: {.content-visible when-format="revealjs"}
+
+- **Pre-training**: the network reads trillions of tokens of text (the
+  web, books, code) and guesses each next token. Every miss nudges the
+  parameters. Months, on tens of thousands of chips.
+- **Post-training**: people write example replies and rate the model's
+  own. The parameters move again. A text continuer becomes an assistant
+  that follows instructions.
+- **Cutoff**: training stops on a date. Later events reach the model
+  only through the conversation or a tool.
+- The result is a fixed file of numbers. Using it does not change it:
+  your chats do not update the parameters.
+
+::: {.notes}
+Two stages. Pre-training is the expensive one and gives the model
+everything it knows about language, code and the world, up to a date.
+Post-training is what makes it answer you instead of continuing your
+sentence. The last bullet is the one students get wrong: the model
+does not learn from your chat. Whatever it seems to remember is in the
+conversation in front of it, or in a note the app saved and pasted
+back in.
+:::
+
+:::
+
+::: {.content-hidden when-format="revealjs"}
+
+Two stages of training produce the model. Both change only the
+parameters.
+
+**Pre-training.** The network reads a very large body of text and, at
+every token, guesses the next one. Each wrong guess moves the
+parameters a little toward the right answer, billions of times over.
+Meta reports training Llama 3 on over 15 trillion tokens of publicly
+available text, on two clusters of 24,000 GPUs
+([Meta, 2024](https://ai.meta.com/blog/meta-llama-3/)); a run takes
+months. Pre-training is where the model picks up grammar, facts, code
+and the patterns of research writing, up to the date the text was
+collected. After it, the model is a text continuer: given the start of
+an article, it writes the rest.
+
+**Post-training.** People write examples of good replies, and rate the
+model's replies against each other. The parameters are adjusted again
+so that the model produces the preferred kind. This is what turns a
+continuer into an assistant that answers a question, follows an
+instruction, and declines some requests. OpenAI's
+[InstructGPT paper](https://arxiv.org/abs/2203.02155) (Ouyang et al.,
+2022) describes the method, called reinforcement learning from human
+feedback (RLHF). Anthropic's
+[constitutional AI](https://arxiv.org/abs/2212.08073) (Bai et al.,
+2022) has a model rate the replies against a written set of principles.
+
+**Cutoff.** Training stops on a date, and the model's knowledge stops
+with it. The vendor's model page lists the date: for Claude Opus 5 the
+reliable knowledge cutoff is May 2026
+([model overview](https://platform.claude.com/docs/en/models/overview)).
+Anything after the cutoff reaches the model only through the
+conversation: you paste it, you attach it, or the app fetches it with a
+tool.
+
+**The result is a file.** A trained model is a fixed set of numbers,
+copied onto servers. Using it does not change it. A chat does not
+update the parameters, and nothing you tell it in one conversation is
+there in the next, unless the app saved a note and pastes it back in.
+The next section explains that "unless".
+
+:::
+
+## The model and its harness {#harness}
+
+::: {.content-visible when-format="revealjs"}
+
+- **Model**: the file of numbers. Nobody types into it directly.
+- **Harness**: the program around the model. It assembles what the
+  model sees (a hidden **system prompt**, your messages, the attached
+  file), sends it, and shows you the reply.
+- **Tools**: a harness can let the model call programs: web search, a
+  sandbox that runs code, your folder, a terminal. The model asks; the
+  harness runs it and pastes the result back in.
+- **Agent**: a harness that lets the model call tools in a loop until
+  the task is done.
+- claude.ai, ChatGPT and Gemini are harnesses. Cowork and Claude Code
+  are harnesses around the same Claude models, with more tools.
+
+::: {.notes}
+What you see on the screen is never the model; it is a harness. The
+chat window is the thinnest one. Cowork gives the same model a folder.
+Claude Code gives it a terminal. Every tier later today is a harness
+with more tools, and every duty on this page follows from what the
+harness lets the model touch.
+:::
+
+:::
+
+::: {.content-hidden when-format="revealjs"}
+
+You never talk to a model. You talk to a **harness**: the program that
+wraps the model and turns it into a product. The harness writes a
+hidden **system prompt** (instructions on how to behave, today's date,
+which tools exist), puts your messages and the file you attached after
+it, sends the whole thing to the model, and shows you the reply. Two
+apps on the same model can behave differently because their system
+prompts and their tools differ. Anthropic publishes the system prompts
+of its own apps
+([release notes](https://platform.claude.com/docs/en/release-notes/system-prompts/overview)).
+
+A harness can also give the model **tools**. The model cannot open a
+web page, run code or read a folder; it can only write text. So the
+harness offers it a list of programs, and when the model writes a
+request in the agreed format ("search the web for X", "run this
+code"), the harness runs the program and pastes the result into the
+conversation, where the model reads it like any other text. Web
+search in claude.ai, the sandbox that runs Python on an attached CSV,
+the folder Cowork connects, and the terminal Claude Code works in are
+all tools of this kind. A harness that lets the model call tools in a
+loop, acting until the task is done, is called an **agent**.
+Anthropic's engineering note
+[Building effective agents](https://www.anthropic.com/engineering/building-effective-agents)
+(2024) draws the picture: one model, with retrieval, tools and memory
+around it.
+
+The names on the screen are harnesses, not models. claude.ai, the
+Claude desktop app, Cowork and Claude Code are four harnesses around
+the same Claude models. ChatGPT is OpenAI's harness around the GPT
+models; Gemini is Google's around the Gemini models. The model picker
+in the chat window chooses the model; the app around it is the
+harness. The three tiers later on this page are three harnesses, each
+with more tools than the last.
+
+:::
+
+## Key features of LLMs {#four-facts}
+
+- An LLM predicts the next word. Plausible is not the same as correct.
+- It generates; it does not look anything up (unless it uses a tool). This explains "hallucinations".
+- It is not deterministic. i.e. the same prompt can generate different results.
+- Its memory of a conversation is finite (context window). So long chats "degrade".
 
 ::: {.content-visible when-format="revealjs"}
 
@@ -124,8 +298,7 @@ account you made.
 
 ![](figures/08-ai-chat/D1-next-token.svg){fig-align="center" height="360" fig-alt="Left: a rounded box holding the text so far as tokens, The mean life expectancy in Oceania in 2007 was, with faint ticks between tokens and 2007 split in two. An arrow labelled next? points to four candidate tokens drawn as bars of decreasing length: 80, 81, about, roughly; 80 is outlined in red and tagged picked this time; 81 has a dashed outline tagged or this one, next run. A curved arrow returns to the box, labelled append it, then repeat. A crossed-out cylinder at the bottom right reads your file: not opened."}
 
-*The next word is picked from a list of candidates. Nothing in this
-picture opens your file.*
+*The next word is picked (statistically) from a list of candidates. The next word is not retrieved from a file or data.* 
 
 ::: {.notes}
 Your phone does this when it suggests the next word. This does the same
@@ -143,7 +316,7 @@ the cylinder: no file, no database.
 Your phone's keyboard suggests the next word from the words before it. A
 chatbot does the same thing with a much longer memory and a much bigger
 list. The mechanism has three steps. The conversation so far is cut into
-**tokens**: a word, or a piece of one; numbers split into several. The
+tokens (a word, or a piece of one; numbers split into several). The
 model produces a list of candidate next tokens, each with a probability,
 picks one, and appends it. Then it repeats until it stops.
 
