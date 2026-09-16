@@ -1050,40 +1050,6 @@ When it fails, say:
 
 :::
 
-## Three failure modes and the fact behind each {#failure-modes}
-
-| Failure | Comes from | Gapminder version |
-|:--|:--|:--|
-| Confident wrongness | Fact 1: plausible before correct | "Oceania's 2007 life expectancy was 80.7 years", from memory |
-| Invented references | Fact 2: generates, does not look up | three papers with DOIs, one of which resolves to nothing |
-| Plausible-but-wrong recipe | Facts 1 and 2 | a mean over all twelve years when you meant 2007 |
-
-::: {.content-visible when-format="revealjs"}
-
-::: {.notes}
-Only the middle one announces itself, and only if you check the DOI. The
-other two run clean and read fine.
-:::
-
-:::
-
-::: {.content-hidden when-format="revealjs"}
-
-Three ways a reply goes wrong, each traced to a fact. **Confident
-wrongness**: a number, a claim or a summary stated flatly with no file
-behind it. Fact 1: the tone of a plausible continuation is the same
-whether it is right or wrong. **Invented references**: an author, title
-and DOI that refer to nothing. Fact 2: it generates text shaped like a
-reference. **Plausible-but-wrong recipes**: code that runs without error
-and answers a different question, or a function argument that does not
-exist. Facts 1 and 2 together: the recipe is the most likely
-continuation, not the one your file needs.
-
-Loud failures (R errors) are the easy kind. The first and third are
-silent.
-
-:::
-
 ## Invented references: three papers, checked {#invented-references}
 
 ```{.markdown filename="Prompt to paste into Claude, web search off"}
@@ -1100,8 +1066,9 @@ authors, year, journal, title and DOI.
 - Next slide: what doi.org says about each.
 
 ::: {.notes}
-Web search off: the + menu under the message box, untick Web search.
-The captured run hedged ("treat every detail, especially the DOIs, as
+The first of two failures shown on Gapminder; the table of the three
+kinds comes after them. Web search off: the + menu under the message
+box, untick Web search. The captured run hedged ("treat every detail, especially the DOIs, as
 unverified") and still shipped one DOI that does not exist. Read the
 tone of the three references: you cannot tell from it which one, and
 neither could the lawyers. Your run will differ; the check does not.
@@ -1236,6 +1203,44 @@ seen the file. Nothing in the tone of the code says "wrong question".
 The second recipe failure is the argument that does not exist.
 `read.csv(file, skip.blank = TRUE)` reads fine as English and errors in
 R. That error is the easy kind.
+
+:::
+
+## Three failure modes and reasons behind them {#failure-modes}
+
+| Failure | Comes from | Gapminder version |
+|:--|:--|:--|
+| Confident but wrong | Fact 1: plausible before correct | "Oceania's 2007 life expectancy was 80.7 years", from memory |
+| Made up references | Fact 2: generates, does not look up | three papers with DOIs, one of which resolves to nothing |
+| Plausible-but-wrong recipe | Facts 1 and 2 | a mean over all twelve years when you meant 2007 |
+
+::: {.content-visible when-format="revealjs"}
+
+::: {.notes}
+The three rows: the references you just checked, the recipe you just
+ran, and the number from memory, which the live demo shows later. Only
+the middle one announces itself, and only if you check the DOI. The
+other two run clean and read fine.
+:::
+
+:::
+
+::: {.content-hidden when-format="revealjs"}
+
+Three ways a reply goes wrong, each traced to a fact. The two sections
+above showed the second and the third; the live demo, later on this
+page, shows the first. **Confident but wrong**: a number, a claim or a
+summary stated flatly with no file behind it. Fact 1: the tone of a
+plausible continuation is the same whether it is right or wrong.
+**Made-up references**: an author, title and DOI that refer to nothing.
+Fact 2: it generates text shaped like a reference.
+**Plausible-but-wrong recipes**: code that runs without error and
+answers a different question, or a function argument that does not
+exist. Facts 1 and 2 together: the recipe is the most likely
+continuation, not the one your file needs.
+
+Loud failures (R errors) are the easy kind. The first and third are
+silent.
 
 :::
 
