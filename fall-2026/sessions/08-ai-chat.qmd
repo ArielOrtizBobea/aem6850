@@ -476,17 +476,17 @@ own every number in your submission.
 
 ## Chat, assistant, coding agent: three tiers {#three-tiers}
 
-| Tier | Example | It sees and can | What you read afterwards |
-|:--|:--|:--|:--|
-| Chat | claude.ai, ChatGPT, Gemini | what you paste; returns text | the script you pasted and ran |
-| Assistant | Cowork (desktop app) | a folder; reads, runs, writes files | `git status`, `git diff` |
-| Coding agent | Claude Code, Codex | a repository; edits as diffs | each diff before you accept it |
+| Tier | Example | It sees and can |
+|:--|:--|:--|
+| Chat | claude.ai, ChatGPT, Gemini | what you paste; returns text |
+| Assistant | Cowork (desktop app) | a folder; reads, runs, writes files |
+| Coding agent | Claude Code, Codex | a repository; edits as diffs |
 
 ::: {.content-visible when-format="revealjs"}
 
 ::: {.notes}
-There are three tiers, with more capability at each step, and in every
-row the last column is yours. This page covers the first two rows. Which
+There are three tiers, with more capability at each step. This page
+covers the first two rows. Which
 tier for which task: a README paragraph goes to chat; a folder of a dozen
 CSVs to describe goes to the assistant; a change inside a repository
 goes to the coding agent. Pick by what the model needs to see.
@@ -571,20 +571,21 @@ things to find.
 ::: {.content-visible when-format="revealjs"}
 
 :::: {.columns}
-::: {.column width="50%"}
-*For*
+::: {.column width="54%"}
+*Can*
 
 - explaining code or an error you paste
 - drafting a README, a comment header
 - planning an analysis, step by step
 - questions about data you describe
 :::
-::: {.column width="50%"}
+::: {.column width="46%"}
 *Cannot*
 
 - run your code
 - see your files unless you attach them
 - carry one chat into the next, reliably
+- keep track of code changes
 :::
 ::::
 
@@ -604,11 +605,13 @@ header. Planning an analysis before you write it: steps in order, one
 base R function per step. Answering questions about data you describe,
 if you paste `str(d)` and `head(d)`.
 
-Chat has three limits. It cannot run your code: the script may look
+Chat has four limits. It cannot run your code: the script may look
 right and fail on line one, and you find out when you run it. It cannot see your
 files unless you attach or paste them: its idea of your data is whatever
 you typed. It cannot be relied on to carry one chat into the next, so do
-not build on "as I said yesterday".
+not build on "as I said yesterday". It cannot keep track of code
+changes: every version you paste is new text to it, and the record of
+what changed lives in git, not in the chat.
 
 One more, which the failure-modes section takes up: an invented argument
 reads the same as a real one. Nothing in the reply marks the difference.
