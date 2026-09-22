@@ -24,11 +24,12 @@ format:
 
 [Slides](09-ai-code-slides.html) · [Source](https://github.com/ArielOrtizBobea/aem6850/blob/main/fall-2026/sessions/09-ai-code.qmd)
 
-How to hand one function to a coding tool that edits files in your
-repository, and how to know whether what came back is right. State the
-goal and the mistake to avoid; work out the answer by hand on a small
-case; run it, read the diff, and leave the check in the script. Every
-step runs in RStudio's Terminal tab inside a git repository.
+What a coding agent in your terminal has in front of it that a chat
+window or Cowork does not; how to hand it one function; and how to know
+whether what came back is right. State the goal and the mistake to
+avoid; work out the answer by hand on a small case; run it, read the
+diff, and leave the check in the script. Every step runs in RStudio's
+Terminal tab inside a git repository.
 
 :::
 
@@ -37,16 +38,15 @@ step runs in RStudio's Terminal tab inside a git repository.
 ::: {#before-class .callout-important title="Before class: install Claude Code, log in, and make the practice repository"}
 
 About twenty-five minutes, once, on the laptop you bring. Claude Code
-needs a Claude Pro subscription; the free plan does not include it. Do
-all six steps; step 6 is the test.
+is not on the free plan; it needs a paid Claude plan. Do all six steps;
+step 6 is the test.
 
-**1. Subscribe to Claude Pro** ($20 a month). You will get a lot out of it
-this semester; it is worth the investment. Cornell is working on access
-for students, but nothing is in place as of September 2026, so plan on
-Pro for now: choose Pro on the [pricing page](https://claude.com/pricing).
-If you decide not to subscribe, follow
-the captured run on the slides in class and pair with a neighbour for
-the two exercises.
+**1. Subscribe to Claude Pro.** You will get a lot out of it this
+semester; it is worth the investment. Cornell is working on access for
+students; until that exists, plan on Pro: choose it on the [pricing
+page](https://claude.com/pricing). If you decide not to subscribe,
+follow the captured run on the slides in class and pair with a
+neighbour for the two exercises.
 
 **2. Install Claude Code.** *Mac:* in RStudio, **Tools → Terminal → New
 Terminal**, paste this line, Enter:
@@ -66,8 +66,8 @@ When it finishes, **quit and reopen RStudio**: the terminal you
 installed from does not see the new program.
 
 **3. Check the install.** **Tools → Terminal → New Terminal**, type
-`claude --version`, Enter. It prints a version number ending in
-`(Claude Code)`, like `2.1.258 (Claude Code)`. `command not found`: quit
+`claude --version`, Enter. It prints a version number followed by
+`(Claude Code)`. `command not found`: quit
 and reopen RStudio. Windows, still not found: add
 `%USERPROFILE%\.local\bin` to your user PATH, then quit and reopen
 RStudio. Windows, and `claude` opens the Claude desktop app instead:
@@ -135,19 +135,25 @@ the folder before class, so that `git status` prints clean.
 
 :::
 
-## Objectives {#objectives}
+## Objectives {#objectives .smaller}
 
 By the end of this session you can:
 
-- Run the five-step delegation loop end to end.
-- Scope a delegation: "write this function," not "do my homework."
-- Read a model's diff and judge it.
-- Convert a one-off verification into a permanent check.
+- Explain what Claude Code has in front of it that a chat window does
+  not: every file in the folder, a terminal, git, and `CLAUDE.md`.
+- Start Claude Code in manual mode inside an RStudio project, read the
+  trust question and the status line, and send a read-only prompt.
+- Delegate one function in one file: state the goal and the mistake to
+  avoid, work out one case by hand, run the script, and compare.
+- Read the approval box and `git diff` before accepting an edit, and
+  answer the five questions about it.
+- Write the hand check into the script and commit it with a message
+  that says who wrote what.
 
 ::: {.content-visible when-format="revealjs"}
 
 ::: {.notes}
-Four things, and you do each of them on your own laptop in the two
+Five things, and you do each of them on your own laptop in the two
 exercises.
 :::
 
@@ -155,14 +161,14 @@ exercises.
 
 ## Plan for today {#plan}
 
-1. Coding tools that read your files
-2. The five-step loop and two rules
-3. Starting Claude Code in the repository
+1. Chat, Cowork, Claude Code: one model, three harnesses
+2. Starting Claude Code in the repository
+3. The five-step loop and the four-part prompt
 4. Delegating one function
 5. Reading the diff, the patch, the check
 6. Version control from inside the agent
-7. CLAUDE.md: standing context and your style
-8. "Runs clean" is not "is right"
+7. CLAUDE.md: standing instructions and your style
+8. A clean run that is wrong
 
 ::: {.content-visible when-format="revealjs"}
 
@@ -173,38 +179,97 @@ in the two exercises.
 
 :::
 
-## Inline and agentic coding tools {#coding-tools}
+## Chat, Cowork, Claude Code: one model, three harnesses {#harnesses}
 
-| | Inline | Agentic |
-|:--|:--|:--|
-| Where | in the editor, as you type | in the Terminal tab, in a folder |
-| Sees | the open file | every file in the repository |
-| Does | suggests the next lines | writes files, runs commands, asks first |
-| Examples | Copilot in RStudio | Claude Code, Codex CLI, Gemini CLI, Cursor |
+| | Chat | Cowork | Claude Code |
+|:--|:--|:--|:--|
+| Where it runs | a web page | the desktop app | your terminal, in one folder |
+| How context arrives | you paste or attach it | from the folder you connect | from the folder, plus `CLAUDE.md` |
+| Reads your files | no | every file in the folder | every file in the repository |
+| Edits your files | no; you paste its output | yes, directly | yes; each edit shown as a diff first |
+| Runs commands | on Anthropic's servers, on an attached file | on Anthropic's servers | on your laptop: R, git, anything in the terminal |
+| Runs your R script | no; you run it | no; you run it | it can; today you run it yourself |
+| What you read afterwards | the script you pasted | `git status`, `git diff` | the approval box, then `git diff` |
 
 ::: {.content-visible when-format="revealjs"}
 
-- Every screen here is Claude Code. The habits are the category's.
-
 ::: {.notes}
-The agentic column can create and change files on your disk. That is
-both the capability and the risk.
+Same model in all three. The app around it, the harness, decides what
+it can see and do. The last column is the only one that acts on your
+laptop, which is why it asks first and why git is the safety net.
 :::
 
 :::
 
 ::: {.content-hidden when-format="revealjs"}
 
-Two kinds of coding tool exist today, and they behave differently. An
-inline tool lives in the editor and proposes the next few lines as grey
-text while you type; [GitHub Copilot inside
+Claude Code is the same Claude model as the chat window and Cowork, in
+a third harness: a program in your terminal that runs in one folder.
+The harness decides what the model can see and do. In a chat you paste
+context in and copy text out. Cowork reads and writes the files in a
+folder you connect and runs code in a sandbox on Anthropic's servers,
+not on your laptop. Claude Code reads every file in the repository,
+edits files after showing each edit as a diff, and runs commands in
+your terminal: R, git, anything you could type there. That row is the
+difference that matters. The other two never touch your machine; this
+one does, which is why it asks before acting and why git is the safety
+net.
+
+Two other kinds of tool are not this page's subject. An inline tool
+such as [GitHub Copilot in
 RStudio](https://docs.posit.co/ide/user/ide/guide/tools/copilot.html)
-is one. An agentic tool lives in a terminal. It reads the folder you
-start it in, writes files, runs commands, and asks before each change.
-Claude Code is one; Codex CLI, Gemini CLI and
-Cursor's agent are peers. This page shows Claude Code because every
-screenshot and every prompt here is one real run of one tool. The
-habits transfer to the category.
+proposes the next few lines in the editor and sees only the open file.
+Terminal agents from other vendors work like Claude Code; the habits
+on this page transfer to them.
+
+:::
+
+## How Claude Code works: the loop inside the tool {#tool-loop}
+
+::: {.content-visible when-format="revealjs"}
+
+![](figures/09-ai-code/D2-agent-loop.svg){fig-align="center" height="195" fig-alt="Five boxes left to right: 1 Prompt, your text plus CLAUDE.md; 2 Read, files, folders, command output; 3 Act, edit a file, run a command; 4 Check, read the result, decide the next step; 5 Reply, when nothing is left to do. A dashed red arrow from box 4 back to box 2 reads: again, until the task is done; in manual mode, step 3 asks you first."}
+
+- It picks a tool: read, search, run a command, edit a file. The result
+  comes back to it. Again, until done.
+- Manual mode: an edit, or a command that changes something, asks you
+  first. Reading never asks.
+- A session starts empty. What carries over is on disk: files, commits,
+  `CLAUDE.md`.
+
+::: {.notes}
+The model writes text only. Every read, run and edit is a request the
+harness carries out and reports back. In manual mode the requests that
+change something come to you as approval boxes.
+:::
+
+:::
+
+::: {.content-hidden when-format="revealjs"}
+
+![The loop inside the tool. In manual mode, step 3 stops and asks you before an edit or a command that changes something.](figures/09-ai-code/D2-agent-loop.svg){fig-align="center" fig-alt="Five boxes left to right: 1 Prompt, your text plus CLAUDE.md; 2 Read, files, folders, command output; 3 Act, edit a file, run a command; 4 Check, read the result, decide the next step; 5 Reply, when nothing is left to do. A dashed red arrow from box 4 back to box 2 reads: again, until the task is done; in manual mode, step 3 asks you first."}
+
+Inside the tool runs a loop. Your prompt goes to the model together
+with a hidden system prompt and, if the folder has one, `CLAUDE.md`.
+The model writes text and nothing else; it cannot open a file or run a
+command itself. So it writes a request for a tool, and the harness
+carries it out: read a file, search the folder, run a command in the
+terminal, edit a file. The tool's result comes back to the model as
+text, and the model decides the next step. That repeats until nothing
+is left to do; then you get a reply. Anthropic's page [How Claude Code
+works](https://code.claude.com/docs/en/how-claude-code-works) describes
+the same loop in three phases: gather context, take action, verify
+results. Today the third phase is yours: every delegation on this page
+tells the tool not to run the script, in the prompt or in `CLAUDE.md`,
+and you run it in RStudio.
+
+In manual mode the loop stops at every edit and at every command that
+changes something and asks you; reading is free. You can stop it too:
+Esc interrupts. Everything the model has in front of it at a given
+moment is its context: the system prompt, `CLAUDE.md`, your prompts,
+every file it read and every command output so far. A new session
+starts with an empty context. What carries over is what is on disk:
+the files, the commits, and `CLAUDE.md`.
 
 :::
 
@@ -232,6 +297,35 @@ not in a chat window. It can run commands, including scripts and git.
 Every edit appears as a diff before it lands; that diff is the one thing
 you must read. The verification is yours; the tool has no way to compare
 the number it produced with the number you meant.
+
+:::
+
+## Two rules: a clean git state, and the diff over the transcript {#two-rules}
+
+- **Start from a clean git state.** `git status` clean before the
+  prompt; afterwards the diff is exactly what the model did.
+- **Trust the diff, not the transcript.** What it did, not what it says
+  it did.
+- You read every diff before you commit.
+
+::: {.content-visible when-format="revealjs"}
+
+::: {.notes}
+Rule one is why rule two works. A dirty tree mixes your edits with its
+edits, and the diff no longer shows what the model did. The diff-reading
+habit from the git session is the whole reason rule two is usable.
+:::
+
+:::
+
+::: {.content-hidden when-format="revealjs"}
+
+Rule one: start from a clean git state. `git status` prints `nothing to
+commit, working tree clean` before you type a prompt; then every line
+the diff shows afterwards is the model's, and none is yours. Rule two:
+trust the diff, not the transcript. The transcript says what the tool
+claims it did. The diff shows what it did. When they disagree, the diff
+wins.
 
 :::
 
@@ -270,97 +364,6 @@ always run: Session → Restart R, then Source. The Files pane shows what
 it wrote. Enlarge the Terminal pane before a prompt: drag the divider
 up, or use the maximize icon in the pane's corner. An approval box for a
 twenty-line file does not fit the default pane.
-
-:::
-
-## The five-step delegation loop {#five-steps}
-
-::: {.content-visible when-format="revealjs"}
-
-![](figures/09-ai-code/D1-five-step-loop.svg){fig-align="center" height="250" fig-alt="Five boxes left to right: 1 Explain, the goal and the failure mode; 2 Delegate, one function, one file; 3 Work it out, one small case by hand; 4 Verify, run, compare, read the diff; 5 Keep it, a stopifnot() line in the script. A dashed red arrow from box 4 back to box 2 reads: they disagree, ask for a patch, then verify again."}
-
-- Today: the population-weighted mean of `lifeExp` by continent.
-- On paper, Oceania 2007: 81.06. The trap: 80.72.
-- The permanent check: one `stopifnot()` line in the script.
-
-::: {.notes}
-Step three is the one people skip. Without a value on paper, step four
-is only watching a script run.
-:::
-
-:::
-
-::: {.content-hidden when-format="revealjs"}
-
-![The five-step delegation loop. When the value on paper and the printed value disagree, the arrow goes back to step 2 as a patch request.](figures/09-ai-code/D1-five-step-loop.svg){fig-align="center" fig-alt="Five boxes left to right: 1 Explain, the goal and the failure mode; 2 Delegate, one function, one file; 3 Work it out, one small case by hand; 4 Verify, run, compare, read the diff; 5 Keep it, a stopifnot() line in the script. A dashed red arrow from box 4 back to box 2 reads: they disagree, ask for a patch, then verify again."}
-
-Every delegation runs the same five steps. State the goal and the
-mistake you do not want (the failure mode). Delegate one function. Work
-out by hand what it must return on a case small enough to check, from
-rows you can see, before anything runs. Run it and compare the printed
-value with the one on paper; if they disagree, read the diff, ask for a
-patch, run again. Then write the hand check into the script as a
-`stopifnot()` line, so the next run checks itself. The value on paper
-comes from the data, not from a guess; that is what makes step 4 a
-comparison and not an impression.
-
-:::
-
-## Two rules for letting a model touch your files {#two-rules}
-
-- **Start from a clean git state.** `git status` clean before the
-  prompt; afterwards the diff is exactly what the model did.
-- **Trust the diff, not the transcript.** What it did, not what it says
-  it did.
-- You read every diff before you commit.
-
-::: {.content-visible when-format="revealjs"}
-
-::: {.notes}
-Rule one is why rule two works. A dirty tree mixes your edits with its
-edits, and the diff no longer shows what the model did. The diff-reading
-habit from the git session is the whole reason rule two is usable.
-:::
-
-:::
-
-::: {.content-hidden when-format="revealjs"}
-
-Rule one: start from a clean git state. `git status` prints `nothing to
-commit, working tree clean` before you type a prompt; then every line
-the diff shows afterwards is the model's, and none is yours. Rule two:
-trust the diff, not the transcript. The transcript says what the tool
-claims it did. The diff shows what it did. When they disagree, the diff
-wins.
-
-:::
-
-## The four parts of a delegation prompt {#prompt-shape}
-
-- **Goal**: the function's name, inputs, and what it returns.
-- **Failure mode**: the mistake to avoid, named.
-- **Artifact and path**: `code/<name>.R`.
-- **What not to do**: no run, no other files, no git.
-- Paste it exactly. Do not paraphrase.
-
-::: {.content-visible when-format="revealjs"}
-
-::: {.notes}
-Part two is the one novices leave out, and you will see in ten minutes
-what happens without it.
-:::
-
-:::
-
-::: {.content-hidden when-format="revealjs"}
-
-A prompt to a coding tool has four parts, in any order. The goal: what
-the function takes and returns, with names. The failure mode: the
-mistake a reasonable reader could make, named. The artifact and its
-path: which file, where. What not to do: do not run it, do not create
-other files, do not use git. The fourth part is what keeps the diff
-small enough to read. Every prompt on this page is the exact text;
-paste it, do not paraphrase it.
 
 :::
 
@@ -432,14 +435,14 @@ Use this line, not bare `claude`, until reading diffs is a habit.
 
 One line in the Terminal tab launches it in manual mode, where it reads
 freely but asks before every edit and every command that changes
-something. A Pro account may
-otherwise start in auto mode, where a second model approves edits
-instead of you. The status line above the prompt says which mode you are
-in; it must read `⏸ manual mode on` for everything today. Shift+Tab
-cycles the modes; if the keystroke does not reach the tool inside
-RStudio's terminal, quit with `/exit` and relaunch with the line above.
-An older install that rejects `manual` accepts `--permission-mode
-default`, which is the same mode.
+something. Depending on the plan, a session may otherwise start in
+auto mode, where a second model reviews actions instead of you. The
+status line above the prompt says which mode you are in; it must read
+`⏸ manual mode on` for everything today. Shift+Tab cycles the modes; if
+the keystroke does not reach the tool inside RStudio's terminal, quit
+with `/exit` and relaunch with the line above. The mode's configuration
+name is `default`, so `--permission-mode default` launches the same
+mode.
 
 :::
 
@@ -487,8 +490,8 @@ New Terminal from inside the project fixes it.
 ![](figures/09-ai-code/S02-welcome.png){width="100%" fig-alt="The Claude Code welcome screen: Claude Code v2.1.258, the model and plan line, the folder ~/github/gapminder-practice, the prompt box, and the status line reading manual mode on."}
 :::
 ::: {.column width="40%"}
-1. **Version**: `2.1.258` or later
-2. **Model · plan**: Sonnet 5 on Pro; wording varies
+1. **Version**: the number varies; any current one
+2. **Model · plan**: the model in use and your plan; wording varies
 3. **Folder**: ends in `gapminder-practice`
 4. **`❯`**: type here, Enter sends
 5. **Status line**: `⏸ manual mode on`
@@ -504,36 +507,45 @@ nothing else on this screen matters yet.
 
 ::: {.content-hidden when-format="revealjs"}
 
-![The welcome screen, with the empty middle of the terminal cut out. The captured account is not a student account; on a Pro account the second line names Sonnet 5 and Claude Pro, in wording that varies.](figures/09-ai-code/S02-welcome.png){fig-align="center" fig-alt="The Claude Code welcome screen: Claude Code v2.1.258, the model and plan line, the folder ~/github/gapminder-practice, the prompt box, and the status line reading manual mode on."}
+![The welcome screen, with the empty middle of the terminal cut out. The captured account is not a student account; on your laptop the second line names your plan and its model, in wording that varies.](figures/09-ai-code/S02-welcome.png){fig-align="center" fig-alt="The Claude Code welcome screen: Claude Code v2.1.258, the model and plan line, the folder ~/github/gapminder-practice, the prompt box, and the status line reading manual mode on."}
 
-Four lines matter: the version; the model and plan (a Pro account names
-Sonnet 5 and Claude Pro; the captured account differs); the folder; and
+Four lines matter: the version; the model and plan (yours differ from
+the captured account's); the folder; and
 the status line, `⏸ manual mode on`. The folder must end in
 `gapminder-practice` (on Windows it starts with `C:/Users/`). The `❯` is
 where a prompt goes; Enter sends it.
 
-Every Claude Code screen on this page comes from real runs of version
-2.1.258, captured on 2026-09-14; the RStudio screens are separate
-captures. Replies vary from run to run: the wording of a
-summary, sometimes the code. The steps do not.
+Every Claude Code screen on this page comes from real runs, captured in
+September 2026 with the version the welcome screen shows; the RStudio
+screens are separate captures. The interface changes between versions,
+and replies vary from run to run: the wording of a summary, sometimes
+the code. The steps do not.
 
 :::
 
-## A read-only first prompt {#first-prompt}
+## Two read-only first prompts {#first-prompt}
 
-```{.markdown filename="Prompt to paste into Claude Code"}
+```{.markdown filename="Prompt 1, to paste into Claude Code"}
 List every file in this repository, folder by folder, with its size.
+Do not edit anything.
+```
+
+```{.markdown filename="Prompt 2, to paste into Claude Code"}
+How many rows does data/gapminder.csv have, and what are its columns?
 Do not edit anything.
 ```
 
 ::: {.content-visible when-format="revealjs"}
 
-- It reads; it does not edit. No edit box appears.
-- A box for a listing command such as `ls` may appear: read it, `1. Yes`.
-- Compare with the Files pane. Same files, same folders.
+- Prompt 1: it reads the folder. No edit box. Compare with the Files pane.
+- Prompt 2: it opens the file itself. A box for `head` or `wc` may
+  appear: a tool call. Read it, `1. Yes`.
+- The reply: 1704 rows; country, continent, year, lifeExp, pop, gdpPercap.
 
 ::: {.notes}
 Reading never asks. Anything that changes a file stops and asks first.
+Prompt 2 is the loop from the diagram, in one turn: a read, the result
+back to the model, the reply.
 :::
 
 :::
@@ -550,9 +562,17 @@ command, then `1. Yes`. The reply lists at least `.gitignore`,
 chose. Paste into the Terminal tab with Cmd+V on a Mac, Ctrl+V on
 Windows. A long prompt may collapse to one line, `[Pasted text #1 +N
 lines]`; that is the whole prompt. Compare the reply with the Files
-pane: same files, same folders. Then
-`git status` in a second Terminal tab (next section) prints clean,
-which is the proof that a read-only prompt read only.
+pane: same files, same folders.
+
+The second prompt is the loop of the previous section in one turn. The
+model cannot see the file until a tool opens it, so it reads the file
+or asks to run `head` and `wc -l` on it; a *Bash command* box with such
+a command is a tool call, and `1. Yes` lets it run. The result comes
+back to the model and the reply follows: 1704 rows and six columns,
+country, continent, year, lifeExp, pop and gdpPercap. Both are
+checkable against what you printed before class. Then `git status` in a
+second Terminal tab (next section) prints clean, which is the proof
+that two read-only prompts read only.
 
 :::
 
@@ -587,6 +607,80 @@ prompt instead of `❯`, you typed `claude` in the Console: Tools →
 Terminal → New Terminal, then again.
 
 ![Two Terminal tabs: Claude Code stays in Terminal 1, git goes in Terminal 2. The dropdown switches between them.](figures/09-ai-code/S13-terminal-dropdown.png){fig-align="center" fig-alt="RStudio's Terminal pane with its dropdown open, listing Terminal 1 running Claude Code and Terminal 2 at the shell prompt, both circled in red."}
+
+:::
+
+## The five-step delegation loop {#five-steps}
+
+::: {.content-visible when-format="revealjs"}
+
+![](figures/09-ai-code/D1-five-step-loop.svg){fig-align="center" height="250" fig-alt="Five boxes left to right: 1 Explain, the goal and the failure mode; 2 Delegate, one function, one file; 3 Work it out, one small case by hand; 4 Verify, run, compare, read the diff; 5 Keep, the hand check as a line in the script. A dashed red arrow from box 4 back to box 2 reads: they disagree, ask for a patch, then verify again."}
+
+- Today: the population-weighted mean of `lifeExp` by continent.
+- On paper, Oceania 2007: 81.06. The trap: 80.72.
+- The permanent check: the hand check written into the script.
+
+::: {.notes}
+Step three is the one people skip. Without a value on paper, step four
+is only watching a script run.
+:::
+
+:::
+
+::: {.content-hidden when-format="revealjs"}
+
+![The five-step delegation loop. When the value on paper and the printed value disagree, the arrow goes back to step 2 as a patch request.](figures/09-ai-code/D1-five-step-loop.svg){fig-align="center" fig-alt="Five boxes left to right: 1 Explain, the goal and the failure mode; 2 Delegate, one function, one file; 3 Work it out, one small case by hand; 4 Verify, run, compare, read the diff; 5 Keep, the hand check as a line in the script. A dashed red arrow from box 4 back to box 2 reads: they disagree, ask for a patch, then verify again."}
+
+Every delegation runs the same five steps. State the goal and the
+mistake you do not want (the failure mode). Delegate one function. Work
+out by hand what it must return on a case small enough to check, from
+rows you can see, before anything runs. Run it and compare the printed
+value with the one on paper; if they disagree, read the diff, ask for a
+patch, run again. Then write the hand check into the script as a line
+that stops it when the value drifts (`stopifnot()`), so the next run
+checks itself. The value on paper comes from the data, not from a
+guess; that is what makes step 4 a comparison and not an impression.
+
+This loop wraps the loop inside the tool. The tool gathers context,
+acts and checks its own result; you decide what right means and check
+it once more from outside. Anthropic's
+[best practices for Claude Code](https://code.claude.com/docs/en/best-practices)
+give the same advice in their own words: state verification criteria
+in the prompt (an example input and its expected output), scope the
+task to one file and one scenario, describe the symptom and what fixed
+looks like when asking for a fix, and, in the list of common failures,
+"If you can't verify it, don't ship it." The five steps are that advice
+arranged for a novice who runs the script and reads the diff in
+person.
+
+:::
+
+## The four parts of a delegation prompt {#prompt-shape}
+
+- **Goal**: the function's name, inputs, and what it returns.
+- **Failure mode**: the mistake to avoid, named.
+- **Artifact and path**: `code/<name>.R`.
+- **What not to do**: no run, no other files, no git.
+- Paste it exactly. Do not paraphrase.
+
+::: {.content-visible when-format="revealjs"}
+
+::: {.notes}
+Part two is the one novices leave out, and you will see in ten minutes
+what happens without it.
+:::
+
+:::
+
+::: {.content-hidden when-format="revealjs"}
+
+A prompt to a coding tool has four parts, in any order. The goal: what
+the function takes and returns, with names. The failure mode: the
+mistake a reasonable reader could make, named. The artifact and its
+path: which file, where. What not to do: do not run it, do not create
+other files, do not use git. The fourth part is what keeps the diff
+small enough to read. Every prompt on this page is the exact text;
+paste it, do not paraphrase it.
 
 :::
 
@@ -729,7 +823,7 @@ Then accept it anyway; the loop is about to test it.
 
 ::: {.content-hidden when-format="revealjs"}
 
-## What the transcript says it did {#transcript-says}
+## The transcript's summary after the write {#transcript-says}
 
 ![After the write: the file again, then the summary paragraph, which says it "uses tapply(sub$lifeExp, sub$continent, mean)".](figures/09-ai-code/S04-written-summary.png){fig-align="center" fig-alt="Claude Code after accepting: Wrote 9 lines to code/lifeexp_by_continent.R, the nine lines, and a summary paragraph ending Not run, no other files touched."}
 
@@ -988,7 +1082,7 @@ row, each checked before the next.
 
 :::
 
-## Three tests of a delegation {#three-tests}
+## Three questions before you delegate {#three-tests}
 
 1. Can you name the failure mode?
 2. Can you work out one case by hand, from rows you can see?
@@ -1284,7 +1378,7 @@ Oceania prints 81.06215. Expected 81.06. Step 4 passes.
 
 :::
 
-## stopifnot(): the check stays in the script {#institutionalize}
+## Writing the hand check into the script: stopifnot() {#institutionalize}
 
 ```bash
 git diff                          # after typing the check in RStudio
@@ -1365,7 +1459,7 @@ else. Do not run the script.
 
 :::
 
-## Commit after reading {#commit}
+## Committing the patched script {#commit}
 
 ```bash
 git add code/lifeexp_by_continent.R
@@ -1401,7 +1495,7 @@ submission's note:
 ## AI disclosure
 - Tools: Claude Code
 - Used for: lifeexp_by_continent(), then a patch to weight by pop
-- Checked: Oceania 2007 by hand, 81.06; stopifnot() in the script
+- Checked: Oceania 2007 by hand, 81.06; the check is in the script
 ```
 
 The transcript is not in the repository; the script, the check and the
@@ -1446,8 +1540,8 @@ messages match.
 ::: {.content-hidden when-format="revealjs"}
 
 *Paired up?* Swap roles: the reader from Exercise 1 types now. *Prefer
-to ask the tool for the check?* The prompt is under the `stopifnot()`
-section above. Read the `stopifnot()` line in the box against your paper
+to ask the tool for the check?* The prompt is under the hand-check
+section above. Read the check line in the box against your paper
 before `1. Yes`. The only red line should be the `print`.
 
 :::
@@ -1493,7 +1587,7 @@ typed. Read them. If one is the subtraction, `git restore
 code/lifeexp_gain.R` and type the check again. A check that names a
 country is a check on the whole chain: the subtraction, the matching,
 and `which.max`. It compares a string with `==`, which is exact; a
-decimal check uses a tolerance, as in the `stopifnot()` section.
+decimal check uses a tolerance, as in the hand-check section.
 
 :::
 
@@ -1529,7 +1623,7 @@ When it fails, say:
 
 :::
 
-## The diff is on screen before the file changes {#diff-on-screen}
+## The edit approval box as a diff, and /diff {#diff-on-screen}
 
 ::: {.content-visible when-format="revealjs"}
 
@@ -1546,9 +1640,9 @@ When it fails, say:
 ::::
 
 ::: {.notes}
-Every edit arrives as a diff in the tool itself. The desktop app's Code
-tab shows the same diff in a window. Reading it here and reading it in
-`git diff` are the same act.
+Every edit arrives as a diff in the tool itself. Other interfaces to
+the tool show the same diff in a window. Reading it here and reading it
+in `git diff` are the same act.
 :::
 
 :::
@@ -1574,16 +1668,16 @@ else. Do not run it and do not commit.
 
 After `1. Yes`, type `/diff` at the `❯` prompt. It opens the uncommitted
 changes as git sees them, inside the tool: one file, `+4 -1`. Enter views
-the lines; Esc closes. The Claude desktop app's
-Code tab shows the same diffs in a window, with Accept and Reject
-buttons. Whichever window you read it in, the diff is the same object
-`git diff` prints in Terminal 2.
+the lines; Esc closes. Other interfaces to the same tool, the desktop
+app and the editor extensions, show the same diff in a window.
+Whichever window you read it in, the diff is the same object `git diff`
+prints in Terminal 2.
 
 ![`/diff` after the edit: the uncommitted changes, from git, inside Claude Code.](figures/09-ai-code/S09-slash-diff.png){fig-align="center" fig-alt="Claude Code after the edit, with the /diff panel open: Uncommitted changes (git diff HEAD), 1 file changed +4 -1, code/lifeexp_gain.R selected, and the keys to switch, select, view and close."}
 
 :::
 
-## The agent runs git when you ask {#agent-git}
+## Asking the agent to commit {#agent-git}
 
 ::: {.content-visible when-format="revealjs"}
 
@@ -1601,9 +1695,9 @@ buttons. Whichever window you read it in, the diff is the same object
 
 ::: {.notes}
 Asked to, it stages, commits, pushes and branches. In manual mode each
-git command is shown and approved. In Auto mode on a Pro plan, commits
-and pushes in the same repository run without a prompt: one more reason
-to stay in manual mode until the habit is formed.
+git command is shown and approved. In auto mode, a commit or a push to
+the repository you are working in runs without a prompt: one more
+reason to stay in manual mode until the habit is formed.
 :::
 
 :::
@@ -1629,11 +1723,11 @@ off, for git or for everything; leave both. Second, the model's own
 line. The `CLAUDE.md` in this repository (a rules file, introduced in
 the next section) says "Do not use git. I commit.", and the tool said so
 and went ahead because the prompt asked explicitly. A rule in the file
-is a default; a sentence in the prompt overrides it. Third, what Auto
-mode would have done. A Pro session may start in Auto mode. There,
-commits and pushes to the repository you are working in run without a
-prompt. That is one more reason to check the status line and stay in
-manual mode until reading diffs is a habit.
+is a default; a sentence in the prompt overrides it. Third, what auto
+mode would have done. Depending on the plan, a session may start in
+auto mode. There, a commit or a push to the repository you are working
+in runs without a prompt. That is one more reason to check the status
+line and stay in manual mode until reading diffs is a habit.
 
 ![After `1. Yes`: Committed as f0f9a04 on main, one file changed, working tree clean.](figures/09-ai-code/S11-after-commit.png){fig-align="center" fig-alt="Claude Code after the commit: Committed f0f9a04, then a line saying Committed as f0f9a04 on main, Add the Oceania check to lifeexp_gain, one file changed, working tree is clean, and the status line reading manual mode on."}
 
@@ -1653,7 +1747,7 @@ it.
 
 :::
 
-## CLAUDE.md: read at every launch {#claude-md}
+## CLAUDE.md: standing instructions, read at every launch {#claude-md}
 
 - A markdown file at the root, read at every launch.
 - Layout, style, working rules. Nothing that changes per task.
@@ -1848,7 +1942,7 @@ conventions, not the form to use for a function you have not checked.
 
 :::
 
-## The file it produced: conventions applied unasked {#short-prompt-file}
+## The file produced with CLAUDE.md in place {#short-prompt-file}
 
 ::: {.content-visible when-format="revealjs"}
 
@@ -1918,13 +2012,13 @@ print(lifeexp_gain(d, FROM, TO))
 
 :::
 
-## What Claude Code is bad at {#bad-at}
+## Tasks not to give Claude Code {#bad-at}
 
 - Outputs you cannot check by hand.
 - Questions that do not touch the repository. Use a chat.
 - A folder with data you must not share. It can read everything.
-- Long stretches without reading. Accept-edits mode is not for this
-  month.
+- Long stretches without reading: accept-edits mode, until reading
+  diffs is a habit.
 
 ::: {.content-visible when-format="revealjs"}
 
@@ -1941,8 +2035,8 @@ Four kinds of work do not belong in it. Outputs you cannot check by eye
 or by hand; it will produce a plausible number in a script that runs.
 Questions that do not touch the repository; open a chat instead. A
 folder holding data you must not share; it can read everything. Long
-stretches without reading; accept-edits mode exists and is not for this
-month.
+stretches without reading; accept-edits mode exists, and it is not for
+the weeks in which reading diffs becomes a habit.
 
 If a model ever produces a value inside a script rather than writing
 the script, five more duties apply. Write down the model and its version
@@ -1954,19 +2048,19 @@ use a rule you can write down instead.
 
 :::
 
-## "Runs clean" is not "is right" {#runs-clean}
+## A script that runs without error can still be wrong {#runs-clean}
 
-- The first script ran clean, printed five plausible numbers, and
-  answered the wrong question.
-- The number on paper caught it and the diff showed why; the
-  `stopifnot()` line keeps it caught.
-- The bottleneck is verification, not typing. Faster tools move it to
+- The first script ran without error, printed five plausible numbers,
+  and answered the wrong question.
+- The number on paper caught it and the diff showed why; the check in
+  the script keeps it caught.
+- The bottleneck is verification, not typing. A faster tool moves it to
   where it is easiest to skip.
 
 ::: {.content-visible when-format="revealjs"}
 
 ::: {.notes}
-"Runs clean" is not "is right".
+A clean run is not a right answer.
 :::
 
 :::
@@ -1975,7 +2069,7 @@ use a rule you can write down instead.
 
 The first script ran without an error and printed five reasonable
 numbers. It answered a different question. Only the value on paper and
-the diff made that visible, and only the `stopifnot()` line keeps it
+the diff made that visible, and only the check in the script keeps it
 visible. The bottleneck is no longer typing; it is verification. Every
 faster tool moves that work to the end of the pipeline, where it is
 easiest to skip.
@@ -2028,7 +2122,7 @@ of them run in `gapminder-practice`, never in a graded repository.
 #     "by hand" section). Run, compare, type the check, commit.
 #  5. Delegate n_countries(d, yr): the number of countries per continent
 #     in year yr. On paper: Oceania is 2 and the five numbers sum to 142.
-#     Type both as stopifnot() conditions. Commit.
+#     Type both as conditions of one check. Commit.
 
 # Breaking the check
 #  6. In RStudio, reverse the subtraction in code/lifeexp_gain.R (swap
@@ -2036,10 +2130,10 @@ of them run in `gapminder-practice`, never in a graded repository.
 #     git restore code/lifeexp_gain.R and git status.
 
 # CLAUDE.md
-#  7. Add one Style rule to CLAUDE.md: "Every function starts with
-#     stopifnot() on the columns it uses." Commit. Relaunch. Ask for a
-#     small function (median lifeExp by continent in a year). Was the
-#     rule followed? Where in the diff?
+#  7. Add one Style rule to CLAUDE.md: "Every function has a one-line
+#     comment above it saying what it returns." Commit. Relaunch. Ask
+#     for a small function (median lifeExp by continent in a year). Was
+#     the rule followed? Where in the diff?
 #  8. Ask: "Add a comment header to code/lifeexp_gain.R saying what it
 #     reads and what it prints. Change nothing else." Read the approval
 #     box: any red line? Accept. Then git diff. Do the box and git diff
@@ -2093,9 +2187,9 @@ of them run in `gapminder-practice`, never in a graded repository.
 #           committed file back
 
 # 7
-#   The new function begins with
-#   stopifnot(c("continent", "year", "lifeExp") %in% names(d))
-#   or similar, in the first lines of the + block.
+#   A one-line comment sits directly above the function in the + block,
+#   and it says what the function returns, not what it does line by
+#   line.
 # expected: the rule appears in the diff without being in the prompt
 
 # 8
@@ -2235,7 +2329,10 @@ and keep the check in the script.**
 | `/diff` | the uncommitted changes, from git, inside the tool | [§](#diff-on-screen) |
 | standing context | `CLAUDE.md`, read at every launch | [§](#claude-md) |
 | scope | what the prompt says not to do | [§](#prompt-shape) |
+| harness | the app around the model: a chat window, Cowork, Claude Code | [§](#harnesses) |
+| tool call | the model's request to read, search, run or edit; in manual mode the ones that change something ask first | [§](#tool-loop) |
+| context | what the model has in front of it: the system prompt, `CLAUDE.md`, your prompts, every file it read and every command output | [§](#tool-loop) |
 
-**Links:** [slides](09-ai-code-slides.html) · [Claude Code docs](https://code.claude.com/docs/en/quickstart) · [Syllabus](../syllabus.qmd) · [data/gapminder.csv](data/gapminder.csv)
+**Links:** [slides](09-ai-code-slides.html) · [Claude Code docs](https://code.claude.com/docs/en/quickstart) · [How Claude Code works](https://code.claude.com/docs/en/how-claude-code-works) · [best practices](https://code.claude.com/docs/en/best-practices) · [Syllabus](../syllabus.qmd) · [data/gapminder.csv](data/gapminder.csv)
 
 :::
