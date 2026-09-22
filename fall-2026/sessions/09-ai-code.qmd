@@ -113,14 +113,15 @@ the folder as it is; class starts from it.
 By the end of this session you can:
 
 - Explain what Claude Code has in front of it that a chat window does
-  not: every file in the folder, a terminal, git, and `CLAUDE.md`.
+  not: every file in the folder, a terminal, git, and a file of standing
+  instructions, `CLAUDE.md`.
 - Start Claude Code in manual mode in an empty RStudio project and have
   it initialize the git repository.
-- Delegate one task at a time with a count you can do by hand on the
-  source page, let the tool run the script, and compare.
-- Read the approval box and `git diff` before accepting an edit, and
-  find a value the tool typed from memory rather than read from the
-  page.
+- Hand the tool one task at a time, with a number you counted yourself
+  on the web page it reads; let it run the script; compare.
+- Read the box that shows each edit, and `git diff`, before accepting
+  it, and find a value the tool typed from memory rather than read from
+  the page.
 - Write a `CLAUDE.md` for the project and a read-only reviewer agent,
   and say what each one changes.
 
@@ -137,8 +138,8 @@ exercises.
 
 1. Chat, Cowork, Claude Code: one model, three harnesses
 2. What you decide and what it does
-3. A project from an empty folder: launch, git, the scraper
-4. Two more columns: a postdoc flag, a country column
+3. A project from an empty folder: launch, git, a web page read into a table
+4. Two more columns: is it a postdoc, and in which country
 5. Where the countries came from
 6. CLAUDE.md: the project's standing instructions
 7. A read-only reviewer agent
@@ -159,12 +160,12 @@ so a laptop that falls behind can read what came back.
 | | Chat | Cowork | Claude Code |
 |:--|:--|:--|:--|
 | Where it runs | a web page | the desktop app | your terminal, in one folder |
-| How context arrives | you paste or attach it | from the folder you connect | from the folder, plus `CLAUDE.md` |
+| How context arrives | you paste or attach it | from the folder you connect | from the folder, plus a file of standing instructions |
 | Reads your files | no | every file in the folder | every file in the repository |
 | Edits your files | no; you paste its output | yes, directly | yes; each edit shown as a diff first |
 | Runs commands | on Anthropic's servers, on an attached file | on Anthropic's servers | on your laptop: R, git, anything in the terminal |
-| Runs your R script | no; you run it | no; you run it | it can; today you run it yourself |
-| What you read afterwards | the script you pasted | `git status`, `git diff` | the approval box, then `git diff` |
+| Runs your R script | no; you run it | no; you run it | it can, when the prompt says so |
+| What you read afterwards | the script you pasted | `git status`, `git diff` | the box that shows each edit, then `git diff` |
 
 ::: {.content-visible when-format="revealjs"}
 
@@ -207,8 +208,8 @@ on this page transfer to them.
 
 - It picks a tool: read, search, run a command, edit a file. The result
   comes back to it. Again, until done.
-- Manual mode: an edit, or a command that changes something, asks you
-  first. Reading never asks.
+- Manual mode, today's setting: an edit, or a command that changes
+  something, asks you first. Reading never asks.
 - A session starts empty. What carries over is on disk: files, commits,
   `CLAUDE.md`.
 
@@ -291,7 +292,8 @@ number you meant.
 - Let it choose and it picks something plausible. Plausible is not the
   same as right.
 - A fact it did not read is a guess: a function's arguments, a
-  citation, a country. Check the documentation, the paper, the page.
+  citation, a fact about the world. Check the documentation, the paper,
+  the source.
 - You must be able to explain every line. Ask it to explain rather
   than write, and it becomes a tutor.
 
@@ -386,14 +388,15 @@ this tool is the best reason to start.
 - One well-defined task per session: "build the county-year panel",
   "write the event-study plot". "Do the analysis" produces large vague
   code.
-- Performance drops as the context fills with old material. `/clear`
-  between unrelated tasks.
+- Performance drops as the context fills with old material. Start a
+  fresh conversation between unrelated tasks (the `/clear` command).
 - Anything with a merge or a panel build: "Describe your approach
   before writing any code." Read the plan; fix misunderstandings there,
   where they are cheap.
-- Conventions you would otherwise repeat go in `CLAUDE.md`, once: base
-  R only, never touch `data/raw/`, relative paths, a clean session, a
-  master script, seeds, `sessionInfo()` saved with results.
+- Conventions you would otherwise repeat go once into `CLAUDE.md`, a
+  file it reads at every launch: base R only, never touch `data/raw/`,
+  relative paths, a clean session, a master script, seeds,
+  `sessionInfo()` saved with results.
 
 ::: {.content-visible when-format="revealjs"}
 
@@ -434,8 +437,8 @@ one for the project.
 
 - **Start from a clean git state.** `git status` clean before the
   prompt; afterwards the diff is exactly what the model did.
-- **Trust the diff, not the transcript.** What it did, not what it says
-  it did.
+- **Trust the diff, not the transcript.** What it did, not what its
+  replies say it did.
 - Commit before each task; read every diff before you commit;
   `git restore` puts a file back.
 
@@ -460,99 +463,17 @@ wins.
 
 :::
 
-## The four parts of a delegation prompt {#prompt-shape}
-
-- **Goal**: the function's name, inputs, and what it returns.
-- **Failure mode**: the mistake to avoid, named.
-- **Artifact and path**: `code/<name>.R`.
-- **What not to do**: no run, no other files, no git.
-- Paste it exactly. Do not paraphrase.
-
-::: {.content-visible when-format="revealjs"}
-
-::: {.notes}
-Part two is the one novices leave out, and you will see in ten minutes
-what happens without it.
-:::
-
-:::
-
-::: {.content-hidden when-format="revealjs"}
-
-A prompt to a coding tool has four parts, in any order. The goal: what
-the function takes and returns, with names. The failure mode: the
-mistake a reasonable reader could make, named. The artifact and its
-path: which file, where. What not to do: do not run it, do not create
-other files, do not use git. The fourth part is what keeps the diff
-small enough to read. Every prompt on this page is the exact text;
-paste it, do not paraphrase it.
-
-:::
-
-## Scoping a delegation: one task, one file {#scoping}
-
-| Too big to check | Right-sized |
-|:--|:--|
-| "Do my analysis of the placements." | "Write `code/placements.R`: the table at ... saved as `data/placements.csv`, four columns." |
-| "Make a report on placements." | "Add a column `postdoc`: TRUE when the position is a postdoc. Change nothing else." |
-| "Fix my script." | "Only the country column is wrong; replace the table in the code with a data file I fill in." |
-
-::: {.content-visible when-format="revealjs"}
-
-- If you cannot count one case on the page, the delegation is too large.
-
-::: {.notes}
-One function, one file, one case you can do on paper. Bigger tasks are
-this, several times.
-:::
-
-:::
-
-::: {.content-hidden when-format="revealjs"}
-
-You cannot check "Do my analysis of the placements", because nothing
-about it has a value you can count. "Add a column `postdoc`" can, with
-the browser's find box. The unit of delegation is one task with one
-output and one small case, in one file. A bigger task is several of
-these in a row, each checked before the next, and one per session.
-
-:::
-
-## Three questions before you delegate {#three-tests}
-
-1. Can you name the failure mode?
-2. Can you count one case by hand, on the page or in rows you can see?
-3. Can you read the whole diff in five minutes?
-
-- Any no: split the task.
-
-::: {.content-visible when-format="revealjs"}
-
-::: {.notes}
-If any answer is no, split the task.
-:::
-
-:::
-
-::: {.content-hidden when-format="revealjs"}
-
-Before pasting, three questions. Can you name the failure mode? Can you
-count one case by hand, on the page or in rows you can see? Can you read
-the diff in five minutes? A no to any of them means the task is too large; split
-it until all three are yes.
-
-:::
-
 ## The project: the Ph.D. placements page, from an empty folder {#project}
 
 - The page: [Recent job placements, Ph.D. in Applied Economics & Management](https://business.cornell.edu/admissions/graduate/phd-aem/for-hire/).
   One table: year, name, position, organization. 109 rows when captured.
-- Four prompts, one task each: initialize git; scrape the table; a
-  postdoc flag; a country column. Then: where the countries came from.
-- This time the prompts say run it. The tool runs the script and fixes
-  it; you check every number against the page.
+- Four prompts, one task each: start git; read the table into a CSV
+  (scraping); flag the postdocs; add each organization's country. Then:
+  where the countries came from.
+- The prompts tell the tool to run the script and fix it when it fails.
+  You check every number against the page.
 - The folder: `placements`, no git yet. Once, in the Console:
-  `install.packages("rvest")`.
+  `install.packages("rvest")`, the R package that reads web pages.
 
 ::: {.content-visible when-format="revealjs"}
 
@@ -586,6 +507,53 @@ screen will differ. The prompts, the checks and the lesson do not.
 
 :::
 
+## The steps, from an empty folder to the first prompt {#steps .smaller}
+
+1. RStudio: **File → New Project → New Directory → New Project**. Name
+   `placements`, inside `~/github`. Do not tick *Create a git
+   repository*. **Create Project**.
+2. Console, once: `install.packages("rvest")`.
+3. **Tools → Terminal → New Terminal.** The prompt ends in `placements`.
+4. Type `claude --permission-mode manual`, Enter.
+5. The trust question: ↓ once to *Yes, I trust this folder*, Enter.
+6. The welcome screen: the folder ends in `placements`; the status line
+   reads `⏸ manual mode on`.
+7. Paste Prompt 0. Read each box, `1. Yes`.
+8. **Tools → Terminal → New Terminal** again (Terminal 2): `git log --oneline`.
+
+::: {.content-visible when-format="revealjs"}
+
+::: {.notes}
+Eight steps, one slide each from here to Prompt 0. Nobody types ahead:
+we do them together, and the exercises repeat them.
+:::
+
+:::
+
+::: {.content-hidden when-format="revealjs"}
+
+The whole path, in order; the next six sections take the steps one at a
+time. The RStudio project is the folder: *New Project* creates
+`~/github/placements` with one file in it, `placements.Rproj`, and every
+Terminal you open from Tools → Terminal starts there, so there is
+nothing to navigate. Leave the git box unticked: Prompt 0 asks the tool
+to do that part, and you watch it happen. If you did Before class, steps
+1 and 2 are done; open the project (File → Recent Projects →
+`placements`) and start at step 3.
+
+Without RStudio, the same eight steps in a terminal:
+
+```bash
+mkdir -p ~/github/placements
+cd ~/github/placements
+claude --permission-mode manual
+```
+
+then the trust question, the welcome screen, and Prompt 0; git goes in a
+second terminal window opened in the same folder.
+
+:::
+
 ## Claude Code in RStudio's Terminal tab {#where-it-lives}
 
 ::: {.content-visible when-format="revealjs"}
@@ -596,7 +564,7 @@ screen will differ. The prompts, the checks and the lesson do not.
 :::
 ::: {.column width="40%"}
 1. **Terminal tab**: where Claude Code runs
-2. **`❯` prompt**: where the delegation goes
+2. **`❯` prompt**: where you type
 3. **Console**: where you run the script
 4. **Files pane**: what it wrote
 :::
@@ -736,6 +704,40 @@ the code. The steps do not.
 
 :::
 
+## Keys, commands, and a second Terminal tab {#keys}
+
+| Key or command | Does |
+|:--|:--|
+| Enter | sends the prompt |
+| Esc | interrupts; on a question, declines |
+| ↑ | brings back the previous prompt |
+| `/clear` | new conversation, same folder |
+| `/exit` (or Ctrl+C twice) | leaves Claude Code |
+| Tools → Terminal → New Terminal | a second tab for git |
+
+::: {.content-visible when-format="revealjs"}
+
+::: {.notes}
+Esc interrupts whatever it is doing. Open a second Terminal tab for git,
+so you can read what it did without leaving the tool.
+:::
+
+:::
+
+::: {.content-hidden when-format="revealjs"}
+
+Five keys a novice needs, and one RStudio habit: Claude Code occupies
+its Terminal tab, so git commands go in a second one.
+Tools → Terminal → New Terminal opens *Terminal 2*; the dropdown at the
+top of the Terminal pane switches between them. Leave Claude Code in
+Terminal 1 and type git in Terminal 2. If the Terminal shows R's `>`
+prompt instead of `❯`, you typed `claude` in the Console: Tools →
+Terminal → New Terminal, then again.
+
+![Two Terminal tabs: Claude Code stays in Terminal 1, git goes in Terminal 2. The dropdown switches between them.](figures/09-ai-code/S13-terminal-dropdown.png){fig-align="center" fig-alt="RStudio's Terminal pane with its dropdown open, listing Terminal 1 running Claude Code and Terminal 2 at the shell prompt, both circled in red."}
+
+:::
+
 ## Prompt 0: initialize git from inside the tool {#prompt-git-init}
 
 ```{.markdown filename="Prompt to paste into Claude Code (captured run)"}
@@ -751,9 +753,9 @@ message "New project".
 ![](figures/09-ai-code/S10-git-commit-dialog.png){width="100%" fig-alt="A Bash command approval box from another project: the exact git add, git commit and git status command, the line This command requires approval, and the answers 1. Yes, 2. Yes and don't ask again for git, 3. Yes and switch to auto mode, 4. No."}
 :::
 ::: {.column width="50%"}
-1. **Create file** box for `.gitignore`: `1. Yes`
-2. **Bash command** box: the exact git line. Read it, `1. Yes`
-3. Terminal 2: `git log --oneline`, one commit
+1. A box shows the new file `.gitignore` first: read it, `1. Yes`
+2. A box shows the exact git command: read it, `1. Yes`
+3. Terminal 2: `git log --oneline` prints one commit
 :::
 ::::
 
@@ -816,37 +818,92 @@ Co-Authored-By: Claude Opus 5 (1M context) <noreply@anthropic.com>" && git log -
 
 :::
 
-## Keys, commands, and a second Terminal tab {#keys}
+## One task per prompt: the four parts {#prompt-shape}
 
-| Key or command | Does |
-|:--|:--|
-| Enter | sends the prompt |
-| Esc | interrupts; on a question, declines |
-| ↑ | brings back the previous prompt |
-| `/clear` | new conversation, same folder |
-| `/exit` (or Ctrl+C twice) | leaves Claude Code |
-| Tools → Terminal → New Terminal | a second tab for git |
+- **The goal**: what the script must do, with names for its inputs and
+  its output.
+- **The mistake to avoid, named**: the plausible wrong reading. Call it
+  the failure mode.
+- **The file to write, and where**: `code/<name>.R`.
+- **What not to do**: no other files, no git; and whether to run it.
+- Prompt 0 had three of the four; the next prompt has all four. Paste
+  them; do not retype them.
 
 ::: {.content-visible when-format="revealjs"}
 
 ::: {.notes}
-Esc interrupts whatever it is doing. Open a second Terminal tab for git,
-so you can read what it did without leaving the tool.
+Part two is the one novices leave out. Prompt 3, the country column,
+is what happens without it.
 :::
 
 :::
 
 ::: {.content-hidden when-format="revealjs"}
 
-Five keys a novice needs, and one RStudio habit: Claude Code occupies
-its Terminal tab, so git commands go in a second one.
-Tools → Terminal → New Terminal opens *Terminal 2*; the dropdown at the
-top of the Terminal pane switches between them. Leave Claude Code in
-Terminal 1 and type git in Terminal 2. If the Terminal shows R's `>`
-prompt instead of `❯`, you typed `claude` in the Console: Tools →
-Terminal → New Terminal, then again.
+A prompt that hands the tool one task has four parts, in any order.
+The goal: what the script must do, with names for what it reads and
+what it writes. The mistake to avoid, named: the plausible wrong
+reading a careful person could take; call it the failure mode. The file
+to write and where: which file, in which folder. What not to do: no
+other files, no git, and whether to run it or leave the run to you.
+The fourth part is what keeps the diff small enough to read. Prompt 0
+had a goal, a file and a "what not to do"; the next prompt, the
+scraper, has all four. Every prompt on this page is the exact text of
+the captured run; paste it, do not retype it.
 
-![Two Terminal tabs: Claude Code stays in Terminal 1, git goes in Terminal 2. The dropdown switches between them.](figures/09-ai-code/S13-terminal-dropdown.png){fig-align="center" fig-alt="RStudio's Terminal pane with its dropdown open, listing Terminal 1 running Claude Code and Terminal 2 at the shell prompt, both circled in red."}
+:::
+
+## Scoping a delegation: one task, one file {#scoping}
+
+| Too big to check | Right-sized |
+|:--|:--|
+| "Do my analysis of the placements." | "Write `code/placements.R`: the table at ... saved as `data/placements.csv`, four columns." |
+| "Make a report on placements." | "Add a column `postdoc`: TRUE when the position is a postdoc. Change nothing else." |
+| "Fix my script." | "Only the country column is wrong; replace the table in the code with a data file I fill in." |
+
+::: {.content-visible when-format="revealjs"}
+
+- If you cannot count one case on the page, the delegation is too large.
+
+::: {.notes}
+One function, one file, one case you can do on paper. Bigger tasks are
+this, several times.
+:::
+
+:::
+
+::: {.content-hidden when-format="revealjs"}
+
+You cannot check "Do my analysis of the placements", because nothing
+about it has a value you can count. "Add a column `postdoc`" can, with
+the browser's find box. The unit of delegation is one task with one
+output and one small case, in one file. A bigger task is several of
+these in a row, each checked before the next, and one per session.
+
+:::
+
+## Three questions before you delegate {#three-tests}
+
+1. Can you name the mistake to avoid?
+2. Can you count one case by hand, on the page or in rows you can see?
+3. Can you read the whole diff in five minutes?
+
+- Any no: split the task.
+
+::: {.content-visible when-format="revealjs"}
+
+::: {.notes}
+If any answer is no, split the task.
+:::
+
+:::
+
+::: {.content-hidden when-format="revealjs"}
+
+Before pasting, three questions. Can you name the mistake to avoid? Can you
+count one case by hand, on the page or in rows you can see? Can you read
+the diff in five minutes? A no to any of them means the task is too large; split
+it until all three are yes.
 
 :::
 
@@ -854,10 +911,11 @@ Terminal → New Terminal, then again.
 
 ::: {.content-visible when-format="revealjs"}
 
-![](figures/09-ai-code/D1-five-step-loop.svg){fig-align="center" height="250" fig-alt="Five boxes left to right: 1 Explain, the goal and the failure mode; 2 Delegate, one function, one file; 3 Work it out, one small case by hand; 4 Verify, run, compare, read the diff; 5 Keep, the hand check as a line in the script. A dashed red arrow from box 4 back to box 2 reads: they disagree, ask for a patch, then verify again."}
+![](figures/09-ai-code/D1-five-step-loop.svg){fig-align="center" height="250" fig-alt="Five boxes left to right: 1 Explain, the goal and the failure mode; 2 Delegate, one task, one file; 3 Work it out, one small case by hand; 4 Verify, run, compare, read the diff; 5 Keep, the hand check as a line in the script. A dashed red arrow from box 4 back to box 2 reads: they disagree, ask for a patch, then verify again."}
 
-- Today: a table scraped from a page, then two columns.
-- On the page: one year's rows; three spellings of postdoc.
+- Next: the table read from the page. The count on paper: one year's
+  rows, counted on the page.
+- Then two columns, each with its own count.
 - The permanent check: the counts written into the script, dated.
 
 ::: {.notes}
@@ -869,7 +927,7 @@ is only watching a script run.
 
 ::: {.content-hidden when-format="revealjs"}
 
-![The five-step delegation loop. When the value on paper and the printed value disagree, the arrow goes back to step 2 as a patch request.](figures/09-ai-code/D1-five-step-loop.svg){fig-align="center" fig-alt="Five boxes left to right: 1 Explain, the goal and the failure mode; 2 Delegate, one function, one file; 3 Work it out, one small case by hand; 4 Verify, run, compare, read the diff; 5 Keep, the hand check as a line in the script. A dashed red arrow from box 4 back to box 2 reads: they disagree, ask for a patch, then verify again."}
+![The five-step delegation loop. When the value on paper and the printed value disagree, the arrow goes back to step 2 as a patch request.](figures/09-ai-code/D1-five-step-loop.svg){fig-align="center" fig-alt="Five boxes left to right: 1 Explain, the goal and the failure mode; 2 Delegate, one task, one file; 3 Work it out, one small case by hand; 4 Verify, run, compare, read the diff; 5 Keep, the hand check as a line in the script. A dashed red arrow from box 4 back to box 2 reads: they disagree, ask for a patch, then verify again."}
 
 Every delegation runs the same five steps. State the goal and the
 mistake you do not want (the failure mode). Delegate one task. Count by
@@ -1273,8 +1331,8 @@ supply them. Exercise 2 walks these five on that edit.
 ```bash
 # Exercise 1 (8 minutes). RStudio, the placements project from Before class.
 #
-# 1. Tools > Terminal > New Terminal; the prompt ends in placements.
-#    claude --permission-mode manual. Status line: manual mode on.
+# 1. Steps 3 to 6 of the list: New Terminal (prompt ends in placements),
+#    claude --permission-mode manual, trust, status line manual mode on.
 #    Enlarge the Terminal pane so the approval boxes fit.
 #
 # 2. Paste Prompt 0 (git). Read the Bash command box, then 1. Yes.
@@ -1636,8 +1694,8 @@ and both replies said the assignments looked right. That is what
    unsure about". You read that and say no.
 2. **Question 4 of the five.** Names and constants yours? A
    sixteen-entry table of literals is a constant you did not supply.
-3. **A reviewer with fresh eyes.** A read-only subagent, later on this
-   page, found it in one turn.
+3. **A reviewer with fresh eyes.** A second Claude that never saw this
+   conversation, later today, found it in one turn.
 
 ::: {.content-visible when-format="revealjs"}
 
