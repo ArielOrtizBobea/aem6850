@@ -467,9 +467,9 @@ wins.
 
 - The page: [Recent job placements, Ph.D. in Applied Economics & Management](https://business.cornell.edu/admissions/graduate/phd-aem/for-hire/).
   One table: year, name, position, organization. 109 rows when captured.
-- Four prompts, one task each: start git; read the table into a CSV
-  (scraping); flag the postdocs; add each organization's country. Then:
-  where the countries came from.
+- Four prompts, one task each: **1** start git; **2** read the table
+  into a CSV (scraping); **3** flag the postdocs; **4** add each
+  organization's country. Then: where the countries came from.
 - The prompts tell the tool to run the script and fix it when it fails.
   You check every number against the page.
 - The folder: `placements`, no git yet. Once, in the Console:
@@ -518,14 +518,17 @@ screen will differ. The prompts, the checks and the lesson do not.
 5. The trust question: ↓ once to *Yes, I trust this folder*, Enter.
 6. The welcome screen: the folder ends in `placements`; the status line
    reads `⏸ manual mode on`.
-7. Paste Prompt 0. Read each box, `1. Yes`.
+7. Ask it to set up git, in these words: *"Initialize a git repository
+   in this folder, add a .gitignore for an RStudio project, and commit
+   everything."* Read each box, `1. Yes`.
 8. **Tools → Terminal → New Terminal** again (Terminal 2): `git log --oneline`.
 
 ::: {.content-visible when-format="revealjs"}
 
 ::: {.notes}
-Eight steps, one slide each from here to Prompt 0. Nobody types ahead:
-we do them together, and the exercises repeat them.
+Eight steps, one slide each from here on. Step 7 is the exact sentence,
+short; the full prompt, with the file names and the commit message, is
+five slides on. Nobody types ahead: we do them together.
 :::
 
 :::
@@ -536,8 +539,8 @@ The whole path, in order; the next six sections take the steps one at a
 time. The RStudio project is the folder: *New Project* creates
 `~/github/placements` with one file in it, `placements.Rproj`, and every
 Terminal you open from Tools → Terminal starts there, so there is
-nothing to navigate. Leave the git box unticked: Prompt 0 asks the tool
-to do that part, and you watch it happen. If you did Before class, steps
+nothing to navigate. Leave the git box unticked: the first prompt asks
+the tool to do that part, and you watch it happen. If you did Before class, steps
 1 and 2 are done; open the project (File → Recent Projects →
 `placements`) and start at step 3.
 
@@ -556,8 +559,8 @@ cd ~/github/placements
 claude --permission-mode manual
 ```
 
-Then the trust question, the welcome screen and Prompt 0 as on the
-slides. Git goes in a second terminal window opened in the same folder
+Then the trust question, the welcome screen and the first prompt as on
+the slides. Git goes in a second terminal window opened in the same folder
 (`cd ~/github/placements`, then `git log --oneline` or `git diff`). Run
 a script with `Rscript code/placements.R` from that folder, or open the
 folder in RStudio when you want the Console.
@@ -764,7 +767,7 @@ changed files and shows each diff when clicked.
 
 :::
 
-## Prompt 0: initialize git from inside the tool {#prompt-git-init}
+## Prompt 1: git, from inside the tool {#prompt-git-init}
 
 ```{.markdown filename="Prompt to paste into Claude Code (captured run)"}
 Initialize a git repository in this folder, add a .gitignore for an RStudio
@@ -852,13 +855,13 @@ Co-Authored-By: Claude Opus 5 (1M context) <noreply@anthropic.com>" && git log -
   the failure mode.
 - **The file to write, and where**: `code/<name>.R`.
 - **What not to do**: no other files, no git; and whether to run it.
-- Prompt 0 had three of the four; the next prompt has all four. Paste
-  them; do not retype them.
+- Prompt 1 had three of the four; Prompt 2, the scraper, has all four.
+  Paste them; do not retype them.
 
 ::: {.content-visible when-format="revealjs"}
 
 ::: {.notes}
-Part two is the one novices leave out. Prompt 3, the country column,
+Part two is the one novices leave out. Prompt 4, the country column,
 is what happens without it.
 :::
 
@@ -872,9 +875,9 @@ what it writes. The mistake to avoid, named: the plausible wrong
 reading a careful person could take; call it the failure mode. The file
 to write and where: which file, in which folder. What not to do: no
 other files, no git, and whether to run it or leave the run to you.
-The fourth part is what keeps the diff small enough to read. Prompt 0
-had a goal, a file and a "what not to do"; the next prompt, the
-scraper, has all four. Every prompt on this page is the exact text of
+The fourth part is what keeps the diff small enough to read. Prompt 1
+had a goal, a file and a "what not to do"; Prompt 2, the scraper, has
+all four. Every prompt on this page is the exact text of
 the captured run; paste it, do not retype it.
 
 :::
@@ -979,7 +982,7 @@ person.
 
 :::
 
-## Prompt 1: the scraper, run until it works {#prompt-scrape}
+## Prompt 2: the scraper, run until it works {#prompt-scrape}
 
 ```{.markdown filename="Prompt to paste into Claude Code (captured run)"}
 Write code/placements.R. It reads the table "Recent job placements" at
@@ -1270,9 +1273,9 @@ or replace: `html_elements()` finds every element of a kind on the page;
 `vapply()` applies a function to each table and promises a logical
 result; `identical()` compares two vectors as a whole. "Explain
 `vapply` on line 19, then rewrite it as a `for` loop if that is
-clearer" is a fair prompt. The full file as written by prompt 1:
+clearer" is a fair prompt. The full file as written by Prompt 2:
 
-```{.r filename="code/placements.R (after prompt 1)"}
+```{.r filename="code/placements.R (after Prompt 2)"}
 # Scrape "Recent job placements" (Ph.D. in Applied Economics & Management)
 # from the Dyson "for hire" page and save it as data/placements.csv.
 # Uses rvest for the HTML and base R for everything else.
@@ -1364,12 +1367,12 @@ supply them. Exercise 2 walks these five on that edit.
 #    claude --permission-mode manual, trust, status line manual mode on.
 #    Enlarge the Terminal pane so the approval boxes fit.
 #
-# 2. Paste Prompt 0 (git). Read the Bash command box, then 1. Yes.
+# 2. Paste Prompt 1 (git). Read the Bash command box, then 1. Yes.
 #    Tools > Terminal > New Terminal (Terminal 2): git log --oneline.
 #
 # 3. On the page, count the rows for the most recent year. Write it down.
 #
-# 4. Paste Prompt 1 (the scraper). Boxes for R and for Rscript: read,
+# 4. Paste Prompt 2 (the scraper). Boxes for R and for Rscript: read,
 #    1. Yes. What came back: how many rows?
 #
 # 5. Console: sum(read.csv("data/placements.csv")$year == 2026)
@@ -1441,7 +1444,7 @@ When it fails, say:
 
 :::
 
-## Prompt 2: a postdoc flag {#prompt-postdoc}
+## Prompt 3: a postdoc flag {#prompt-postdoc}
 
 ```{.markdown filename="Prompt to paste into Claude Code (captured run)"}
 Add a column postdoc to the table before it is saved: TRUE when the position
@@ -1587,7 +1590,7 @@ git log --oneline
 
 :::
 
-## Prompt 3: a country column {#prompt-country}
+## Prompt 4: a country column {#prompt-country}
 
 ```{.markdown filename="Prompt to paste into Claude Code (captured run)"}
 Add a column country with the country of the organization. Change nothing
@@ -1637,7 +1640,7 @@ and international organizations counted at their headquarters.
 
 The block as written, in full:
 
-```{.r filename="code/placements.R (the country block, prompt 3)"}
+```{.r filename="code/placements.R (the country block, Prompt 4)"}
 # Country of the organization. The page does not list it, so it is inferred
 # from the organization name: the first matching pattern below wins, and
 # anything unmatched is treated as United States (the large majority).
@@ -1741,7 +1744,7 @@ minute of reading.
 
 Three habits from the first part of this page would each have caught
 the column before it existed. The cheapest is the plan. Sent on the
-same project before prompt 3, "Describe your approach before writing
+same project before Prompt 4, "Describe your approach before writing
 any code" produced the reply below: a hand-curated lookup table, filled
 in "from knowledge of the institutions", with the uncertain ones
 flagged. A reader who owns the question stops there: the source is the
@@ -1787,7 +1790,7 @@ reported the table and the default with line numbers in one turn.
 
 :::
 
-## The fix: facts you supply live in a data file {#fix-countries}
+## Prompt 5, the fix: facts you supply live in a data file {#fix-countries}
 
 ```{.markdown filename="Prompt to paste into Claude Code (captured run)"}
 The page does not state countries, so the lookup is a guess. Replace it: write
@@ -1932,17 +1935,17 @@ cat(length(orgs), "organizations\n")'; head -5 data/countries.csv)
 # 1. On the page, Ctrl+F (Cmd+F on a Mac): "postdoc", "post-doc",
 #    "post doc". Add the three counts. Write the sum down.
 #
-# 2. Paste Prompt 2 (postdoc). Read the edit box: which spellings does
+# 2. Paste Prompt 3 (postdoc). Read the edit box: which spellings does
 #    the pattern cover? 1. Yes. Compare its count with yours.
 #
-# 3. Paste Prompt 3 (country). Read the edit box before 1. Yes: where
+# 3. Paste Prompt 4 (country). Read the edit box before 1. Yes: where
 #    does each country come from? Count the country names typed into
 #    the code. Then 1. Yes, and read the table it prints.
 #
 # 4. Terminal 2: git diff. How many + lines are facts the page does not
 #    contain?
 #
-# 5. Paste the fix prompt (previous section). Read the box, 1. Yes.
+# 5. Paste Prompt 5, the fix (previous slide). Read the box, 1. Yes.
 #    Terminal 2: git status, then git add -A and a commit whose message
 #    says which lines are the tool's.
 #
@@ -2392,7 +2395,7 @@ being checked.
 
 ::: {.content-hidden when-format="revealjs"}
 
-Sent on the project after prompt 3, before the fix. The main
+Sent on the project after Prompt 4, before the fix. The main
 conversation started the subagent with the rule and the file name; the
 subagent read the script and returned the report; the main conversation
 relayed it, with the line numbers, and added that nothing was edited.
