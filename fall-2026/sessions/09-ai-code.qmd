@@ -854,7 +854,8 @@ Co-Authored-By: Claude Opus 5 (1M context) <noreply@anthropic.com>" && git log -
 - **The mistake to avoid, named**: the plausible wrong reading. Call it
   the failure mode.
 - **The file to write, and where**: `code/<name>.R`.
-- **What not to do**: no other files, no git; and whether to run it.
+- **What not to do**: no other files; no git, so that you read the
+  diff and commit; and whether to run the script.
 - Prompt 1 had three of the four; Prompt 2, the scraper, has all four.
   Paste them; do not retype them.
 
@@ -874,7 +875,8 @@ The goal: what the script must do, with names for what it reads and
 what it writes. The mistake to avoid, named: the plausible wrong
 reading a careful person could take; call it the failure mode. The file
 to write and where: which file, in which folder. What not to do: no
-other files, no git, and whether to run it or leave the run to you.
+other files; no git, so that the commit stays yours and the diff gets
+read; and whether to run the script or leave that to you.
 The fourth part is what keeps the diff small enough to read. Prompt 1
 had a goal, a file and a "what not to do"; Prompt 2, the scraper, has
 all four. Every prompt on this page is the exact text of
@@ -882,57 +884,95 @@ the captured run; paste it, do not retype it.
 
 :::
 
-## Scoping a delegation: one task, one file {#scoping}
+## How much to ask for in one prompt: one task, one file {#scoping}
 
 | Too big to check | Right-sized |
 |:--|:--|
-| "Do my analysis of the placements." | "Write `code/placements.R`: the table at ... saved as `data/placements.csv`, four columns." |
+| "Do my analysis of the placements." | "Write `code/placements.R`: the table on the placements page, saved as `data/placements.csv`, four columns." |
 | "Make a report on placements." | "Add a column `postdoc`: TRUE when the position is a postdoc. Change nothing else." |
 | "Fix my script." | "Only the country column is wrong; replace the table in the code with a data file I fill in." |
 
 ::: {.content-visible when-format="revealjs"}
 
-- If you cannot count one case on the page, the delegation is too large.
+- The test: name one number the answer must contain, and work that
+  number out yourself, before you send the prompt.
+- For the scraper, next slide: the page shows 16 rows for 2026, and you
+  can count them. So the task is small enough to check.
+- No such number: the request is too big. Split it.
 
 ::: {.notes}
-One function, one file, one case you can do on paper. Bigger tasks are
-this, several times.
+"Do my analysis" has no number in it, so there is nothing to compare
+afterwards. A big job is several small ones in a row, each checked
+before the next.
 :::
 
 :::
 
 ::: {.content-hidden when-format="revealjs"}
 
-You cannot check "Do my analysis of the placements", because nothing
-about it has a value you can count. "Add a column `postdoc`" can, with
-the browser's find box. The unit of delegation is one task with one
-output and one small case, in one file. A bigger task is several of
-these in a row, each checked before the next, and one per session.
+"Do my analysis of the placements" cannot be checked, because no number
+in the answer is one you could have worked out first. "Write
+`code/placements.R`: the table at that address saved as
+`data/placements.csv`" can: the page shows 16 rows for 2026, you count
+them in a few seconds, and the CSV must contain 16 rows for 2026 or the
+script is wrong. "Add a column `postdoc`" can too: the browser's find
+box counts the spellings on the page.
+
+So the unit to hand over is one task that writes one file and produces
+at least one number you can get yourself. A large job is several of
+these in a row, each checked before the next is sent, one per
+conversation. That is also why the third row of the table replaces "Fix
+my script" with a sentence naming the one thing that is wrong: it turns
+an open-ended request into a change whose size you know before you read
+the diff.
 
 :::
 
-## Three questions before you delegate {#three-tests}
+## Three questions before you send a prompt {#three-tests}
 
-1. Can you name the mistake to avoid?
-2. Can you count one case by hand, on the page or in rows you can see?
-3. Can you read the whole diff in five minutes?
+1. Can you say in advance what a wrong answer would look like, and
+   write that into the prompt?
+2. Can you work out one number of the answer yourself, from the page or
+   from rows on your screen?
+3. Could you read the whole diff in five minutes?
 
-- Any no: split the task.
+- Any no: the task is too big. Split it and send the first part.
 
 ::: {.content-visible when-format="revealjs"}
 
 ::: {.notes}
-If any answer is no, split the task.
+For the scraper: a wrong answer is rows dropped or doubled, or the
+other table on the page; the number is 16 rows for 2026; the diff is
+one new file of about thirty lines. Three yes, so it goes.
 :::
 
 :::
 
 ::: {.content-hidden when-format="revealjs"}
 
-Before pasting, three questions. Can you name the mistake to avoid? Can you
-count one case by hand, on the page or in rows you can see? Can you read
-the diff in five minutes? A no to any of them means the task is too large; split
-it until all three are yes.
+Before pasting, three questions, and all three are about what you will
+do after the reply arrives.
+
+**Can you say in advance what a wrong answer would look like?** Not
+"might it be wrong", but what shape the error would take: rows dropped
+by a bad match, the countries averaged instead of the people, the other
+table on the page read instead of this one. You write that sentence
+into the prompt, which is the "mistake to avoid" part of the four. If
+no wrong answer occurs to you, you do not yet understand the task well
+enough to check it.
+
+**Can you work out one number of the answer yourself?** One number is
+enough, from the page or from rows on your screen: 16 rows for the most
+recent year, 25 postdocs, two countries in Oceania. You get it before
+the script runs, so that the comparison afterwards is a comparison and
+not an impression.
+
+**Could you read the whole diff in five minutes?** One new file of
+thirty lines, yes. Four files and two hundred lines, no: you will skim,
+and skimming is how a wrong line gets committed.
+
+A no to any of them means the task is too big. Split it and send the
+first part; the next parts get easier to check once the first is in.
 
 :::
 
@@ -982,7 +1022,7 @@ person.
 
 :::
 
-## Prompt 2: the scraper, run until it works {#prompt-scrape}
+## Prompt 2: the scraper, run until it works {#prompt-scrape .smaller}
 
 ```{.markdown filename="Prompt to paste into Claude Code (captured run)"}
 Write code/placements.R. It reads the table "Recent job placements" at
@@ -996,25 +1036,39 @@ rows. Do not use git.
 
 ::: {.content-visible when-format="revealjs"}
 
-- Two *Bash command* boxes before any file: it looked at the page's two
-  tables first. Then *Create file*, then `Rscript`.
-- What came back: "Wrote 109 rows"; the first five rows; how it chose
+- It looked at the page's two tables first (two *Bash command* boxes),
+  then *Create file*, then `Rscript`.
+- What came back: "Wrote 109 rows", the first five rows, how it chose
   the table.
-- The hand check, on the page: count the 2026 rows. 16. Console:
+- Your check, on the page: count the 2026 rows. 16. Console:
   `sum(read.csv("data/placements.csv")$year == 2026)`.
+- **"Do not use git"**: a commit made for you is a diff you never read.
+  From here, you commit.
 
 ::: {.notes}
-Goal, artifact and path, what not to do, and this time: run it. The
-check is one year's rows, small enough to count on the page.
+The last clause is the one to explain out loud: a commit made for you
+is a diff you never read. Prompt 1 was the exception, and we watched
+that command before it ran.
 :::
 
 :::
 
 ::: {.content-hidden when-format="revealjs"}
 
-The prompt has the four parts: the goal with names, the artifact and
-its path, what not to do, and one more sentence than before: run it,
-and fix it if it fails. In the captured run the tool first ran two
+The prompt has the four parts: the goal with names, the file and its
+path, what not to do, and one more sentence than before: run it, and
+fix it if it fails.
+
+Two of those need a word. "Run it with `Rscript`" is new: until now
+every prompt on this page left the running to you, and this one hands
+it over, because the check that follows is yours either way. "Do not
+use git" looks like a contradiction one slide after asking the tool to
+initialize the repository, and it is the opposite: a commit the tool
+makes for you is a diff you never read. Prompt 1 was the exception, and
+even there the exact `git` command appeared in a box before it ran.
+From here the tool writes and runs; you read the diff and commit. That
+sentence is repeated in the next two prompts, and then it disappears
+into `CLAUDE.md`, which says it once for every prompt after that. In the captured run the tool first ran two
 short R commands to look at the page (the page has two tables, one for
 alumni for hire and one for placements), then wrote the script, ran it,
 and reported: 109 rows, the first five, and how it chose the table. It
@@ -2718,7 +2772,7 @@ accept it, and keep facts you supply in a data file.**
 |:--|:--|
 | A look, no change | "... Do not edit anything." |
 | Git from inside the tool | "Initialize a git repository ... and commit everything with the message ..." |
-| A script, run until it works | goal with names; `code/<name>.R`; "Run it with Rscript ...; if it fails, fix the script and run again; show me ..."; "Do not use git." |
+| A script, run until it works | goal with names; `code/<name>.R`; "Run it with Rscript ...; if it fails, fix the script and run again; show me ..."; "Do not use git" (you commit, after reading the diff) |
 | One more column | "Add a column X: TRUE when ... Change nothing else. Run it again and tell me how many ..." |
 | A plan first | "Describe your approach before writing any code." |
 | A patch | "X prints A; on the page I count B because ...; change the line that ...; change nothing else." |
@@ -2732,7 +2786,7 @@ accept it, and keep facts you supply in a data file.**
 |:--|:--|:--|
 | 1 | state the goal and the failure mode | the prompt's first parts; "Change nothing else" |
 | 2 | delegate one task | `1. Yes` on boxes you read |
-| 3 | count one case by hand | 16 rows for 2026 on the page; 15 + 9 + 1 postdoc spellings |
+| 3 | work out one number yourself | 16 rows for 2026, counted on the page; 15 + 9 + 1 postdoc spellings |
 | 4 | verify | the tool's run; your count; `git diff`; the five questions |
 | 5 | keep the check | `stopifnot(sum(placements$year == 2026) == 16, ...)`, dated in a comment |
 
@@ -2778,9 +2832,9 @@ accept it, and keep facts you supply in a data file.**
 | harness | the app around the model: a chat window, Cowork, Claude Code | [§](#harnesses) |
 | tool call | the model's request to read, search, run or edit; in manual mode the ones that change something ask first | [§](#tool-loop) |
 | context | what the model has in front of it: the system prompt, `CLAUDE.md`, your prompts, every file it read and every command output | [§](#tool-loop) |
-| delegation | one task handed to the tool, with a count you can do on the page | [§](#scoping) |
-| failure mode | the plausible mistake, named in the prompt or caught by the check | [§](#prompt-shape) |
-| hand count | the number counted on the page before the run | [§](#prompt-scrape) |
+| delegation | one task handed to the tool, small enough that you can work out one number of the answer yourself | [§](#scoping) |
+| failure mode | what a wrong answer would look like, said in advance and written into the prompt | [§](#prompt-shape) |
+| hand count | a number you work out yourself, before the script runs, so the comparison afterwards is a comparison | [§](#prompt-scrape) |
 | manual mode | it asks before every edit and every command that changes something | [§](#launch) |
 | approval box | the file, diff or command shown before it lands; `1. Yes` or Esc | [§](#approve-create) |
 | the five questions | files, removals, the working line, names and constants, a line you cannot explain | [§](#judge-diff) |
