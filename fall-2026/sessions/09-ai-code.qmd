@@ -1,7 +1,7 @@
 ---
-title: "9 · AI II — coding agents at the command line"
+title: "9 · AI II — coding agents"
 subtitle: "Tuesday, September 22, 2026"
-pagetitle: "AEM 6850 · 9 AI II: coding agents at the command line"
+pagetitle: "AEM 6850 · 9 AI II: coding agents"
 format:
   html:
     toc: true
@@ -149,6 +149,8 @@ By the end of this session you can:
   answer the five questions about it.
 - Write the hand check into the script and commit it with a message
   that says who wrote what.
+- Put the check in the prompt and let the tool run until it passes, or
+  hand a review to a read-only subagent, and say when each fits.
 
 ::: {.content-visible when-format="revealjs"}
 
@@ -168,7 +170,8 @@ exercises.
 5. Reading the diff, the patch, the check
 6. Version control from inside the agent
 7. CLAUDE.md: standing instructions and your style
-8. A clean run that is wrong
+8. Loops and subagents: the tool checks itself
+9. A clean run that is wrong
 
 ::: {.content-visible when-format="revealjs"}
 
@@ -259,9 +262,10 @@ text, and the model decides the next step. That repeats until nothing
 is left to do; then you get a reply. Anthropic's page [How Claude Code
 works](https://code.claude.com/docs/en/how-claude-code-works) describes
 the same loop in three phases: gather context, take action, verify
-results. Today the third phase is yours: every delegation on this page
-tells the tool not to run the script, in the prompt or in `CLAUDE.md`,
-and you run it in RStudio.
+results. For most of this page the third phase is yours: the
+delegations tell the tool not to run the script, in the prompt or in
+`CLAUDE.md`, and you run it in RStudio. The section on loops hands that
+phase to the tool, with a check it can run.
 
 In manual mode the loop stops at every edit and at every command that
 changes something and asks you; reading is free. You can stop it too:
@@ -2012,6 +2016,378 @@ print(lifeexp_gain(d, FROM, TO))
 
 :::
 
+## A prompt without a loop and a prompt with one {#loop-prompts}
+
+| | Without a loop: every prompt so far | With a loop |
+|:--|:--|:--|
+| The check | on your paper | in the script, from your paper |
+| Who runs the script | you, in RStudio | the tool, with `Rscript`, until the check passes |
+| Who reads a failure | you; then a patch request | the tool; it patches and runs again |
+| What you read afterwards | the diff | the diff, and the output of the last run |
+
+```{.markdown filename="Prompt to paste into Claude Code (captured run, with a loop)"}
+Write code/gdp_by_continent.R. It defines gdp_by_continent(d, yr): the mean
+gdpPercap of each continent in year yr, as a named numeric vector with one
+number per continent. Base R only. At the bottom, read data/gapminder.csv into
+d, store gdp_by_continent(d, 2007) in res, print res, and check it with
+stopifnot(abs(res["Oceania"] - 32883) < 50). By hand, Oceania 2007 is 32,883:
+Australia 34,435.37 with 20,434,176 people and New Zealand 25,185.01 with
+4,115,771 people. Then run the script with Rscript code/gdp_by_continent.R. If
+the check fails, change the function so that the check passes and run again.
+Show me the output of the last run. Do not use git.
+```
+
+::: {.content-visible when-format="revealjs"}
+
+::: {.notes}
+Same function as practice task 4, and the prompt is ambiguous on
+purpose: "the mean gdpPercap". What differs is where the check lives and
+who runs the script.
+:::
+
+:::
+
+::: {.content-hidden when-format="revealjs"}
+
+Every prompt so far ended with "Do not run the script; I will run it
+myself", and you were the loop: run, compare with the paper, ask for a
+patch. The tool can be the loop instead, if the prompt gives it a check
+it can run and tells it to run until the check passes. Anthropic's
+[best practices](https://code.claude.com/docs/en/best-practices) call
+this giving Claude a way to verify its work: a check that returns pass
+or fail, so that the loop closes on its own. Here the check is the hand
+check you have been typing since the first delegation, written into the
+script and named in the prompt.
+
+The prompt above is the captured run's. It is ambiguous on purpose,
+"the mean gdpPercap of each continent", the same gap as the first
+delegation of the day. The check carries the hand value, 32,883, from
+the two Oceania rows (practice task 4 works it out). The prompt also
+says how to run the script and what to show at the end: the output of
+the last run is the evidence, and the docs say to ask for evidence
+rather than a claim of success.
+
+:::
+
+## The loop's run: a failed check, a patch, a pass {#loop-run}
+
+```{.default filename="The captured run, condensed; the full transcript is on the page"}
+Write(code/gdp_by_continent.R)        tapply(sub$gdpPercap, sub$continent, mean)
+Bash  Rscript code/gdp_by_continent.R
+        Africa  Americas      Asia    Europe   Oceania
+      3089.033 11003.032 12473.027 25054.482 29810.188
+      Error: abs(res["Oceania"] - 32883) < 50 is not TRUE
+Edit(code/gdp_by_continent.R)  tapply(sub$gdpPercap * sub$pop, sub$continent, sum) /
+                                 tapply(sub$pop, sub$continent, sum)
+Bash  Rscript code/gdp_by_continent.R
+      2560.930 21602.746  5432.372 25244.048 32884.555
+```
+
+- Two runs, one patch, no prompt from you in between.
+- Its reply: the check only passes for the population-weighted mean, so
+  that is what the final function computes.
+- The check is now the specification. A wrong check gives wrong code
+  that passes.
+
+::: {.content-visible when-format="revealjs"}
+
+::: {.notes}
+The morning's failure, caught and fixed without you. Ask the room what
+29,810 in the check would have produced. In manual mode each edit and
+each Rscript still asks: four boxes, `1. Yes` each.
+:::
+
+:::
+
+::: {.content-hidden when-format="revealjs"}
+
+The run: it listed the folder, read the existing script for its
+pattern, wrote a plain mean of `gdpPercap`, ran it, and the check
+stopped the script at Oceania 29,810. It edited the function to weight
+by `pop`, ran again, got 32,884.56, and replied with the output and two
+flags: that the request said "mean" but the check only passes for the
+weighted mean, and that `CLAUDE.md` says not to run scripts but the
+prompt asked. Two runs, one patch, and you typed nothing in between.
+
+The lesson is in the first flag. With a loop, the check is the
+specification: the tool changes the code until the check passes, and it
+will make a wrong check pass too. With 29,810 in the check, the simple
+mean, the first run passes, the function stays unweighted, and the reply
+reports success. So the value in the check comes from your hand, from
+rows you can see, exactly as in step 3 of the loop; the tool's loop
+does not replace that step, it depends on it.
+
+When to use a loop: when you have a check you trust and the tool can
+run, a hand value, a row count, a column list, a file that must exist.
+When not: when the check is the thing you are unsure of, or when a run
+has side effects you have not named, files written, downloads, long
+jobs. After a loop you still read the diff with the five questions;
+the tool's own summary is a transcript, and the diff is the fact. The
+docs describe stronger versions of the same loop, a goal the tool
+re-checks after every turn and a rule that stops it from finishing
+until a script passes; for one function, the prompt is enough.
+
+In manual mode each edit and each `Rscript` arrives as a box: a *Create
+file* box, a *Bash command* box, then the failed run in the transcript,
+an *Edit file* box with the red and green lines, a *Bash command* box,
+then the passing run. Four `1. Yes`. The run below was captured
+non-interactively with those tools allowed in advance, which is the
+same thing without the boxes.
+
+::: {.callout-tip collapse="true"}
+## The full captured transcript
+
+````{.default}
+⏺ Bash(ls code data && head -3 data/gapminder.csv)
+  ⎿ code:
+    lifeexp_by_continent.R
+    lifeexp_gain.R
+    
+    data:
+    gapminder.csv
+    "country","continent","year","lifeExp","pop","gdpPercap"
+    "Afghanistan","Asia",1952,28.801,8425333,779.4453145
+    "Afghanistan","Asia",1957,30.332,9240934,820.8530296
+⏺ Read(code/lifeexp_by_continent.R)
+  ⎿ 1	# Population-weighted mean life expectancy by continent for a given year (base R only)
+    2	
+    3	lifeexp_by_continent <- function(d, yr) {
+    4	  sub <- d[d$year == yr, ]
+    5	  tapply(sub$lifeExp * sub$pop, sub$continent, sum) /
+    6	    tapply(sub$pop, sub$continent, sum)
+    7	}
+    8	
+    9	d <- read.csv("data/gapminder.csv", stringsAsFactors = FALSE)
+    10	res <- lifeexp_by_continent(d, 2007)
+    11	print(res)
+    12	
+    13	# Check: Oceania 2007 by hand. Australia 81.235 (20,434,176 people) and
+    14	# New Zealand 80.204 (4,115,771 people) give 81.06.
+    15	stopifnot(abs(res["Oceania"] - 81.06) < 0.01)
+    16
+⏺ Reply:
+  Writing the script as specified — a plain mean of `gdpPercap` per continent — then running it.
+⏺ Write(code/gdp_by_continent.R)
+  # Mean GDP per capita by continent for a given year (base R only).
+  # Prints a named vector with one number per continent.
+  
+  YEAR <- 2007
+  
+  gdp_by_continent <- function(d, yr) {
+    sub <- d[d$year == yr, ]
+    tapply(sub$gdpPercap, sub$continent, mean)
+  }
+  
+  d <- read.csv("data/gapminder.csv", stringsAsFactors = FALSE)
+  res <- gdp_by_continent(d, YEAR)
+  print(res)
+  
+  # Check: Oceania 2007 by hand. Australia 34,435.37 (20,434,176 people) and
+  # New Zealand 25,185.01 (4,115,771 people) give 32,883.
+  stopifnot(abs(res["Oceania"] - 32883) < 50)
+  ⎿ File created successfully at: code/gdp_by_continent.R
+⏺ Bash(Rscript code/gdp_by_continent.R)
+  ⎿ Exit code 1
+       Africa  Americas      Asia    Europe   Oceania 
+     3089.033 11003.032 12473.027 25054.482 29810.188 
+    Error: abs(res["Oceania"] - 32883) < 50 is not TRUE
+    Execution halted
+⏺ Edit(code/gdp_by_continent.R)
+  - # Mean GDP per capita by continent for a given year (base R only).
+  - # Prints a named vector with one number per continent.
+  - 
+  - YEAR <- 2007
+  - 
+  - gdp_by_continent <- function(d, yr) {
+  -   sub <- d[d$year == yr, ]
+  -   tapply(sub$gdpPercap, sub$continent, mean)
+  - }
+  + # Population-weighted mean GDP per capita by continent for a given year
+  + # (base R only). Prints a named vector with one number per continent.
+  + 
+  + YEAR <- 2007
+  + 
+  + gdp_by_continent <- function(d, yr) {
+  +   sub <- d[d$year == yr, ]
+  +   # Weight by population so large countries count for more, as in the
+  +   # hand-computed Oceania check below.
+  +   tapply(sub$gdpPercap * sub$pop, sub$continent, sum) /
+  +     tapply(sub$pop, sub$continent, sum)
+  + }
+  ⎿ The file code/gdp_by_continent.R has been updated successfully.
+⏺ Bash(Rscript code/gdp_by_continent.R)
+  ⎿ Africa  Americas      Asia    Europe   Oceania 
+     2560.930 21602.746  5432.372 25244.048 32884.555
+⏺ Reply:
+  Output of the last run (exit code 0, check passes):
+  
+  ```
+     Africa  Americas      Asia    Europe   Oceania 
+   2560.930 21602.746  5432.372 25244.048 32884.555
+  ```
+  
+  What happened:
+  
+  1. **First run** — `gdp_by_continent` computed the plain (unweighted) mean of `gdpPercap`. Oceania came out at 29,810.19, i.e. (34,435.37 + 25,185.01)/2, and `stopifnot` failed.
+  2. **Fix** — the hand figure 32,883 is the population-weighted mean: (34,435.37 × 20,434,176 + 25,185.01 × 4,115,771) / 24,549,947 ≈ 32,884.6. I changed the function to weight by `pop` (same `tapply` pattern as `code/lifeexp_by_continent.R`) and updated the header comment to say so.
+  
+  Two things to flag:
+  - Your request said "mean gdpPercap", but the check only passes for the population-weighted mean, so that is what the final function computes. If you actually want the unweighted mean, the check constant should be 29,810 instead.
+  - The project CLAUDE.md says not to run scripts, but you explicitly asked for `Rscript` here, so I ran it. No git was used.
+````
+
+:::
+
+:::
+
+## Subagents: a second Claude with its own context {#subagents}
+
+- A subagent is a separate conversation the tool starts for one task:
+  its own empty context, its own tool list, `CLAUDE.md` included. It
+  returns a report, not its working.
+- When: reading many files, so your context stays small; an
+  independent review of a diff or a rule, so the checker is not the
+  thing being checked.
+- One line: `Use a subagent to review code/x.R against this rule: ...
+  Report what it says. Do not edit anything.`
+- Permanent: a file in `.claude/agents/`, like `CLAUDE.md`: a name, a
+  description, the tools it may use, then its instructions.
+
+::: {.content-visible when-format="revealjs"}
+
+::: {.notes}
+The reviewer never saw the conversation that wrote the code. That is
+the point, and it is the same rule as typing the check yourself.
+:::
+
+:::
+
+::: {.content-hidden when-format="revealjs"}
+
+A [subagent](https://code.claude.com/docs/en/sub-agents) is a second
+conversation that the tool starts for one task and closes when the task
+is done. It begins with an empty context: the task, `CLAUDE.md`, and
+nothing from your conversation, not the files already read, not the
+prompt that wrote the code. It has its own list of tools, which can be
+shorter than the main conversation's. When it finishes, its report
+comes back into your conversation as text; its reading and its
+intermediate steps stay in its own context and are gone.
+
+Two uses fit this course. The first is reading: a task that opens many
+files fills your context with their contents, and everything the model
+has in front of it competes for its attention; a subagent reads them in
+its own context and reports a summary. The second is review: a reviewer
+that did not see the conversation that produced the code judges the
+code on its own terms. That is the rule from the check section, the
+checker is not the thing being checked, applied inside the tool. The
+docs recommend the same step before treating a task as done, a review
+of the diff in a fresh context, and warn that a reviewer asked to find
+gaps will report some even when the work is sound; ask for gaps that
+affect correctness, not style.
+
+Two ways to use one. The one-line way needs no setup: "Use a subagent
+to review code/x.R against this rule: ... Report what it says. Do not
+edit anything." The tool starts a general-purpose subagent with that
+task. The permanent way is a file in `.claude/agents/` at the
+repository root, committed like `CLAUDE.md`: a name, a description of
+when it applies, the tools it may use, then its instructions in plain
+prose. The `tools:` line is a fence. A reviewer allowed only `Read`,
+`Grep` and `Glob` cannot edit a file whatever its instructions say. You
+call it by name in a prompt. The next section shows one.
+
+A subagent is one more model call, with its own cost, and its report is
+a claim like any transcript: the line it quotes is what you check.
+
+:::
+
+## A read-only reviewer subagent: the file {#reviewer-agent}
+
+```{.markdown filename=".claude/agents/hand-check-reviewer.md"}
+---
+name: hand-check-reviewer
+description: Reviews one R script against one rule from the request. Read-only.
+tools: Read, Grep, Glob
+---
+
+You review one R script against one rule given in the request. Read the
+script. Reply in three lines: the rule; the line of code that follows it
+or breaks it, quoted; the verdict, "follows" or "breaks". Do not edit any
+file. Do not propose a rewrite unless asked.
+```
+
+- Save, commit, relaunch. The name is how you call it.
+- `tools:` is the fence: it can read; it cannot edit or run anything.
+
+::: {.content-visible when-format="revealjs"}
+
+::: {.notes}
+Same shape as CLAUDE.md: written once, read when called. The body is
+its standing instructions; the request supplies the rule.
+:::
+
+:::
+
+::: {.content-hidden when-format="revealjs"}
+
+The file, as used in the captured run. In RStudio: File → New File →
+Text File, paste, save as `.claude/agents/hand-check-reviewer.md`
+(RStudio's Files pane hides folders that start with a dot; Show Hidden
+Files in the pane's More menu, or type the path in the save dialog).
+Commit it: `git add .claude/agents/hand-check-reviewer.md`, then a
+commit message. Relaunch Claude Code so it reads the folder. The
+frontmatter between the `---` lines names the agent, says when it
+applies, and lists its tools; the prose below is its standing
+instructions, the way `CLAUDE.md` holds the repository's. The rule to
+check against comes with each request.
+
+:::
+
+## The reviewer subagent's report {#reviewer-report}
+
+```{.markdown filename="Prompt to paste into Claude Code (captured run)"}
+Use the hand-check-reviewer subagent to review code/lifeexp_by_continent.R
+against this rule: each country's life expectancy must be weighted by its
+population, the pop column. Report what the subagent says. Do not edit
+anything.
+```
+
+```{.default filename="The subagent's report, as returned"}
+Rule: each country's life expectancy must be weighted by its population, the `pop`
+  column.
+Line (`code/lifeexp_by_continent.R`, lines 5-6): `tapply(sub$lifeExp * sub$pop,
+  sub$continent, sum) / tapply(sub$pop, sub$continent, sum)` — sum of lifeExp times
+  pop, divided by sum of pop, per continent.
+Verdict: follows.
+```
+
+- Rule, line, verdict. Nothing edited: `git status` prints clean.
+- It read the file with fresh eyes; the quoted line is what you check.
+
+::: {.content-visible when-format="revealjs"}
+
+::: {.notes}
+Two things to read: the quoted line, against the file; and git status,
+which proves the fence held.
+:::
+
+:::
+
+::: {.content-hidden when-format="revealjs"}
+
+The captured run. The main conversation started the subagent with the
+rule and the file name; the subagent read the file and returned the
+three lines above; the main conversation relayed them and added that
+nothing was edited. `git status` in Terminal 2 confirms it. The report
+quotes the line, so the check is quick: open the file and read lines 5
+and 6. A report that names a verdict without quoting a line is a
+transcript claim; ask for the line.
+
+Practice task 10 runs the same reviewer on `lifeexp_gain.R` against the
+gain rule, where the answer depends on two lines, the `merge()` and the
+subtraction.
+
+:::
+
 ## Tasks not to give Claude Code {#bad-at}
 
 - Outputs you cannot check by hand.
@@ -2080,13 +2456,14 @@ easiest to skip.
 
 ::: {.content-visible when-format="revealjs"}
 
-Eight exercises on the session page, with solutions behind a click. All
+Ten exercises on the session page, with solutions behind a click. All
 of them run in `gapminder-practice`, never in a graded repository.
 
 - **1–3** Read-only prompts, and scoping "analyze the data" down to one function
 - **4–5** The loop again: `gdpPercap` weighted by people; countries per continent
 - **6** Break the check on purpose, read the error, `git restore`
 - **7–8** CLAUDE.md: add a rule; an approval box read against `git diff`
+- **9–10** A loop prompt run to a pass; a reviewer subagent on `lifeexp_gain.R`
 
 :::
 
@@ -2138,6 +2515,19 @@ of them run in `gapminder-practice`, never in a graded repository.
 #     reads and what it prints. Change nothing else." Read the approval
 #     box: any red line? Accept. Then git diff. Do the box and git diff
 #     agree line for line?
+
+# Loops and subagents
+#  9. Task 4 again, as a loop. If task 4 left code/gdp_by_continent.R,
+#     delete it first. Paste the loop prompt from the page (it keeps
+#     "the mean gdpPercap", ambiguous on purpose, and puts the hand check
+#     in the script). Count the Bash boxes. Then git diff: what did it
+#     change to make the check pass? Delete the file and repeat with
+#     29810 in the check. What passes now?
+# 10. Create .claude/agents/hand-check-reviewer.md from the page, commit
+#     it, relaunch, and ask the subagent to review code/lifeexp_gain.R
+#     against this rule: "a gain is lifeExp in year to minus lifeExp in
+#     year from, matched by country name". Does the report quote the
+#     subtraction line and the matching line? git status afterwards.
 ```
 
 ### Solutions
@@ -2197,6 +2587,19 @@ of them run in `gapminder-practice`, never in a graded repository.
 #   shows the same lines. A red line in either means the scope was not
 #   held: Esc, or git restore, and ask again.
 # expected: box and git diff agree line for line
+
+# 9
+#   Two Rscript boxes and one edit box: the first run prints 29810.19
+#   and stops at the check; the edit weights by pop; the second run
+#   prints 32884.56. With 29810 in the check, the first run passes and
+#   the function stays unweighted. The check is the specification.
+# expected: two runs, one patch; with the wrong constant, wrong code passes
+
+# 10
+#   Three lines: the rule; the merge() line and the subtraction
+#   (both$lifeExp_to - both$lifeExp_from) quoted; "follows". git status
+#   prints clean: the subagent has no edit tool.
+# expected: rule, line, verdict; nothing changed on disk
 ```
 
 ```{.markdown filename="Prompt to paste into Claude Code (task 3, one scoped delegation)"}
@@ -2268,6 +2671,8 @@ and keep the check in the script.**
 | The permanent check | type it yourself; or "Add a check: stopifnot() that ...; change nothing else." and read the line before `1. Yes` |
 | A commit by the agent | "Commit code/x.R with the message: ..."; read the command in the box before `1. Yes`; manual mode only |
 | A function under CLAUDE.md | two or three sentences: name, what it returns, what to print at the bottom; the failure mode still stated |
+| A loop | the check in the script, from your paper; "run it with Rscript; if the check fails, change the function and run again; show me the output of the last run" |
+| A subagent review | "Use the <name> subagent to review code/x.R against this rule: ... Report what it says. Do not edit anything." |
 
 **The loop**
 
@@ -2332,7 +2737,9 @@ and keep the check in the script.**
 | harness | the app around the model: a chat window, Cowork, Claude Code | [§](#harnesses) |
 | tool call | the model's request to read, search, run or edit; in manual mode the ones that change something ask first | [§](#tool-loop) |
 | context | what the model has in front of it: the system prompt, `CLAUDE.md`, your prompts, every file it read and every command output | [§](#tool-loop) |
+| loop | the tool runs the check itself and patches until it passes; the check becomes the specification | [§](#loop-run) |
+| subagent | a separate conversation the tool starts for one task, with its own context and tool list; it returns a report | [§](#subagents) |
 
-**Links:** [slides](09-ai-code-slides.html) · [Claude Code docs](https://code.claude.com/docs/en/quickstart) · [How Claude Code works](https://code.claude.com/docs/en/how-claude-code-works) · [best practices](https://code.claude.com/docs/en/best-practices) · [Syllabus](../syllabus.qmd) · [data/gapminder.csv](data/gapminder.csv)
+**Links:** [slides](09-ai-code-slides.html) · [Claude Code docs](https://code.claude.com/docs/en/quickstart) · [How Claude Code works](https://code.claude.com/docs/en/how-claude-code-works) · [best practices](https://code.claude.com/docs/en/best-practices) · [subagents](https://code.claude.com/docs/en/sub-agents) · [Syllabus](../syllabus.qmd) · [data/gapminder.csv](data/gapminder.csv)
 
 :::

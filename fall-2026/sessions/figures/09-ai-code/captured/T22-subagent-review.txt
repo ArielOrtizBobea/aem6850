@@ -1,0 +1,36 @@
+⏺ Agent(subagent_type: hand-check-reviewer)
+  prompt: Review the R script code/lifeexp_by_continent.R (in the project root <repository root>) against this single rule: each country's life expectancy must be weighted by its population, the `pop` column. Read the script and report whether it follows the rule, citing the specific lines where the weighting happens (or where it fails to). Do not edit anything.
+⏺ Read(code/lifeexp_by_continent.R)
+  ⎿ 1	# Population-weighted mean life expectancy by continent for a given year (base R only)
+    2	
+    3	lifeexp_by_continent <- function(d, yr) {
+    4	  sub <- d[d$year == yr, ]
+    5	  tapply(sub$lifeExp * sub$pop, sub$continent, sum) /
+    6	    tapply(sub$pop, sub$continent, sum)
+    7	}
+    8	
+    9	d <- read.csv("data/gapminder.csv", stringsAsFactors = FALSE)
+    10	res <- lifeexp_by_continent(d, 2007)
+    11	print(res)
+    12	
+    13	# Check: Oceania 2007 by hand. Australia 81.235 (20,434,176 people) and
+    14	# New Zealand 80.204 (4,115,771 people) give 81.06.
+    15	stopifnot(abs(res["Oceania"] - 81.06) < 0.01)
+    16
+  ⎿ Rule: each country's life expectancy must be weighted by its population, the `pop` column.
+    
+    Line (`code/lifeexp_by_continent.R`, lines 5-6): `tapply(sub$lifeExp * sub$pop, sub$continent, sum) / tapply(sub$pop, sub$continent, sum)` — sum of lifeExp times pop, divided by sum of pop, per continent.
+    
+    Verdict: follows.
+⏺ Reply:
+  The reviewer's verdict: **follows the rule.**
+  
+  It cited `code/lifeexp_by_continent.R:5-6`, where the continent average is computed as
+  
+  ```r
+  tapply(sub$lifeExp * sub$pop, sub$continent, sum) / tapply(sub$pop, sub$continent, sum)
+  ```
+  
+  i.e. the sum of `lifeExp × pop` per continent divided by the sum of `pop` per continent — a population-weighted mean using the `pop` column, as required.
+  
+  Nothing was edited.

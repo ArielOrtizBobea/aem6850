@@ -126,3 +126,27 @@ box: cat .gitignore, head of the CSV, wc -l), then proposed the file.
 | `S12-rstudio-terminal-claude.png` | RStudio (dark theme) with the `gapminder-practice` project open: the Terminal tab active, "Terminal 1 (busy)", Claude Code's welcome screen in the pane (v2.1.258, `~/github/gapminder-practice`, the `❯` prompt, "⏸ manual mode on"), the Environment pane and the Files pane (`.gitignore`, `CLAUDE.md`, `code`, `data`, `gapminder-practice.Rproj`) | Real capture. Claude Code was started in the Terminal tab by an RStudio startup hook because this build cannot type in RStudio; one warning line that only appears when RStudio is launched from inside another Claude Code session was painted over in the terminal's background colour. Nothing else changed. Students on the default light theme see the same layout in light colours. |
 
 `S13-terminal-dropdown.png` (the terminal dropdown with two terminals) stays a placeholder: it needs a click in RStudio on a regular desktop Space.
+
+## Runs L and S (2026-09-21): a loop, and a subagent review
+
+Both non-interactive (`claude -p ... --output-format stream-json`) in a
+scratch clone of the repository at commit f0f9a04, with the tools the
+prompt needs allowed in advance (`Write,Edit,Bash(Rscript *)` for L,
+`Agent` for S), which is what pressing `1. Yes` on each box does in
+manual mode. Same version as the September 14 captures.
+
+- Run L, prompt in the page's loop section (ambiguous "mean gdpPercap",
+  the hand check in the script, "run until the check passes"): 7 turns,
+  50 s. It wrote a plain mean, ran it (Oceania 29810.188, the check
+  failed), edited to the population-weighted mean, ran again (32884.555),
+  and replied with the output and two flags (the check only passes for
+  the weighted mean; CLAUDE.md says not to run scripts but the prompt
+  asked). `T21-loop-run.txt` is the transcript, `D-gdp_by_continent.R`
+  the final file.
+- Run S: `.claude/agents/hand-check-reviewer.md` (here as
+  `hand-check-reviewer.md.txt`) in place, prompt "Use the
+  hand-check-reviewer subagent to review code/lifeexp_by_continent.R
+  against this rule: ...". Run twice, the second time with the description
+  shortened to one line so the slide shows the whole file; the report on the
+  page is the second run's. The subagent read the file and returned rule,
+  line, verdict; nothing edited. `T22-subagent-review.txt`.
