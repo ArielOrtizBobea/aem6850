@@ -1,0 +1,1885 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-html/tabby.min.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/light-border.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-7f8f88aac4f3542376d5c11b86a4c14d.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
+  <meta name="generator" content="quarto-1.9.37">
+
+  <title>AEM 6850 – AEM 6850 · 9 AI II: coding agents</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="../../site_libs/revealjs/dist/reset.css">
+  <link rel="stylesheet" href="../../site_libs/revealjs/dist/reveal.css">
+  <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+      vertical-align: middle;
+    }
+    /* CSS for syntax highlighting */
+    html { -webkit-text-size-adjust: 100%; }
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      { color: #003b4f; background-color: #f1f3f5; }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span { color: #003b4f; } /* Normal */
+    code span.al { color: #ad0000; } /* Alert */
+    code span.an { color: #5e5e5e; } /* Annotation */
+    code span.at { color: #657422; } /* Attribute */
+    code span.bn { color: #ad0000; } /* BaseN */
+    code span.bu { } /* BuiltIn */
+    code span.cf { color: #003b4f; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #20794d; } /* Char */
+    code span.cn { color: #8f5902; } /* Constant */
+    code span.co { color: #5e5e5e; } /* Comment */
+    code span.cv { color: #5e5e5e; font-style: italic; } /* CommentVar */
+    code span.do { color: #5e5e5e; font-style: italic; } /* Documentation */
+    code span.dt { color: #ad0000; } /* DataType */
+    code span.dv { color: #ad0000; } /* DecVal */
+    code span.er { color: #ad0000; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #ad0000; } /* Float */
+    code span.fu { color: #4758ab; } /* Function */
+    code span.im { color: #00769e; } /* Import */
+    code span.in { color: #5e5e5e; } /* Information */
+    code span.kw { color: #003b4f; font-weight: bold; } /* Keyword */
+    code span.op { color: #5e5e5e; } /* Operator */
+    code span.ot { color: #003b4f; } /* Other */
+    code span.pp { color: #ad0000; } /* Preprocessor */
+    code span.sc { color: #5e5e5e; } /* SpecialChar */
+    code span.ss { color: #20794d; } /* SpecialString */
+    code span.st { color: #20794d; } /* String */
+    code span.va { color: #111111; } /* Variable */
+    code span.vs { color: #20794d; } /* VerbatimString */
+    code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
+  </style>
+  <link rel="stylesheet" href="../../site_libs/revealjs/dist/theme/quarto-a5c1557a4d28374a1a0284b3f0cafc9e.css">
+  <link href="../../site_libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
+  <link href="../../site_libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
+  <link href="../../site_libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
+  <link href="../../site_libs/revealjs/plugin/quarto-support/footer.css" rel="stylesheet">
+  <style type="text/css">
+    .reveal div.sourceCode {
+      margin: 0;
+      overflow: auto;
+    }
+    .reveal div.hanging-indent {
+      margin-left: 1em;
+      text-indent: -1em;
+    }
+    .reveal .slide:not(.center) {
+      height: 100%;
+    }
+    .reveal .slide.scrollable {
+      overflow-y: auto;
+    }
+    .reveal .footnotes {
+      height: 100%;
+      overflow-y: auto;
+    }
+    .reveal .slide .absolute {
+      position: absolute;
+      display: block;
+    }
+    .reveal .footnotes ol {
+      counter-reset: ol;
+      list-style-type: none; 
+      margin-left: 0;
+    }
+    .reveal .footnotes ol li:before {
+      counter-increment: ol;
+      content: counter(ol) ". "; 
+    }
+    .reveal .footnotes ol li > p:first-child {
+      display: inline-block;
+    }
+    .reveal .slide ul,
+    .reveal .slide ol {
+      margin-bottom: 0.5em;
+    }
+    .reveal .slide ul li,
+    .reveal .slide ol li {
+      margin-top: 0.4em;
+      margin-bottom: 0.2em;
+    }
+    .reveal .slide ul[role="tablist"] li {
+      margin-bottom: 0;
+    }
+    .reveal .slide ul li > *:first-child,
+    .reveal .slide ol li > *:first-child {
+      margin-block-start: 0;
+    }
+    .reveal .slide ul li > *:last-child,
+    .reveal .slide ol li > *:last-child {
+      margin-block-end: 0;
+    }
+    .reveal .slide .columns:nth-child(3) {
+      margin-block-start: 0.8em;
+    }
+    .reveal blockquote {
+      box-shadow: none;
+    }
+    .reveal .tippy-content>* {
+      margin-top: 0.2em;
+      margin-bottom: 0.7em;
+    }
+    .reveal .tippy-content>*:last-child {
+      margin-bottom: 0.2em;
+    }
+    .reveal .slide > img.stretch.quarto-figure-center,
+    .reveal .slide > img.r-stretch.quarto-figure-center {
+      display: block;
+      margin-left: auto;
+      margin-right: auto; 
+    }
+    .reveal .slide > img.stretch.quarto-figure-left,
+    .reveal .slide > img.r-stretch.quarto-figure-left  {
+      display: block;
+      margin-left: 0;
+      margin-right: auto; 
+    }
+    .reveal .slide > img.stretch.quarto-figure-right,
+    .reveal .slide > img.r-stretch.quarto-figure-right  {
+      display: block;
+      margin-left: auto;
+      margin-right: 0; 
+    }
+  </style>
+</head>
+<body class="quarto-light">
+  <div class="reveal">
+    <div class="slides">
+
+<section id="title-slide" class="center">
+  <p class="ttl-number">AEM 6850</p>
+  <p class="ttl-course">Empirical Methods for Applied Economists</p>
+  <p class="ttl-prof">Prof. Ariel Ortiz-Bobea</p>
+  <h1 class="title">9 · AI II — coding agents</h1>
+  <p class="subtitle">Tuesday, September 22, 2026</p>
+  <img class="ttl-seal" src="../images/cornell_seal.svg" alt="Cornell University">
+</section>
+<section id="objectives" class="slide level2 smaller">
+<h2>Objectives</h2>
+<p>By the end of this session you can:</p>
+<ul>
+<li>Explain what Claude Code has in front of it that a chat window does not: every file in the folder, a terminal, git, and a file of standing instructions, <code>CLAUDE.md</code>.</li>
+<li>Start Claude Code in manual mode in an empty RStudio project and have it initialize the git repository.</li>
+<li>Hand the tool one task at a time, with a number you counted yourself on the web page it reads; let it run the script; compare.</li>
+<li>Read the box that shows each edit, and <code>git diff</code>, before accepting it, and say where every value in the result came from.</li>
+<li>Write a <code>CLAUDE.md</code> for the project and a read-only reviewer agent, and say what each one changes.</li>
+</ul>
+<aside class="notes">
+<p>Five things, and you do each of them on your own laptop as we go.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="plan" class="slide level2">
+<h2>Plan for today</h2>
+<ol type="1">
+<li>Chat, Cowork, Claude Code: one model, three harnesses</li>
+<li>What you decide and what it does</li>
+<li>A project from an empty folder: launch, git, a web page read into a table</li>
+<li>Two more columns: is it a postdoc, and in which country</li>
+<li>Where the countries came from</li>
+<li>CLAUDE.md: the project’s standing instructions</li>
+<li>A read-only reviewer agent</li>
+<li>Tasks not to give it; practice</li>
+</ol>
+<aside class="notes">
+<p>The projector shows the instructor’s terminal. Every prompt is on a slide, paste-ready; every result on a slide is from the captured run, so a laptop that falls behind can read what came back.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="harnesses" class="slide level2">
+<h2>Chat, Cowork, Claude Code: one model, three harnesses</h2>
+<table class="caption-top">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;"></th>
+<th style="text-align: left;">Chat</th>
+<th style="text-align: left;">Cowork</th>
+<th style="text-align: left;">Claude Code</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Where it runs</td>
+<td style="text-align: left;">a web page</td>
+<td style="text-align: left;">the desktop app</td>
+<td style="text-align: left;">your terminal, in one folder</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">How context arrives</td>
+<td style="text-align: left;">you paste or attach it</td>
+<td style="text-align: left;">from the folder you connect</td>
+<td style="text-align: left;">from the folder, plus a file of standing instructions</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Reads your files</td>
+<td style="text-align: left;">no</td>
+<td style="text-align: left;">every file in the folder</td>
+<td style="text-align: left;">every file in the repository</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Edits your files</td>
+<td style="text-align: left;">no; you paste its output</td>
+<td style="text-align: left;">yes, directly</td>
+<td style="text-align: left;">yes; each edit shown as a diff first</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Runs commands</td>
+<td style="text-align: left;">on Anthropic’s servers, on an attached file</td>
+<td style="text-align: left;">on Anthropic’s servers</td>
+<td style="text-align: left;">on your laptop: R, git, anything in the terminal</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Runs your R script</td>
+<td style="text-align: left;">no; you run it</td>
+<td style="text-align: left;">no; you run it</td>
+<td style="text-align: left;">it can, when the prompt says so</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">What you read afterwards</td>
+<td style="text-align: left;">the script you pasted</td>
+<td style="text-align: left;"><code>git status</code>, <code>git diff</code></td>
+<td style="text-align: left;">the box that shows each edit, then <code>git diff</code></td>
+</tr>
+</tbody>
+</table>
+<aside class="notes">
+<p>Same model in all three. The app around it, the harness, decides what it can see and do. The last column is the only one that acts on your laptop, which is why it asks first and why git is the safety net.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="tool-loop" class="slide level2">
+<h2>How Claude Code works: the loop inside the tool</h2>
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="figures/09-ai-code/D2-agent-loop.svg" class="quarto-figure quarto-figure-center" alt="Five boxes left to right: 1 Prompt, your text plus CLAUDE.md; 2 Read, files, folders, command output; 3 Act, edit a file, run a command; 4 Check, read the result, decide the next step; 5 Reply, when nothing is left to do. A dashed red arrow from box 4 back to box 2 reads: again, until the task is done; in manual mode, step 3 asks you first." height="195"></p>
+</figure>
+</div>
+<ul>
+<li>It picks a tool: read, search, run a command, edit a file. The result comes back to it. Again, until done.</li>
+<li>Manual mode, today’s setting: an edit, or a command that changes something, asks you first. Reading never asks.</li>
+<li>A session starts empty. What carries over is on disk: files, commits, <code>CLAUDE.md</code>.</li>
+</ul>
+<aside class="notes">
+<p>The model writes text only. Every read, run and edit is a request the harness carries out and reports back. In manual mode the requests that change something come to you as approval boxes.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="what-changes" class="slide level2">
+<h2>What changes when a tool can edit your files</h2>
+<ul>
+<li>It can read any file in the repository. Nothing private goes in that folder.</li>
+<li>Its edits land on disk, not in a chat.</li>
+<li>It can run commands, including git.</li>
+<li>It shows every edit as a diff before it lands. You accept or refuse.</li>
+<li>Anything it reads goes to Anthropic’s servers. Restricted data stays out; develop on a public or synthetic sample.</li>
+<li>What is right is still your call.</li>
+</ul>
+<aside class="notes">
+<p>Each of these needs a habit; git and reading the diff are the two.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="you-decide" class="slide level2">
+<h2>You decide the question; it writes the code</h2>
+<ul>
+<li>It is strong at writing, refactoring and debugging code. It is weak at judging whether a specification answers your question.</li>
+<li>Decide the estimand, the sample, the weights, the fixed effects and the clustering yourself. Then ask it to implement them.</li>
+<li>Let it choose and it picks something plausible. Plausible is not the same as right.</li>
+<li>A fact it did not read is a guess: a function’s arguments, a citation, a fact about the world. Check the documentation, the paper, the source.</li>
+<li>You must be able to explain every line. Ask it to explain rather than write, and it becomes a tutor.</li>
+</ul>
+<aside class="notes">
+<p>Treat it as a fast, capable research assistant that needs clear instructions and close supervision. The third bullet is today’s project: a country column.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="silent-errors" class="slide level2">
+<h2>The main risk is silent errors, not crashes</h2>
+<ul>
+<li>Code that fails is easy to fix. Code that runs and is wrong is the danger.</li>
+<li>The usual shapes: a merge that drops or duplicates rows; <code>NA</code>s handled silently; a unit mismatch; an estimation call that differs a little from what you asked.</li>
+<li>Three defenses: explicit checks, <code>stopifnot()</code> on row counts, unique keys and value ranges; estimators tried on simulated data with known parameters; the merge and the regression call read by you.</li>
+<li>Git is the safety net: commit before each task, read the diff after it, <code>git restore</code> puts a file back.</li>
+</ul>
+<aside class="notes">
+<p>Every defense is something you do. The tool can write the check; it cannot decide what the right row count is.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="small-tasks" class="slide level2">
+<h2>Small tasks, short sessions, a plan before code</h2>
+<ul>
+<li>One well-defined task per session: “build the county-year panel”, “write the event-study plot”. “Do the analysis” produces large vague code.</li>
+<li>Performance drops as the context fills with old material. Start a fresh conversation between unrelated tasks (the <code>/clear</code> command).</li>
+<li>Anything with a merge or a panel build: “Describe your approach before writing any code.” Read the plan; fix misunderstandings there, where they are cheap.</li>
+<li>Conventions you would otherwise repeat go once into <code>CLAUDE.md</code>, a file it reads at every launch: base R only, never touch <code>data/raw/</code>, relative paths, a clean session, a master script, seeds, <code>sessionInfo()</code> saved with results.</li>
+</ul>
+<aside class="notes">
+<p>Plan mode exists for the third bullet; the sentence works in any mode. CLAUDE.md is the sixth part of today.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="two-rules" class="slide level2">
+<h2>Two rules: a clean git state, and the diff over the transcript</h2>
+<ul>
+<li><strong>Start from a clean git state.</strong> <code>git status</code> clean before the prompt; afterwards the diff is exactly what the model did.</li>
+<li><strong>Trust the diff, not the transcript.</strong> What it did, not what its replies say it did.</li>
+<li>Commit before each task; read every diff before you commit; <code>git restore</code> puts a file back.</li>
+</ul>
+<aside class="notes">
+<p>Rule one is why rule two works. A dirty tree mixes your edits with its edits, and the diff no longer shows what the model did. The diff-reading habit from the git session is the whole reason rule two is usable.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="project" class="slide level2">
+<h2>The project: the Ph.D.&nbsp;placements page, from an empty folder</h2>
+<ul>
+<li>The page: <a href="https://business.cornell.edu/admissions/graduate/phd-aem/for-hire/">Recent job placements, Ph.D.&nbsp;in Applied Economics &amp; Management</a>. One table: year, name, position, organization. 109 rows when captured.</li>
+<li>Four prompts, one task each: <strong>1</strong> start git; <strong>2</strong> read the table into a CSV (scraping); <strong>3</strong> flag the postdocs; <strong>4</strong> add each organization’s country. Then: where the countries came from.</li>
+<li>The prompts tell the tool to run the script and fix it when it fails. You check every number against the page.</li>
+<li>The folder: <code>placements</code>, no git yet. Once, in the Console: <code>install.packages("rvest")</code>, the R package that reads web pages.</li>
+</ul>
+<aside class="notes">
+<p>A public page, one table, and a column the page does not have. The instructor’s terminal is on the projector; the slides carry the prompts and what came back.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="steps" class="slide level2 smaller">
+<h2>The steps, from an empty folder to the first prompt</h2>
+<ol type="1">
+<li>RStudio: <strong>File → New Project → New Directory → New Project</strong>. Name <code>placements</code>, inside <code>~/github</code>. Do not tick <em>Create a git repository</em>. <strong>Create Project</strong>.</li>
+<li>Console, once: <code>install.packages("rvest")</code>.</li>
+<li><strong>Tools → Terminal → New Terminal.</strong> The prompt ends in <code>placements</code>.</li>
+<li>Type <code>claude --permission-mode manual</code>, Enter.</li>
+<li>The trust question: ↓ once to <em>Yes, I trust this folder</em>, Enter.</li>
+<li>The welcome screen: the folder ends in <code>placements</code>; the status line reads <code>⏸ manual mode on</code>.</li>
+<li>Ask it to set up git, in these words: <em>“Initialize a git repository in this folder, add a .gitignore for an RStudio project, and commit everything.”</em> Read each box, <code>1. Yes</code>.</li>
+<li><strong>Tools → Terminal → New Terminal</strong> again (Terminal 2): <code>git log --oneline</code>.</li>
+</ol>
+<aside class="notes">
+<p>Eight steps, one slide each from here on. Step 7 is the exact sentence, short; the full prompt, with the file names and the commit message, is five slides on. Nobody types ahead: we do them together, and everyone gets to step 8 before Prompt 2.</p>
+<p>When it fails, say:</p>
+<ul>
+<li><code>command not found: claude</code>: Before class step 2; quit and reopen RStudio; pair up for now.</li>
+<li>The Terminal shows R’s <code>&gt;</code> prompt instead of <code>❯</code>: they typed <code>claude</code> in the Console. Tools → Terminal → New Terminal, then again.</li>
+<li>The status line says auto mode: <code>/exit</code>, then <code>claude --permission-mode manual</code>.</li>
+<li>The trust question again: the terminal is outside the project; Tools → Terminal → New Terminal from inside it.</li>
+<li><code>there is no package called 'rvest'</code>: <code>install.packages("rvest")</code> in the Console; then tell the tool to run again.</li>
+<li>No Bash box for git and the reply says it cannot run commands: the status line is not manual, or the folder was not trusted; <code>/exit</code>, relaunch, look at the status line.</li>
+<li>The box never appears and it prints code instead: it wrote nothing; ask again with the artifact line, “Write code/placements.R”, first.</li>
+<li>The row count differs from the page: the page changed since capture; the count for one year is the check that matters.</li>
+</ul>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="where-it-lives" class="slide level2">
+<h2>Claude Code in RStudio’s Terminal tab</h2>
+<div class="columns">
+<div class="column" style="width:60%;">
+<p><img data-src="figures/09-ai-code/S12-rstudio-terminal-claude.png" style="width:100.0%" alt="The RStudio window with the gapminder-practice project open: the Terminal tab showing the Claude Code welcome screen, the Console beside it, and the Files pane, each circled in red."></p>
+</div><div class="column" style="width:40%;">
+<ol type="1">
+<li><strong>Terminal tab</strong>: where Claude Code runs</li>
+<li><strong><code>❯</code> prompt</strong>: where you type</li>
+<li><strong>Console</strong>: where you run the script</li>
+<li><strong>Files pane</strong>: what it wrote</li>
+</ol>
+</div></div>
+<aside class="notes">
+<p>It runs in the Terminal tab, inside the project, so the paths are the project’s paths. The Console stays free for running the script. This is the same tab they used for git; say so here, not on the page.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="launch" class="slide level2">
+<h2>Launching Claude Code in manual mode</h2>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a aria-hidden="true" tabindex="-1"></a><span class="ex">claude</span> <span class="at">--permission-mode</span> manual</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<ul>
+<li>Manual mode: it asks before every edit and every command that changes something.</li>
+<li>The status line must read <code>⏸ manual mode on</code>.</li>
+<li>Any other mode: <code>/exit</code>, then this line again.</li>
+</ul>
+<aside class="notes">
+<p>Use this line, not bare <code>claude</code>, until reading diffs is a habit.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="trust" class="slide level2">
+<h2>The trust question</h2>
+<div class="columns">
+<div class="column" style="width:60%;">
+<p><img data-src="figures/09-ai-code/S01-trust-folder.png" style="width:100.0%" alt="Claude Code's first screen in a folder: Accessing workspace, the folder path /Users/ao332/github/gapminder-practice, a quick safety check paragraph, and the two answers No, exit (highlighted) and Yes, I trust this folder."></p>
+</div><div class="column" style="width:40%;">
+<ol type="1">
+<li><strong>The path</strong>: must end in <code>placements</code></li>
+<li><strong>No, exit</strong> is highlighted</li>
+<li><strong>↓ once, then Enter</strong></li>
+<li>Asked once per folder</li>
+</ol>
+</div></div>
+<aside class="notes">
+<p>Read the path before you press anything. If it is your home folder, you are about to trust a tool with everything in it. The screen is from another folder; yours ends in placements.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="welcome" class="slide level2">
+<h2>Reading the welcome screen</h2>
+<div class="columns">
+<div class="column" style="width:60%;">
+<p><img data-src="figures/09-ai-code/S02-welcome.png" style="width:100.0%" alt="The Claude Code welcome screen: Claude Code v2.1.258, the model and plan line, the folder ~/github/gapminder-practice, the prompt box, and the status line reading manual mode on."></p>
+</div><div class="column" style="width:40%;">
+<ol type="1">
+<li><strong>Version</strong>: the number varies; any current one</li>
+<li><strong>Model · plan</strong>: the model in use and your plan; wording varies</li>
+<li><strong>Folder</strong>: ends in <code>placements</code></li>
+<li><strong><code>❯</code></strong>: type here, Enter sends</li>
+<li><strong>Status line</strong>: <code>⏸ manual mode on</code></li>
+</ol>
+</div></div>
+<aside class="notes">
+<p>Line three and the status line. If either is wrong, exit and relaunch; nothing else on this screen matters yet.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="keys" class="slide level2">
+<h2>Keys, commands, and a second Terminal tab</h2>
+<table class="caption-top">
+<thead>
+<tr class="header">
+<th style="text-align: left;">Key or command</th>
+<th style="text-align: left;">Does</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Enter</td>
+<td style="text-align: left;">sends the prompt</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Esc</td>
+<td style="text-align: left;">interrupts; on a question, declines</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">↑</td>
+<td style="text-align: left;">brings back the previous prompt</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>/clear</code></td>
+<td style="text-align: left;">new conversation, same folder</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>/exit</code> (or Ctrl+C twice)</td>
+<td style="text-align: left;">leaves Claude Code</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Tools → Terminal → New Terminal</td>
+<td style="text-align: left;">a second tab for git</td>
+</tr>
+</tbody>
+</table>
+<aside class="notes">
+<p>Esc interrupts whatever it is doing. Open a second Terminal tab for git, so you can read what it did without leaving the tool.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="prompt-git-init" class="slide level2">
+<h2>Prompt 1: git, from inside the tool</h2>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>Prompt to paste into Claude Code (captured run)</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2" data-filename="Prompt to paste into Claude Code (captured run)"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb2-1"><a aria-hidden="true" tabindex="-1"></a>Initialize a git repository in this folder, add a .gitignore for an RStudio</span>
+<span id="cb2-2"><a aria-hidden="true" tabindex="-1"></a>project (.Rproj.user, .Rhistory, .RData), and commit everything with the</span>
+<span id="cb2-3"><a aria-hidden="true" tabindex="-1"></a>message "New project".</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="columns">
+<div class="column" style="width:50%;">
+<p><img data-src="figures/09-ai-code/S10-git-commit-dialog.png" style="width:100.0%" alt="A Bash command approval box from another project: the exact git add, git commit and git status command, the line This command requires approval, and the answers 1. Yes, 2. Yes and don't ask again for git, 3. Yes and switch to auto mode, 4. No."></p>
+</div><div class="column" style="width:50%;">
+<ol type="1">
+<li>A box shows the new file <code>.gitignore</code> first: read it, <code>1. Yes</code></li>
+<li>A box shows the exact git command: read it, <code>1. Yes</code></li>
+<li>Terminal 2: <code>git log --oneline</code> prints one commit</li>
+</ol>
+</div></div>
+<aside class="notes">
+<p>The box is from another project; the shape is the same. Two boxes today: a file and a command. Auto mode would have asked for neither. Its commit message carries a Co-Authored-By line naming the model.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="prompt-shape" class="slide level2">
+<h2>One task per prompt: the four parts</h2>
+<ul>
+<li><strong>The goal</strong>: what the script must do, with names for its inputs and its output.</li>
+<li><strong>The mistake to avoid, named</strong>: the plausible wrong reading. Call it the failure mode.</li>
+<li><strong>The file to write, and where</strong>: <code>code/&lt;name&gt;.R</code>.</li>
+<li><strong>What not to do</strong>: no other files; no git, so that you read the diff and commit; and whether to run the script.</li>
+<li>Prompt 1 had three of the four; Prompt 2, the scraper, has all four. Paste them; do not retype them.</li>
+</ul>
+<aside class="notes">
+<p>Part two is the one novices leave out. Prompt 4, the country column, is what happens without it.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="scoping" class="slide level2">
+<h2>How much to ask for in one prompt: one task, one file</h2>
+<table class="caption-top">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Too big to check</th>
+<th style="text-align: left;">Right-sized</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">“Do my analysis of the placements.”</td>
+<td style="text-align: left;">“Write <code>code/placements.R</code>: the table on the placements page, saved as <code>data/placements.csv</code>, four columns.”</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">“Make a report on placements.”</td>
+<td style="text-align: left;">“Add a column <code>postdoc</code>: TRUE when the position is a postdoc. Change nothing else.”</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">“Fix my script.”</td>
+<td style="text-align: left;">“The 2015 rows are missing; change the line that filters the years, nothing else.”</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>The test: name one number the answer must contain, and work that number out yourself, before you send the prompt.</li>
+<li>For the scraper, next slide: the page shows 16 rows for 2026, and you can count them. So the task is small enough to check.</li>
+<li>No such number: the request is too big. Split it.</li>
+</ul>
+<aside class="notes">
+<p>“Do my analysis” has no number in it, so there is nothing to compare afterwards. A big job is several small ones in a row, each checked before the next.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="three-tests" class="slide level2">
+<h2>Three questions before you send a prompt</h2>
+<ol type="1">
+<li>Can you say in advance what a wrong answer would look like, and write that into the prompt?</li>
+<li>Can you work out one number of the answer yourself, from the page or from rows on your screen?</li>
+<li>Could you read the whole diff in five minutes?</li>
+</ol>
+<ul>
+<li>Any no: the task is too big. Split it and send the first part.</li>
+</ul>
+<aside class="notes">
+<p>For the scraper: a wrong answer is rows dropped or doubled, or the other table on the page; the number is 16 rows for 2026; the diff is one new file of about thirty lines. Three yes, so it goes.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="five-steps" class="slide level2">
+<h2>The five-step delegation loop</h2>
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="figures/09-ai-code/D1-five-step-loop.svg" class="quarto-figure quarto-figure-center" alt="Five boxes left to right: 1 Explain, the goal and the failure mode; 2 Delegate, one task, one file; 3 Work it out, one small case by hand; 4 Verify, run, compare, read the diff; 5 Keep, the hand check as a line in the script. A dashed red arrow from box 4 back to box 2 reads: they disagree, ask for a patch, then verify again." height="250"></p>
+</figure>
+</div>
+<ul>
+<li>Next: the table read from the page. The count on paper: one year’s rows, counted on the page.</li>
+<li>Then two columns, each with its own count.</li>
+<li>The permanent check: the counts written into the script, dated.</li>
+</ul>
+<aside class="notes">
+<p>Step three is the one people skip. Without a value on paper, step four is only watching a script run.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="prompt-scrape" class="slide level2 smaller">
+<h2>Prompt 2: the scraper, run until it works</h2>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>Prompt to paste into Claude Code (captured run)</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3" data-filename="Prompt to paste into Claude Code (captured run)"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb3-1"><a aria-hidden="true" tabindex="-1"></a>Write code/placements.R. It reads the table "Recent job placements" at</span>
+<span id="cb3-2"><a aria-hidden="true" tabindex="-1"></a>https://business.cornell.edu/admissions/graduate/phd-aem/for-hire/ and saves</span>
+<span id="cb3-3"><a aria-hidden="true" tabindex="-1"></a>it as data/placements.csv with the page's four columns, year, name, position,</span>
+<span id="cb3-4"><a aria-hidden="true" tabindex="-1"></a>organization, one row per graduate. Use the rvest package for the HTML and</span>
+<span id="cb3-5"><a aria-hidden="true" tabindex="-1"></a>base R for the rest. Run it with Rscript code/placements.R; if it fails, fix</span>
+<span id="cb3-6"><a aria-hidden="true" tabindex="-1"></a>the script and run again. Then show me the first five rows and the number of</span>
+<span id="cb3-7"><a aria-hidden="true" tabindex="-1"></a>rows. Do not use git.</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<ul>
+<li>It looked at the page’s two tables first (two <em>Bash command</em> boxes), then <em>Create file</em>, then <code>Rscript</code>.</li>
+<li>What came back: “Wrote 109 rows”, the first five rows, how it chose the table.</li>
+<li>Your check, on the page: count the 2026 rows. 16. Console: <code>sum(read.csv("data/placements.csv")$year == 2026)</code>.</li>
+<li><strong>“Do not use git”</strong>: a commit made for you is a diff you never read. From here, you commit.</li>
+</ul>
+<aside class="notes">
+<p>The last clause is the one to explain out loud: a commit made for you is a diff you never read. Prompt 1 was the exception, and we watched that command before it ran.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="approve-create" class="slide level2">
+<h2>The approval box for a new file</h2>
+<div class="columns">
+<div class="column" style="width:60%;">
+<p><img data-src="figures/09-ai-code/S03-create-file-dialog.png" alt="Claude Code's approval box: Write(code/lifeexp_by_continent.R), Create file, the nine-line script with line 5 reading tapply(sub$lifeExp, sub$continent, mean), and the question Do you want to create lifeexp_by_continent.R? with the answers 1. Yes, 2. Yes, and switch to accept edits, 3. No." height="415"></p>
+</div><div class="column" style="width:40%;">
+<ol type="1">
+<li><strong>Create file</strong>, and the path</li>
+<li><strong>The file</strong>, every line</li>
+<li><strong><code>1. Yes</code></strong>: Enter writes it</li>
+<li><strong><code>2.</code></strong>: stops asking about edits. Leave it.</li>
+<li><strong><code>3. No</code> or Esc</strong>: refuse</li>
+</ol>
+</div></div>
+<aside class="notes">
+<p>The box is from another project; the shape is the same. Read the file before it exists. Today: which lines pick the table?</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="diff-new-file" class="slide level2">
+<h2>git diff --staged on the scraper: the lines to read</h2>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><a aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> add code/placements.R</span>
+<span id="cb4-2"><a aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> diff <span class="at">--staged</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a aria-hidden="true" tabindex="-1"></a>wanted  <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"year"</span>, <span class="st">"name"</span>, <span class="st">"position"</span>, <span class="st">"organization"</span>)</span>
+<span id="cb5-2"><a aria-hidden="true" tabindex="-1"></a>headers <span class="ot">&lt;-</span> <span class="fu">lapply</span>(tables, <span class="cf">function</span>(tb) <span class="fu">tolower</span>(<span class="fu">html_text2</span>(<span class="fu">html_elements</span>(tb, <span class="st">"th"</span>))))</span>
+<span id="cb5-3"><a aria-hidden="true" tabindex="-1"></a>hit     <span class="ot">&lt;-</span> <span class="fu">which</span>(<span class="fu">vapply</span>(headers, <span class="cf">function</span>(h) <span class="fu">identical</span>(h, wanted), <span class="fu">logical</span>(<span class="dv">1</span>)))</span>
+<span id="cb5-4"><a aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="fu">length</span>(hit) <span class="sc">!=</span> <span class="dv">1</span>) {</span>
+<span id="cb5-5"><a aria-hidden="true" tabindex="-1"></a>  <span class="fu">stop</span>(<span class="st">"Expected exactly one placements table with columns "</span>, ...)</span>
+<span id="cb5-6"><a aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<ul>
+<li>A new file: every line is a <code>+</code>. Read it top to bottom once.</li>
+<li>These lines matter: it picks the table by its header, not by its position, and stops if there is not exactly one.</li>
+<li>A line you cannot explain: ask for an explanation before you accept. <code>vapply()</code> and <code>identical()</code> are two to ask about.</li>
+</ul>
+<aside class="notes">
+<p>The transcript said how it chose the table; the diff shows it. Now you have read it rather than been told it.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="judge-diff" class="slide level2">
+<h2>How to judge a model’s diff: five questions</h2>
+<ol type="1">
+<li><strong>Which files changed?</strong> Only the ones you named? (<code>git status</code>)</li>
+<li><strong>What was deleted?</strong> Read the red lines first. Did you ask for each one to go?</li>
+<li><strong>Which line does the actual work?</strong> Does it do what you asked, and nothing more?</li>
+<li><strong>Where does each value in it come from?</strong> Your data, or typed into the code by the tool?</li>
+<li><strong>Is there a line you could not explain to someone?</strong> Ask what it does before you accept it.</li>
+</ol>
+<aside class="notes">
+<p>Five questions, in this order. The second one is where an unasked change hides.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="prompt-postdoc" class="slide level2">
+<h2>Prompt 3: a postdoc flag</h2>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>Prompt to paste into Claude Code (captured run)</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6" data-filename="Prompt to paste into Claude Code (captured run)"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb6-1"><a aria-hidden="true" tabindex="-1"></a><span class="an">Add a column postdoc to the table before it is saved:</span><span class="co"> TRUE when the position</span></span>
+<span id="cb6-2"><a aria-hidden="true" tabindex="-1"></a>is a postdoc, FALSE otherwise. Change nothing else. Run it again and tell me</span>
+<span id="cb6-3"><a aria-hidden="true" tabindex="-1"></a>how many rows are TRUE.</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode diff code-with-copy"><code class="sourceCode diff"><span id="cb7-1"><a aria-hidden="true" tabindex="-1"></a><span class="va">+# Flag postdoc positions; spellings on the page include "Postdoc", "Post-doc",</span></span>
+<span id="cb7-2"><a aria-hidden="true" tabindex="-1"></a><span class="va">+# "Post Doctoral Fellow" and "Postdoctoral Associate".</span></span>
+<span id="cb7-3"><a aria-hidden="true" tabindex="-1"></a><span class="va">+placements$postdoc &lt;- grepl("post[- ]?doc", placements$position, ignore.case = TRUE)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<ul>
+<li>It looked at the spellings first: eleven of them. One pattern covers the three shapes: joined, hyphen, space.</li>
+<li>25 of 109 rows are TRUE. One judgment call in its reply: a row listed as both a postdoc and an assistant professor.</li>
+<li>The hand check, Ctrl+F on the page: “postdoc” 15, “post-doc” 9, “post doc” 1. 25.</li>
+</ul>
+<aside class="notes">
+<p>The edit box shows one comment and one line. A pattern you cannot read is question 5: ask it to explain <code>[- ]?</code>.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="approve-edit" class="slide level2">
+<h2>The approval box for an edit: red and green lines</h2>
+<div class="columns">
+<div class="column" style="width:60%;">
+<p><img data-src="figures/09-ai-code/S05-edit-dialog-diff.png" alt="Claude Code's edit approval box: Update(code/lifeexp_by_continent.R), Edit file, a diff with line 1 removed in red and rewritten in green, line 5 removed in red and replaced by two green lines using sum, and the question Do you want to make this edit? with the answers 1. Yes, 2. Yes, and switch to accept edits, 3. No." height="415"></p>
+</div><div class="column" style="width:40%;">
+<ol type="1">
+<li><strong><code>-</code> red</strong>: what goes. Read these first.</li>
+<li><strong><code>+</code> green</strong>: what arrives</li>
+<li><strong>Line 1</strong>: changed unasked; harmless, but read it</li>
+<li><strong><code>1. Yes</code></strong> accepts; <strong>Esc</strong> refuses</li>
+</ol>
+</div></div>
+<aside class="notes">
+<p>The box is from another project; the shape is the same. Two red lines where one was asked for: the extra one is a comment. Notice it, then accept it. The country edit has no red lines and thirty green ones.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="hand-check" class="slide level2 smaller">
+<h2>Your own check, typed into the script and committed with it</h2>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode diff code-with-copy"><code class="sourceCode diff"><span id="cb8-1"><a aria-hidden="true" tabindex="-1"></a> placements$postdoc &lt;- grepl("post[- ]?doc", placements$position, ignore.case = TRUE)</span>
+<span id="cb8-2"><a aria-hidden="true" tabindex="-1"></a><span class="va">+</span></span>
+<span id="cb8-3"><a aria-hidden="true" tabindex="-1"></a><span class="va">+# Counted on the page on 2026-09-21: 16 rows for 2026; postdoc spellings</span></span>
+<span id="cb8-4"><a aria-hidden="true" tabindex="-1"></a><span class="va">+# 15 + 9 + 1. When the page changes this stops the script: recount, then edit.</span></span>
+<span id="cb8-5"><a aria-hidden="true" tabindex="-1"></a><span class="va">+stopifnot(sum(placements$year == 2026) == 16, sum(placements$postdoc) == 25)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<ul>
+<li>Your two counts, 16 and 25, as one line the script must satisfy every run. You type it, not the tool.</li>
+<li>Committed with the code, so the check travels with the script.</li>
+<li>If the page changes or a later edit breaks the scraper, the script stops here instead of writing a wrong CSV.</li>
+</ul>
+<aside class="notes">
+<p>This is the answer to “how would you ever notice”. Say it plainly: you checked once by hand, and now the script does that check on every run, for good, because it is in the file and in the commit.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="prompt-country" class="slide level2">
+<h2>Prompt 4: a country column</h2>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>Prompt to paste into Claude Code (captured run)</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9" data-filename="Prompt to paste into Claude Code (captured run)"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb9-1"><a aria-hidden="true" tabindex="-1"></a>Add a column country with the country of the organization. Change nothing</span>
+<span id="cb9-2"><a aria-hidden="true" tabindex="-1"></a>else. Run it again and show me the number of rows per country.</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>What it printed after running the script again</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10" data-filename="What it printed after running the script again"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb10-1"><a aria-hidden="true" tabindex="-1"></a>United States 77   China 7   India 4   Australia 3   Canada 3</span>
+<span id="cb10-2"><a aria-hidden="true" tabindex="-1"></a>Germany 2   Hong Kong 2   Singapore 2   Finland 1   France 1</span>
+<span id="cb10-3"><a aria-hidden="true" tabindex="-1"></a>New Zealand 1   Norway 1   Saudi Arabia 1   South Korea 1</span>
+<span id="cb10-4"><a aria-hidden="true" tabindex="-1"></a>Switzerland 1   Vietnam 1   Zambia 1</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<ul>
+<li>It added the column, ran the script, and printed the counts. 109 rows, 17 countries, no error.</li>
+<li>Its reply ends: the assignments “all look right”.</li>
+<li>Before you accept it: open the diff and read the new lines. The next slide is that diff.</li>
+</ul>
+<aside class="notes">
+<p>Say nothing yet about how it got the countries. Let them look at the diff on the next slide and answer question 4 themselves.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="country-diff" class="slide level2">
+<h2>The diff for the country column: where does each value come from?</h2>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a aria-hidden="true" tabindex="-1"></a>country_patterns <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
+<span id="cb11-2"><a aria-hidden="true" tabindex="-1"></a>  <span class="st">"Australia"</span>    <span class="ot">=</span> <span class="st">"Monash|New South Wales|University of Sydney"</span>,</span>
+<span id="cb11-3"><a aria-hidden="true" tabindex="-1"></a>  <span class="st">"Canada"</span>       <span class="ot">=</span> <span class="st">"Alberta|Calgary|Ottawa"</span>,</span>
+<span id="cb11-4"><a aria-hidden="true" tabindex="-1"></a>  <span class="st">"China"</span>        <span class="ot">=</span> <span class="st">"Beijing|Peking|Renmin|Xi.an Jiaotong"</span>,</span>
+<span id="cb11-5"><a aria-hidden="true" tabindex="-1"></a>  <span class="st">"Germany"</span>      <span class="ot">=</span> <span class="st">"Ludwig-Maximilian|DTUM"</span>,</span>
+<span id="cb11-6"><a aria-hidden="true" tabindex="-1"></a>  ...                                        <span class="co"># sixteen countries in all</span></span>
+<span id="cb11-7"><a aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb11-8"><a aria-hidden="true" tabindex="-1"></a>placements<span class="sc">$</span>country <span class="ot">&lt;-</span> <span class="st">"United States"</span></span>
+<span id="cb11-9"><a aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (ctry <span class="cf">in</span> <span class="fu">names</span>(country_patterns)) { ... }</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<ul>
+<li>Question 4, on this diff: for each value the column can take, where did it come from?</li>
+<li><code>"Australia"</code>, <code>"Canada"</code>, <code>"China"</code>, and thirteen more: typed here.</li>
+<li><code>"United States"</code>: typed here too, and given to every row that matches nothing. That is 77 of the 109.</li>
+</ul>
+<aside class="notes">
+<p>Give them a minute on the code before the next slide. Ask the room: which of these seventeen countries is written anywhere on the page they scraped? The answer is on the next slide.</p>
+<p>When it fails, say:</p>
+<ul>
+<li>The pattern matched fewer than the page count: it matched one spelling; the check would have caught it; ask for a patch naming the missing spelling.</li>
+<li>No country table, it wrote NA for everything: a better run than the captured one; read its reply for why, and go to step 5 anyway.</li>
+<li>It asked to fetch the organizations’ web pages: Esc; that is a different task, and today the facts are yours to supply.</li>
+<li><code>git diff</code> shows the postdoc line removed: “Change nothing else” was not held; <code>git restore code/placements.R</code> and ask again.</li>
+</ul>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="countries-lesson" class="slide level2">
+<h2>Where the countries came from</h2>
+<ul>
+<li>The page names a place for 14 of 109 rows. Nothing else on the page says a country.</li>
+<li>The rest is memory: a table it typed, and a default. It said so, in a comment and in its reply, and the column still went into the CSV.</li>
+<li>DTUM: Denmark in one run, Germany in the next. Same prompt, same page.</li>
+<li>Plausible is not the same as right. A fact it did not read is a guess, however confident the sentence around it.</li>
+<li>The script ran without error both times.</li>
+</ul>
+<aside class="notes">
+<p>Two runs on the same evening. Ask the room which one is right. Nobody in the room knows, and that is the answer: it is not data.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="catch-earlier" class="slide level2">
+<h2>What would have caught it earlier</h2>
+<ol type="1">
+<li><strong>A plan before code.</strong> “Describe your approach before writing any code.” The captured reply proposes a lookup table it would “populate myself from knowledge of the institutions” and mark “the handful I’m unsure about”. You read that and say no.</li>
+<li><strong>Question 4 of the five, asked of the diff.</strong> Where does each value come from? Sixteen country names sit in the code, and none of them came from the page or from you.</li>
+<li><strong>A reviewer with fresh eyes.</strong> A second Claude that never saw this conversation, later today, found it in one turn.</li>
+</ol>
+<aside class="notes">
+<p>All three are cheap. The plan costs one sentence in the prompt and one minute of reading.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="fix-countries" class="slide level2">
+<h2>Prompt 5, the fix: facts you supply live in a data file</h2>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>Prompt to paste into Claude Code (captured run)</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12" data-filename="Prompt to paste into Claude Code (captured run)"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb12-1"><a aria-hidden="true" tabindex="-1"></a>The page does not state countries, so the lookup is a guess. Replace it: write</span>
+<span id="cb12-2"><a aria-hidden="true" tabindex="-1"></a>the distinct organizations to data/countries.csv with an empty country column</span>
+<span id="cb12-3"><a aria-hidden="true" tabindex="-1"></a>for me to fill in, read that file in the script, and set country to NA when</span>
+<span id="cb12-4"><a aria-hidden="true" tabindex="-1"></a>the organization is not in it or its country is empty. Change nothing else.</span>
+<span id="cb12-5"><a aria-hidden="true" tabindex="-1"></a>Run it and tell me how many rows have NA.</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a aria-hidden="true" tabindex="-1"></a>countries <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="fu">file.path</span>(<span class="st">"data"</span>, <span class="st">"countries.csv"</span>), <span class="at">stringsAsFactors =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb13-2"><a aria-hidden="true" tabindex="-1"></a>countries<span class="sc">$</span>country[<span class="fu">trimws</span>(countries<span class="sc">$</span>country) <span class="sc">==</span> <span class="st">""</span>] <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
+<span id="cb13-3"><a aria-hidden="true" tabindex="-1"></a>placements<span class="sc">$</span>country <span class="ot">&lt;-</span> countries<span class="sc">$</span>country[<span class="fu">match</span>(placements<span class="sc">$</span>organization,</span>
+<span id="cb13-4"><a aria-hidden="true" tabindex="-1"></a>                                              countries<span class="sc">$</span>organization)]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<ul>
+<li><code>data/countries.csv</code>: 107 organizations, an empty country column, written once.</li>
+<li>109 of 109 rows are <code>NA</code> until you fill it. The CSV claims nothing nobody checked.</li>
+<li>Fill ten rows from the organizations’ pages, run, commit the file.</li>
+</ul>
+<aside class="notes">
+<p>The tool did the plumbing: the file, the match, the NA. The facts are yours to type, and git records that you typed them.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="claude-md" class="slide level2">
+<h2>CLAUDE.md: standing instructions, read at every launch</h2>
+<ul>
+<li>A markdown file at the root, read at every launch.</li>
+<li>Layout, style, facts and checks, working rules. Nothing that changes per task.</li>
+<li>Short: 35 lines here. The docs’ target is under 200.</li>
+<li>Committed. It is part of the record.</li>
+</ul>
+<aside class="notes">
+<p>Everything you would otherwise paste into every prompt, written once.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="init" class="slide level2 smaller">
+<h2>/init: a first draft of CLAUDE.md</h2>
+<div class="columns">
+<div class="column" style="width:60%;">
+<p><img data-src="figures/09-ai-code/S14-init-create-box.png" style="width:100.0%" alt="Claude Code's approval box after /init: Create file, CLAUDE.md, the first lines of the draft, and the 1. Yes row, with the file name and the 1. Yes row circled in red."></p>
+</div><div class="column" style="width:40%;">
+<ol type="1">
+<li>This project has none. Nothing made one for you.</li>
+<li><strong><code>/init</code></strong> reads the folder, writes a first draft.</li>
+<li>The same box as any new file: <code>1. Yes</code>.</li>
+<li>A draft of what it found, not of how you want code written.</li>
+</ol>
+</div></div>
+<aside class="notes">
+<p>A starting point from what it saw. What it did not see is how you want code written.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="claude-md-seed" class="slide level2">
+<h2>The CLAUDE.md for placements</h2>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>CLAUDE.md (excerpt; the full file is on the page)</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb14" data-filename="CLAUDE.md (excerpt; the full file is on the page)"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb14-1"><a aria-hidden="true" tabindex="-1"></a><span class="fu"># placements</span></span>
+<span id="cb14-2"><a aria-hidden="true" tabindex="-1"></a><span class="fu">## Style</span></span>
+<span id="cb14-3"><a aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Base R. The only package is <span class="in">`rvest`</span>, and only for reading HTML.</span>
+<span id="cb14-4"><a aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>A number or a URL that could change sits at the top of the script as a</span>
+<span id="cb14-5"><a aria-hidden="true" tabindex="-1"></a>  named constant in capitals: <span class="in">`URL &lt;- "..."`</span>.</span>
+<span id="cb14-6"><a aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Comments say why, not what.</span>
+<span id="cb14-7"><a aria-hidden="true" tabindex="-1"></a><span class="fu">## Facts and checks</span></span>
+<span id="cb14-8"><a aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>A fact that is not on the page and not in a data file does not go into</span>
+<span id="cb14-9"><a aria-hidden="true" tabindex="-1"></a>  code. Put it in a file under <span class="in">`data/`</span> that I fill in, and use <span class="in">`NA`</span> until</span>
+<span id="cb14-10"><a aria-hidden="true" tabindex="-1"></a>  I do.</span>
+<span id="cb14-11"><a aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>After a merge or a filter, check the row count with <span class="in">`stopifnot()`</span>.</span>
+<span id="cb14-12"><a aria-hidden="true" tabindex="-1"></a><span class="fu">## Working rules</span></span>
+<span id="cb14-13"><a aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Do not run scripts unless the prompt asks. I run them in RStudio.</span>
+<span id="cb14-14"><a aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Do not use git unless the prompt asks. I commit.</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<aside class="notes">
+<p>Paste it over the draft, save, commit, relaunch. Thirty-five lines. The “Facts and checks” section is this afternoon’s lesson, written down once.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="style-in-claude-md" class="slide level2">
+<h2>Style habits in CLAUDE.md: naming, structure, constants, comments</h2>
+<ul>
+<li><strong>Naming</strong>: <code>snake_case</code>; file names say what the script does.</li>
+<li><strong>Structure</strong>: one script per task; a function does one job.</li>
+<li><strong>Named constants</strong>: <code>URL &lt;- "..."</code> at the top, never a bare value below.</li>
+<li><strong>Comments say why</strong>, not what. A header on every script.</li>
+<li><strong>Facts and checks</strong>: a fact not on the page goes in a data file; a row count after every merge.</li>
+<li>Written once. Read at every launch. Copy it to the next repository.</li>
+</ul>
+<aside class="notes">
+<p>Your style sheet is how you brief an assistant. It is also how you brief yourself in December. The five habits are the style handout; this is where it pays off.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="short-prompt" class="slide level2">
+<h2>A one-sentence prompt after CLAUDE.md</h2>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>Prompt to paste into Claude Code (captured run)</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb15" data-filename="Prompt to paste into Claude Code (captured run)"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb15-1"><a aria-hidden="true" tabindex="-1"></a>Write code/by_year.R: for each year, the number of placements and the number</span>
+<span id="cb15-2"><a aria-hidden="true" tabindex="-1"></a>of postdocs, from data/placements.csv, printed as a table with one row per</span>
+<span id="cb15-3"><a aria-hidden="true" tabindex="-1"></a>year.</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a aria-hidden="true" tabindex="-1"></a><span class="co"># Reads data/placements.csv. Writes nothing; prints a table with one row</span></span>
+<span id="cb16-2"><a aria-hidden="true" tabindex="-1"></a><span class="co"># per year giving the number of placements and the number of postdocs.</span></span>
+<span id="cb16-3"><a aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-4"><a aria-hidden="true" tabindex="-1"></a>PLACEMENTS <span class="ot">&lt;-</span> <span class="st">"data/placements.csv"</span></span>
+<span id="cb16-5"><a aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-6"><a aria-hidden="true" tabindex="-1"></a>count_by_year <span class="ot">&lt;-</span> <span class="cf">function</span>(placements) {</span>
+<span id="cb16-7"><a aria-hidden="true" tabindex="-1"></a>  ...</span>
+<span id="cb16-8"><a aria-hidden="true" tabindex="-1"></a>  <span class="co"># Every placement belongs to exactly one year, so the counts must add up.</span></span>
+<span id="cb16-9"><a aria-hidden="true" tabindex="-1"></a>  <span class="fu">stopifnot</span>(<span class="fu">sum</span>(by_year<span class="sc">$</span>n_placements) <span class="sc">==</span> <span class="fu">nrow</span>(placements))</span>
+<span id="cb16-10"><a aria-hidden="true" tabindex="-1"></a>  by_year</span>
+<span id="cb16-11"><a aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<ul>
+<li>Not in the prompt: the header, the constant, the function, the row check, “do not run it”. All in <code>CLAUDE.md</code>.</li>
+<li>Its last sentence: “Not run, per the project rules.”</li>
+</ul>
+<aside class="notes">
+<p>What is missing from the prompt is in the file it read at launch. The check on the counts came from the “Facts and checks” section.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="subagents" class="slide level2">
+<h2>Subagents: a second Claude with its own context</h2>
+<ul>
+<li>A subagent is a separate conversation the tool starts for one task: its own empty context, its own tool list, <code>CLAUDE.md</code> included. It returns a report, not its working.</li>
+<li>When: reading many files, so your context stays small; an independent review of a diff or a rule, so the checker is not the thing being checked.</li>
+<li>One line: <code>Use a subagent to review code/x.R against this rule: ... Report what it says. Do not edit anything.</code></li>
+<li>Permanent: a file in <code>.claude/agents/</code>, like <code>CLAUDE.md</code>: a name, a description, the tools it may use, then its instructions.</li>
+</ul>
+<aside class="notes">
+<p>The reviewer never saw the conversation that wrote the code. That is the point, and it is the same rule as typing the check yourself.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="reviewer-agent" class="slide level2">
+<h2>A read-only reviewer subagent: the file</h2>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>.claude/agents/hand-check-reviewer.md</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb17" data-filename=".claude/agents/hand-check-reviewer.md"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb17-1"><a aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb17-2"><a aria-hidden="true" tabindex="-1"></a><span class="an">name:</span><span class="co"> hand-check-reviewer</span></span>
+<span id="cb17-3"><a aria-hidden="true" tabindex="-1"></a><span class="an">description:</span><span class="co"> Reviews one R script against one rule from the request. Read-only.</span></span>
+<span id="cb17-4"><a aria-hidden="true" tabindex="-1"></a><span class="an">tools:</span><span class="co"> Read, Grep, Glob</span></span>
+<span id="cb17-5"><a aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb17-6"><a aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-7"><a aria-hidden="true" tabindex="-1"></a>You review one R script against one rule given in the request. Read the</span>
+<span id="cb17-8"><a aria-hidden="true" tabindex="-1"></a>script. Reply in three lines: the rule; the line of code that follows it</span>
+<span id="cb17-9"><a aria-hidden="true" tabindex="-1"></a>or breaks it, quoted; the verdict, "follows" or "breaks". Do not edit any</span>
+<span id="cb17-10"><a aria-hidden="true" tabindex="-1"></a>file. Do not propose a rewrite unless asked.</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<ul>
+<li>Save, commit, relaunch. The name is how you call it.</li>
+<li><code>tools:</code> is the fence: it can read; it cannot edit or run anything.</li>
+</ul>
+<aside class="notes">
+<p>Same shape as CLAUDE.md: written once, read when called. The body is its standing instructions; the request supplies the rule.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="reviewer-report" class="slide level2">
+<h2>The reviewer on placements.R: the report</h2>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>Prompt to paste into Claude Code (captured run, before the fix)</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb18" data-filename="Prompt to paste into Claude Code (captured run, before the fix)"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb18-1"><a aria-hidden="true" tabindex="-1"></a>Use the hand-check-reviewer subagent to review code/placements.R against this</span>
+<span id="cb18-2"><a aria-hidden="true" tabindex="-1"></a>rule: every value in the country column must come from the page or from a data</span>
+<span id="cb18-3"><a aria-hidden="true" tabindex="-1"></a>file, never from a table typed into the code. Report what it says. Do not edit</span>
+<span id="cb18-4"><a aria-hidden="true" tabindex="-1"></a>anything.</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>The subagent's report, condensed; the full report is on the page</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb19" data-filename="The subagent's report, condensed; the full report is on the page"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb19-1"><a aria-hidden="true" tabindex="-1"></a>Rule: every value in the country column must come from the page or from a</span>
+<span id="cb19-2"><a aria-hidden="true" tabindex="-1"></a>  data file, never from a table typed into the code.</span>
+<span id="cb19-3"><a aria-hidden="true" tabindex="-1"></a>Line that breaks it (code/placements.R, lines 44-67): country_patterns &lt;- c(</span>
+<span id="cb19-4"><a aria-hidden="true" tabindex="-1"></a>  "Australia" = "Monash|New South Wales|University of Sydney", ...) and</span>
+<span id="cb19-5"><a aria-hidden="true" tabindex="-1"></a>  placements$country &lt;- "United States".</span>
+<span id="cb19-6"><a aria-hidden="true" tabindex="-1"></a>No data file is read anywhere; the only input is read_html(url) on line 10.</span>
+<span id="cb19-7"><a aria-hidden="true" tabindex="-1"></a>Verdict: breaks.</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<ul>
+<li>One turn, a fresh context, line numbers. Nothing edited: <code>git status</code> is clean.</li>
+<li>It found what question 4 finds. The difference: it did not write the code it judged.</li>
+</ul>
+<aside class="notes">
+<p>Same rule as typing the check yourself: the checker is not the thing being checked.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="bad-at" class="slide level2">
+<h2>Tasks not to give Claude Code</h2>
+<ul>
+<li>Outputs you cannot check by hand.</li>
+<li>Facts it did not read: a country, a citation, a function’s arguments.</li>
+<li>Restricted data. It sends what it reads to Anthropic’s servers: develop on a public or synthetic sample, run the final code yourself.</li>
+<li>Questions that do not touch the repository. Use a chat.</li>
+<li>Long stretches without reading: accept-edits mode, until reading diffs is a habit.</li>
+</ul>
+<aside class="notes">
+<p>Every one of these is a case where the diff is not enough, or you would not read it.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="runs-clean" class="slide level2">
+<h2>A script that runs without error can still be wrong</h2>
+<ul>
+<li>The country script ran without error twice and wrote 109 countries. Fourteen came from the page.</li>
+<li>Reading the diff made that visible; a data file you fill keeps it visible; a dated count keeps the scraper honest.</li>
+<li>The bottleneck is verification, not typing. A faster tool moves it to where it is easiest to skip.</li>
+</ul>
+<aside class="notes">
+<p>A clean run is not a right answer.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="practice" class="slide level2">
+<h2>Practice</h2>
+<p>Nine exercises on the session page, with solutions behind a click. All of them run in <code>placements</code>, never in a graded repository.</p>
+<ul>
+<li><strong>1–2</strong> Read-only prompts: an explanation of the scraper; what a page change would do</li>
+<li><strong>3–4</strong> Facts and checks: fill ten countries; a count per organization with a hand check</li>
+<li><strong>5–6</strong> Break things on purpose: the pattern; the check; <code>git restore</code></li>
+<li><strong>7–8</strong> CLAUDE.md and the reviewer: add a rule; review <code>by_year.R</code></li>
+<li><strong>9</strong> Your own small project, reorganized under a <code>CLAUDE.md</code></li>
+</ul>
+</section>
+<section id="quick-reference" class="slide level2">
+<h2>Quick reference</h2>
+<p><strong>Count it on the page before you run it, read the diff before you accept it, and keep facts you supply in a data file.</strong></p>
+<p>Every command, key, prompt shape and check from today, one line each, on the session page, with the things that bite.</p>
+
+
+</section>
+    </div>
+  <div class="quarto-auto-generated-content" style="display: none;">
+<div class="footer footer-default">
+<p>AEM 6850 · Session 9</p>
+</div>
+</div></div>
+
+  <script>window.backupDefine = window.define; window.define = undefined;</script>
+  <script src="../../site_libs/revealjs/dist/reveal.js"></script>
+  <!-- reveal.js plugins -->
+  <script src="../../site_libs/revealjs/plugin/quarto-line-highlight/line-highlight.js"></script>
+  <script src="../../site_libs/revealjs/plugin/pdf-export/pdfexport.js"></script>
+  <script src="../../site_libs/revealjs/plugin/reveal-menu/menu.js"></script>
+  <script src="../../site_libs/revealjs/plugin/reveal-menu/quarto-menu.js"></script>
+  <script src="../../site_libs/revealjs/plugin/quarto-support/support.js"></script>
+  
+
+  <script src="../../site_libs/revealjs/plugin/notes/notes.js"></script>
+  <script src="../../site_libs/revealjs/plugin/search/search.js"></script>
+  <script src="../../site_libs/revealjs/plugin/zoom/zoom.js"></script>
+  <script src="../../site_libs/revealjs/plugin/math/math.js"></script>
+  <script>window.define = window.backupDefine; window.backupDefine = undefined;</script>
+
+  <script>
+
+      // Full list of configuration options available at:
+      // https://revealjs.com/config/
+      Reveal.initialize({
+'controlsAuto': true,
+'previewLinksAuto': false,
+'pdfSeparateFragments': false,
+'autoAnimateEasing': "ease",
+'autoAnimateDuration': 1,
+'autoAnimateUnmatched': true,
+'jumpToSlide': true,
+'menu': {"side":"left","useTextContentForMissingTitles":true,"markers":false,"loadIcons":false,"custom":[{"title":"Tools","icon":"<i class=\"fas fa-gear\"></i>","content":"<ul class=\"slide-menu-items\">\n<li class=\"slide-tool-item active\" data-item=\"0\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.fullscreen(event)\"><kbd>f</kbd> Fullscreen</a></li>\n<li class=\"slide-tool-item\" data-item=\"1\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.speakerMode(event)\"><kbd>s</kbd> Speaker View</a></li>\n<li class=\"slide-tool-item\" data-item=\"2\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.overview(event)\"><kbd>o</kbd> Slide Overview</a></li>\n<li class=\"slide-tool-item\" data-item=\"3\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.togglePdfExport(event)\"><kbd>e</kbd> PDF Export Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"4\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.toggleScrollView(event)\"><kbd>r</kbd> Scroll View Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"5\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.keyboardHelp(event)\"><kbd>?</kbd> Keyboard Help</a></li>\n</ul>"}],"openButton":true},
+'smaller': false,
+ 
+        // Display controls in the bottom right corner
+        controls: false,
+
+        // Help the user learn the controls by providing hints, for example by
+        // bouncing the down arrow when they first encounter a vertical slide
+        controlsTutorial: false,
+
+        // Determines where controls appear, "edges" or "bottom-right"
+        controlsLayout: 'edges',
+
+        // Visibility rule for backwards navigation arrows; "faded", "hidden"
+        // or "visible"
+        controlsBackArrows: 'faded',
+
+        // Display a presentation progress bar
+        progress: true,
+
+        // Display the page number of the current slide
+        slideNumber: 'c/t',
+
+        // 'all', 'print', or 'speaker'
+        showSlideNumber: 'all',
+
+        // Add the current slide number to the URL hash so that reloading the
+        // page/copying the URL will return you to the same slide
+        hash: true,
+
+        // Start with 1 for the hash rather than 0
+        hashOneBasedIndex: false,
+
+        // Flags if we should monitor the hash and change slides accordingly
+        respondToHashChanges: true,
+
+        // Push each slide change to the browser history
+        history: false,
+
+        // Enable keyboard shortcuts for navigation
+        keyboard: true,
+
+        // Enable the slide overview mode
+        overview: true,
+
+        // Disables the default reveal.js slide layout (scaling and centering)
+        // so that you can use custom CSS layout
+        disableLayout: false,
+
+        // Vertical centering of slides
+        center: false,
+
+        // Enables touch navigation on devices with touch input
+        touch: true,
+
+        // Loop the presentation
+        loop: false,
+
+        // Change the presentation direction to be RTL
+        rtl: false,
+
+        // see https://revealjs.com/vertical-slides/#navigation-mode
+        navigationMode: 'linear',
+
+        // Randomizes the order of slides each time the presentation loads
+        shuffle: false,
+
+        // Turns fragments on and off globally
+        fragments: true,
+
+        // Flags whether to include the current fragment in the URL,
+        // so that reloading brings you to the same fragment position
+        fragmentInURL: false,
+
+        // Flags if the presentation is running in an embedded mode,
+        // i.e. contained within a limited portion of the screen
+        embedded: false,
+
+        // Flags if we should show a help overlay when the questionmark
+        // key is pressed
+        help: true,
+
+        // Flags if it should be possible to pause the presentation (blackout)
+        pause: true,
+
+        // Flags if speaker notes should be visible to all viewers
+        showNotes: false,
+
+        // Global override for autoplaying embedded media (null/true/false)
+        autoPlayMedia: null,
+
+        // Global override for preloading lazy-loaded iframes (null/true/false)
+        preloadIframes: null,
+
+        // Number of milliseconds between automatically proceeding to the
+        // next slide, disabled when set to 0, this value can be overwritten
+        // by using a data-autoslide attribute on your slides
+        autoSlide: 0,
+
+        // Stop auto-sliding after user input
+        autoSlideStoppable: true,
+
+        // Use this method for navigation when auto-sliding
+        autoSlideMethod: null,
+
+        // Specify the average time in seconds that you think you will spend
+        // presenting each slide. This is used to show a pacing timer in the
+        // speaker view
+        defaultTiming: null,
+
+        // Enable slide navigation via mouse wheel
+        mouseWheel: false,
+
+        // The display mode that will be used to show slides
+        display: 'block',
+
+        // Hide cursor if inactive
+        hideInactiveCursor: true,
+
+        // Time before the cursor is hidden (in ms)
+        hideCursorTime: 5000,
+
+        // Opens links in an iframe preview overlay
+        previewLinks: false,
+
+        // Transition style (none/fade/slide/convex/concave/zoom)
+        transition: 'none',
+
+        // Transition speed (default/fast/slow)
+        transitionSpeed: 'default',
+
+        // Transition style for full page slide backgrounds
+        // (none/fade/slide/convex/concave/zoom)
+        backgroundTransition: 'none',
+
+        // Number of slides away from the current that are visible
+        viewDistance: 3,
+
+        // Number of slides away from the current that are visible on mobile
+        // devices. It is advisable to set this to a lower number than
+        // viewDistance in order to save resources.
+        mobileViewDistance: 2,
+
+        // The "normal" size of the presentation, aspect ratio will be preserved
+        // when the presentation is scaled to fit different resolutions. Can be
+        // specified using percentage units.
+        width: 1050,
+
+        height: 700,
+
+        // Factor of the display size that should remain empty around the content
+        margin: 0.1,
+
+        math: {
+          mathjax: 'https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js',
+          config: 'TeX-AMS_HTML-full',
+          tex2jax: {
+            inlineMath: [['\\(','\\)']],
+            displayMath: [['\\[','\\]']],
+            balanceBraces: true,
+            processEscapes: false,
+            processRefs: true,
+            processEnvironments: true,
+            preview: 'TeX',
+            skipTags: ['script','noscript','style','textarea','pre','code'],
+            ignoreClass: 'tex2jax_ignore',
+            processClass: 'tex2jax_process'
+          },
+        },
+
+        // reveal.js plugins
+        plugins: [QuartoLineHighlight, PdfExport, RevealMenu, QuartoSupport,
+
+          RevealMath,
+          RevealNotes,
+          RevealSearch,
+          RevealZoom
+        ]
+      });
+    </script>
+    <script id="quarto-html-after-body" type="application/javascript">
+      window.document.addEventListener("DOMContentLoaded", function (event) {
+        const tabsets =  window.document.querySelectorAll(".panel-tabset-tabby")
+        tabsets.forEach(function(tabset) {
+          const tabby = new Tabby('#' + tabset.id);
+        });
+        const isCodeAnnotation = (el) => {
+          for (const clz of el.classList) {
+            if (clz.startsWith('code-annotation-')) {                     
+              return true;
+            }
+          }
+          return false;
+        }
+        const onCopySuccess = function(e) {
+          // button target
+          const button = e.trigger;
+          // don't keep focus
+          button.blur();
+          // flash "checked"
+          button.classList.add('code-copy-button-checked');
+          var currentTitle = button.getAttribute("title");
+          button.setAttribute("title", "Copied!");
+          let tooltip;
+          if (window.bootstrap) {
+            button.setAttribute("data-bs-toggle", "tooltip");
+            button.setAttribute("data-bs-placement", "left");
+            button.setAttribute("data-bs-title", "Copied!");
+            tooltip = new bootstrap.Tooltip(button, 
+              { trigger: "manual", 
+                customClass: "code-copy-button-tooltip",
+                offset: [0, -8]});
+            tooltip.show();    
+          }
+          setTimeout(function() {
+            if (tooltip) {
+              tooltip.hide();
+              button.removeAttribute("data-bs-title");
+              button.removeAttribute("data-bs-toggle");
+              button.removeAttribute("data-bs-placement");
+            }
+            button.setAttribute("title", currentTitle);
+            button.classList.remove('code-copy-button-checked');
+          }, 1000);
+          // clear code selection
+          e.clearSelection();
+        }
+        const getTextToCopy = function(trigger) {
+          const outerScaffold = trigger.parentElement.cloneNode(true);
+          const codeEl = outerScaffold.querySelector('code');
+          for (const childEl of codeEl.children) {
+            if (isCodeAnnotation(childEl)) {
+              childEl.remove();
+            }
+          }
+          return codeEl.innerText;
+        }
+        const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+          text: getTextToCopy
+        });
+        clipboard.on('success', onCopySuccess);
+        if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+          const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+            text: getTextToCopy,
+            container: window.document.getElementById('quarto-embedded-source-code-modal')
+          });
+          clipboardModal.on('success', onCopySuccess);
+        }
+          var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+          var mailtoRegex = new RegExp(/^mailto:/);
+            var filterRegex = new RegExp("https:\/\/arielortizbobea\.github\.io\/aem6850\/");
+          var isInternal = (href) => {
+              return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+          }
+          // Inspect non-navigation links and adorn them if external
+         var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+          for (var i=0; i<links.length; i++) {
+            const link = links[i];
+            if (!isInternal(link.href)) {
+              // undo the damage that might have been done by quarto-nav.js in the case of
+              // links that we want to consider external
+              if (link.dataset.originalHref !== undefined) {
+                link.href = link.dataset.originalHref;
+              }
+                // target, if specified
+                link.setAttribute("target", "_blank");
+                if (link.getAttribute("rel") === null) {
+                  link.setAttribute("rel", "noopener");
+                }
+            }
+          }
+        function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+          const config = {
+            allowHTML: true,
+            maxWidth: 500,
+            delay: 100,
+            arrow: false,
+            appendTo: function(el) {
+                return el.closest('section.slide') || el.parentElement;
+            },
+            interactive: true,
+            interactiveBorder: 10,
+            theme: 'light-border',
+            placement: 'bottom-start',
+          };
+          if (contentFn) {
+            config.content = contentFn;
+          }
+          if (onTriggerFn) {
+            config.onTrigger = onTriggerFn;
+          }
+          if (onUntriggerFn) {
+            config.onUntrigger = onUntriggerFn;
+          }
+            config['offset'] = [0,0];
+            config['maxWidth'] = 700;
+          window.tippy(el, config); 
+        }
+        const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+        for (var i=0; i<noterefs.length; i++) {
+          const ref = noterefs[i];
+          tippyHover(ref, function() {
+            // use id or data attribute instead here
+            let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+            try { href = new URL(href).hash; } catch {}
+            const id = href.replace(/^#\/?/, "");
+            const note = window.document.getElementById(id);
+            if (note) {
+              return note.innerHTML;
+            } else {
+              return "";
+            }
+          });
+        }
+        const findCites = (el) => {
+          const parentEl = el.parentElement;
+          if (parentEl) {
+            const cites = parentEl.dataset.cites;
+            if (cites) {
+              return {
+                el,
+                cites: cites.split(' ')
+              };
+            } else {
+              return findCites(el.parentElement)
+            }
+          } else {
+            return undefined;
+          }
+        };
+        var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+        for (var i=0; i<bibliorefs.length; i++) {
+          const ref = bibliorefs[i];
+          const citeInfo = findCites(ref);
+          if (citeInfo) {
+            tippyHover(citeInfo.el, function() {
+              var popup = window.document.createElement('div');
+              citeInfo.cites.forEach(function(cite) {
+                var citeDiv = window.document.createElement('div');
+                citeDiv.classList.add('hanging-indent');
+                citeDiv.classList.add('csl-entry');
+                var biblioDiv = window.document.getElementById('ref-' + cite);
+                if (biblioDiv) {
+                  citeDiv.innerHTML = biblioDiv.innerHTML;
+                }
+                popup.appendChild(citeDiv);
+              });
+              return popup.innerHTML;
+            });
+          }
+        }
+      });
+      </script>
+    
+
+</body></html>
