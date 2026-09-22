@@ -1,0 +1,35 @@
+# placements
+
+Conventions for any code written in this repository.
+
+## Layout
+
+- `code/` holds one script per task. `data/` holds what scripts read and
+  write; `data/countries.csv` is filled in by hand and never overwritten.
+- Scripts run from the project root, from a clean R session, with
+  relative paths like `"data/placements.csv"`.
+
+## Style
+
+- Base R. The only package is `rvest`, and only for reading HTML.
+- Short lower-case names with underscores: `by_year`, `n_postdoc`.
+- A number or a URL that could change sits at the top of the script as a
+  named constant in capitals: `URL <- "..."`.
+- Every script starts with a comment saying what it reads and what it
+  writes.
+- Comments say why, not what.
+- A function does one job and returns a value; the script calls it.
+
+## Facts and checks
+
+- A fact that is not on the page and not in a data file does not go into
+  code. Put it in a file under `data/` that I fill in, and use `NA` until
+  I do.
+- After a merge or a filter, check the row count with `stopifnot()`.
+
+## Working rules
+
+- Do not run scripts unless the prompt asks. I run them in RStudio.
+- Do not create files I did not ask for. Do not edit `.gitignore` or the
+  `.Rproj` file.
+- Do not use git unless the prompt asks. I commit.

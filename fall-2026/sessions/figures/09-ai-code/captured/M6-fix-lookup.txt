@@ -1,0 +1,72 @@
+⏺ Read(<project>code/placements.R)
+  ⎿ (the file)
+⏺ Bash(ls -la data/ && head -3 data/placements.csv 2>/dev/null; Rscript -e 'library(rvest)' && echo ok)
+  ⎿ total 24
+    drwxr-xr-x@ 3 ao332  wheel     96 Sep 21 23:37 .
+    drwxr-xr-x@ 8 ao332  wheel    256 Sep 21 23:39 ..
+    -rw-r--r--@ 1 ao332  wheel  10830 Sep 21 23:38 placements.csv
+    "year","name","position","organization","postdoc","country"
+    2026,"Trevor Dean Arnold","Postdoc","University of Calgary Department of Economics",TRUE,"Canada"
+    2026,"Molly Jane Doruska","Assistant Professor","Clarkson University",FALSE,"United States"
+    ok
+⏺ Reply:
+  I'll write the template file once (a one-off, so the script never overwrites your filled-in file), then change the script to read it.
+⏺ Bash(Rscript -e '
+p <- read.csv("data/placements.csv", stringsAsFactors = FALSE)
+orgs <- sort(unique(p$organization))
+write.csv(data.frame(organization = orgs, country = ""), "data/countries.csv", row.names = FALSE)
+cat(length(orgs), "organizations\n")'; head -5 data/countries.csv)
+  ⎿ 107 organizations
+    "organization","country"
+    "Acadian Asset Management",""
+    "Amherst College",""
+    "Analysis Group",""
+    "Arizona State University, School of Public Affairs",""
+⏺ Edit(<project>code/placements.R)
+  - # Country of the organization. The page does not list it, so it is inferred
+  - # from the organization name: the first matching pattern below wins, and
+  - # anything unmatched is treated as United States (the large majority).
+  - # International organizations (IMF, World Bank, IDB, USAID) are assigned the
+  - # country of their headquarters. "DTUM" is read as TUM (Munich).
+  - country_patterns <- c(
+  -   "Australia"    = "Monash|New South Wales|University of Sydney",
+  -   "Canada"       = "Alberta|Calgary|Ottawa",
+  -   "China"        = "Beijing|Peking|Renmin|Industrial and Commercial Bank of China|Xi.an Jiaotong",
+  -   "Finland"      = "Finland",
+  -   "France"       = "Paris School of Economics",
+  -   "Germany"      = "Ludwig-Maximilian|DTUM",
+  -   "Hong Kong"    = "Hong Kong",
+  -   "India"        = "Azim Premji|Indian Institute of Management|IIMA|Krea",
+  -   "New Zealand"  = "New Zealand",
+  -   "Norway"       = "Norwegian",
+  -   "Saudi Arabia" = "KAPSARC",
+  -   "Singapore"    = "Nanyang|^NUS$",
+  -   "South Korea"  = "KDI",
+  -   "Switzerland"  = "Bern",
+  -   "Vietnam"      = "VNUHCM",
+  -   "Zambia"       = "Zambia"
+  - )
+  - placements$country <- "United States"
+  - for (ctry in names(country_patterns)) {
+  -   hit <- grepl(country_patterns[[ctry]], placements$organization) &
+  -     placements$country == "United States"
+  -   placements$country[hit] <- ctry
+  - }
+  + # Country of the organization. The page does not list it, so it is looked up
+  + # in data/countries.csv (organization, country), a hand-filled file. Any
+  + # organization missing from that file, or with an empty country, gets NA.
+  + countries <- read.csv(file.path("data", "countries.csv"), stringsAsFactors = FALSE)
+  + countries$country[trimws(countries$country) == ""] <- NA
+  + placements$country <- countries$country[match(placements$organization,
+  +                                               countries$organization)]
+  ⎿ The file <project>code/placements.R has been updated successfully.
+⏺ Bash(Rscript code/placements.R && Rscript -e 'p <- read.csv("data/placements.csv"); cat("NA country:", sum(is.na(p$country)), "of", nrow(p), "\n")')
+  ⎿ Wrote 109 rows to data/placements.csv 
+    NA country: 109 of 109
+⏺ Reply:
+  Done.
+  
+  - `data/countries.csv` — 107 distinct organizations (sorted), `country` column empty for you to fill in. Written once as a one-off; the script only reads it, so it won't overwrite your entries.
+  - `code/placements.R:39-45` — the hardcoded pattern table and `"United States"` default are gone. The script now reads `data/countries.csv`, treats empty countries as NA, and assigns `country` via `match()` on the organization; unmatched organizations get NA. Nothing else changed.
+  
+  Ran it: **109 of 109 rows have NA** for `country`, as expected since the file is still blank.

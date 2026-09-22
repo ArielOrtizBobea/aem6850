@@ -1,0 +1,271 @@
+⏺ Reply:
+  The country isn't on the page, so it has to be inferred from the organization name. Let me see all the organizations.
+⏺ Bash(Rscript -e 'd <- read.csv("data/placements.csv"); o <- sort(unique(d$organization)); cat(length(o), "unique orgs\n"); writeLines(o)')
+  ⎿ 107 unique orgs
+    Acadian Asset Management
+    Amherst College
+    Analysis Group
+    Arizona State University, School of Public Affairs
+    Azim Premji University
+    Bates White Economic Consulting
+    Beijing Normal University
+    Berkeley Research Group
+    Brown
+    California State Government, South Coast Air Quality Management District
+    California State University
+    Capital One
+    Center for Governmental Research
+    Central University of Finance and Economics (Beijing)
+    Citibank
+    Clarkson University
+    Colgate University, Department of Economics
+    Cooper/Smith
+    Cornell University
+    Cornell University, Charles H. Dyson School of Applied Economics and Management
+    Dean & Company
+    DTUM
+    Dyson School, Cornell University
+    Econic Partners LLC
+    Edgeworth Economics
+    Federal Home Loan Bank of Topeka, KS
+    Fordham University, Department of Economics
+    Freddie Mac
+    Harvard Digital Value Lab
+    Harvard University
+    Holy Cross
+    Hong Kong University of Science and Technology
+    Hong Kong University of Science and Technology, Department of Economics
+    IIMA
+    IMPAQ International
+    Indian Institute of Management Bangalore
+    Industrial and Commercial Bank of China
+    InterAmerican Development Bank
+    International Monetary Fund
+    International University – VNUHCM
+    ISO New England
+    James Madison
+    Johns Hopkins University
+    KAPSARC School of Public Policy, Riyadh
+    KDI School of Public Policy and Management (Korea)
+    Krea University
+    Lincoln University in New Zealand
+    Ludwig-Maximilian University of Munich
+    Middlebury College
+    Monash University
+    Morgan Stanley
+    Nanyang Technological University
+    National Bureau of Economic Research, Claremont McKenna College
+    Natural Resources Institute Finland
+    North Carolina State University
+    Norwegian School of Economics
+    Notre Dame
+    NUS
+    Ohio State University
+    Ohio State University, Department of Agricultural, Environmental and Development Economics
+    Oregon State University, Applied Economics Department
+    Pacific Gas & Electric Company
+    Paris School of Economics
+    Peking University
+    Peking University (Beijing)
+    Princeton University
+    Purdue University, Department of Agricultural Economics
+    Renmin University of China
+    Rutgers
+    St. Mary’s College of Maryland
+    Stanford King Center
+    Stanford University Human-Centered Artificial Intelligence
+    StoneX Group
+    Stout
+    Tata-Cornell Agriculture and Nutrition Initiative
+    Tata-Cornell Institute at Cornell University
+    Temple University
+    Texas Christian University (TCU)
+    The Analysis Group
+    The Earth Institute, Columbia University
+    U.S. Department of Transportation Volpe National Transportation Systems Center Corporate Average Fuel Economy Program
+    U.S. Dept. of Agriculture, Global Commodity Analysis Division, Office of Global Analysis, Foreign Agricultural Service
+    U.S. Securities & Exchange Commission
+    Uber
+    UCLA Anderson Forecast
+    University of Alberta, Canada
+    University of Bern
+    University of Calgary Department of Economics
+    University of California, San Diego
+    University of Delaware
+    University of Evansville, Schroeder School of Business
+    University of Georgia, Department of Agricultural and Applied Economics
+    University of Illinois Urbana-Champaign
+    University of Maryland, Baltimore County
+    University of New South Wales in Sydney
+    University of Ottawa, Telfer School of Management
+    University of Rhode Island, Department of Environmental and Natural Resource Economics
+    University of Sydney, School of Economics
+    University of Washington
+    USAID
+    USDA Economic Research Service
+    Utah State University, Department of Applied Economics
+    Vitalite Zambia Limited
+    World Bank, Young Professionals Program
+    Xi’an Jiaotong-Liverpool University
+    Yale School of the Environment
+    Yale University
+⏺ Bash(Rscript -e 'd <- read.csv("data/placements.csv"); print(d[d$organization %in% c("DTUM","Cooper/Smith","Stout","Econic Partners LLC","IIMA"), ])')
+  ⎿ year                     name            position        organization
+    12 2026           Matias Navarro           Associate Econic Partners LLC
+    13 2026 Benjamin Prescott Norton           Economist               Stout
+    31 2024                Yiding Ma            post-doc                DTUM
+    73 2019          Vidya Vemireddy Assistant Professor                IIMA
+    78 2018        Erwin Knippenberg      Lead Economist        Cooper/Smith
+       postdoc
+    12   FALSE
+    13   FALSE
+    31    TRUE
+    73   FALSE
+    78   FALSE
+⏺ Edit(<project>code/placements.R)
+  - placements$postdoc <- grepl("post[- ]?doc", placements$position, ignore.case = TRUE)
+  - 
+  - dir.create
+  + placements$postdoc <- grepl("post[- ]?doc", placements$position, ignore.case = TRUE)
+  + 
+  + # Country of the organization. The page does not list it, so it is inferred
+  + # from the organization name: the first matching pattern below wins, and
+  + # anything unmatched is treated as United States (the large majority).
+  + # International organizations (IMF, World Bank, IDB, USAID) are assigned the
+  + # country of their headquarters. "DTUM" is read as TUM (Munich).
+  + country_patterns <- c(
+  +   "Australia"    = "Monash|New South Wales|University of Sydney",
+  +   "Canada"       = "Alberta|Calgary|Ottawa",
+  +   "China"        = "Beijing|Peking|Renmin|Industrial and Commercial Bank of China|Xi.an Jiaotong",
+  +   "Finland"      = "Finland",
+  +   "France"       = "Paris School of Economics",
+  +   "Germany"      = "Ludwig-Maximilian|DTUM",
+  +   "Hong Kong"    = "Hong Kong",
+  +   "India"        = "Azim Premji|Indian Institute of Management|IIMA|Krea",
+  +   "New Zealand"  = "New Zealand",
+  +   "Norway"       = "Norwegian",
+  +   "Saudi Arabia" = "KAPSARC",
+  +   "Singapore"    = "Nanyang|^NUS$",
+  +   "South Korea"  = "KDI",
+  +   "Switzerland"  = "Bern",
+  +   "Vietnam"      = "VNUHCM",
+  +   "Zambia"       = "Zambia"
+  + )
+  + placements$country <- "United States"
+  + for (ctry in names(country_patterns)) {
+  +   hit <- grepl(country_patterns[[ctry]], placements$organization) &
+  +     placements$country == "United States"
+  +   placements$country[hit] <- ctry
+  + }
+  + 
+  + dir.create
+  ⎿ The file <project>code/placements.R has been updated successfully.
+⏺ Bash(Rscript code/placements.R && Rscript -e 'd <- read.csv("data/placements.csv"); print(sort(table(d$country), decreasing = TRUE)); cat("\nnon-US orgs:\n"); print(unique(d[d$country != "United States", c("organization","country")]), row.names = FALSE)')
+  ⎿ Wrote 109 rows to data/placements.csv 
+    
+    United States         China         India     Australia        Canada 
+               77             7             4             3             3 
+          Germany     Hong Kong     Singapore       Finland        France 
+                2             2             2             1             1 
+      New Zealand        Norway  Saudi Arabia   South Korea   Switzerland 
+                1             1             1             1             1 
+          Vietnam        Zambia 
+                1             1 
+    
+    non-US orgs:
+                                                                organization
+                               University of Calgary Department of Economics
+                           University of Ottawa, Telfer School of Management
+                                               Norwegian School of Economics
+                                                  Renmin University of China
+                                                   Paris School of Economics
+                                     University of New South Wales in Sydney
+                                           Lincoln University in New Zealand
+                                     KAPSARC School of Public Policy, Riyadh
+                                           International University – VNUHCM
+                                         Natural Resources Institute Finland
+                                                                        DTUM
+                          KDI School of Public Policy and Management (Korea)
+                                                                         NUS
+                                   University of Sydney, School of Economics
+     Hong Kong University of Science and Technology, Department of Economics
+                                                             Krea University
+                                                           Peking University
+                                         Xi’an Jiaotong-Liverpool University
+                                      Ludwig-Maximilian University of Munich
+                              Hong Kong University of Science and Technology
+                                                          University of Bern
+                                                           Monash University
+                                                      Azim Premji University
+                                                                        IIMA
+                                                   Beijing Normal University
+                       Central University of Finance and Economics (Beijing)
+                                                 Peking University (Beijing)
+                                               University of Alberta, Canada
+                                    Indian Institute of Management Bangalore
+                                                     Vitalite Zambia Limited
+                                     Industrial and Commercial Bank of China
+                                            Nanyang Technological University
+          country
+           Canada
+           Canada
+           Norway
+            China
+           France
+        Australia
+      New Zealand
+     Saudi Arabia
+          Vietnam
+          Finland
+          Germany
+      South Korea
+        Singapore
+        Australia
+        Hong Kong
+            India
+            China
+            China
+          Germany
+        Hong Kong
+      Switzerland
+        Australia
+            India
+            India
+            China
+            China
+            China
+           Canada
+            India
+           Zambia
+            China
+        Singapore
+⏺ Reply:
+  Added the `country` column and re-ran (109 rows). **Rows per country:**
+  
+  | country | n |
+  |---|---|
+  | United States | 77 |
+  | China | 7 |
+  | India | 4 |
+  | Australia | 3 |
+  | Canada | 3 |
+  | Germany | 2 |
+  | Hong Kong | 2 |
+  | Singapore | 2 |
+  | Finland | 1 |
+  | France | 1 |
+  | New Zealand | 1 |
+  | Norway | 1 |
+  | Saudi Arabia | 1 |
+  | South Korea | 1 |
+  | Switzerland | 1 |
+  | Vietnam | 1 |
+  | Zambia | 1 |
+  
+  How it works: the page doesn't list countries, so the script infers them from the organization name via a small pattern table (`country_patterns` in `code/placements.R`); anything unmatched defaults to United States. The 32 non-US assignments are printed above and all look right.
+  
+  Two judgment calls to be aware of:
+  - **"DTUM"** (Yiding Ma, 2024 postdoc) isn't a real name; I read it as a typo for TUM (Technical University of Munich) → Germany. If you know otherwise, it's a one-word edit in the pattern table.
+  - **IMF, World Bank, IDB, USAID, Tata-Cornell Institute** are counted as United States (headquarters), though the work may be elsewhere.
+  
+  Hong Kong is kept separate from China; merge them in the pattern table if you'd prefer a single entry.

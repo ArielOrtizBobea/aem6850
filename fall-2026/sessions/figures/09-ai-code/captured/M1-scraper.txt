@@ -1,0 +1,147 @@
+⏺ Reply:
+  Let me look at the page structure first.
+⏺ Bash(Rscript -e '
+library(rvest)
+pg <- read_html("https://business.cornell.edu/admissions/graduate/phd-aem/for-hire/")
+tbls <- html_elements(pg, "table")
+cat("n tables:", length(tbls), "\n")
+for (i in seq_along(tbls)) { cat("--- table", i, "---\n"); print(head(html_table(tbls[[i]], header = TRUE), 4)) }
+hs <- html_elements(pg, "h2, h3, h4"); print(html_text2(hs))
+')
+  ⎿ n tables: 2 
+    --- table 1 ---
+    # A tibble: 2 × 4
+      Name           `Current position`              Organization `More information`
+      <chr>          <chr>                           <chr>        <chr>             
+    1 Tarana Chauhan Visiting Assistant Professor    Colgate Uni… Personal website  
+    2 Seungmin Lee   Postdoctoral Research Associate Pulte Insti… Personal website  
+    --- table 2 ---
+    # A tibble: 4 × 4
+       Year Name               Position                       Organization          
+      <int> <chr>              <chr>                          <chr>                 
+    1  2026 Trevor Dean Arnold Postdoc                        University of Calgary…
+    2  2026 Molly Jane Doruska Assistant Professor            Clarkson University   
+    3  2026 Sijia Fan          Assistant Professor of Finance University of Ottawa,…
+    4  2026 Adrian Haws        Postdoc                        Norwegian School of E…
+     [1] "Currently for hire"                                            
+     [2] "Apurva Borar"                                                  
+     [3] "Bingyan Dai"                                                   
+     [4] "Luc Esprabens"                                                 
+     [5] "Nicholas Grandstaff"                                           
+     [6] "Yurou He"                                                      
+     [7] "Alan Hinds"                                                    
+     [8] "Jerzy Jaromczyk"                                               
+     [9] "Vrinda Kapoor"                                                 
+    [10] "Emil Kee-Tui"                                                  
+    [11] "Xueyun Luo"                                                    
+    [12] "Anthony Ponce"                                                 
+    [13] "Kasim Saiyyad"                                                 
+    [14] "Lakshita Sharma"                                               
+    [15] "Jayen Tan"                                                     
+    [16] "Yunran Wang"                                                   
+    [17] "Motoyuki Yoshihara"                                            
+    [18] "Alumni for hire"                                               
+    [19] "Recent job placements: Ph.D. in Applied Economics & Management"
+    [20] "Information For"                                               
+    [21] "Our Schools"                                                   
+    [22] "Resources"
+⏺ Reply:
+  The second table is the placements table. Let me check how it's associated with its heading so the script selects it robustly.
+⏺ Bash(Rscript -e '
+library(rvest)
+pg <- read_html("https://business.cornell.edu/admissions/graduate/phd-aem/for-hire/")
+t2 <- html_elements(pg, "table")[[2]]
+print(html_attrs(t2))
+print(html_text2(html_element(t2, "caption")))
+d <- html_table(t2, header = TRUE); cat("rows:", nrow(d), "\n"); print(tail(d, 3)); print(table(d$Year)); print(sum(d$Name == "" | is.na(d$Name)))
+')
+  ⎿ id                          class 
+                  "tablepress-202" "tablepress tablepress-id-202" 
+                   aria-labelledby 
+             "tablepress-202-name" 
+    [1] NA
+    rows: 109 
+    # A tibble: 3 × 4
+       Year Name         Position                Organization                       
+      <int> <chr>        <chr>                   <chr>                              
+    1  2015 Lin Sun      AVP Risk Management     Industrial and Commercial Bank of …
+    2  2015 Joanna Upton Post-Doctoral Associate Dyson School, Cornell University   
+    3  2015 Jubo Yan     Assistant Professor     Nanyang Technological University   
+    
+    2015 2016 2017 2018 2019 2020 2021 2022 2023 2024 2025 2026 
+      10    8    7   11    6    7   10    6    5   14    9   16 
+    [1] 0
+⏺ Write(<project>code/placements.R)
+  # Scrape "Recent job placements" (Ph.D. in Applied Economics & Management)
+  # from the Dyson "for hire" page and save it as data/placements.csv.
+  # Uses rvest for the HTML and base R for everything else.
+  
+  library(rvest)
+  
+  url <- "https://business.cornell.edu/admissions/graduate/phd-aem/for-hire/"
+  out <- file.path("data", "placements.csv")
+  
+  page   <- read_html(url)
+  tables <- html_elements(page, "table")
+  
+  # The page has several tables (e.g. "Currently for hire"); pick the one whose
+  # header is Year / Name / Position / Organization rather than relying on its
+  # position or TablePress id.
+  wanted  <- c("year", "name", "position", "organization")
+  headers <- lapply(tables, function(tb) tolower(html_text2(html_elements(tb, "th"))))
+  hit     <- which(vapply(headers, function(h) identical(h, wanted), logical(1)))
+  if (length(hit) != 1) {
+    stop("Expected exactly one placements table with columns ",
+         paste(wanted, collapse = ", "), "; found ", length(hit))
+  }
+  
+  placements <- as.data.frame(html_table(tables[[hit]], header = TRUE),
+                              stringsAsFactors = FALSE)
+  names(placements) <- wanted
+  placements$year   <- as.integer(placements$year)
+  for (v in wanted[-1]) placements[[v]] <- trimws(placements[[v]])
+  
+  # Drop any completely empty rows (spacer rows in the table) but keep one
+  # row per graduate otherwise.
+  placements <- placements[placements$name != "", ]
+  rownames(placements) <- NULL
+  
+  dir.create(dirname(out), showWarnings = FALSE, recursive = TRUE)
+  write.csv(placements, out, row.names = FALSE)
+  
+  cat("Wrote", nrow(placements), "rows to", out, "\n")
+  ⎿ File created successfully at: <project>code/placements.R
+⏺ Bash(Rscript code/placements.R && Rscript -e 'd <- read.csv("data/placements.csv"); print(head(d, 5)); cat("rows:", nrow(d), "\n")')
+  ⎿ Wrote 109 rows to data/placements.csv 
+      year               name                                    position
+    1 2026 Trevor Dean Arnold                                     Postdoc
+    2 2026 Molly Jane Doruska                         Assistant Professor
+    3 2026          Sijia Fan              Assistant Professor of Finance
+    4 2026        Adrian Haws                                     Postdoc
+    5 2026         Jihye Jang Tenure-track Assistant Professor of Finance
+                                           organization
+    1     University of Calgary Department of Economics
+    2                               Clarkson University
+    3 University of Ottawa, Telfer School of Management
+    4                     Norwegian School of Economics
+    5                  Texas Christian University (TCU)
+    rows: 109
+⏺ Reply:
+  The script ran cleanly on the first try and wrote `data/placements.csv`.
+  
+  **First five rows:**
+  
+  | year | name | position | organization |
+  |---|---|---|---|
+  | 2026 | Trevor Dean Arnold | Postdoc | University of Calgary Department of Economics |
+  | 2026 | Molly Jane Doruska | Assistant Professor | Clarkson University |
+  | 2026 | Sijia Fan | Assistant Professor of Finance | University of Ottawa, Telfer School of Management |
+  | 2026 | Adrian Haws | Postdoc | Norwegian School of Economics |
+  | 2026 | Jihye Jang | Tenure-track Assistant Professor of Finance | Texas Christian University (TCU) |
+  
+  **Number of rows:** 109 (graduates from 2015–2026).
+  
+  Notes on `code/placements.R`:
+  - The page has two tables (the "Currently for hire" table comes first), so the script picks the table whose header is exactly Year / Name / Position / Organization rather than hard-coding its position or TablePress id.
+  - It errors out loudly if it doesn't find exactly one such table, so a future page change won't silently write the wrong data.
+  - `data/` is created if missing; `year` is stored as an integer and text columns are trimmed.

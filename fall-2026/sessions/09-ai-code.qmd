@@ -24,22 +24,25 @@ format:
 
 [Slides](09-ai-code-slides.html) · [Source](https://github.com/ArielOrtizBobea/aem6850/blob/main/fall-2026/sessions/09-ai-code.qmd)
 
-What a coding agent in your terminal has in front of it that a chat
-window or Cowork does not; how to hand it one function; and how to know
-whether what came back is right. State the goal and the mistake to
-avoid; work out the answer by hand on a small case; run it, read the
-diff, and leave the check in the script. Every step runs in RStudio's
-Terminal tab inside a git repository.
+How to work with a coding agent in your terminal as a fast research
+assistant that needs clear instructions and close supervision. The first
+part says what it has in front of it that a chat window does not, and
+what you decide before it writes a line. The second part builds a small
+project from an empty folder: a scraper for the Dyson School's Ph.D.
+placements page, a postdoc flag, a country column, and the moment the
+tool fills a column from memory. The third part writes the project's
+`CLAUDE.md` and a read-only reviewer agent. Every step runs in RStudio's
+Terminal tab.
 
 :::
 
 ::: {.content-hidden when-format="revealjs"}
 
-::: {#before-class .callout-important title="Before class: install Claude Code, log in, and make the practice repository"}
+::: {#before-class .callout-important title="Before class: install Claude Code, log in, and install rvest"}
 
-About twenty-five minutes, once, on the laptop you bring. Claude Code
-is not on the free plan; it needs a paid Claude plan. Do all six steps;
-step 6 is the test.
+About fifteen minutes, once, on the laptop you bring. Claude Code is not
+on the free plan; it needs a paid Claude plan. Do all five steps; step 5
+is the test.
 
 **1. Subscribe to Claude Pro.** You will get a lot out of it this
 semester; it is worth the investment. Cornell is working on access for
@@ -67,69 +70,39 @@ installed from does not see the new program.
 
 **3. Check the install.** **Tools → Terminal → New Terminal**, type
 `claude --version`, Enter. It prints a version number followed by
-`(Claude Code)`. `command not found`: quit
-and reopen RStudio. Windows, still not found: add
-`%USERPROFILE%\.local\bin` to your user PATH, then quit and reopen
-RStudio. Windows, and `claude` opens the Claude desktop app instead:
-update the desktop app, then retry.
+`(Claude Code)`. `command not found`: quit and reopen RStudio. Windows,
+still not found: add `%USERPROFILE%\.local\bin` to your user PATH, then
+quit and reopen RStudio. Windows, and `claude` opens the Claude desktop
+app instead: update the desktop app, then retry.
 
-**4. Open or make the practice repository.** If a folder
-`github/gapminder-practice` already exists on your laptop, open it
-(**File → Open Project**, then its `.Rproj` file) and go to step 5.
-Otherwise make it: **File → New Project → New Directory → New Project.**
-Directory name `gapminder-practice`; *Create project as subdirectory of*
-`~/github`; tick **Create a git repository**; **Create Project**. On Windows type `C:/Users/<your Windows username>/github` for
-the parent folder; do not click Browse, which opens Documents, a folder
-OneDrive often syncs. Then, in RStudio's **Console** (not the Terminal),
-Enter after each line:
+**4. Install rvest.** In RStudio's **Console** (not the Terminal), Enter
+after each line:
 
 ```r
-install.packages("gapminder")
-dir.create("data")
-write.csv(gapminder::gapminder, "data/gapminder.csv", row.names = FALSE)
-nrow(read.csv("data/gapminder.csv"))
-#> [1] 1704
+install.packages("rvest")
+library(rvest)
 ```
 
-`install.packages()` prints a few lines first; the `1704` is the test.
+The second line prints nothing when the install worked.
 
-**5. Commit once.** **Tools → Terminal → New Terminal**; the prompt ends
-in `gapminder-practice`. Enter after each line:
-
-```bash
-git status
-#> Untracked files:
-#>         .gitignore
-#>         data/
-#>         gapminder-practice.Rproj
-git add -A
-git commit -m "Add the Gapminder table"
-git status
-#> On branch main
-#> nothing to commit, working tree clean
-```
-
-If the first `git status` says `fatal: not a git repository`, run
-`git init` and start the block again. If it prints `nothing to commit,
-working tree clean`, the folder is already committed: go to step 6.
-
-*Lines without `#>` you type. Lines with `#>` are what the program
-prints.* `main` may read `master` on your laptop; both are fine. If git
-asks who you are, run `git config --global user.name "Your Name"` and
-`git config --global user.email "netid@cornell.edu"`, then commit again.
-
-**6. Log in (the test).** In the same Terminal tab, type `claude`, Enter.
-The first run asks a few set-up questions; take the default text style.
-When it asks how to log in, choose the subscription login. Your browser
-opens a Claude sign-in page: sign in with the account from step 1 and
-follow the prompts back to the Terminal. When it asks whether you trust
-this folder, **No, exit** is highlighted: press the down arrow once to
-*Yes, I trust this folder*, Enter. A welcome screen names the version,
-the model and your plan, and a folder ending in `gapminder-practice`.
-Type `/exit`, Enter. That is a pass. Anything else: the "Things that
-bite" table at the end of this page lists the fixes; still stuck, bring
-the laptop to class ten minutes early. Commit anything else you add to
-the folder before class, so that `git status` prints clean.
+**5. Make the folder and log in (the test).** **File → New Project → New
+Directory → New Project.** Directory name `placements`; *Create project
+as subdirectory of* a folder you choose (`~/github` if you have one; on
+Windows type `C:/Users/<your Windows username>/github` rather than
+clicking Browse, which opens a folder OneDrive often syncs); do **not**
+tick *Create a git repository*; **Create Project**. Then **Tools →
+Terminal → New Terminal**; the prompt ends in `placements`. Type
+`claude`, Enter. The first run asks a few set-up questions; take the
+default text style. When it asks how to log in, choose the subscription
+login. Your browser opens a Claude sign-in page: sign in with the
+account from step 1 and follow the prompts back to the Terminal. When
+it asks whether you trust this folder, **No, exit** is highlighted:
+press the down arrow once to *Yes, I trust this folder*, Enter. A
+welcome screen names the version, the model and your plan, and a folder
+ending in `placements`. Type `/exit`, Enter. That is a pass. Anything
+else: the "Things that bite" table at the end of this page lists the
+fixes; still stuck, bring the laptop to class ten minutes early. Leave
+the folder as it is; class starts from it.
 
 :::
 
@@ -141,16 +114,15 @@ By the end of this session you can:
 
 - Explain what Claude Code has in front of it that a chat window does
   not: every file in the folder, a terminal, git, and `CLAUDE.md`.
-- Start Claude Code in manual mode inside an RStudio project, read the
-  trust question and the status line, and send a read-only prompt.
-- Delegate one function in one file: state the goal and the mistake to
-  avoid, work out one case by hand, run the script, and compare.
+- Start Claude Code in manual mode in an empty RStudio project and have
+  it initialize the git repository.
+- Delegate one task at a time with a count you can do by hand on the
+  source page, let the tool run the script, and compare.
 - Read the approval box and `git diff` before accepting an edit, and
-  answer the five questions about it.
-- Write the hand check into the script and commit it with a message
-  that says who wrote what.
-- Put the check in the prompt and let the tool run until it passes, or
-  hand a review to a read-only subagent, and say when each fits.
+  find a value the tool typed from memory rather than read from the
+  page.
+- Write a `CLAUDE.md` for the project and a read-only reviewer agent,
+  and say what each one changes.
 
 ::: {.content-visible when-format="revealjs"}
 
@@ -164,20 +136,20 @@ exercises.
 ## Plan for today {#plan}
 
 1. Chat, Cowork, Claude Code: one model, three harnesses
-2. Starting Claude Code in the repository
-3. The five-step loop and the four-part prompt
-4. Delegating one function
-5. Reading the diff, the patch, the check
-6. Version control from inside the agent
-7. CLAUDE.md: standing instructions and your style
-8. Loops and subagents: the tool checks itself
-9. A clean run that is wrong
+2. What you decide and what it does
+3. A project from an empty folder: launch, git, the scraper
+4. Two more columns: a postdoc flag, a country column
+5. Where the countries came from
+6. CLAUDE.md: the project's standing instructions
+7. A read-only reviewer agent
+8. Tasks not to give it; practice
 
 ::: {.content-visible when-format="revealjs"}
 
 ::: {.notes}
-The projector shows a captured run. The typing happens on your laptop,
-in the two exercises.
+The projector shows the instructor's terminal. Every prompt is on a
+slide, paste-ready; every result on a slide is from the captured run,
+so a laptop that falls behind can read what came back.
 :::
 
 :::
@@ -262,10 +234,9 @@ text, and the model decides the next step. That repeats until nothing
 is left to do; then you get a reply. Anthropic's page [How Claude Code
 works](https://code.claude.com/docs/en/how-claude-code-works) describes
 the same loop in three phases: gather context, take action, verify
-results. For most of this page the third phase is yours: the
-delegations tell the tool not to run the script, in the prompt or in
-`CLAUDE.md`, and you run it in RStudio. The section on loops hands that
-phase to the tool, with a check it can run.
+results. In today's project the tool runs the script and fixes it when
+it fails; the third phase is still yours, because only you know the
+number the script must reproduce.
 
 In manual mode the loop stops at every edit and at every command that
 changes something and asks you; reading is free. You can stop it too:
@@ -283,6 +254,8 @@ the files, the commits, and `CLAUDE.md`.
 - Its edits land on disk, not in a chat.
 - It can run commands, including git.
 - It shows every edit as a diff before it lands. You accept or refuse.
+- Anything it reads goes to Anthropic's servers. Restricted data stays
+  out; develop on a public or synthetic sample.
 - What is right is still your call.
 
 ::: {.content-visible when-format="revealjs"}
@@ -299,8 +272,161 @@ Four things change. It can read any file in the repository, so what it
 sees is not what you pasted but what is on disk. Its edits land on disk,
 not in a chat window. It can run commands, including scripts and git.
 Every edit appears as a diff before it lands; that diff is the one thing
-you must read. The verification is yours; the tool has no way to compare
-the number it produced with the number you meant.
+you must read. Anything it reads is sent to Anthropic's servers for
+processing, so check your data use agreements before pointing it at
+confidential files; the practical workaround is to let it develop the
+code on a synthetic or public sample with the same structure, and to
+run the final code yourself on the restricted data. The verification is
+yours; the tool has no way to compare the number it produced with the
+number you meant.
+
+:::
+
+## You decide the question; it writes the code {#you-decide}
+
+- It is strong at writing, refactoring and debugging code. It is weak
+  at judging whether a specification answers your question.
+- Decide the estimand, the sample, the weights, the fixed effects and
+  the clustering yourself. Then ask it to implement them.
+- Let it choose and it picks something plausible. Plausible is not the
+  same as right.
+- A fact it did not read is a guess: a function's arguments, a
+  citation, a country. Check the documentation, the paper, the page.
+- You must be able to explain every line. Ask it to explain rather
+  than write, and it becomes a tutor.
+
+::: {.content-visible when-format="revealjs"}
+
+::: {.notes}
+Treat it as a fast, capable research assistant that needs clear
+instructions and close supervision. The third bullet is today's
+project: a country column.
+:::
+
+:::
+
+::: {.content-hidden when-format="revealjs"}
+
+Claude Code is most useful when you treat it as a fast, capable
+research assistant that needs clear instructions and close
+supervision. It is strong at writing, refactoring and debugging code.
+It is weaker at judging whether a specification answers your question.
+So you own the identification and it owns the plumbing: decide the
+estimand, the fixed effects, the clustering and the sample restrictions
+yourself, then ask it to implement them. If you let it choose, it will
+pick something plausible, and plausible is not the same as right.
+
+The same rule covers facts. It can misremember a function's arguments,
+especially in less common packages; it can cite papers that do not
+exist or misstate what they found; it can fill a column with countries
+it never read anywhere. Check documentation and citations yourself, and
+treat any value it did not read from your data or your page as a guess
+until you have checked it. Today's project shows this with a country
+column.
+
+For students, understanding comes first. It is possible to produce
+working code without understanding it. The rule in this course is that
+you can explain every line of code in your analysis. Ask the tool to
+explain its code rather than only write it; that turns it into a tutor.
+A line you still cannot explain after the explanation is a line to
+replace with one you can.
+
+:::
+
+## The main risk is silent errors, not crashes {#silent-errors}
+
+- Code that fails is easy to fix. Code that runs and is wrong is the
+  danger.
+- The usual shapes: a merge that drops or duplicates rows; `NA`s
+  handled silently; a unit mismatch; an estimation call that differs a
+  little from what you asked.
+- Three defenses: explicit checks, `stopifnot()` on row counts, unique
+  keys and value ranges; estimators tried on simulated data with known
+  parameters; the merge and the regression call read by you.
+- Git is the safety net: commit before each task, read the diff after
+  it, `git restore` puts a file back.
+
+::: {.content-visible when-format="revealjs"}
+
+::: {.notes}
+Every defense is something you do. The tool can write the check; it
+cannot decide what the right row count is.
+:::
+
+:::
+
+::: {.content-hidden when-format="revealjs"}
+
+Code that fails is easy to fix: the error names the line. Code that
+runs but is wrong is the real danger, and it is the common case with a
+tool that writes plausible code quickly. The usual shapes are a merge
+that drops or duplicates rows, `NA`s handled in a way you did not
+expect, a unit mismatch, and an estimation call that differs slightly
+from what you asked for: a different standard error, a sample
+restriction applied one step too late.
+
+Three defenses, all yours. Ask for explicit checks, `stopifnot()` on
+row counts after a merge, on unique keys, on value ranges; the tool
+writes them well once you name the number. Test estimators on
+simulated data with known parameters before running them on real data;
+if the estimate does not recover the parameter you planted, the code is
+wrong, whatever the transcript says. And read the key lines yourself,
+the merges and the regression call above all.
+
+Git is the safety net around all of it. Commit before each task, so the
+diff afterwards is exactly what the tool did. Review that diff. Claude
+Code edits many files quickly, and git is what lets you see what
+changed and roll back with `git restore`. If you do not use git yet,
+this tool is the best reason to start.
+
+:::
+
+## Small tasks, short sessions, a plan before code {#small-tasks}
+
+- One well-defined task per session: "build the county-year panel",
+  "write the event-study plot". "Do the analysis" produces large vague
+  code.
+- Performance drops as the context fills with old material. `/clear`
+  between unrelated tasks.
+- Anything with a merge or a panel build: "Describe your approach
+  before writing any code." Read the plan; fix misunderstandings there,
+  where they are cheap.
+- Conventions you would otherwise repeat go in `CLAUDE.md`, once: base
+  R only, never touch `data/raw/`, relative paths, a clean session, a
+  master script, seeds, `sessionInfo()` saved with results.
+
+::: {.content-visible when-format="revealjs"}
+
+::: {.notes}
+Plan mode exists for the third bullet; the sentence works in any mode.
+CLAUDE.md is the sixth part of today.
+:::
+
+:::
+
+::: {.content-hidden when-format="revealjs"}
+
+Keep tasks small and sessions short. Everything the model has in front
+of it competes for its attention, and performance drops as the context
+fills with old material. Give one well-defined task per session, such
+as "build the county-year panel" or "write the event-study plot", and
+use `/clear` between unrelated tasks. Large vague requests like "do the
+analysis" produce large vague code that nobody can check.
+
+Plan before it writes code. For anything nontrivial, use plan mode
+(Shift+Tab cycles to it) or simply write "Describe your approach before
+writing any code." Read the plan. Fix misunderstandings at that stage,
+when they are cheap. This habit matters most for data construction
+steps like merges and panel building, and today's project shows what
+it would have caught.
+
+Build reproducibility in from the start, as standing rules rather than
+reminders: a master script that runs the whole pipeline in order,
+package versions locked (`renv` is one way), a seed for anything
+stochastic, `sessionInfo()` saved with the results. The tool follows
+such rules reliably once they are written in `CLAUDE.md`, the file it
+reads at the start of every session; the sixth part of this page writes
+one for the project.
 
 :::
 
@@ -310,7 +436,8 @@ the number it produced with the number you meant.
   prompt; afterwards the diff is exactly what the model did.
 - **Trust the diff, not the transcript.** What it did, not what it says
   it did.
-- You read every diff before you commit.
+- Commit before each task; read every diff before you commit;
+  `git restore` puts a file back.
 
 ::: {.content-visible when-format="revealjs"}
 
@@ -330,6 +457,132 @@ the diff shows afterwards is the model's, and none is yours. Rule two:
 trust the diff, not the transcript. The transcript says what the tool
 claims it did. The diff shows what it did. When they disagree, the diff
 wins.
+
+:::
+
+## The four parts of a delegation prompt {#prompt-shape}
+
+- **Goal**: the function's name, inputs, and what it returns.
+- **Failure mode**: the mistake to avoid, named.
+- **Artifact and path**: `code/<name>.R`.
+- **What not to do**: no run, no other files, no git.
+- Paste it exactly. Do not paraphrase.
+
+::: {.content-visible when-format="revealjs"}
+
+::: {.notes}
+Part two is the one novices leave out, and you will see in ten minutes
+what happens without it.
+:::
+
+:::
+
+::: {.content-hidden when-format="revealjs"}
+
+A prompt to a coding tool has four parts, in any order. The goal: what
+the function takes and returns, with names. The failure mode: the
+mistake a reasonable reader could make, named. The artifact and its
+path: which file, where. What not to do: do not run it, do not create
+other files, do not use git. The fourth part is what keeps the diff
+small enough to read. Every prompt on this page is the exact text;
+paste it, do not paraphrase it.
+
+:::
+
+## Scoping a delegation: one task, one file {#scoping}
+
+| Too big to check | Right-sized |
+|:--|:--|
+| "Do my analysis of the placements." | "Write `code/placements.R`: the table at ... saved as `data/placements.csv`, four columns." |
+| "Make a report on placements." | "Add a column `postdoc`: TRUE when the position is a postdoc. Change nothing else." |
+| "Fix my script." | "Only the country column is wrong; replace the table in the code with a data file I fill in." |
+
+::: {.content-visible when-format="revealjs"}
+
+- If you cannot count one case on the page, the delegation is too large.
+
+::: {.notes}
+One function, one file, one case you can do on paper. Bigger tasks are
+this, several times.
+:::
+
+:::
+
+::: {.content-hidden when-format="revealjs"}
+
+You cannot check "Do my analysis of the placements", because nothing
+about it has a value you can count. "Add a column `postdoc`" can, with
+the browser's find box. The unit of delegation is one task with one
+output and one small case, in one file. A bigger task is several of
+these in a row, each checked before the next, and one per session.
+
+:::
+
+## Three questions before you delegate {#three-tests}
+
+1. Can you name the failure mode?
+2. Can you count one case by hand, on the page or in rows you can see?
+3. Can you read the whole diff in five minutes?
+
+- Any no: split the task.
+
+::: {.content-visible when-format="revealjs"}
+
+::: {.notes}
+If any answer is no, split the task.
+:::
+
+:::
+
+::: {.content-hidden when-format="revealjs"}
+
+Before pasting, three questions. Can you name the failure mode? Can you
+count one case by hand, on the page or in rows you can see? Can you read
+the diff in five minutes? A no to any of them means the task is too large; split
+it until all three are yes.
+
+:::
+
+## The project: the Ph.D. placements page, from an empty folder {#project}
+
+- The page: [Recent job placements, Ph.D. in Applied Economics & Management](https://business.cornell.edu/admissions/graduate/phd-aem/for-hire/).
+  One table: year, name, position, organization. 109 rows when captured.
+- Four prompts, one task each: initialize git; scrape the table; a
+  postdoc flag; a country column. Then: where the countries came from.
+- This time the prompts say run it. The tool runs the script and fixes
+  it; you check every number against the page.
+- The folder: `placements`, no git yet. Once, in the Console:
+  `install.packages("rvest")`.
+
+::: {.content-visible when-format="revealjs"}
+
+::: {.notes}
+A public page, one table, and a column the page does not have. The
+instructor's terminal is on the projector; the slides carry the prompts
+and what came back.
+:::
+
+:::
+
+::: {.content-hidden when-format="revealjs"}
+
+The project is small and real. The Dyson School lists its recent Ph.D.
+placements on one public page as a table with four columns: year, name,
+position, organization. We scrape it into a CSV, add a column that
+flags postdocs, and add a column with the country of each organization.
+The page does not state the country, and that is the point of the
+third prompt.
+
+Two things differ from a chat. The prompts tell the tool to run the
+script and fix it when it fails, so the tool is the loop; your job is
+the check, a number you count on the page before you believe the
+number on the screen. And everything starts from an empty folder: no
+repository, no script, nothing the tool did not write in front of you.
+
+Every prompt on this page is the exact text of one captured run on
+2026-09-21, and every number is from that run: 109 rows, 16 of them in
+2026, 25 postdocs. The page grows every year, so the numbers on your
+screen will differ. The prompts, the checks and the lesson do not.
 
 :::
 
@@ -359,7 +612,7 @@ the same tab they used for git; say so here, not on the page.
 
 ::: {.content-hidden when-format="revealjs"}
 
-![One RStudio window: Claude Code in the Terminal tab, the Console free for running scripts, the Files pane showing what was written.](figures/09-ai-code/S12-rstudio-terminal-claude.png){fig-align="center" fig-alt="The RStudio window with the gapminder-practice project open: the Terminal tab showing the Claude Code welcome screen, the Console beside it, and the Files pane, each circled in red."}
+![One RStudio window: Claude Code in the Terminal tab, the Console free for running scripts, the Files pane showing what was written. The project on screen is another one; the layout is the same.](figures/09-ai-code/S12-rstudio-terminal-claude.png){fig-align="center" fig-alt="The RStudio window with the gapminder-practice project open: the Terminal tab showing the Claude Code welcome screen, the Console beside it, and the Files pane, each circled in red."}
 
 Claude Code runs in RStudio's Terminal tab, the tab where git commands
 go, opened inside the project so the folder it sees is the repository.
@@ -368,52 +621,6 @@ always run: Session → Restart R, then Source. The Files pane shows what
 it wrote. Enlarge the Terminal pane before a prompt: drag the divider
 up, or use the maximize icon in the pane's corner. An approval box for a
 twenty-line file does not fit the default pane.
-
-:::
-
-## git status before you start {#clean-start}
-
-```bash
-git status
-#> On branch main
-#> nothing to commit, working tree clean
-git log --oneline
-#> 4993e56 Add the Gapminder table
-```
-
-::: {.content-visible when-format="revealjs"}
-
-- Clean tree, one commit. Anything listed: commit it first.
-- Claude Code can read everything in this folder.
-- Never in that folder: licensed data, other students' work, personal
-  information.
-
-::: {.notes}
-Rule one, applied. The hash on your screen is yours; the message is the
-same. Before you type `claude`, look at the Files pane: everything in it
-is what you are about to show the tool.
-:::
-
-:::
-
-::: {.content-hidden when-format="revealjs"}
-
-Open the project (File → Recent Projects →
-`gapminder-practice`), then Tools → Terminal → New Terminal. The prompt
-ends in the project name. `git status` must be clean, and `git log
---oneline` shows the commits made so far (the hashes on your laptop
-differ). If `git status` lists anything, commit it first; a
-prompt sent to a dirty tree means you cannot tell later which lines were
-yours.
-
-The folder is the tool's entire view, and it can read everything in it.
-The syllabus rule applies with no exceptions: no licensed data, no other
-students' work, no personal information in a folder you open Claude
-Code in. A practice repository with a public file is the right place to
-learn. `gapminder.csv` is CC BY 4.0 (gapminder.org via the
-[`gapminder`](https://cran.r-project.org/package=gapminder) R package);
-anyone may read it. A graded repository is the right place only once
-the routine is automatic and the data is public.
 
 :::
 
@@ -459,7 +666,7 @@ mode.
 ![](figures/09-ai-code/S01-trust-folder.png){width="100%" fig-alt="Claude Code's first screen in a folder: Accessing workspace, the folder path /Users/ao332/github/gapminder-practice, a quick safety check paragraph, and the two answers No, exit (highlighted) and Yes, I trust this folder."}
 :::
 ::: {.column width="40%"}
-1. **The path**: must end in `gapminder-practice`
+1. **The path**: must end in `placements`
 2. **No, exit** is highlighted
 3. **↓ once, then Enter**
 4. Asked once per folder
@@ -468,14 +675,15 @@ mode.
 
 ::: {.notes}
 Read the path before you press anything. If it is your home folder, you
-are about to trust a tool with everything in it.
+are about to trust a tool with everything in it. The screen is from
+another folder; yours ends in placements.
 :::
 
 :::
 
 ::: {.content-hidden when-format="revealjs"}
 
-![The trust question. Read the path; the highlighted answer is No, exit.](figures/09-ai-code/S01-trust-folder.png){fig-align="center" fig-alt="Claude Code's first screen in a folder: Accessing workspace, the folder path /Users/ao332/github/gapminder-practice, a quick safety check paragraph, and the two answers No, exit (highlighted) and Yes, I trust this folder."}
+![The trust question. Read the path; the highlighted answer is No, exit. The screen is from another folder; yours ends in `placements`.](figures/09-ai-code/S01-trust-folder.png){fig-align="center" fig-alt="Claude Code's first screen in a folder: Accessing workspace, the folder path /Users/ao332/github/gapminder-practice, a quick safety check paragraph, and the two answers No, exit (highlighted) and Yes, I trust this folder."}
 
 The first launch in a folder asks whether you trust it. The highlighted
 answer is **No, exit**. Press the down arrow once to **Yes, I trust this
@@ -496,7 +704,7 @@ New Terminal from inside the project fixes it.
 ::: {.column width="40%"}
 1. **Version**: the number varies; any current one
 2. **Model · plan**: the model in use and your plan; wording varies
-3. **Folder**: ends in `gapminder-practice`
+3. **Folder**: ends in `placements`
 4. **`❯`**: type here, Enter sends
 5. **Status line**: `⏸ manual mode on`
 :::
@@ -516,7 +724,8 @@ nothing else on this screen matters yet.
 Four lines matter: the version; the model and plan (yours differ from
 the captured account's); the folder; and
 the status line, `⏸ manual mode on`. The folder must end in
-`gapminder-practice` (on Windows it starts with `C:/Users/`). The `❯` is
+`placements` (on Windows it starts with `C:/Users/`); the captured
+screen shows another folder. The `❯` is
 where a prompt goes; Enter sends it.
 
 Every Claude Code screen on this page comes from real runs, captured in
@@ -527,56 +736,83 @@ the code. The steps do not.
 
 :::
 
-## Two read-only first prompts {#first-prompt}
+## Prompt 0: initialize git from inside the tool {#prompt-git-init}
 
-```{.markdown filename="Prompt 1, to paste into Claude Code"}
-List every file in this repository, folder by folder, with its size.
-Do not edit anything.
-```
-
-```{.markdown filename="Prompt 2, to paste into Claude Code"}
-How many rows does data/gapminder.csv have, and what are its columns?
-Do not edit anything.
+```{.markdown filename="Prompt to paste into Claude Code (captured run)"}
+Initialize a git repository in this folder, add a .gitignore for an RStudio
+project (.Rproj.user, .Rhistory, .RData), and commit everything with the
+message "New project".
 ```
 
 ::: {.content-visible when-format="revealjs"}
 
-- Prompt 1: it reads the folder. No edit box. Compare with the Files pane.
-- Prompt 2: it opens the file itself. A box for `head` or `wc` may
-  appear: a tool call. Read it, `1. Yes`.
-- The reply: 1704 rows; country, continent, year, lifeExp, pop, gdpPercap.
+:::: {.columns}
+::: {.column width="50%"}
+![](figures/09-ai-code/S10-git-commit-dialog.png){width="100%" fig-alt="A Bash command approval box from another project: the exact git add, git commit and git status command, the line This command requires approval, and the answers 1. Yes, 2. Yes and don't ask again for git, 3. Yes and switch to auto mode, 4. No."}
+:::
+::: {.column width="50%"}
+1. **Create file** box for `.gitignore`: `1. Yes`
+2. **Bash command** box: the exact git line. Read it, `1. Yes`
+3. Terminal 2: `git log --oneline`, one commit
+:::
+::::
 
 ::: {.notes}
-Reading never asks. Anything that changes a file stops and asks first.
-Prompt 2 is the loop from the diagram, in one turn: a read, the result
-back to the model, the reply.
+The box is from another project; the shape is the same. Two boxes
+today: a file and a command. Auto mode would have asked for neither.
+Its commit message carries a Co-Authored-By line naming the model.
 :::
 
 :::
 
 ::: {.content-hidden when-format="revealjs"}
 
-The first prompt changes nothing; it proves the tool sees the
-repository. A prompt that ends with "Do not edit anything" does not
-trigger an edit box, because reading is free in manual mode. A box may
-still appear for a listing command such as `ls` or `find`; read the
-command, then `1. Yes`. The reply lists at least `.gitignore`,
-`gapminder-practice.Rproj` and `data/gapminder.csv` with their sizes
-(often `.git/` and `.Rproj.user/` too), in whatever layout that run
-chose. Paste into the Terminal tab with Cmd+V on a Mac, Ctrl+V on
-Windows. A long prompt may collapse to one line, `[Pasted text #1 +N
-lines]`; that is the whole prompt. Compare the reply with the Files
-pane: same files, same folders.
+![A *Bash command* box. The screen is from another project; the box is the same.](figures/09-ai-code/S10-git-commit-dialog.png){fig-align="center" fig-alt="A Bash command approval box from another project: the exact git add, git commit and git status command, the line This command requires approval, and the answers 1. Yes, 2. Yes and don't ask again for git, 3. Yes and switch to auto mode, 4. No."}
 
-The second prompt is the loop of the previous section in one turn. The
-model cannot see the file until a tool opens it, so it reads the file
-or asks to run `head` and `wc -l` on it; a *Bash command* box with such
-a command is a tool call, and `1. Yes` lets it run. The result comes
-back to the model and the reply follows: 1704 rows and six columns,
-country, continent, year, lifeExp, pop and gdpPercap. Both are
-checkable against what you printed before class. Then `git status` in a
-second Terminal tab (next section) prints clean, which is the proof
-that two read-only prompts read only.
+The first prompt asks the tool to do what you would otherwise type:
+`git init`, a `.gitignore`, a first commit. In the captured run it
+listed the folder, wrote `.gitignore` (a *Create file* box, three
+lines), then ran one command, `git init && git add -A && git commit -m
+... && git log --oneline && git status`, shown in full in a *Bash
+command* box before it ran. `1. Yes` runs it; the other answers turn
+the asking off, for git or for everything; leave them. The reply named
+the commit and said the tree was clean. Check it yourself in a second
+Terminal tab (next section): `git log --oneline` prints one commit.
+
+One detail to know: a commit the tool makes carries a `Co-Authored-By`
+line in the message naming the model. That is a fair record of who
+wrote what, and it belongs in your disclosure too.
+
+::: {.callout-tip collapse="true"}
+## The captured transcript
+
+````{.default}
+⏺ Bash(ls -la <project>)
+  ⎿ total 8
+    drwxr-xr-x@  3 ao332  wheel    96 Sep 21 23:36 .
+    drwx------@ 47 ao332  wheel  1504 Sep 21 23:36 ..
+    -rw-r--r--@  1 ao332  wheel    89 Sep 21 23:36 placements.Rproj
+⏺ Write(<project>.gitignore)
+  .Rproj.user
+  .Rhistory
+  .RData
+  ⎿ File created successfully at: <project>.gitignore
+⏺ Bash(git init && git add -A && git commit -m "New project
+
+Co-Authored-By: Claude Opus 5 (1M context) <noreply@anthropic.com>" && git log --oneline && git status)
+  ⎿ Initialized empty Git repository in <project>.git/
+    [main (root-commit) 36333d3] New project
+     2 files changed, 7 insertions(+)
+     create mode 100644 .gitignore
+     create mode 100644 placements.Rproj
+    36333d3 New project
+    On branch main
+    nothing to commit, working tree clean
+⏺ Reply:
+  Done. Git repo initialized on `main`, `.gitignore` added with `.Rproj.user`, `.Rhistory`, `.RData`, and the initial commit `36333d3 "New project"` contains `.gitignore` and `placements.Rproj`. Working tree is clean.
+````
+
+:::
 
 :::
 
@@ -620,9 +856,9 @@ Terminal → New Terminal, then again.
 
 ![](figures/09-ai-code/D1-five-step-loop.svg){fig-align="center" height="250" fig-alt="Five boxes left to right: 1 Explain, the goal and the failure mode; 2 Delegate, one function, one file; 3 Work it out, one small case by hand; 4 Verify, run, compare, read the diff; 5 Keep, the hand check as a line in the script. A dashed red arrow from box 4 back to box 2 reads: they disagree, ask for a patch, then verify again."}
 
-- Today: the population-weighted mean of `lifeExp` by continent.
-- On paper, Oceania 2007: 81.06. The trap: 80.72.
-- The permanent check: the hand check written into the script.
+- Today: a table scraped from a page, then two columns.
+- On the page: one year's rows; three spellings of postdoc.
+- The permanent check: the counts written into the script, dated.
 
 ::: {.notes}
 Step three is the one people skip. Without a value on paper, step four
@@ -636,9 +872,9 @@ is only watching a script run.
 ![The five-step delegation loop. When the value on paper and the printed value disagree, the arrow goes back to step 2 as a patch request.](figures/09-ai-code/D1-five-step-loop.svg){fig-align="center" fig-alt="Five boxes left to right: 1 Explain, the goal and the failure mode; 2 Delegate, one function, one file; 3 Work it out, one small case by hand; 4 Verify, run, compare, read the diff; 5 Keep, the hand check as a line in the script. A dashed red arrow from box 4 back to box 2 reads: they disagree, ask for a patch, then verify again."}
 
 Every delegation runs the same five steps. State the goal and the
-mistake you do not want (the failure mode). Delegate one function. Work
-out by hand what it must return on a case small enough to check, from
-rows you can see, before anything runs. Run it and compare the printed
+mistake you do not want (the failure mode). Delegate one task. Count by
+hand what it must return on a case small enough to check, on the page
+or from rows you can see, before anything runs. Run it and compare the printed
 value with the one on paper; if they disagree, read the diff, ask for a
 patch, run again. Then write the hand check into the script as a line
 that stops it when the value drifts (`stopifnot()`), so the next run
@@ -659,131 +895,207 @@ person.
 
 :::
 
-## The four parts of a delegation prompt {#prompt-shape}
-
-- **Goal**: the function's name, inputs, and what it returns.
-- **Failure mode**: the mistake to avoid, named.
-- **Artifact and path**: `code/<name>.R`.
-- **What not to do**: no run, no other files, no git.
-- Paste it exactly. Do not paraphrase.
-
-::: {.content-visible when-format="revealjs"}
-
-::: {.notes}
-Part two is the one novices leave out, and you will see in ten minutes
-what happens without it.
-:::
-
-:::
-
-::: {.content-hidden when-format="revealjs"}
-
-A prompt to a coding tool has four parts, in any order. The goal: what
-the function takes and returns, with names. The failure mode: the
-mistake a reasonable reader could make, named. The artifact and its
-path: which file, where. What not to do: do not run it, do not create
-other files, do not use git. The fourth part is what keeps the diff
-small enough to read. Every prompt on this page is the exact text;
-paste it, do not paraphrase it.
-
-:::
-
-## The function to delegate, and its failure mode {#the-task}
-
-- **Goal**: `lifeexp_by_continent(d, yr)`: one number per continent,
-  the mean `lifeExp` of the people living there in year `yr`.
-- **Failure mode**: averaging countries, not people. Each country counts
-  once instead of once per person.
-- Both run clean. Only one answers the question.
-
-::: {.content-visible when-format="revealjs"}
-
-::: {.notes}
-Name the mistake before you ask. If you cannot name one, you have no way
-to check the answer.
-:::
-
-:::
-
-::: {.content-hidden when-format="revealjs"}
-
-The goal: `lifeexp_by_continent(d, yr)` takes the Gapminder data frame
-and one year and returns one number per continent, the
-population-weighted mean of `lifeExp`. The failure mode: averaging
-countries instead of people. "Mean life expectancy by continent" has
-two readings: average the countries, or average the people. The tool
-resolves an ambiguous instruction toward the common reading and does not
-say which it chose. Both run clean. The simple mean of five numbers answers "what is the typical
-country"; the weighted mean answers "what is the typical person". That
-is what makes it a failure mode worth naming: a careful reader could
-pick either, so the prompt has to say which. The value in step 3 is
-worked out under your reading, so a silent switch shows up as a number.
-
-:::
-
-## Working out the expected value by hand: Oceania 2007 {#by-hand}
-
-| | `lifeExp` | `pop` |
-|:--|--:|--:|
-| Australia | 81.235 | 20,434,176 |
-| New Zealand | 80.204 | 4,115,771 |
-
-- Weighted by people (pop in millions): (81.235 × 20.43 + 80.204 × 4.12) / 24.55 = **81.06**
-- Simple mean of two countries: **80.72**
-- Write **81.06** down now. 80.72 is the failure mode.
-
-::: {.content-visible when-format="revealjs"}
-
-::: {.notes}
-Two rows, so the arithmetic fits on paper. That is why Oceania is the
-test case.
-:::
-
-:::
-
-::: {.content-hidden when-format="revealjs"}
-
-Oceania in 2007 has two rows, so you can work the answer out on paper
-from the data itself. Australia has 83 % of the people (20.43 of 24.55
-million). The weighted mean therefore sits 83 % of the way from 80.204
-to 81.235: 80.204 + 0.83 × 1.031 = 81.06. The simple mean of the two
-numbers is 80.72. Write 81.06 down before anything runs. If the script
-prints 80.72, it averaged countries.
-
-:::
-
-## The prompt as sent {#delegation-prompt}
+## Prompt 1: the scraper, run until it works {#prompt-scrape}
 
 ```{.markdown filename="Prompt to paste into Claude Code (captured run)"}
-Write code/lifeexp_by_continent.R. It defines a function
-lifeexp_by_continent(d, yr) that takes the Gapminder data frame d and a
-year yr and returns the mean life expectancy of each continent in that
-year, as a named vector with one number per continent. Base R only, no
-packages. At the bottom of the script, read data/gapminder.csv into d and
-print lifeexp_by_continent(d, 2007). Do not run the script; I will run it
-myself. Do not create any other file and do not use git.
+Write code/placements.R. It reads the table "Recent job placements" at
+https://business.cornell.edu/admissions/graduate/phd-aem/for-hire/ and saves
+it as data/placements.csv with the page's four columns, year, name, position,
+organization, one row per graduate. Use the rvest package for the HTML and
+base R for the rest. Run it with Rscript code/placements.R; if it fails, fix
+the script and run again. Then show me the first five rows and the number of
+rows. Do not use git.
 ```
 
 ::: {.content-visible when-format="revealjs"}
 
-- Goal, artifact and path, what not to do: present.
-- The failure mode: absent, on purpose. "Mean life expectancy of each
-  continent" reads both ways.
-- Your run will differ in wording and maybe in code. The steps do not.
+- Two *Bash command* boxes before any file: it looked at the page's two
+  tables first. Then *Create file*, then `Rscript`.
+- What came back: "Wrote 109 rows"; the first five rows; how it chose
+  the table.
+- The hand check, on the page: count the 2026 rows. 16. Console:
+  `sum(read.csv("data/placements.csv")$year == 2026)`.
 
 ::: {.notes}
-Three of four parts. Watch which mean comes back.
+Goal, artifact and path, what not to do, and this time: run it. The
+check is one year's rows, small enough to count on the page.
 :::
 
 :::
 
 ::: {.content-hidden when-format="revealjs"}
 
-This is the exact prompt of the captured run. Read it against the four
-parts: the goal is there, the artifact and path are there, what not to
-do is there. The failure mode is not. The run on this page is what a
-prompt without part two produces, and the loop still catches it,
-because 81.06 was on paper.
+The prompt has the four parts: the goal with names, the artifact and
+its path, what not to do, and one more sentence than before: run it,
+and fix it if it fails. In the captured run the tool first ran two
+short R commands to look at the page (the page has two tables, one for
+alumni for hire and one for placements), then wrote the script, ran it,
+and reported: 109 rows, the first five, and how it chose the table. It
+ran cleanly the first time; a scraper often does not, and the sentence
+"if it fails, fix the script and run again" is what lets the tool
+iterate without you.
+
+The check is yours. The total, 109, is too long to count by hand, so
+count one year: the 2026 rows sit at the top of the table, sixteen of
+them when captured. In the Console, `sum(read.csv("data/placements.csv")$year
+== 2026)` must print the same number. If it does not, the scraper
+dropped or duplicated rows, which is exactly the silent error a clean
+run hides.
+
+::: {.callout-tip collapse="true"}
+## The captured transcript
+
+````{.default}
+⏺ Reply:
+  Let me look at the page structure first.
+⏺ Bash(Rscript -e '
+library(rvest)
+pg <- read_html("https://business.cornell.edu/admissions/graduate/phd-aem/for-hire/")
+tbls <- html_elements(pg, "table")
+cat("n tables:", length(tbls), "\n")
+for (i in seq_along(tbls)) { cat("--- table", i, "---\n"); print(head(html_table(tbls[[i]], header = TRUE), 4)) }
+hs <- html_elements(pg, "h2, h3, h4"); print(html_text2(hs))
+')
+  ⎿ n tables: 2 
+    --- table 1 ---
+    # A tibble: 2 × 4
+      Name           `Current position`              Organization `More information`
+      <chr>          <chr>                           <chr>        <chr>             
+    1 Tarana Chauhan Visiting Assistant Professor    Colgate Uni… Personal website  
+    2 Seungmin Lee   Postdoctoral Research Associate Pulte Insti… Personal website  
+    --- table 2 ---
+    # A tibble: 4 × 4
+       Year Name               Position                       Organization          
+      <int> <chr>              <chr>                          <chr>                 
+    1  2026 Trevor Dean Arnold Postdoc                        University of Calgary…
+    2  2026 Molly Jane Doruska Assistant Professor            Clarkson University   
+    3  2026 Sijia Fan          Assistant Professor of Finance University of Ottawa,…
+    4  2026 Adrian Haws        Postdoc                        Norwegian School of E…
+     [1] "Currently for hire"                                            
+     [2] "Apurva Borar"                                                  
+     [3] "Bingyan Dai"                                                   
+     [4] "Luc Esprabens"                                                 
+     [5] "Nicholas Grandstaff"                                           
+     [6] "Yurou He"                                                      
+     [7] "Alan Hinds"                                                    
+     [8] "Jerzy Jaromczyk"                                               
+     [9] "Vrinda Kapoor"                                                 
+    [10] "Emil Kee-Tui"                                                  
+    [11] "Xueyun Luo"                                                    
+    [12] "Anthony Ponce"                                                 
+    [13] "Kasim Saiyyad"                                                 
+    [14] "Lakshita Sharma"                                               
+    [15] "Jayen Tan"                                                     
+    [16] "Yunran Wang"                                                   
+    [17] "Motoyuki Yoshihara"                                            
+    [18] "Alumni for hire"                                               
+    [19] "Recent job placements: Ph.D. in Applied Economics & Management"
+    [20] "Information For"                                               
+    [21] "Our Schools"                                                   
+    [22] "Resources"
+⏺ Reply:
+  The second table is the placements table. Let me check how it's associated with its heading so the script selects it robustly.
+⏺ Bash(Rscript -e '
+library(rvest)
+pg <- read_html("https://business.cornell.edu/admissions/graduate/phd-aem/for-hire/")
+t2 <- html_elements(pg, "table")[[2]]
+print(html_attrs(t2))
+print(html_text2(html_element(t2, "caption")))
+d <- html_table(t2, header = TRUE); cat("rows:", nrow(d), "\n"); print(tail(d, 3)); print(table(d$Year)); print(sum(d$Name == "" | is.na(d$Name)))
+')
+  ⎿ id                          class 
+                  "tablepress-202" "tablepress tablepress-id-202" 
+                   aria-labelledby 
+             "tablepress-202-name" 
+    [1] NA
+    rows: 109 
+    # A tibble: 3 × 4
+       Year Name         Position                Organization                       
+      <int> <chr>        <chr>                   <chr>                              
+    1  2015 Lin Sun      AVP Risk Management     Industrial and Commercial Bank of …
+    2  2015 Joanna Upton Post-Doctoral Associate Dyson School, Cornell University   
+    3  2015 Jubo Yan     Assistant Professor     Nanyang Technological University   
+    
+    2015 2016 2017 2018 2019 2020 2021 2022 2023 2024 2025 2026 
+      10    8    7   11    6    7   10    6    5   14    9   16 
+    [1] 0
+⏺ Write(<project>code/placements.R)
+  # Scrape "Recent job placements" (Ph.D. in Applied Economics & Management)
+  # from the Dyson "for hire" page and save it as data/placements.csv.
+  # Uses rvest for the HTML and base R for everything else.
+  
+  library(rvest)
+  
+  url <- "https://business.cornell.edu/admissions/graduate/phd-aem/for-hire/"
+  out <- file.path("data", "placements.csv")
+  
+  page   <- read_html(url)
+  tables <- html_elements(page, "table")
+  
+  # The page has several tables (e.g. "Currently for hire"); pick the one whose
+  # header is Year / Name / Position / Organization rather than relying on its
+  # position or TablePress id.
+  wanted  <- c("year", "name", "position", "organization")
+  headers <- lapply(tables, function(tb) tolower(html_text2(html_elements(tb, "th"))))
+  hit     <- which(vapply(headers, function(h) identical(h, wanted), logical(1)))
+  if (length(hit) != 1) {
+    stop("Expected exactly one placements table with columns ",
+         paste(wanted, collapse = ", "), "; found ", length(hit))
+  }
+  
+  placements <- as.data.frame(html_table(tables[[hit]], header = TRUE),
+                              stringsAsFactors = FALSE)
+  names(placements) <- wanted
+  placements$year   <- as.integer(placements$year)
+  for (v in wanted[-1]) placements[[v]] <- trimws(placements[[v]])
+  
+  # Drop any completely empty rows (spacer rows in the table) but keep one
+  # row per graduate otherwise.
+  placements <- placements[placements$name != "", ]
+  rownames(placements) <- NULL
+  
+  dir.create(dirname(out), showWarnings = FALSE, recursive = TRUE)
+  write.csv(placements, out, row.names = FALSE)
+  
+  cat("Wrote", nrow(placements), "rows to", out, "\n")
+  ⎿ File created successfully at: <project>code/placements.R
+⏺ Bash(Rscript code/placements.R && Rscript -e 'd <- read.csv("data/placements.csv"); print(head(d, 5)); cat("rows:", nrow(d), "\n")')
+  ⎿ Wrote 109 rows to data/placements.csv 
+      year               name                                    position
+    1 2026 Trevor Dean Arnold                                     Postdoc
+    2 2026 Molly Jane Doruska                         Assistant Professor
+    3 2026          Sijia Fan              Assistant Professor of Finance
+    4 2026        Adrian Haws                                     Postdoc
+    5 2026         Jihye Jang Tenure-track Assistant Professor of Finance
+                                           organization
+    1     University of Calgary Department of Economics
+    2                               Clarkson University
+    3 University of Ottawa, Telfer School of Management
+    4                     Norwegian School of Economics
+    5                  Texas Christian University (TCU)
+    rows: 109
+⏺ Reply:
+  The script ran cleanly on the first try and wrote `data/placements.csv`.
+  
+  **First five rows:**
+  
+  | year | name | position | organization |
+  |---|---|---|---|
+  | 2026 | Trevor Dean Arnold | Postdoc | University of Calgary Department of Economics |
+  | 2026 | Molly Jane Doruska | Assistant Professor | Clarkson University |
+  | 2026 | Sijia Fan | Assistant Professor of Finance | University of Ottawa, Telfer School of Management |
+  | 2026 | Adrian Haws | Postdoc | Norwegian School of Economics |
+  | 2026 | Jihye Jang | Tenure-track Assistant Professor of Finance | Texas Christian University (TCU) |
+  
+  **Number of rows:** 109 (graduates from 2015–2026).
+  
+  Notes on `code/placements.R`:
+  - The page has two tables (the "Currently for hire" table comes first), so the script picks the table whose header is exactly Year / Name / Position / Organization rather than hard-coding its position or TablePress id.
+  - It errors out loudly if it doesn't find exactly one such table, so a future page change won't silently write the wrong data.
+  - `data/` is created if missing; `year` is stored as an integer and text columns are trimmed.
+````
+
+:::
 
 :::
 
@@ -797,7 +1109,7 @@ because 81.06 was on paper.
 :::
 ::: {.column width="40%"}
 1. **Create file**, and the path
-2. **The file**, all nine lines
+2. **The file**, every line
 3. **`1. Yes`**: Enter writes it
 4. **`2.`**: stops asking about edits. Leave it.
 5. **`3. No` or Esc**: refuse
@@ -805,478 +1117,116 @@ because 81.06 was on paper.
 ::::
 
 ::: {.notes}
-Read line 5 before the file exists: `mean()` over countries. Accept it
-anyway; the test comes next.
+The box is from another project; the shape is the same. Read the file
+before it exists. Today: which lines pick the table?
 :::
 
 :::
 
 ::: {.content-hidden when-format="revealjs"}
 
-![The approval box for a new file. The whole file is on screen before it exists; line 5 is the one to read.](figures/09-ai-code/S03-create-file-dialog.png){fig-align="center" fig-alt="Claude Code's approval box: Write(code/lifeexp_by_continent.R), Create file, the nine-line script with line 5 reading tapply(sub$lifeExp, sub$continent, mean), and the question Do you want to create lifeexp_by_continent.R? with the answers 1. Yes, 2. Yes, and switch to accept edits, 3. No."}
+![The approval box for a new file. The whole file is on screen before it exists. The screen is from another project; the box is the same.](figures/09-ai-code/S03-create-file-dialog.png){fig-align="center" fig-alt="Claude Code's approval box: Write(code/lifeexp_by_continent.R), Create file, the nine-line script with line 5 reading tapply(sub$lifeExp, sub$continent, mean), and the question Do you want to create lifeexp_by_continent.R? with the answers 1. Yes, 2. Yes, and switch to accept edits, 3. No."}
 
 In manual mode the tool shows the file before it exists. The box names
 the action (*Create file*), the path, every line of the file, and a
 question with three answers. `1. Yes` (Enter) writes the file. `2. Yes,
 and switch to accept edits` turns the edit questions off for the
-session; leave it today. `3. No`, or Esc, refuses and lets you say why. Read line 5
-before pressing anything: `tapply(sub$lifeExp, sub$continent, mean)`.
-Then accept it anyway; the loop is about to test it.
+session; leave it today. `3. No`, or Esc, refuses and lets you say why.
+For the scraper, the lines to read before pressing anything are the
+ones that pick the table; the next section shows them.
 
 :::
 
-::: {.content-hidden when-format="revealjs"}
-
-## The transcript's summary after the write {#transcript-says}
-
-![After the write: the file again, then the summary paragraph, which says it "uses tapply(sub$lifeExp, sub$continent, mean)".](figures/09-ai-code/S04-written-summary.png){fig-align="center" fig-alt="Claude Code after accepting: Wrote 9 lines to code/lifeexp_by_continent.R, the nine lines, and a summary paragraph ending Not run, no other files touched."}
-
-After the write, the transcript summarizes: it filters `d` to the
-requested year and uses `tapply(sub$lifeExp, sub$continent, mean)`,
-which returns a named numeric vector. That summary is accurate here. It
-is still a claim about a file; the file on disk is the fact. That is why
-the diff section opens the file through `git diff`.
-
-:::
-
-## Source the script: expected 81.06, printed 80.72 {#run-disagree}
-
-```r
-source("code/lifeexp_by_continent.R")
-#>   Africa Americas     Asia   Europe  Oceania 
-#> 54.80604 73.60812 70.72848 77.64860 80.71950 
-```
-
-::: {.content-visible when-format="revealjs"}
-
-- No error, five numbers, Oceania **80.72**.
-- On paper: **81.06**. They disagree.
-- It averaged countries. Step 4 caught it; step 3 made that possible.
-
-::: {.notes}
-It runs clean and answers the wrong question. Without the value on paper
-you would have committed it. They have seen a model edit a script and
-read its diff before; this is that, with the model in the tab.
-:::
-
-:::
-
-::: {.content-hidden when-format="revealjs"}
-
-Run it where scripts always run: Session → Restart R, then open
-`code/lifeexp_by_continent.R` from the Files pane and click Source (or
-`source("code/lifeexp_by_continent.R")` in the Console). It runs without
-an error and prints five numbers. Oceania reads 80.7195. The paper says
-81.06. The script ran clean and answered the other question, and the
-only reason that is visible is the number written down in step 3.
-
-:::
-
-## The prompt for Exercise 1: lifeexp_gain() {#exercise-1-prompt}
-
-```{.markdown filename="Prompt to paste into Claude Code"}
-Write code/lifeexp_gain.R. It defines a function lifeexp_gain(d, from, to)
-that takes the Gapminder data frame d and two years, and returns, for each
-continent, the name of the country whose lifeExp rose the most between the
-years from and to, as a named character vector with the continent names as
-names. A gain is a country's lifeExp in year to minus its lifeExp in year
-from, matched by country name, never by row position; a fall counts as a
-negative gain and stays in. Base R only, no packages. At the bottom of the
-script, read data/gapminder.csv into d and print lifeexp_gain(d, 1952, 2007).
-Do not run the script; I will run it myself. Do not create any other file
-and do not use git.
-```
-
-::: {.content-visible when-format="revealjs"}
-
-- Goal (lines 1–5); failure mode (lines 5–7); artifact (line 1); what
-  not to do (lines 9–10).
-- Oceania on paper first: 81.235 − 69.12 and 80.204 − 69.39.
-
-::: {.notes}
-All four parts. Before you paste it, subtract twice and write one
-country's name down.
-:::
-
-:::
-
-::: {.content-hidden when-format="revealjs"}
-
-The second function is yours to delegate, with all four parts present
-this time. `lifeexp_gain(d, from, to)` returns, for each continent, the
-name of the country whose `lifeExp` rose the most between two years.
-The failure mode has three shapes. A gain is the value in `to` minus
-the value in `from`, matched by country name. Matching by row position,
-subtracting the other way, or dropping a country whose life expectancy
-fell each produces a plausible name. Oceania is again the case you can
-check: Australia went from 69.12 to 81.235, New Zealand from 69.39 to
-80.204.
-
-:::
-
-## Exercise 1 {#exercise-1 .smaller}
-
-::: {.panel-tabset}
-
-### Exercise
+## git diff \-\-staged on the scraper: the lines to read {#diff-new-file}
 
 ```bash
-# Exercise 1 (8 minutes). RStudio, your gapminder-practice project.
-#
-# 1. Tools > Terminal > New Terminal:  git status  (clean), then
-#    claude --permission-mode manual. Status line: manual mode on.
-#    Enlarge the Terminal pane so the approval box will fit.
-#
-# 2. On paper first. Australia: 69.12 in 1952, 81.235 in 2007.
-#    New Zealand: 69.39 in 1952, 80.204 in 2007. Subtract twice.
-#    Which country gained more? Write its name down.
-#
-# 3. Paste the prompt from the slide before this one. Do not edit it.
-#    Enter. Wait for the box that shows the file.
-#
-# 4. In the box, find the line that subtracts the two years. Is it
-#    "to minus from"? Then 1. Yes. If not: Esc, then type "The gain
-#    must be lifeExp in year to minus lifeExp in year from, matched by
-#    country name. Change only that line." Read the new box, then 1. Yes.
-#
-# 5. Session > Restart R. Open code/lifeexp_gain.R, click Source.
-#    Compare the Oceania name with the one on your paper.
-#
-# Two answers to compare with the room: the Oceania name your script
-# printed, and whether the other four names match your neighbour's.
-```
-
-::: {.content-hidden when-format="revealjs"}
-
-*Paired with a neighbour?* One laptop, two readers: the one not typing
-reads the approval box aloud, including the subtraction line. The prompt
-is in the section above, with a copy button. A box titled *Bash command*
-asking to run `mkdir code` or `ls` only makes the folder or looks: `1.
-Yes`. One that contains `Rscript` or `R -e`: Esc; you run the script
-yourself in step 5.
-
-:::
-
-### Solution
-
-On paper: Australia 81.235 − 69.12 = 12.115; New Zealand 80.204 − 69.39
-= 10.814. **Australia.**
-
-```r
-source("code/lifeexp_gain.R")
-#>      Africa    Americas        Asia      Europe     Oceania 
-#>     "Libya" "Nicaragua"      "Oman"    "Turkey" "Australia" 
-```
-
-::: {.content-visible when-format="revealjs"}
-
-**Australia**; the five names are Libya, Nicaragua, Oman, Turkey,
-Australia; the subtraction reads `lifeExp_to - lifeExp_from` (or a
-`match()` by country, then a subtraction).
-
-:::
-
-::: {.content-hidden when-format="revealjs"}
-
-One shape a correct function takes (captured 2026-09-14 from a shorter
-prompt for the same function; yours differs in wording and possibly in
-method):
-
-```r
-lifeexp_gain <- function(d, from, to) {
-  start <- d[d$year == from, c("country", "continent", "lifeExp")]
-  end <- d[d$year == to, c("country", "lifeExp")]
-  # Merge on country so a country missing in either year drops out
-  # instead of misaligning the subtraction.
-  both <- merge(start, end, by = "country", suffixes = c("_from", "_to"))
-  both$gain <- both$lifeExp_to - both$lifeExp_from
-  tapply(seq_len(nrow(both)), both$continent, function(i) {
-    both$country[i][which.max(both$gain[i])]
-  })
-}
-```
-
-A `merge()` by country or a `match()` by country both satisfy the
-failure mode. A file that subtracts two `lifeExp` vectors straight from
-two subsets relies on row order. The order happens to match in this file
-and would not in another. That is the line to read in step 4. Three
-functions a model is likely to use:
-
-- `merge(a, b, by = "country")` joins two tables on a shared column.
-- `which.max(x)` is the position of the largest value in `x`.
-- `seq_len(n)` is `1, 2, ..., n`.
-
-A line you cannot explain is question 5 of the five questions later on
-this page. Ask for an explanation, or for a version that uses only
-`split()`, `sapply()` and square brackets. Two prompts pasted
-identically produce two different files; the Oceania name does not
-differ if both are right.
-
-:::
-
-:::
-
-::: {.content-visible when-format="revealjs"}
-
-::: {.notes}
-Debrief (2 min). Everyone printed Australia: the loop worked, and a name
-the room agrees on is the check. A laptop printed New Zealand: the
-subtraction ran the other way (`from − to`), and `which.max` picked the
-smaller fall; it is the failure mode the prompt named, and the fix is a
-patch request. A laptop printed a different country in Africa or Asia:
-read its subtraction line and its matching; that is Exercise 2's first
-step, done early.
-
-When it fails, say:
-
-- `command not found: claude`: Before class step 2; quit and reopen
-  RStudio; pair up for now.
-- The Terminal shows R's `>` prompt instead of `❯`: they typed `claude`
-  in the Console. Tools → Terminal → New Terminal, then again.
-- The status line says auto mode: `/exit`, then
-  `claude --permission-mode manual`.
-- `--permission-mode manual` is rejected: an older install;
-  `claude --permission-mode default` is the same mode.
-- The trust question again: the terminal is outside the project; Tools →
-  Terminal → New Terminal from inside it.
-- The box never appears and it prints code instead: it wrote nothing;
-  ask again with the artifact line, "Write code/lifeexp_gain.R", first.
-- A *Bash command* box for `mkdir code` or `ls`: it only makes the
-  folder or looks; `1. Yes`.
-- It asks to run `Rscript` or `R -e`: Esc (the last option, No). They
-  run it themselves in step 5.
-- Source reports `object 'd' not found`: the file's bottom lines are
-  missing; read the box again, or add the two lines yourself.
-- Source printed nothing: the last line lacks `print()`; wrap it, save,
-  Source again.
-- It ran the script itself: the status line was not manual. `/exit`,
-  relaunch, `git status`; nothing to undo if only `code/lifeexp_gain.R`
-  is listed.
-:::
-
-:::
-
-## Scoping a delegation: one function, one file {#scoping}
-
-| Too big to check | Right-sized |
-|:--|:--|
-| "Do my analysis of the Gapminder data." | "Write `lifeexp_gain(d, from, to)` in `code/lifeexp_gain.R`." |
-| "Make a report on life expectancy." | "Write `lifeexp_by_continent(d, yr)`; weighted by `pop`." |
-| "Fix my script." | "Only the Oceania number is wrong; change the line that computes the mean." |
-
-::: {.content-visible when-format="revealjs"}
-
-- If you cannot work out one case by hand, the delegation is too large.
-
-::: {.notes}
-One function, one file, one case you can do on paper. Bigger tasks are
-this, several times.
-:::
-
-:::
-
-::: {.content-hidden when-format="revealjs"}
-
-You cannot check "Do my analysis of the Gapminder data", because
-nothing about it has a value you can work out by hand. "Write
-`lifeexp_gain(d, from, to)` in `code/lifeexp_gain.R`" can, in two
-subtractions. The unit of delegation is one function with one output
-and one small case, in one file. A bigger task is several of these in a
-row, each checked before the next.
-
-:::
-
-## Three questions before you delegate {#three-tests}
-
-1. Can you name the failure mode?
-2. Can you work out one case by hand, from rows you can see?
-3. Can you read the whole diff in five minutes?
-
-- Any no: split the task.
-
-::: {.content-visible when-format="revealjs"}
-
-::: {.notes}
-If any answer is no, split the task.
-:::
-
-:::
-
-::: {.content-hidden when-format="revealjs"}
-
-Before pasting, three questions. Can you name the failure mode? Can you
-work out one case by hand, from rows you can see? Can you read the diff
-in five minutes? A no to any of them means the task is too large; split
-it until all three are yes.
-
-:::
-
-## git diff \-\-staged: what the model wrote {#diff-new-file}
-
-```{=html}
-<style>
-code.diff span.st { color: #b31b1b; }
-code.diff span.va { color: #1a7f37; }
-</style>
-```
-
-```bash
-git status
-#> Untracked files:
-#>         code/
-git add code/lifeexp_by_continent.R
+git add code/placements.R
 git diff --staged
 ```
 
-```diff
-+lifeexp_by_continent <- function(d, yr) {
-+  sub <- d[d$year == yr, ]
-+  tapply(sub$lifeExp, sub$continent, mean)
-+}
-```
-
-::: {.content-visible when-format="revealjs"}
-
-- A new file: `git diff` shows nothing until `git add`.
-- Every `+` line is the model's. Nothing else changed.
-
-::: {.notes}
-Rule two. The transcript said `tapply` with `mean`; the diff shows the
-same line. Now you have read it rather than been told it.
-:::
-
-:::
-
-::: {.content-hidden when-format="revealjs"}
-
-In Terminal 2, `git status` lists the new file under `code/` as
-untracked (the folder itself, if it is new); a new file has
-no earlier version, so `git diff` alone shows nothing. `git add` the
-file, then `git diff --staged` prints every line with a `+`. That is the
-whole of what the model did, and the transcript is not needed to know
-it. The block above shows the four lines that matter; the full output
-of `git diff --staged` is below.
-
-```diff
-diff --git a/code/lifeexp_by_continent.R b/code/lifeexp_by_continent.R
-new file mode 100644
-index 0000000..751a6b8
---- /dev/null
-+++ b/code/lifeexp_by_continent.R
-@@ -0,0 +1,9 @@
-+# Mean life expectancy by continent for a given year (base R only)
-+
-+lifeexp_by_continent <- function(d, yr) {
-+  sub <- d[d$year == yr, ]
-+  tapply(sub$lifeExp, sub$continent, mean)
-+}
-+
-+d <- read.csv("data/gapminder.csv", stringsAsFactors = FALSE)
-+print(lifeexp_by_continent(d, 2007))
-```
-
-:::
-
-## Line 5 averages countries, not people {#the-line}
-
 ```r
-tapply(sub$lifeExp, sub$continent, mean)                 # each country once
-tapply(sub$lifeExp * sub$pop, sub$continent, sum) /
-  tapply(sub$pop, sub$continent, sum)                    # each person once
+wanted  <- c("year", "name", "position", "organization")
+headers <- lapply(tables, function(tb) tolower(html_text2(html_elements(tb, "th"))))
+hit     <- which(vapply(headers, function(h) identical(h, wanted), logical(1)))
+if (length(hit) != 1) {
+  stop("Expected exactly one placements table with columns ", ...)
+}
 ```
 
 ::: {.content-visible when-format="revealjs"}
 
-- Line 5 answers "the typical country". The question was "the typical
-  person".
-- One expression differs. Ask for that change and nothing else.
+- A new file: every line is a `+`. Read it top to bottom once.
+- These lines matter: it picks the table by its header, not by its
+  position, and stops if there is not exactly one.
+- A line you cannot explain: ask for an explanation before you accept.
+  `vapply()` and `identical()` are two to ask about.
 
 ::: {.notes}
-This is what a failure mode looks like in code: one line, both readings
-plausible.
+The transcript said how it chose the table; the diff shows it. Now you
+have read it rather than been told it.
 :::
 
 :::
 
 ::: {.content-hidden when-format="revealjs"}
 
-`tapply(sub$lifeExp, sub$continent, mean)` takes the mean of one number
-per country. The question asked for the mean over people,
-`sum(lifeExp × pop) / sum(pop)` within each continent. Both are "the
-mean life expectancy of each continent", which is why the prompt should
-have said which. The fix is one expression, so the request is a patch,
-not a rewrite.
+A new file has no earlier version, so `git diff` alone shows nothing;
+`git add` it, then `git diff --staged` prints every line with a `+`.
+That is the whole of what the tool did. Read it once from the top. The
+lines above are the ones that carry the risk: they collect every table
+on the page, keep the one whose header is exactly the four names, and
+stop the script if there is not exactly one such table. A future change
+to the page fails loudly instead of writing the wrong table.
 
-:::
+Three functions a novice may not know, and may ask the tool to explain
+or replace: `html_elements()` finds every element of a kind on the page;
+`vapply()` applies a function to each table and promises a logical
+result; `identical()` compares two vectors as a whole. "Explain
+`vapply` on line 19, then rewrite it as a `for` loop if that is
+clearer" is a fair prompt. The full file as written by prompt 1:
 
-## Asking for a patch, not a rewrite {#patch-prompt}
+```{.r filename="code/placements.R (after prompt 1)"}
+# Scrape "Recent job placements" (Ph.D. in Applied Economics & Management)
+# from the Dyson "for hire" page and save it as data/placements.csv.
+# Uses rvest for the HTML and base R for everything else.
 
-```{.markdown filename="Prompt to paste into Claude Code"}
-I ran the script. Oceania prints 80.72. By hand I get 81.06: Australia,
-81.235, has 20,434,176 people and New Zealand, 80.204, has 4,115,771, so
-the mean over people is 81.06. Your function averages countries, not
-people. Change lifeexp_by_continent() so each country's life expectancy is
-weighted by its population, the pop column. Change nothing else. Do not
-run the script.
+library(rvest)
+
+url <- "https://business.cornell.edu/admissions/graduate/phd-aem/for-hire/"
+out <- file.path("data", "placements.csv")
+
+page   <- read_html(url)
+tables <- html_elements(page, "table")
+
+# The page has several tables (e.g. "Currently for hire"); pick the one whose
+# header is Year / Name / Position / Organization rather than relying on its
+# position or TablePress id.
+wanted  <- c("year", "name", "position", "organization")
+headers <- lapply(tables, function(tb) tolower(html_text2(html_elements(tb, "th"))))
+hit     <- which(vapply(headers, function(h) identical(h, wanted), logical(1)))
+if (length(hit) != 1) {
+  stop("Expected exactly one placements table with columns ",
+       paste(wanted, collapse = ", "), "; found ", length(hit))
+}
+
+placements <- as.data.frame(html_table(tables[[hit]], header = TRUE),
+                            stringsAsFactors = FALSE)
+names(placements) <- wanted
+placements$year   <- as.integer(placements$year)
+for (v in wanted[-1]) placements[[v]] <- trimws(placements[[v]])
+
+# Drop any completely empty rows (spacer rows in the table) but keep one
+# row per graduate otherwise.
+placements <- placements[placements$name != "", ]
+rownames(placements) <- NULL
+
+
+
+dir.create(dirname(out), showWarnings = FALSE, recursive = TRUE)
+write.csv(placements, out, row.names = FALSE)
+
+cat("Wrote", nrow(placements), "rows to", out, "\n")
 ```
-
-::: {.content-visible when-format="revealjs"}
-
-- Expected, printed, why, the one change. Then the scope: change nothing
-  else.
-- Do not write "fix it" or "rewrite it"; both ask for a diff of unknown
-  size.
-
-::: {.notes}
-A patch request is a diff whose size you know in advance. A rewrite is
-a second file to read from scratch.
-:::
-
-:::
-
-::: {.content-hidden when-format="revealjs"}
-
-The patch request says what you expected, what the script printed, why
-they differ, and the one change wanted. "Change nothing else" is the
-scope. Paste it exactly. The captured run's prompt, sent in the same
-conversation as the first prompt, differed from this one in one clause;
-the edit it produced is in the next section.
-
-:::
-
-## The approval box for an edit: red and green lines {#approve-edit}
-
-::: {.content-visible when-format="revealjs"}
-
-:::: {.columns}
-::: {.column width="60%"}
-![](figures/09-ai-code/S05-edit-dialog-diff.png){height="415" fig-alt="Claude Code's edit approval box: Update(code/lifeexp_by_continent.R), Edit file, a diff with line 1 removed in red and rewritten in green, line 5 removed in red and replaced by two green lines using sum, and the question Do you want to make this edit? with the answers 1. Yes, 2. Yes, and switch to accept edits, 3. No."}
-:::
-::: {.column width="40%"}
-1. **`-` red**: what goes. Read these first.
-2. **`+` green**: what arrives
-3. **Line 1**: changed unasked; harmless, but read it
-4. **`1. Yes`** accepts; **Esc** refuses
-:::
-::::
-
-::: {.notes}
-Two red lines where you asked for one. The extra one is a comment:
-notice it, then accept it.
-:::
-
-:::
-
-::: {.content-hidden when-format="revealjs"}
-
-![The approval box for an edit. Two red lines: the mean line you asked about, and the header comment, rewritten without being asked.](figures/09-ai-code/S05-edit-dialog-diff.png){fig-align="center" fig-alt="Claude Code's edit approval box: Update(code/lifeexp_by_continent.R), Edit file, a diff with line 1 removed in red and rewritten in green, line 5 removed in red and replaced by two green lines using sum, and the question Do you want to make this edit? with the answers 1. Yes, 2. Yes, and switch to accept edits, 3. No."}
-
-The tool shows an edit as a diff before it lands: removed lines in red
-with `-`, added lines in green with `+`. Read every red line first. Here
-two lines go: the `mean` line, and the header comment, which the tool
-rewrote to say "population-weighted" although nobody asked. It is
-harmless, and it is the kind of extra change the red lines exist to
-show. `1. Yes` accepts.
 
 :::
 
@@ -1284,8 +1234,8 @@ show. `1. Yes` accepts.
 
 1. **Files**: only the ones you named? (`git status`)
 2. **Removals**: every `-` line asked for? Read these first.
-3. **The math line**: does it do what the failure mode said?
-4. **Names and constants**: yours, no bare numbers?
+3. **The line that does the work**: does it do what you asked, and only that?
+4. **Names and constants**: yours? A table of literals is a constant you did not supply.
 5. **A line you cannot explain**: ask before you accept, or ask for one
    you can read.
 
@@ -1308,203 +1258,575 @@ you named? Are the names and constants yours (the argument names, no
 bare numbers)? Is there a line you cannot explain? For the last one,
 ask for an explanation before accepting, or ask for a version that uses
 only functions you know. Removals first: a removal you did not ask for
-is the dangerous kind. Applied to the edit above: one file (yes); two
-removals, one asked for and one a comment; the math line weights by
-`pop` (yes); the names are the prompt's (yes); no line unexplained.
-Exercise 2 walks these five on your own file.
+is the dangerous kind. Question 4 is the one the country column fails:
+sixteen country names and a default are constants, and you did not
+supply them. Exercise 2 walks these five on that edit.
 
 :::
 
-## git diff after the patch, and the second run {#diff-after-patch}
+## Exercise 1 {#exercise-1 .smaller}
+
+::: {.panel-tabset}
+
+### Exercise
+
+```bash
+# Exercise 1 (8 minutes). RStudio, the placements project from Before class.
+#
+# 1. Tools > Terminal > New Terminal; the prompt ends in placements.
+#    claude --permission-mode manual. Status line: manual mode on.
+#    Enlarge the Terminal pane so the approval boxes fit.
+#
+# 2. Paste Prompt 0 (git). Read the Bash command box, then 1. Yes.
+#    Tools > Terminal > New Terminal (Terminal 2): git log --oneline.
+#
+# 3. On the page, count the rows for the most recent year. Write it down.
+#
+# 4. Paste Prompt 1 (the scraper). Boxes for R and for Rscript: read,
+#    1. Yes. What came back: how many rows?
+#
+# 5. Console: sum(read.csv("data/placements.csv")$year == 2026)
+#    (your year). Compare with your count.
+#
+# 6. Terminal 2: git add code/placements.R, then git diff --staged.
+#    The five questions. Which lines pick the table?
+#
+# Two answers to compare with the room: the number of rows, and the
+# count for the most recent year.
+```
+
+::: {.content-hidden when-format="revealjs"}
+
+*Paired with a neighbour?* One laptop, two readers: the one not typing
+reads each box aloud before `1. Yes`. A *Bash command* box that runs
+`Rscript -e` with `read_html` in it is the tool looking at the page;
+`1. Yes`. A box that asks for `curl` or `ls`: `1. Yes`. If the script
+fails with `there is no package called 'rvest'`, run
+`install.packages("rvest")` in the Console and tell the tool "rvest is
+installed now; run it again".
+
+:::
+
+### Solution
+
+On the page, 16 rows for 2026 when captured. The script printed "Wrote
+109 rows to data/placements.csv"; the Console prints `16`. The table is
+picked by the lines that compare each table's header with `year, name,
+position, organization` and stop unless exactly one matches.
 
 ::: {.content-visible when-format="revealjs"}
 
-```bash
-git diff
+**109 rows, 16 for 2026** in the captured run; yours may differ if the
+page grew. The picking lines: `wanted`, `headers`, `hit`, and the
+`stop()`.
+
+:::
+
+:::
+
+::: {.content-visible when-format="revealjs"}
+
+::: {.notes}
+Debrief (2 min). Everyone's row count is the same number: the page is
+one source. A laptop whose year count differs from its page count:
+which rows are missing or doubled? That is the silent error, found.
+
+When it fails, say:
+
+- `command not found: claude`: Before class step 2; quit and reopen
+  RStudio; pair up for now.
+- The Terminal shows R's `>` prompt instead of `❯`: they typed `claude`
+  in the Console. Tools → Terminal → New Terminal, then again.
+- The status line says auto mode: `/exit`, then
+  `claude --permission-mode manual`.
+- The trust question again: the terminal is outside the project; Tools →
+  Terminal → New Terminal from inside it.
+- `there is no package called 'rvest'`: `install.packages("rvest")` in
+  the Console; then tell the tool to run again.
+- No Bash box for git and the reply says it cannot run commands: the
+  status line is not manual, or the folder was not trusted; `/exit`,
+  relaunch, look at the status line.
+- The box never appears and it prints code instead: it wrote nothing;
+  ask again with the artifact line, "Write code/placements.R", first.
+- The row count differs from the page: the page changed since capture;
+  the count for one year is the check that matters.
+:::
+
+:::
+
+## Prompt 2: a postdoc flag {#prompt-postdoc}
+
+```{.markdown filename="Prompt to paste into Claude Code (captured run)"}
+Add a column postdoc to the table before it is saved: TRUE when the position
+is a postdoc, FALSE otherwise. Change nothing else. Run it again and tell me
+how many rows are TRUE.
 ```
 
 ```diff
--# Mean life expectancy by continent for a given year (base R only)
-+# Population-weighted mean life expectancy by continent for a ...
- lifeexp_by_continent <- function(d, yr) {
-   sub <- d[d$year == yr, ]
--  tapply(sub$lifeExp, sub$continent, mean)
-+  tapply(sub$lifeExp * sub$pop, sub$continent, sum) /
-+    tapply(sub$pop, sub$continent, sum)
++# Flag postdoc positions; spellings on the page include "Postdoc", "Post-doc",
++# "Post Doctoral Fellow" and "Postdoctoral Associate".
++placements$postdoc <- grepl("post[- ]?doc", placements$position, ignore.case = TRUE)
 ```
 
-- Two `-`, three `+`, nothing else in the file moved.
-- Restart R, Source: Oceania **81.06215**. On paper: 81.06.
+::: {.content-visible when-format="revealjs"}
+
+- It looked at the spellings first: eleven of them. One pattern covers
+  the three shapes: joined, hyphen, space.
+- 25 of 109 rows are TRUE. One judgment call in its reply: a row listed
+  as both a postdoc and an assistant professor.
+- The hand check, Ctrl+F on the page: "postdoc" 15, "post-doc" 9,
+  "post doc" 1. 25.
 
 ::: {.notes}
-They agree. The next step makes them keep agreeing after you have
-forgotten today.
+The edit box shows one comment and one line. A pattern you cannot read
+is question 5: ask it to explain `[- ]?`.
 :::
 
 :::
 
 ::: {.content-hidden when-format="revealjs"}
 
-```bash
-git diff
-```
+A one-line task with a check you can do in the browser. The tool first
+printed every position containing "post", eleven spellings from
+"Post-doc" to "Earth Institute Postdoctoral Fellow", then added one
+comment and one line: a pattern that accepts "postdoc", "post-doc" and
+"post doc" in any case. It ran the script again and reported 25 of 109
+rows TRUE, and flagged one judgment call, a graduate listed as
+"Postdoctoral Associate; Assistant Professor of Economics", counted as
+TRUE.
+
+The hand check is the browser's find box on the page. Find is not
+case-sensitive, so "postdoc" counts every "Postdoc" and "Postdoctoral",
+15 when captured; "post-doc" counts the hyphenated ones, 9; "post doc"
+counts the one with a space. 25. A pattern that matched only "postdoc"
+would have printed 15 and run clean; that is the failure mode this
+check catches, and it is worth trying on purpose in the practice set.
+
+:::
+
+## The approval box for an edit: red and green lines {#approve-edit}
+
+::: {.content-visible when-format="revealjs"}
+
+:::: {.columns}
+::: {.column width="60%"}
+![](figures/09-ai-code/S05-edit-dialog-diff.png){height="415" fig-alt="Claude Code's edit approval box: Update(code/lifeexp_by_continent.R), Edit file, a diff with line 1 removed in red and rewritten in green, line 5 removed in red and replaced by two green lines using sum, and the question Do you want to make this edit? with the answers 1. Yes, 2. Yes, and switch to accept edits, 3. No."}
+:::
+::: {.column width="40%"}
+1. **`-` red**: what goes. Read these first.
+2. **`+` green**: what arrives
+3. **Line 1**: changed unasked; harmless, but read it
+4. **`1. Yes`** accepts; **Esc** refuses
+:::
+::::
+
+::: {.notes}
+The box is from another project; the shape is the same. Two red lines
+where one was asked for: the extra one is a comment. Notice it, then
+accept it. The country edit has no red lines and thirty green ones.
+:::
+
+:::
+
+::: {.content-hidden when-format="revealjs"}
+
+![The approval box for an edit. Two red lines: the line asked about, and a header comment rewritten without being asked. The screen is from another project; the box is the same.](figures/09-ai-code/S05-edit-dialog-diff.png){fig-align="center" fig-alt="Claude Code's edit approval box: Update(code/lifeexp_by_continent.R), Edit file, a diff with line 1 removed in red and rewritten in green, line 5 removed in red and replaced by two green lines using sum, and the question Do you want to make this edit? with the answers 1. Yes, 2. Yes, and switch to accept edits, 3. No."}
+
+The tool shows an edit as a diff before it lands: removed lines in red
+with `-`, added lines in green with `+`. Read every red line first. In
+the box shown, two lines go: the line asked about, and a header
+comment the tool rewrote although nobody asked. It is harmless, and it
+is the kind of extra change the red lines exist to show. `1. Yes`
+accepts. The postdoc edit is one comment and one line, all green; the
+country edit is thirty green lines, and every country name in them is
+question 4.
+
+:::
+
+## Writing the hand counts into the script {#hand-check}
 
 ```diff
-diff --git a/code/lifeexp_by_continent.R b/code/lifeexp_by_continent.R
-index 751a6b8..7687c9d 100644
---- a/code/lifeexp_by_continent.R
-+++ b/code/lifeexp_by_continent.R
-@@ -1,8 +1,9 @@
--# Mean life expectancy by continent for a given year (base R only)
-+# Population-weighted mean life expectancy by continent for a given year (base R only)
- 
- lifeexp_by_continent <- function(d, yr) {
-   sub <- d[d$year == yr, ]
--  tapply(sub$lifeExp, sub$continent, mean)
-+  tapply(sub$lifeExp * sub$pop, sub$continent, sum) /
-+    tapply(sub$pop, sub$continent, sum)
- }
- 
- d <- read.csv("data/gapminder.csv", stringsAsFactors = FALSE)
+ placements$postdoc <- grepl("post[- ]?doc", placements$position, ignore.case = TRUE)
++
++# Counted on the page on 2026-09-21: 16 rows for 2026; postdoc spellings
++# 15 + 9 + 1. When the page changes this stops the script: recount, then edit.
++stopifnot(sum(placements$year == 2026) == 16, sum(placements$postdoc) == 25)
 ```
 
-`git diff` in Terminal 2 shows the same change git's way: one comment
-line and one expression replaced, nothing else in the file touched.
-Session → Restart R, Source:
+::: {.content-visible when-format="revealjs"}
+
+- You type it, in RStudio. The checker is not the thing being checked.
+- The numbers are the ones you counted; the comment says when.
+- When the page changes, the script stops and says so. That is the
+  point, not a nuisance.
+- Then commit: `git add code/placements.R`, `git commit -m "Scrape
+  placements, flag postdocs (Claude Code); two hand counts"`.
+
+::: {.notes}
+Step five of the loop. Two counts you did by hand, now run on every
+Source. The commit message says who wrote what.
+:::
+
+:::
+
+::: {.content-hidden when-format="revealjs"}
+
+The hand counts were done once, by a person. They become a line the
+script runs every time. Type it yourself in RStudio, after the `postdoc`
+line and before `write.csv`, save, Session → Restart R, Source: no
+error. The checker is not the thing being checked, so in a graded
+repository typing it yourself is the default.
+
+The counts will go stale: the page adds a class every year. When it
+does, the script stops with `Error: sum(placements$year == 2026) == 16
+is not TRUE`, which is the script telling you that the source changed
+and the counts need redoing. Recount on the page, edit the numbers and
+the date in the comment, run again. A check that never fails is a
+check on nothing.
+
+Then commit, with a message that says who wrote what: the scraper and
+the flag are the tool's, patched by nobody; the counts are yours. The
+same sentence fills the disclosure block of a submission.
+
+```bash
+git add code/placements.R
+git commit -m "Scrape placements, flag postdocs (Claude Code); two hand counts"
+git log --oneline
+#> <your hash> Scrape placements, flag postdocs (Claude Code); two hand counts
+#> <your hash> New project
+```
+
+:::
+
+## Prompt 3: a country column {#prompt-country}
+
+```{.markdown filename="Prompt to paste into Claude Code (captured run)"}
+Add a column country with the country of the organization. Change nothing
+else. Run it again and show me the number of rows per country.
+```
 
 ```r
-source("code/lifeexp_by_continent.R")
-#>   Africa Americas     Asia   Europe  Oceania 
-#> 54.56441 75.35668 69.44386 77.89057 81.06215 
-```
-
-Oceania prints 81.06215. Expected 81.06. Step 4 passes.
-
-:::
-
-## Writing the hand check into the script: stopifnot() {#institutionalize}
-
-```bash
-git diff                          # after typing the check in RStudio
-```
-
-```diff
--print(lifeexp_by_continent(d, 2007))
-+res <- lifeexp_by_continent(d, 2007)
-+print(res)
-+
-+# Check: Oceania 2007 by hand. Australia 81.235 (20,434,176 people) and
-+# New Zealand 80.204 (4,115,771 people) give 81.06.
-+stopifnot(abs(res["Oceania"] - 81.06) < 0.01)
+# Country of the organization. The page does not list it, so it is inferred
+# from the organization name: the first matching pattern below wins, and
+# anything unmatched is treated as United States (the large majority).
+# ... "DTUM" is read as TUM (Munich).
+country_patterns <- c(
+  "Australia"    = "Monash|New South Wales|University of Sydney",
+  "Canada"       = "Alberta|Calgary|Ottawa",
+  ...                                        # sixteen entries in all
+)
+placements$country <- "United States"
 ```
 
 ::: {.content-visible when-format="revealjs"}
 
-- You type it. The checker is not the thing being checked.
-- Decimals with a tolerance: `abs(x - 81.06) < 0.01`, never `==`.
-- Change the mean back and the script stops here.
+- It listed the 107 organizations, then typed sixteen patterns and a
+  default. 77 rows are "United States" because no pattern matched.
+- Its reply: the page does not list countries, so they are inferred;
+  the non-US assignments "all look right".
 
 ::: {.notes}
-Step five. You type the line yourself. The comment says where the
-numbers came from; the line stops the script when the value drifts.
-`stopifnot()` is the function they met when writing their own
-functions; the check is the same call in a new place.
+Read the green lines in the box. Every country name in them is a fact
+the page does not contain.
 :::
 
 :::
 
 ::: {.content-hidden when-format="revealjs"}
 
-A person did the hand check once. It becomes a line the script runs
-every time. Type it yourself in RStudio: open
-`code/lifeexp_by_continent.R`, replace the last line with the three
-lines and the comment above, save. The checker is not the thing being
-checked, and in a graded repository typing it yourself is the default.
-Stage the patch first (`git add code/lifeexp_by_continent.R` in
-Terminal 2), so `git diff` afterwards shows only the check.
+The same shape of prompt as the postdoc flag, and a different kind of
+answer. The tool listed the 107 distinct organizations, looked up five
+of them it did not recognize, and then typed into the script a table of
+sixteen patterns mapping fragments of organization names to countries,
+with a default: every organization no pattern matches is "United
+States". It ran the script and reported the counts, 77 United States,
+7 China, 4 India, and so on, and added that the page does not list
+countries, that they are therefore inferred from the names, and that
+the non-US assignments "all look right". Two judgment calls were
+flagged: "DTUM", which it read as the Technical University of Munich,
+and international organizations counted at their headquarters.
 
-The tolerance is 0.01 because 81.06 is a rounded number; compare
-decimals with a tolerance, never with `==`. In R, `81.235 - 69.120` is
-`12.114999...`, so `== 12.115` is `FALSE` on correct code and
-`round(81.235 - 69.120, 2)` prints `12.11`. If anyone later changes the
-function back to the simple mean, the script prints the table and then
-stops with `Error: abs(res["Oceania"] - 81.06) < 0.01 is not TRUE`.
+The block as written, in full:
 
-The full file, as it stands after the check:
-
-```{.r filename="code/lifeexp_by_continent.R"}
-# Population-weighted mean life expectancy by continent for a given year (base R only)
-
-lifeexp_by_continent <- function(d, yr) {
-  sub <- d[d$year == yr, ]
-  tapply(sub$lifeExp * sub$pop, sub$continent, sum) /
-    tapply(sub$pop, sub$continent, sum)
+```{.r filename="code/placements.R (the country block, prompt 3)"}
+# Country of the organization. The page does not list it, so it is inferred
+# from the organization name: the first matching pattern below wins, and
+# anything unmatched is treated as United States (the large majority).
+# International organizations (IMF, World Bank, IDB, USAID) are assigned the
+# country of their headquarters. "DTUM" is read as TUM (Munich).
+country_patterns <- c(
+  "Australia"    = "Monash|New South Wales|University of Sydney",
+  "Canada"       = "Alberta|Calgary|Ottawa",
+  "China"        = "Beijing|Peking|Renmin|Industrial and Commercial Bank of China|Xi.an Jiaotong",
+  "Finland"      = "Finland",
+  "France"       = "Paris School of Economics",
+  "Germany"      = "Ludwig-Maximilian|DTUM",
+  "Hong Kong"    = "Hong Kong",
+  "India"        = "Azim Premji|Indian Institute of Management|IIMA|Krea",
+  "New Zealand"  = "New Zealand",
+  "Norway"       = "Norwegian",
+  "Saudi Arabia" = "KAPSARC",
+  "Singapore"    = "Nanyang|^NUS$",
+  "South Korea"  = "KDI",
+  "Switzerland"  = "Bern",
+  "Vietnam"      = "VNUHCM",
+  "Zambia"       = "Zambia"
+)
+placements$country <- "United States"
+for (ctry in names(country_patterns)) {
+  hit <- grepl(country_patterns[[ctry]], placements$organization) &
+    placements$country == "United States"
+  placements$country[hit] <- ctry
 }
-
-d <- read.csv("data/gapminder.csv", stringsAsFactors = FALSE)
-res <- lifeexp_by_continent(d, 2007)
-print(res)
-
-# Check: Oceania 2007 by hand. Australia 81.235 (20,434,176 people) and
-# New Zealand 80.204 (4,115,771 people) give 81.06.
-stopifnot(abs(res["Oceania"] - 81.06) < 0.01)
-```
-
-The alternative is to ask for the check as a patch. If you use it, read
-the `stopifnot()` line in the box against the two Oceania rows before
-`1. Yes`. Then read the red lines; the only one should be the `print`.
-
-```{.markdown filename="Prompt to paste into Claude Code (the alternative: ask for the check)"}
-Add a check to code/lifeexp_by_continent.R: after the result is computed and
-printed, stopifnot() that the Oceania value is within 0.01 of 81.06. Put a
-comment above it giving the two rows the number comes from. Change nothing
-else. Do not run the script.
 ```
 
 :::
 
-## Committing the patched script {#commit}
+## Where the countries came from {#countries-lesson}
 
-```bash
-git add code/lifeexp_by_continent.R
-git commit -m "Weighted life expectancy by continent, with the Oceania check"
-git log --oneline
-#> c0dd7ee Weighted life expectancy by continent, with the Oceania check
-#> 4993e56 Add the Gapminder table
-```
+- The page names a place for 14 of 109 rows. Nothing else on the page
+  says a country.
+- The rest is memory: a table it typed, and a default. It said so, in
+  a comment and in its reply, and the column still went into the CSV.
+- DTUM: Denmark in one run, Germany in the next. Same prompt, same page.
+- Plausible is not the same as right. A fact it did not read is a
+  guess, however confident the sentence around it.
+- The script ran without error both times.
 
 ::: {.content-visible when-format="revealjs"}
 
-- Read, then run, then commit, in that order.
-- The transcript is not in the repository; the script, the check and
-  the message are.
-
 ::: {.notes}
-Two commits. The second holds a function, a check, and a message. Say in
-the message who wrote what; it costs a few words.
+Two runs on the same evening. Ask the room which one is right. Nobody
+in the room knows, and that is the answer: it is not data.
 :::
 
 :::
 
 ::: {.content-hidden when-format="revealjs"}
 
-Commit after you have read the diff and the run agrees, never before.
-The message above is the captured one. A better one says who wrote what:
-`Weighted life expectancy by continent (Claude Code, patched), with the
-Oceania check`. The next reader needs to know which lines came from
-where. The same sentence fills the disclosure block in every
-submission's note:
+Count what the page supports. Fourteen of the 109 organization strings
+name a place ("University of Alberta, Canada", "KDI School ... (Korea)",
+"Federal Home Loan Bank of Topeka, KS"). For the other 95 the page says
+nothing, and the tool cannot read a country from a name; it can only
+remember one. The table it typed is a set of claims about the world,
+and the default is a larger one: 77 rows became "United States" because
+no pattern matched them, which is the same fate for "Clarkson
+University" and for an organization it had never heard of.
 
-```{.markdown filename="AI disclosure, for this commit"}
-## AI disclosure
-- Tools: Claude Code
-- Used for: lifeexp_by_continent(), then a patch to weight by pop
-- Checked: Oceania 2007 by hand, 81.06; the check is in the script
+The tool was honest about it. The comment says "inferred", the reply
+says the page has no country field, and it flagged the two entries it
+was least sure of. Honesty in the transcript does not change what is in
+the CSV: a country column with no source, ready to be mapped, tabulated
+and cited.
+
+Run the same prompt twice and the guess moves. On the same evening, the
+first run read "DTUM" as DTU Management in Denmark; the second, from
+the same page with the same prompt, read it as the Technical University
+of Munich in Germany. Both runs wrote a country, both ran without error,
+and both replies said the assignments looked right. That is what
+"plausible is not the same as right" looks like in a column.
+
+:::
+
+## What would have caught it earlier {#catch-earlier}
+
+1. **A plan before code.** "Describe your approach before writing any
+   code." The captured reply proposes a lookup table it would "populate
+   myself from knowledge of the institutions" and mark "the handful I'm
+   unsure about". You read that and say no.
+2. **Question 4 of the five.** Names and constants yours? A
+   sixteen-entry table of literals is a constant you did not supply.
+3. **A reviewer with fresh eyes.** A read-only subagent, later on this
+   page, found it in one turn.
+
+::: {.content-visible when-format="revealjs"}
+
+::: {.notes}
+All three are cheap. The plan costs one sentence in the prompt and one
+minute of reading.
+:::
+
+:::
+
+::: {.content-hidden when-format="revealjs"}
+
+Three habits from the first part of this page would each have caught
+the column before it existed. The cheapest is the plan. Sent on the
+same project before prompt 3, "Describe your approach before writing
+any code" produced the reply below: a hand-curated lookup table, filled
+in "from knowledge of the institutions", with the uncertain ones
+flagged. A reader who owns the question stops there: the source is the
+model's memory, so the column is not wanted in that form.
+
+The second is question 4 of the five questions for any diff: are the
+names and constants yours? A table of sixteen literals is a constant,
+and you did not supply it. The third is a reviewer that never saw the
+conversation, the subagent in the seventh part of this page, which
+reported the table and the default with line numbers in one turn.
+
+::: {.callout-tip collapse="true"}
+## The captured plan reply, in full
+
+````{.default}
+⏺ Reply:
+  Here's what I found and what I'd do.
+  
+  **What's there.** `code/placements.R` scrapes the Dyson placements table and writes `data/placements.csv` (109 rows; columns `year, name, position, organization, postdoc`). The `organization` column has ~105 distinct free-text strings — mixed granularity (`"Brown"`, `"NUS"`, `"DTUM"`, `"Stout"`), embedded departments (`"Purdue University, Department of Agricultural Economics"`), occasional location hints (`"Peking University (Beijing)"`, `"KDI School … (Korea)"`, `"University of Alberta, Canada"`), and a few two-organization entries (`"National Bureau of Economic Research, Claremont McKenna College"`).
+  
+  **Approach: a hand-curated lookup table, joined in the script.**
+  
+  1. **New file `data/org_country.csv`** with two columns, `organization, country`, one row per distinct organization string exactly as it appears in the scraped data (after `trimws`). I'd populate it myself from knowledge of the institutions, and mark the handful I'm unsure about in my reply so you can check them.
+  2. **Edit `code/placements.R`**: after the `postdoc` flag and before `write.csv`, read the lookup, `match()` on the exact organization string, and add `placements$country`. If any organization isn't in the table, print the unmapped names and leave `country = NA` (warn rather than stop, so a re-scrape never fails when a new graduate appears — you just extend the table). Column order: `year, name, position, organization, country, postdoc`.
+  
+  **Why a lookup table rather than the alternatives.**
+  - Regex heuristics ("University of X" → US) break immediately on `University of Sydney`, `University of Bern`, `University of Calgary`.
+  - Geocoding / ROR / web APIs add a network dependency and choke on abbreviations like `NUS`, `IIMA`, `DTUM`, `Brown`.
+  - The dataset is ~100 rows; a table is trivial to maintain, fully reproducible, and the script rewrites `placements.csv` on every run, so the mapping has to live outside that file anyway.
+  
+  **Judgment calls I'd make unless you say otherwise.**
+  - **Country labels:** plain English short names (`United States`, `United Kingdom`, `South Korea`, `Hong Kong`, …). I can add an ISO3 code column too if you want it for later joins.
+  - **International organizations** (World Bank, IMF, Inter-American Development Bank, USAID): `United States` — headquarters location. Alternative is a separate "International" label; say which you prefer.
+  - **Hong Kong**: `Hong Kong`, not `China`.
+  - **Multinationals** (Uber, Citibank, Morgan Stanley, Capital One, StoneX, Acadian): country of headquarters (US), since the `position` text doesn't give an office location.
+  - **Two-org entries**: country of the first-listed organization (both examples are US anyway).
+  - **Uncertain ones I'd flag:** `DTUM` (likely DTU Management, Denmark), `Stout` (US consulting firm), `Cooper/Smith` (US), `Econic Partners LLC` (US), `Center for Governmental Research` (US, Rochester NY).
+  
+  If that all sounds right — or you want ISO codes / a different rule for international orgs — tell me and I'll write it.
+````
+
+:::
+
+:::
+
+## The fix: facts you supply live in a data file {#fix-countries}
+
+```{.markdown filename="Prompt to paste into Claude Code (captured run)"}
+The page does not state countries, so the lookup is a guess. Replace it: write
+the distinct organizations to data/countries.csv with an empty country column
+for me to fill in, read that file in the script, and set country to NA when
+the organization is not in it or its country is empty. Change nothing else.
+Run it and tell me how many rows have NA.
 ```
 
-The transcript is not in the repository; the script, the check and the
-message are, and that is the record. Hashes differ on every laptop;
-messages match.
+```r
+countries <- read.csv(file.path("data", "countries.csv"), stringsAsFactors = FALSE)
+countries$country[trimws(countries$country) == ""] <- NA
+placements$country <- countries$country[match(placements$organization,
+                                              countries$organization)]
+```
+
+::: {.content-visible when-format="revealjs"}
+
+- `data/countries.csv`: 107 organizations, an empty country column,
+  written once.
+- 109 of 109 rows are `NA` until you fill it. The CSV claims nothing
+  nobody checked.
+- Fill ten rows from the organizations' pages, run, commit the file.
+
+::: {.notes}
+The tool did the plumbing: the file, the match, the NA. The facts are
+yours to type, and git records that you typed them.
+:::
+
+:::
+
+::: {.content-hidden when-format="revealjs"}
+
+The fix keeps the plumbing and moves the facts. The prompt says what is
+wrong (the lookup is a guess), what to do instead (a data file with the
+organizations, filled in by you), and what to do with the gaps (`NA`).
+The tool wrote `data/countries.csv` once, 107 rows with an empty
+`country` column, replaced the pattern table with three lines that read
+the file and match on the organization, ran the script, and reported
+that all 109 rows have `NA`. That is the right answer for now: the
+column claims nothing until a person supplies a fact.
+
+Filling the file is research, not typing: each country comes from the
+organization's own page, and a row you cannot settle stays empty. Commit
+the file with a message that says the countries are yours. From then on
+the fact, its source and who supplied it are in the record, and the
+script never invents a country for a new organization; it prints `NA`
+and waits for you.
+
+::: {.callout-tip collapse="true"}
+## The captured transcript
+
+````{.default}
+⏺ Read(<project>code/placements.R)
+  ⎿ (the file)
+⏺ Bash(ls -la data/ && head -3 data/placements.csv 2>/dev/null; Rscript -e 'library(rvest)' && echo ok)
+  ⎿ total 24
+    drwxr-xr-x@ 3 ao332  wheel     96 Sep 21 23:37 .
+    drwxr-xr-x@ 8 ao332  wheel    256 Sep 21 23:39 ..
+    -rw-r--r--@ 1 ao332  wheel  10830 Sep 21 23:38 placements.csv
+    "year","name","position","organization","postdoc","country"
+    2026,"Trevor Dean Arnold","Postdoc","University of Calgary Department of Economics",TRUE,"Canada"
+    2026,"Molly Jane Doruska","Assistant Professor","Clarkson University",FALSE,"United States"
+    ok
+⏺ Reply:
+  I'll write the template file once (a one-off, so the script never overwrites your filled-in file), then change the script to read it.
+⏺ Bash(Rscript -e '
+p <- read.csv("data/placements.csv", stringsAsFactors = FALSE)
+orgs <- sort(unique(p$organization))
+write.csv(data.frame(organization = orgs, country = ""), "data/countries.csv", row.names = FALSE)
+cat(length(orgs), "organizations\n")'; head -5 data/countries.csv)
+  ⎿ 107 organizations
+    "organization","country"
+    "Acadian Asset Management",""
+    "Amherst College",""
+    "Analysis Group",""
+    "Arizona State University, School of Public Affairs",""
+⏺ Edit(<project>code/placements.R)
+  - # Country of the organization. The page does not list it, so it is inferred
+  - # from the organization name: the first matching pattern below wins, and
+  - # anything unmatched is treated as United States (the large majority).
+  - # International organizations (IMF, World Bank, IDB, USAID) are assigned the
+  - # country of their headquarters. "DTUM" is read as TUM (Munich).
+  - country_patterns <- c(
+  -   "Australia"    = "Monash|New South Wales|University of Sydney",
+  -   "Canada"       = "Alberta|Calgary|Ottawa",
+  -   "China"        = "Beijing|Peking|Renmin|Industrial and Commercial Bank of China|Xi.an Jiaotong",
+  -   "Finland"      = "Finland",
+  -   "France"       = "Paris School of Economics",
+  -   "Germany"      = "Ludwig-Maximilian|DTUM",
+  -   "Hong Kong"    = "Hong Kong",
+  -   "India"        = "Azim Premji|Indian Institute of Management|IIMA|Krea",
+  -   "New Zealand"  = "New Zealand",
+  -   "Norway"       = "Norwegian",
+  -   "Saudi Arabia" = "KAPSARC",
+  -   "Singapore"    = "Nanyang|^NUS$",
+  -   "South Korea"  = "KDI",
+  -   "Switzerland"  = "Bern",
+  -   "Vietnam"      = "VNUHCM",
+  -   "Zambia"       = "Zambia"
+  - )
+  - placements$country <- "United States"
+  - for (ctry in names(country_patterns)) {
+  -   hit <- grepl(country_patterns[[ctry]], placements$organization) &
+  -     placements$country == "United States"
+  -   placements$country[hit] <- ctry
+  - }
+  + # Country of the organization. The page does not list it, so it is looked up
+  + # in data/countries.csv (organization, country), a hand-filled file. Any
+  + # organization missing from that file, or with an empty country, gets NA.
+  + countries <- read.csv(file.path("data", "countries.csv"), stringsAsFactors = FALSE)
+  + countries$country[trimws(countries$country) == ""] <- NA
+  + placements$country <- countries$country[match(placements$organization,
+  +                                               countries$organization)]
+  ⎿ The file <project>code/placements.R has been updated successfully.
+⏺ Bash(Rscript code/placements.R && Rscript -e 'p <- read.csv("data/placements.csv"); cat("NA country:", sum(is.na(p$country)), "of", nrow(p), "\n")')
+  ⎿ Wrote 109 rows to data/placements.csv 
+    NA country: 109 of 109
+⏺ Reply:
+  Done.
+  
+  - `data/countries.csv` — 107 distinct organizations (sorted), `country` column empty for you to fill in. Written once as a one-off; the script only reads it, so it won't overwrite your entries.
+  - `code/placements.R:39-45` — the hardcoded pattern table and `"United States"` default are gone. The script now reads `data/countries.csv`, treats empty countries as NA, and assigns `country` via `match()` on the organization; unmatched organizations get NA. Nothing else changed.
+  
+  Ran it: **109 of 109 rows have NA** for `country`, as expected since the file is still blank.
+````
+
+:::
 
 :::
 
@@ -1515,83 +1837,53 @@ messages match.
 ### Exercise
 
 ```bash
-# Exercise 2 (7 minutes). Same project. Claude Code stays in Terminal 1;
-# git goes in Terminal 2 (Tools > Terminal > New Terminal).
+# Exercise 2 (8 minutes). Same project: Claude Code in Terminal 1, git in
+# Terminal 2.
 #
-# 1. Terminal 2:  git status
-#                 git add code/lifeexp_gain.R
-#                 git diff --staged
-#    The five questions: only that file? any - lines? the subtraction
-#    line (to minus from)? the names yours? a line you cannot explain?
+# 1. On the page, Ctrl+F (Cmd+F on a Mac): "postdoc", "post-doc",
+#    "post doc". Add the three counts. Write the sum down.
 #
-# 2. RStudio: open code/lifeexp_gain.R. Replace the print line at the
-#    bottom with these three lines, then save:
-#      res <- lifeexp_gain(d, 1952, 2007)
-#      print(res)
-#      stopifnot(res["Oceania"] == "Australia")
+# 2. Paste Prompt 2 (postdoc). Read the edit box: which spellings does
+#    the pattern cover? 1. Yes. Compare its count with yours.
 #
-# 3. Terminal 2:  git diff     How many - lines? How many + lines?
+# 3. Paste Prompt 3 (country). Read the edit box before 1. Yes: where
+#    does each country come from? Count the country names typed into
+#    the code. Then 1. Yes, and read the table it prints.
 #
-# 4. Session > Restart R, Source. Five names, no error.
+# 4. Terminal 2: git diff. How many + lines are facts the page does not
+#    contain?
 #
-# 5. Terminal 2:  git add code/lifeexp_gain.R
-#    git commit -m "Add lifeexp_gain (Claude Code) and its hand check"
+# 5. Paste the fix prompt (previous section). Read the box, 1. Yes.
+#    Terminal 2: git status, then git add -A and a commit whose message
+#    says which lines are the tool's.
 #
-# Two answers to compare with the room: the number of - lines in git diff,
-# and the first line of git log --oneline.
+# Two answers to compare with the room: your postdoc count, and the
+# country your run gave DTUM.
 ```
 
 ::: {.content-hidden when-format="revealjs"}
 
-*Paired up?* Swap roles: the reader from Exercise 1 types now. *Prefer
-to ask the tool for the check?* The prompt is under the hand-check
-section above. Read the check line in the box against your paper
-before `1. Yes`. The only red line should be the `print`.
+*Paired up?* Swap roles: the reader from Exercise 1 types now. In step
+3, the reader says each country aloud and the typist says whether the
+page states it. In step 5, the box shows red lines for the whole
+pattern table; that is the removal you asked for.
 
 :::
 
 ### Solution
 
-```bash
-git diff
-```
-
-```diff
--print(lifeexp_gain(d, 1952, 2007))
-+res <- lifeexp_gain(d, 1952, 2007)
-+print(res)
-+stopifnot(res["Oceania"] == "Australia")
-```
-
-```bash
-git log --oneline
-#> <your hash> Add lifeexp_gain (Claude Code) and its hand check
-#> <your hash> ...                       # your earlier commits
-```
+Step 1: 15 + 9 + 1 = 25 when captured. Step 2: the box names three or
+four spellings; the count matches. Step 3: about sixteen country names
+in the code, plus "United States" as the default, none from the page.
+Step 4: every `+` line with a country name in it. Step 5: `git status`
+lists `code/placements.R` modified and `data/countries.csv` new; after
+the commit, `git log --oneline` starts with your message.
 
 ::: {.content-visible when-format="revealjs"}
 
-**One `-` line (the `print`), three `+` lines**; `git log --oneline`
-starts with your new message and a hash of your own.
-
-:::
-
-::: {.content-hidden when-format="revealjs"}
-
-Step 1, the five questions on `git diff --staged`. Question 1: `git
-status` lists one new file under `code/` and nothing else. Question 2: a new file has no
-`-` lines. Question 3: the subtraction is `_to` minus `_from`, matched
-by `merge()` (or `match()`). Question 4: the function and argument
-names are the prompt's; `1952` and `2007` appear only in the bottom
-line, where the prompt put them. Question 5: Exercise 1's solution
-explains `merge()`, `which.max()` and `seq_len()`.
-
-Step 3: two or more `-` lines mean something else changed while you
-typed. Read them. If one is the subtraction, `git restore
-code/lifeexp_gain.R` and type the check again. A check that names a
-country is a check on the whole chain: the subtraction, the matching,
-and `which.max`. It compares a string with `==`, which is exact; a
-decimal check uses a tolerance, as in the hand-check section.
+**25**; sixteen names plus a default, none from the page; DTUM varies
+from run to run (Denmark and Germany on the same evening); after the
+fix, 109 `NA`.
 
 :::
 
@@ -1600,162 +1892,32 @@ decimal check uses a tolerance, as in the hand-check section.
 ::: {.content-visible when-format="revealjs"}
 
 ::: {.notes}
-Debrief (1 min). Hashes differ; messages match; the `-` count is one on
-almost every laptop. A laptop with two `-` lines: what was the second
-one? That is the room's second lesson in reading a diff. Hands for
-question 5: which line could nobody explain? Say what it does in one
-sentence.
+Debrief (2 min). Hands: who got Denmark for DTUM, who got Germany, who
+got something else? Same prompt, same page. Then: who read the box and
+pressed Esc instead of 1. Yes? That was the right call too; the fix
+prompt works from either state.
 
 When it fails, say:
 
-- `git diff --staged` prints nothing: the `git add` was skipped, or the
-  file has a different name; `git status` says which.
-- `git diff` prints nothing after step 2: the file was not saved;
-  Cmd+S / Ctrl+S, then again.
-- `stopifnot` fails on Source: the Oceania name is not Australia; the
-  function is wrong, not the check. Patch request, Exercise 1's failure
-  mode.
-- `could not find function "lifeexp_gain"`: the model named it
-  differently; `git diff --staged` shows the name it used. The name in
-  the prompt was the contract; ask for that name back.
-- `git commit` asks who you are: `git config --global user.name "Your
-  Name"` and `git config --global user.email "netid@cornell.edu"`, then
-  commit again.
-- `git commit` opens a screen asking for a message: the `-m` was
-  dropped; Escape, colon, `w`, `q`, Enter, and retype with `-m`.
+- The pattern matched fewer than the page count: it matched one
+  spelling; the check would have caught it; ask for a patch naming the
+  missing spelling.
+- No country table, it wrote NA for everything: a better run than the
+  captured one; read its reply for why, and go to step 5 anyway.
+- It asked to fetch the organizations' web pages: Esc; that is a
+  different task, and today the facts are yours to supply.
+- `git diff` shows the postdoc line removed: "Change nothing else" was
+  not held; `git restore code/placements.R` and ask again.
 :::
-
-:::
-
-## The edit approval box as a diff, and /diff {#diff-on-screen}
-
-::: {.content-visible when-format="revealjs"}
-
-:::: {.columns}
-::: {.column width="60%"}
-![](figures/09-ai-code/S08-edit-dialog-check.png){height="415" fig-alt="Claude Code's edit approval box for code/lifeexp_gain.R: line 20, print(lifeexp_gain(d, FROM, TO)), in red; four green lines, result <- lifeexp_gain(d, FROM, TO), print(result), a hand-checked-case comment, and stopifnot(result['Oceania'] == 'Australia'); then the question with the answers 1. Yes, 2. Yes, and switch to accept edits, 3. No."}
-:::
-::: {.column width="40%"}
-1. **Edit file**, and the path
-2. **One `-`, four `+`**: read before `1. Yes`
-3. **The box is a diff**: `-`/`+`, before the file changes
-4. **`/diff`** afterwards: the same change, from git
-:::
-::::
-
-::: {.notes}
-Every edit arrives as a diff in the tool itself. Other interfaces to
-the tool show the same diff in a window. Reading it here and reading it
-in `git diff` are the same act.
-:::
-
-:::
-
-::: {.content-hidden when-format="revealjs"}
-
-![The edit approval box is a diff. One line out, four in, before the file changes.](figures/09-ai-code/S08-edit-dialog-check.png){fig-align="center" fig-alt="Claude Code's edit approval box for code/lifeexp_gain.R: line 20, print(lifeexp_gain(d, FROM, TO)), in red; four green lines, result <- lifeexp_gain(d, FROM, TO), print(result), a hand-checked-case comment, and stopifnot(result['Oceania'] == 'Australia'); then the question with the answers 1. Yes, 2. Yes, and switch to accept edits, 3. No."}
-
-Version control is not only something you do after the tool has
-finished. The approval box is a diff: removed lines in red with `-`,
-added lines in green with `+`, shown before the file changes. The one
-above came from this prompt, sent in a new conversation with
-`code/lifeexp_gain.R` committed and a rules file, `CLAUDE.md`, in place.
-The section after next introduces that file; its rules are where the
-`FROM` and `TO` constants come from.
-
-```{.markdown filename="Prompt to paste into Claude Code (captured run)"}
-In code/lifeexp_gain.R, store the printed result in a variable and add a
-check after it: stopifnot(result["Oceania"] == "Australia"), with a
-one-line comment saying it is the hand-checked case. Change nothing
-else. Do not run it and do not commit.
-```
-
-After `1. Yes`, type `/diff` at the `❯` prompt. It opens the uncommitted
-changes as git sees them, inside the tool: one file, `+4 -1`. Enter views
-the lines; Esc closes. Other interfaces to the same tool, the desktop
-app and the editor extensions, show the same diff in a window.
-Whichever window you read it in, the diff is the same object `git diff`
-prints in Terminal 2.
-
-![`/diff` after the edit: the uncommitted changes, from git, inside Claude Code.](figures/09-ai-code/S09-slash-diff.png){fig-align="center" fig-alt="Claude Code after the edit, with the /diff panel open: Uncommitted changes (git diff HEAD), 1 file changed +4 -1, code/lifeexp_gain.R selected, and the keys to switch, select, view and close."}
-
-:::
-
-## Asking the agent to commit {#agent-git}
-
-::: {.content-visible when-format="revealjs"}
-
-:::: {.columns}
-::: {.column width="60%"}
-![](figures/09-ai-code/S10-git-commit-dialog.png){height="415" fig-alt="Claude Code asked to commit: its line that CLAUDE.md says not to use git but the request is explicit, then a Bash command box with the exact git add, git commit -m and git status command, the line This command requires approval, and the question Do you want to proceed? with the answers 1. Yes, 2. Yes, and don't ask again for git, 3. Yes, and switch to auto mode, 4. No."}
-:::
-::: {.column width="40%"}
-1. **Bash command**: the exact git line, shown first
-2. **Do you want to proceed?**: manual mode asks
-3. **A standing rule said no git**: the prompt overrode it
-4. **Auto mode asks nothing**: stay in manual
-:::
-::::
-
-::: {.notes}
-Asked to, it stages, commits, pushes and branches. In manual mode each
-git command is shown and approved. In auto mode, a commit or a push to
-the repository you are working in runs without a prompt: one more
-reason to stay in manual mode until the habit is formed.
-:::
-
-:::
-
-::: {.content-hidden when-format="revealjs"}
-
-![Asked for a commit, the agent shows the exact git command and waits. The line above the box says the standing rule in CLAUDE.md yielded to the explicit request.](figures/09-ai-code/S10-git-commit-dialog.png){fig-align="center" fig-alt="Claude Code asked to commit: its line that CLAUDE.md says not to use git but the request is explicit, then a Bash command box with the exact git add, git commit -m and git status command, the line This command requires approval, and the question Do you want to proceed? with the answers 1. Yes, 2. Yes, and don't ask again for git, 3. Yes, and switch to auto mode, 4. No."}
-
-The agent can run git for you. Asked to, it stages, commits, pushes and
-branches. The prompt of the captured run:
-
-```{.markdown filename="Prompt to paste into Claude Code (captured run)"}
-Commit code/lifeexp_gain.R with the message: Add the Oceania check to
-lifeexp_gain
-```
-
-Three things to read on the screen. First, the exact command, `git add`
-then `git commit -m` then `git status --short`, shown in full before it
-runs. The box is titled *Bash command*: a command for the terminal, here
-git. In manual mode every git command that changes the repository is
-such a command and asks. `1. Yes` runs it; `2.` and `3.` turn the asking
-off, for git or for everything; leave both. Second, the model's own
-line. The `CLAUDE.md` in this repository (a rules file, introduced in
-the next section) says "Do not use git. I commit.", and the tool said so
-and went ahead because the prompt asked explicitly. A rule in the file
-is a default; a sentence in the prompt overrides it. Third, what auto
-mode would have done. Depending on the plan, a session may start in
-auto mode. There, a commit or a push to the repository you are working
-in runs without a prompt. That is one more reason to check the status
-line and stay in manual mode until reading diffs is a habit.
-
-![After `1. Yes`: Committed as f0f9a04 on main, one file changed, working tree clean.](figures/09-ai-code/S11-after-commit.png){fig-align="center" fig-alt="Claude Code after the commit: Committed f0f9a04, then a line saying Committed as f0f9a04 on main, Add the Oceania check to lifeexp_gain, one file changed, working tree is clean, and the status line reading manual mode on."}
-
-Check the result in Terminal 2, as for any commit:
-
-```bash
-git log --oneline
-#> f0f9a04 Add the Oceania check to lifeexp_gain
-#> d479286 Largest life-expectancy gain per continent
-#> a216a2c Add CLAUDE.md with the project's conventions
-#> c0dd7ee Weighted life expectancy by continent, with the Oceania check
-#> 4993e56 Add the Gapminder table
-```
-
-The transcript says what it did. The diff shows what it did. Git keeps
-it.
 
 :::
 
 ## CLAUDE.md: standing instructions, read at every launch {#claude-md}
 
 - A markdown file at the root, read at every launch.
-- Layout, style, working rules. Nothing that changes per task.
-- Short: 28 lines here. The docs' target is under 200.
+- Layout, style, facts and checks, working rules. Nothing that changes
+  per task.
+- Short: 35 lines here. The docs' target is under 200.
 - Committed. It is part of the record.
 
 ::: {.content-visible when-format="revealjs"}
@@ -1772,7 +1934,7 @@ Everything you would otherwise paste into every prompt, written once.
 at the repository root that Claude Code reads at the start of every
 session in that folder. It holds what every prompt would otherwise
 repeat: the layout, the coding conventions, the working rules. Keep it
-short; the one here is 28 lines, and the docs' target is under 200. You
+short; the one here is 35 lines, and the docs' target is under 200. You
 commit it with the repository, so it shows in `git diff` and travels
 with the code.
 
@@ -1803,37 +1965,41 @@ code written.
 
 ::: {.content-hidden when-format="revealjs"}
 
-![`/init` proposes a CLAUDE.md in the same approval box as any new file.](figures/09-ai-code/S14-init-create-box.png){fig-align="center" fig-alt="Claude Code's approval box after /init: Create file, CLAUDE.md, the first lines of the draft, and the 1. Yes row, with the file name and the 1. Yes row circled in red."}
+![`/init` proposes a CLAUDE.md in the same approval box as any new file. The screen is from another project; the box is the same.](figures/09-ai-code/S14-init-create-box.png){fig-align="center" fig-alt="Claude Code's approval box after /init: Create file, CLAUDE.md, the first lines of the draft, and the 1. Yes row, with the file name and the 1. Yes row circled in red."}
 
 Type `/init` at the prompt. It reads the folder and proposes a
 `CLAUDE.md`, shown in the same approval box as any new file. Accept it,
 read it, and treat it as a draft: it describes what it found, not what
-you want. The next section replaces it.
+you want, and it knows nothing about where facts may come from. The
+next section replaces it.
 
 :::
 
-## The CLAUDE.md for gapminder-practice {#claude-md-seed}
+## The CLAUDE.md for placements {#claude-md-seed}
 
 ::: {.content-visible when-format="revealjs"}
 
 ```{.markdown filename="CLAUDE.md (excerpt; the full file is on the page)"}
-# gapminder-practice
+# placements
 ## Style
-- Base R only. No packages.
-- Short lower-case names with underscores: `life_exp`, `by_continent`.
-- A number that could change sits at the top of the script as a named
-  constant in capitals: `YEAR <- 2007`.
+- Base R. The only package is `rvest`, and only for reading HTML.
+- A number or a URL that could change sits at the top of the script as a
+  named constant in capitals: `URL <- "..."`.
 - Comments say why, not what.
-- A function does one job and returns a value; the script calls it.
+## Facts and checks
+- A fact that is not on the page and not in a data file does not go into
+  code. Put it in a file under `data/` that I fill in, and use `NA` until
+  I do.
+- After a merge or a filter, check the row count with `stopifnot()`.
 ## Working rules
-- Do not run scripts. I run them in RStudio.
-- Do not create files I did not ask for. Do not edit `.gitignore` or the
-  `.Rproj` file.
-- Do not use git. I commit.
+- Do not run scripts unless the prompt asks. I run them in RStudio.
+- Do not use git unless the prompt asks. I commit.
 ```
 
 ::: {.notes}
-Paste it over the draft, save, commit, relaunch. Twenty-eight lines.
+Paste it over the draft, save, commit, relaunch. Thirty-five lines. The
+"Facts and checks" section is this afternoon's lesson, written down
+once.
 :::
 
 :::
@@ -1841,40 +2007,50 @@ Paste it over the draft, save, commit, relaunch. Twenty-eight lines.
 ::: {.content-hidden when-format="revealjs"}
 
 The full file, with a copy button. In RStudio, click `CLAUDE.md` in the
-Files pane, select all, paste this over the draft, save. Commit it:
-`git add CLAUDE.md`, then `git commit -m "Add CLAUDE.md with the
-project's conventions"`. Quit Claude Code and relaunch so it reads the
-new file.
+Files pane (or File → New File → Text File, saved as `CLAUDE.md` at the
+project root), paste this over the draft, save. Commit it: `git add
+CLAUDE.md`, then `git commit -m "Add CLAUDE.md with the project's
+conventions"`. Quit Claude Code and relaunch so it reads the new file.
+The "Facts and checks" section is the country column, written as a
+standing rule: a fact the tool did not read goes into a data file you
+fill, never into code.
 
 ```{.markdown filename="CLAUDE.md"}
-# gapminder-practice
+# placements
 
 Conventions for any code written in this repository.
 
 ## Layout
 
-- `code/` holds one script per task. `data/` holds inputs and is never
-  edited by hand. `output/` holds what the scripts write.
-- Scripts run from the project root, so paths look like
-  `"data/gapminder.csv"`.
+- `code/` holds one script per task. `data/` holds what scripts read and
+  write; `data/countries.csv` is filled in by hand and never overwritten.
+- Scripts run from the project root, from a clean R session, with
+  relative paths like `"data/placements.csv"`.
 
 ## Style
 
-- Base R only. No packages.
-- Short lower-case names with underscores: `life_exp`, `by_continent`.
-- A number that could change sits at the top of the script as a named
-  constant in capitals: `YEAR <- 2007`.
-- Every script starts with a comment saying what it does and what it
-  produces.
+- Base R. The only package is `rvest`, and only for reading HTML.
+- Short lower-case names with underscores: `by_year`, `n_postdoc`.
+- A number or a URL that could change sits at the top of the script as a
+  named constant in capitals: `URL <- "..."`.
+- Every script starts with a comment saying what it reads and what it
+  writes.
 - Comments say why, not what.
 - A function does one job and returns a value; the script calls it.
 
+## Facts and checks
+
+- A fact that is not on the page and not in a data file does not go into
+  code. Put it in a file under `data/` that I fill in, and use `NA` until
+  I do.
+- After a merge or a filter, check the row count with `stopifnot()`.
+
 ## Working rules
 
-- Do not run scripts. I run them in RStudio.
+- Do not run scripts unless the prompt asks. I run them in RStudio.
 - Do not create files I did not ask for. Do not edit `.gitignore` or the
   `.Rproj` file.
-- Do not use git. I commit.
+- Do not use git unless the prompt asks. I commit.
 ```
 
 :::
@@ -1883,9 +2059,11 @@ Conventions for any code written in this repository.
 
 - **Naming**: `snake_case`; file names say what the script does.
 - **Structure**: one script per task; a function does one job.
-- **Named constants**: `YEAR <- 2007` at the top, never a bare number
+- **Named constants**: `URL <- "..."` at the top, never a bare value
   below.
 - **Comments say why**, not what. A header on every script.
+- **Facts and checks**: a fact not on the page goes in a data file; a
+  row count after every merge.
 - Written once. Read at every launch. Copy it to the next repository.
 
 ::: {.content-visible when-format="revealjs"}
@@ -1905,338 +2083,86 @@ names that say what the script does. One script per task; a function
 does one job and the script calls it. Numbers that could change sit at
 the top as named constants in capitals. Comments say why, not what.
 These are the habits you use when you write code yourself; written
-down, they are the brief an assistant reads at every launch. Copy the
-Style section from one repository to the next.
+down, they are the brief an assistant reads at every launch. The "Facts
+and checks" section is the one this project taught: a fact the tool did
+not read goes into a data file you fill, and a row count follows every
+merge. Copy the Style and the Facts sections from one repository to the
+next; the Layout section is the one that changes.
 
 :::
 
-## A two-sentence prompt after CLAUDE.md {#short-prompt}
+## A one-sentence prompt after CLAUDE.md {#short-prompt}
 
 ```{.markdown filename="Prompt to paste into Claude Code (captured run)"}
-Write code/lifeexp_gain.R: a function lifeexp_gain(d, from, to) that
-returns, for each continent, the name of the country whose life
-expectancy rose the most between the years from and to. At the bottom,
-read the data and print the result for 1952 to 2007.
+Write code/by_year.R: for each year, the number of placements and the number
+of postdocs, from data/placements.csv, printed as a table with one row per
+year.
+```
+
+```r
+# Reads data/placements.csv. Writes nothing; prints a table with one row
+# per year giving the number of placements and the number of postdocs.
+
+PLACEMENTS <- "data/placements.csv"
+
+count_by_year <- function(placements) {
+  ...
+  # Every placement belongs to exactly one year, so the counts must add up.
+  stopifnot(sum(by_year$n_placements) == nrow(placements))
+  by_year
+}
 ```
 
 ::: {.content-visible when-format="revealjs"}
 
-- No path for the data, no "base R only", no "do not run it": all in
-  `CLAUDE.md`.
-- The failure mode is not in `CLAUDE.md` either; it still belongs in
-  the prompt.
-- Two sentences. The file that came back is on the next slide.
+- Not in the prompt: the header, the constant, the function, the row
+  check, "do not run it". All in `CLAUDE.md`.
+- Its last sentence: "Not run, per the project rules."
 
 ::: {.notes}
 What is missing from the prompt is in the file it read at launch. The
-failure mode still goes in the prompt; conventions go in the file.
+check on the counts came from the "Facts and checks" section.
 :::
 
 :::
 
 ::: {.content-hidden when-format="revealjs"}
 
-With `CLAUDE.md` in place, this prompt asked for the same function as
-Exercise 1 in two sentences. What is not in the prompt: the data's path, the
-base-R rule, the constants rule, the working rules. All of it is in
-`CLAUDE.md`. Failure modes still belong in the prompt; the standing
-context carries the conventions, not the task. This prompt names no
-failure mode. It is the short form, shown to make the point about
-conventions, not the form to use for a function you have not checked.
+With `CLAUDE.md` in place, one sentence asked for a small script. What
+came back has a header saying what it reads and writes, the path as a
+named constant, a function that does one job and returns a value, a
+`stopifnot()` that the per-year counts add up to the row count, and a
+reply ending "Not run, per the project rules." None of that was in the
+prompt; all of it was in the file. The full script:
 
-:::
+```{.r filename="code/by_year.R"}
+# Reads data/placements.csv. Writes nothing; prints a table with one row
+# per year giving the number of placements and the number of postdocs.
 
-## The file produced with CLAUDE.md in place {#short-prompt-file}
+PLACEMENTS <- "data/placements.csv"
 
-::: {.content-visible when-format="revealjs"}
-
-:::: {.columns}
-::: {.column width="60%"}
-![](figures/09-ai-code/S06-gain-create-dialog.png){height="415" fig-alt="Claude Code's approval box for code/lifeexp_gain.R, twenty lines: a two-line header comment, FROM <- 1952 and TO <- 2007, the function with a why-comment above merge(), and the question Do you want to create lifeexp_gain.R? with three answers."}
-:::
-::: {.column width="40%"}
-1. **Header comment**: not in the prompt
-2. **`FROM <- 1952`, `TO <- 2007`**: not in the prompt
-3. **A why-comment** above `merge()`
-4. **Not run**: the last line of the reply
-:::
-::::
-
-::: {.notes}
-Header, constants, a comment that says why, and it did not run the
-script. None of that was in the prompt; all of it was in the file.
-:::
-
-:::
-
-::: {.content-hidden when-format="revealjs"}
-
-![The file that came back: a header, named constants, a why-comment. None of it was in the prompt.](figures/09-ai-code/S06-gain-create-dialog.png){fig-align="center" fig-alt="Claude Code's approval box for code/lifeexp_gain.R, twenty lines: a two-line header comment, FROM <- 1952 and TO <- 2007, the function with a why-comment above merge(), and the question Do you want to create lifeexp_gain.R? with three answers."}
-
-The file that came back has a header comment, the named constants
-`FROM` and `TO`, and a comment above `merge()` saying why rows are
-matched by country. The tool did not run it. The transcript's last
-sentence, "Not run, per the project rules.", shows that it read the
-standing rules.
-
-![After the write: the summary ends "Not run, per the project rules."](figures/09-ai-code/S07-gain-written-summary.png){fig-align="center" fig-alt="Claude Code after accepting: Wrote 20 lines to code/lifeexp_gain.R, the file, and a summary paragraph ending Not run, per the project rules."}
-
-Sourced, it prints five names:
-
-```r
-source("code/lifeexp_gain.R")
-#>      Africa    Americas        Asia      Europe     Oceania 
-#>     "Libya" "Nicaragua"      "Oman"    "Turkey" "Australia" 
-```
-
-The full file, for a laptop that fell behind:
-
-```{.r filename="code/lifeexp_gain.R"}
-# For each continent, the country whose life expectancy rose the most
-# between two years. Prints a named character vector (continent -> country).
-
-FROM <- 1952
-TO <- 2007
-
-lifeexp_gain <- function(d, from, to) {
-  start <- d[d$year == from, c("country", "continent", "lifeExp")]
-  end <- d[d$year == to, c("country", "lifeExp")]
-  # Merge on country so a country missing in either year drops out
-  # instead of misaligning the subtraction.
-  both <- merge(start, end, by = "country", suffixes = c("_from", "_to"))
-  both$gain <- both$lifeExp_to - both$lifeExp_from
-  tapply(seq_len(nrow(both)), both$continent, function(i) {
-    both$country[i][which.max(both$gain[i])]
-  })
+count_by_year <- function(placements) {
+  n_placements <- tapply(placements$postdoc, placements$year, length)
+  n_postdoc <- tapply(placements$postdoc, placements$year, sum)
+  by_year <- data.frame(
+    year = as.integer(names(n_placements)),
+    n_placements = as.integer(n_placements),
+    n_postdoc = as.integer(n_postdoc)
+  )
+  # Every placement belongs to exactly one year, so the counts must add up.
+  stopifnot(sum(by_year$n_placements) == nrow(placements))
+  by_year
 }
 
-d <- read.csv("data/gapminder.csv", stringsAsFactors = FALSE)
-print(lifeexp_gain(d, FROM, TO))
+placements <- read.csv(PLACEMENTS)
+by_year <- count_by_year(placements)
+print(by_year, row.names = FALSE)
 ```
 
-:::
-
-## A prompt without a loop and a prompt with one {#loop-prompts}
-
-| | Without a loop: every prompt so far | With a loop |
-|:--|:--|:--|
-| The check | on your paper | in the script, from your paper |
-| Who runs the script | you, in RStudio | the tool, with `Rscript`, until the check passes |
-| Who reads a failure | you; then a patch request | the tool; it patches and runs again |
-| What you read afterwards | the diff | the diff, and the output of the last run |
-
-```{.markdown filename="Prompt to paste into Claude Code (captured run, with a loop)"}
-Write code/gdp_by_continent.R. It defines gdp_by_continent(d, yr): the mean
-gdpPercap of each continent in year yr, as a named numeric vector with one
-number per continent. Base R only. At the bottom, read data/gapminder.csv into
-d, store gdp_by_continent(d, 2007) in res, print res, and check it with
-stopifnot(abs(res["Oceania"] - 32883) < 50). By hand, Oceania 2007 is 32,883:
-Australia 34,435.37 with 20,434,176 people and New Zealand 25,185.01 with
-4,115,771 people. Then run the script with Rscript code/gdp_by_continent.R. If
-the check fails, change the function so that the check passes and run again.
-Show me the output of the last run. Do not use git.
-```
-
-::: {.content-visible when-format="revealjs"}
-
-::: {.notes}
-Same function as practice task 4, and the prompt is ambiguous on
-purpose: "the mean gdpPercap". What differs is where the check lives and
-who runs the script.
-:::
-
-:::
-
-::: {.content-hidden when-format="revealjs"}
-
-Every prompt so far ended with "Do not run the script; I will run it
-myself", and you were the loop: run, compare with the paper, ask for a
-patch. The tool can be the loop instead, if the prompt gives it a check
-it can run and tells it to run until the check passes. Anthropic's
-[best practices](https://code.claude.com/docs/en/best-practices) call
-this giving Claude a way to verify its work: a check that returns pass
-or fail, so that the loop closes on its own. Here the check is the hand
-check you have been typing since the first delegation, written into the
-script and named in the prompt.
-
-The prompt above is the captured run's. It is ambiguous on purpose,
-"the mean gdpPercap of each continent", the same gap as the first
-delegation of the day. The check carries the hand value, 32,883, from
-the two Oceania rows (practice task 4 works it out). The prompt also
-says how to run the script and what to show at the end: the output of
-the last run is the evidence, and the docs say to ask for evidence
-rather than a claim of success.
-
-:::
-
-## The loop's run: a failed check, a patch, a pass {#loop-run}
-
-```{.default filename="The captured run, condensed; the full transcript is on the page"}
-Write(code/gdp_by_continent.R)        tapply(sub$gdpPercap, sub$continent, mean)
-Bash  Rscript code/gdp_by_continent.R
-        Africa  Americas      Asia    Europe   Oceania
-      3089.033 11003.032 12473.027 25054.482 29810.188
-      Error: abs(res["Oceania"] - 32883) < 50 is not TRUE
-Edit(code/gdp_by_continent.R)  tapply(sub$gdpPercap * sub$pop, sub$continent, sum) /
-                                 tapply(sub$pop, sub$continent, sum)
-Bash  Rscript code/gdp_by_continent.R
-      2560.930 21602.746  5432.372 25244.048 32884.555
-```
-
-- Two runs, one patch, no prompt from you in between.
-- Its reply: the check only passes for the population-weighted mean, so
-  that is what the final function computes.
-- The check is now the specification. A wrong check gives wrong code
-  that passes.
-
-::: {.content-visible when-format="revealjs"}
-
-::: {.notes}
-The morning's failure, caught and fixed without you. Ask the room what
-29,810 in the check would have produced. In manual mode each edit and
-each Rscript still asks: four boxes, `1. Yes` each.
-:::
-
-:::
-
-::: {.content-hidden when-format="revealjs"}
-
-The run: it listed the folder, read the existing script for its
-pattern, wrote a plain mean of `gdpPercap`, ran it, and the check
-stopped the script at Oceania 29,810. It edited the function to weight
-by `pop`, ran again, got 32,884.56, and replied with the output and two
-flags: that the request said "mean" but the check only passes for the
-weighted mean, and that `CLAUDE.md` says not to run scripts but the
-prompt asked. Two runs, one patch, and you typed nothing in between.
-
-The lesson is in the first flag. With a loop, the check is the
-specification: the tool changes the code until the check passes, and it
-will make a wrong check pass too. With 29,810 in the check, the simple
-mean, the first run passes, the function stays unweighted, and the reply
-reports success. So the value in the check comes from your hand, from
-rows you can see, exactly as in step 3 of the loop; the tool's loop
-does not replace that step, it depends on it.
-
-When to use a loop: when you have a check you trust and the tool can
-run, a hand value, a row count, a column list, a file that must exist.
-When not: when the check is the thing you are unsure of, or when a run
-has side effects you have not named, files written, downloads, long
-jobs. After a loop you still read the diff with the five questions;
-the tool's own summary is a transcript, and the diff is the fact. The
-docs describe stronger versions of the same loop, a goal the tool
-re-checks after every turn and a rule that stops it from finishing
-until a script passes; for one function, the prompt is enough.
-
-In manual mode each edit and each `Rscript` arrives as a box: a *Create
-file* box, a *Bash command* box, then the failed run in the transcript,
-an *Edit file* box with the red and green lines, a *Bash command* box,
-then the passing run. Four `1. Yes`. The run below was captured
-non-interactively with those tools allowed in advance, which is the
-same thing without the boxes.
-
-::: {.callout-tip collapse="true"}
-## The full captured transcript
-
-````{.default}
-⏺ Bash(ls code data && head -3 data/gapminder.csv)
-  ⎿ code:
-    lifeexp_by_continent.R
-    lifeexp_gain.R
-    
-    data:
-    gapminder.csv
-    "country","continent","year","lifeExp","pop","gdpPercap"
-    "Afghanistan","Asia",1952,28.801,8425333,779.4453145
-    "Afghanistan","Asia",1957,30.332,9240934,820.8530296
-⏺ Read(code/lifeexp_by_continent.R)
-  ⎿ 1	# Population-weighted mean life expectancy by continent for a given year (base R only)
-    2	
-    3	lifeexp_by_continent <- function(d, yr) {
-    4	  sub <- d[d$year == yr, ]
-    5	  tapply(sub$lifeExp * sub$pop, sub$continent, sum) /
-    6	    tapply(sub$pop, sub$continent, sum)
-    7	}
-    8	
-    9	d <- read.csv("data/gapminder.csv", stringsAsFactors = FALSE)
-    10	res <- lifeexp_by_continent(d, 2007)
-    11	print(res)
-    12	
-    13	# Check: Oceania 2007 by hand. Australia 81.235 (20,434,176 people) and
-    14	# New Zealand 80.204 (4,115,771 people) give 81.06.
-    15	stopifnot(abs(res["Oceania"] - 81.06) < 0.01)
-    16
-⏺ Reply:
-  Writing the script as specified — a plain mean of `gdpPercap` per continent — then running it.
-⏺ Write(code/gdp_by_continent.R)
-  # Mean GDP per capita by continent for a given year (base R only).
-  # Prints a named vector with one number per continent.
-  
-  YEAR <- 2007
-  
-  gdp_by_continent <- function(d, yr) {
-    sub <- d[d$year == yr, ]
-    tapply(sub$gdpPercap, sub$continent, mean)
-  }
-  
-  d <- read.csv("data/gapminder.csv", stringsAsFactors = FALSE)
-  res <- gdp_by_continent(d, YEAR)
-  print(res)
-  
-  # Check: Oceania 2007 by hand. Australia 34,435.37 (20,434,176 people) and
-  # New Zealand 25,185.01 (4,115,771 people) give 32,883.
-  stopifnot(abs(res["Oceania"] - 32883) < 50)
-  ⎿ File created successfully at: code/gdp_by_continent.R
-⏺ Bash(Rscript code/gdp_by_continent.R)
-  ⎿ Exit code 1
-       Africa  Americas      Asia    Europe   Oceania 
-     3089.033 11003.032 12473.027 25054.482 29810.188 
-    Error: abs(res["Oceania"] - 32883) < 50 is not TRUE
-    Execution halted
-⏺ Edit(code/gdp_by_continent.R)
-  - # Mean GDP per capita by continent for a given year (base R only).
-  - # Prints a named vector with one number per continent.
-  - 
-  - YEAR <- 2007
-  - 
-  - gdp_by_continent <- function(d, yr) {
-  -   sub <- d[d$year == yr, ]
-  -   tapply(sub$gdpPercap, sub$continent, mean)
-  - }
-  + # Population-weighted mean GDP per capita by continent for a given year
-  + # (base R only). Prints a named vector with one number per continent.
-  + 
-  + YEAR <- 2007
-  + 
-  + gdp_by_continent <- function(d, yr) {
-  +   sub <- d[d$year == yr, ]
-  +   # Weight by population so large countries count for more, as in the
-  +   # hand-computed Oceania check below.
-  +   tapply(sub$gdpPercap * sub$pop, sub$continent, sum) /
-  +     tapply(sub$pop, sub$continent, sum)
-  + }
-  ⎿ The file code/gdp_by_continent.R has been updated successfully.
-⏺ Bash(Rscript code/gdp_by_continent.R)
-  ⎿ Africa  Americas      Asia    Europe   Oceania 
-     2560.930 21602.746  5432.372 25244.048 32884.555
-⏺ Reply:
-  Output of the last run (exit code 0, check passes):
-  
-  ```
-     Africa  Americas      Asia    Europe   Oceania 
-   2560.930 21602.746  5432.372 25244.048 32884.555
-  ```
-  
-  What happened:
-  
-  1. **First run** — `gdp_by_continent` computed the plain (unweighted) mean of `gdpPercap`. Oceania came out at 29,810.19, i.e. (34,435.37 + 25,185.01)/2, and `stopifnot` failed.
-  2. **Fix** — the hand figure 32,883 is the population-weighted mean: (34,435.37 × 20,434,176 + 25,185.01 × 4,115,771) / 24,549,947 ≈ 32,884.6. I changed the function to weight by `pop` (same `tapply` pattern as `code/lifeexp_by_continent.R`) and updated the header comment to say so.
-  
-  Two things to flag:
-  - Your request said "mean gdpPercap", but the check only passes for the population-weighted mean, so that is what the final function computes. If you actually want the unweighted mean, the check constant should be 29,810 instead.
-  - The project CLAUDE.md says not to run scripts, but you explicitly asked for `Rscript` here, so I ran it. No git was used.
-````
-
-:::
+Sourced in RStudio, it prints one row per year, 2015 to 2026, with the
+number of placements and of postdocs. Conventions go in the file; the
+task, and any fact the tool might otherwise guess, still go in the
+prompt.
 
 :::
 
@@ -2342,57 +2268,113 @@ check against comes with each request.
 
 :::
 
-## The reviewer subagent's report {#reviewer-report}
+## The reviewer on placements.R: the report {#reviewer-report}
 
-```{.markdown filename="Prompt to paste into Claude Code (captured run)"}
-Use the hand-check-reviewer subagent to review code/lifeexp_by_continent.R
-against this rule: each country's life expectancy must be weighted by its
-population, the pop column. Report what the subagent says. Do not edit
+```{.markdown filename="Prompt to paste into Claude Code (captured run, before the fix)"}
+Use the hand-check-reviewer subagent to review code/placements.R against this
+rule: every value in the country column must come from the page or from a data
+file, never from a table typed into the code. Report what it says. Do not edit
 anything.
 ```
 
-```{.default filename="The subagent's report, as returned"}
-Rule: each country's life expectancy must be weighted by its population, the `pop`
-  column.
-Line (`code/lifeexp_by_continent.R`, lines 5-6): `tapply(sub$lifeExp * sub$pop,
-  sub$continent, sum) / tapply(sub$pop, sub$continent, sum)` — sum of lifeExp times
-  pop, divided by sum of pop, per continent.
-Verdict: follows.
+```{.default filename="The subagent's report, condensed; the full report is on the page"}
+Rule: every value in the country column must come from the page or from a
+  data file, never from a table typed into the code.
+Line that breaks it (code/placements.R, lines 44-67): country_patterns <- c(
+  "Australia" = "Monash|New South Wales|University of Sydney", ...) and
+  placements$country <- "United States".
+No data file is read anywhere; the only input is read_html(url) on line 10.
+Verdict: breaks.
 ```
-
-- Rule, line, verdict. Nothing edited: `git status` prints clean.
-- It read the file with fresh eyes; the quoted line is what you check.
 
 ::: {.content-visible when-format="revealjs"}
 
+- One turn, a fresh context, line numbers. Nothing edited: `git status`
+  is clean.
+- It found what question 4 finds. The difference: it did not write the
+  code it judged.
+
 ::: {.notes}
-Two things to read: the quoted line, against the file; and git status,
-which proves the fence held.
+Same rule as typing the check yourself: the checker is not the thing
+being checked.
 :::
 
 :::
 
 ::: {.content-hidden when-format="revealjs"}
 
-The captured run. The main conversation started the subagent with the
-rule and the file name; the subagent read the file and returned the
-three lines above; the main conversation relayed them and added that
-nothing was edited. `git status` in Terminal 2 confirms it. The report
-quotes the line, so the check is quick: open the file and read lines 5
-and 6. A report that names a verdict without quoting a line is a
-transcript claim; ask for the line.
+Sent on the project after prompt 3, before the fix. The main
+conversation started the subagent with the rule and the file name; the
+subagent read the script and returned the report; the main conversation
+relayed it, with the line numbers, and added that nothing was edited.
+`git status` in Terminal 2 confirms it. The report quotes the lines, so
+the check is quick: open the file and read them. A report that names a
+verdict without quoting a line is a transcript claim; ask for the line.
 
-Practice task 10 runs the same reviewer on `lifeexp_gain.R` against the
-gain rule, where the answer depends on two lines, the `merge()` and the
-subtraction.
+::: {.callout-tip collapse="true"}
+## The captured transcript
+
+````{.default}
+⏺ Agent(subagent_type: hand-check-reviewer)
+  prompt: Review the R script at code/placements.R (repo root: <project>) against this single rule:
+
+"Every value in the country column must come from the page or from a data file, never from a table typed into the code."
+
+Trace how the `country` column is populated. Report every place a country value could originate from a literal/lookup table typed into the code (e.g. named vectors, case_when/switch/ifelse with string literals, recode maps, hardcoded data frames), with file:line references. Also note which values do come from the page/scraped content or from a data file. State clearly whether the script passes or fails the rule, and why. Do not edit anything.
+⏺ Read(<project>code/placements.R)
+  ⎿ (the file)
+  ⎿ Rule: "Every value in the country column must come from the page or from a data file, never from a table typed into the code."
+    
+    Line that breaks it (`<project>code/placements.R`, lines 44-67):
+    ```r
+    country_patterns <- c(
+      "Australia"    = "Monash|New South Wales|University of Sydney",
+      ...
+      "Zambia"       = "Zambia"
+    )
+    placements$country <- "United States"
+    for (ctry in names(country_patterns)) {
+      hit <- grepl(country_patterns[[ctry]], placements$organization) &
+        placements$country == "United States"
+      placements$country[hit] <- ctry
+    }
+    ```
+    
+    Verdict: breaks.
+    
+    Trace of how `country` is populated:
+    - Line 62: every row is first set to the string literal `"United States"` typed in the code. Any organization that matches no pattern keeps this literal value.
+    - Lines 44-61: `country_patterns` is a named character vector typed into the code, a 16-entry lookup table mapping regex patterns on `organization` to country names (`"Australia"`, `"Canada"`, `"China"`, ..., `"Zambia"`). Line 66 assigns `ctry`, which is the name from this hardcoded vector, into `placements$country`.
+    - The comment on lines 39-43 confirms the page does not list the country and it is "inferred from the organization name" using the table below; it also encodes editorial choices in the code (IMF/World Bank/IDB/USAID assigned to headquarters country, "DTUM" read as TUM).
+    - There is no other assignment to `country` and no data file is read anywhere in the script (the only input is `read_html(url)` on line 10; the only file I/O is `write.csv` on line 70).
+    
+    What does come from the page: `year`, `name`, `position`, `organization` (lines 24-28, from `html_table` on the scraped table) and `postdoc` (line 37, derived by regex from the scraped `position`). The `organization` string is used as the match key for country, but the country strings themselves never come from the page or from a data file — 100% of `country` values originate in the literals on lines 44-62. Hence the script fails the rule.
+⏺ Reply:
+  The reviewer's verdict: **`code/placements.R` fails the rule.**
+  
+  **Where it breaks** (`code/placements.R:44-67`):
+  
+  - **Line 62** — `placements$country <- "United States"` sets every row to a string literal typed in the code. Any organization matching no pattern keeps this value.
+  - **Lines 44-61** — `country_patterns` is a 16-entry named vector typed into the code, mapping regexes on `organization` (e.g. `"Monash|New South Wales|University of Sydney"`) to country names (`"Australia"`, `"Canada"`, `"China"`, … `"Zambia"`). Line 66 writes those hardcoded names into `placements$country`.
+  - The comment at lines 39-43 acknowledges the page doesn't list a country and it's "inferred from the organization name," and it embeds editorial choices in code (IMF/World Bank/IDB/USAID → headquarters country; "DTUM" read as TUM).
+  - No data file is read anywhere — the only input is `read_html(url)` on line 10; the only file I/O is `write.csv` on line 70.
+  
+  **What does come from the page:** `year`, `name`, `position`, `organization` (lines 24-28, via `html_table`) and `postdoc` (line 37, regex on scraped `position`). `organization` is used as the match key, but 100% of the `country` strings originate in the literals on lines 44-62.
+  
+  No edits were made.
+````
+
+:::
 
 :::
 
 ## Tasks not to give Claude Code {#bad-at}
 
 - Outputs you cannot check by hand.
+- Facts it did not read: a country, a citation, a function's arguments.
+- Restricted data. It sends what it reads to Anthropic's servers:
+  develop on a public or synthetic sample, run the final code yourself.
 - Questions that do not touch the repository. Use a chat.
-- A folder with data you must not share. It can read everything.
 - Long stretches without reading: accept-edits mode, until reading
   diffs is a habit.
 
@@ -2407,12 +2389,17 @@ not read it.
 
 ::: {.content-hidden when-format="revealjs"}
 
-Four kinds of work do not belong in it. Outputs you cannot check by eye
+Five kinds of work do not belong in it. Outputs you cannot check by eye
 or by hand; it will produce a plausible number in a script that runs.
-Questions that do not touch the repository; open a chat instead. A
-folder holding data you must not share; it can read everything. Long
-stretches without reading; accept-edits mode exists, and it is not for
-the weeks in which reading diffs becomes a habit.
+Facts it did not read: a country, a citation, the arguments of a
+function in a package it half remembers; check the page, the paper and
+the documentation yourself. Restricted data: anything it reads is sent
+to Anthropic's servers, so check the data use agreement, let it develop
+the code on a public or synthetic sample with the same structure, and
+run the final code yourself on the real files. Questions that do not
+touch the repository; open a chat instead. Long stretches without
+reading; accept-edits mode exists, and it is not for the weeks in which
+reading diffs becomes a habit.
 
 If a model ever produces a value inside a script rather than writing
 the script, five more duties apply. Write down the model and its version
@@ -2426,10 +2413,10 @@ use a rule you can write down instead.
 
 ## A script that runs without error can still be wrong {#runs-clean}
 
-- The first script ran without error, printed five plausible numbers,
-  and answered the wrong question.
-- The number on paper caught it and the diff showed why; the check in
-  the script keeps it caught.
+- The country script ran without error twice and wrote 109 countries.
+  Fourteen came from the page.
+- Reading the diff made that visible; a data file you fill keeps it
+  visible; a dated count keeps the scraper honest.
 - The bottleneck is verification, not typing. A faster tool moves it to
   where it is easiest to skip.
 
@@ -2443,12 +2430,13 @@ A clean run is not a right answer.
 
 ::: {.content-hidden when-format="revealjs"}
 
-The first script ran without an error and printed five reasonable
-numbers. It answered a different question. Only the value on paper and
-the diff made that visible, and only the check in the script keeps it
-visible. The bottleneck is no longer typing; it is verification. Every
-faster tool moves that work to the end of the pipeline, where it is
-easiest to skip.
+The country script ran without an error, twice, and wrote a country
+for every one of 109 rows. Fourteen of them came from the page. Only
+reading the diff made that visible; only a data file you fill in keeps
+it visible; only a dated count in the script tells you when the scraper
+and the page have drifted apart. The bottleneck is no longer typing; it
+is verification. Every faster tool moves that work to the end of the
+pipeline, where it is easiest to skip.
 
 :::
 
@@ -2456,14 +2444,16 @@ easiest to skip.
 
 ::: {.content-visible when-format="revealjs"}
 
-Ten exercises on the session page, with solutions behind a click. All
-of them run in `gapminder-practice`, never in a graded repository.
+Nine exercises on the session page, with solutions behind a click. All
+of them run in `placements`, never in a graded repository.
 
-- **1–3** Read-only prompts, and scoping "analyze the data" down to one function
-- **4–5** The loop again: `gdpPercap` weighted by people; countries per continent
-- **6** Break the check on purpose, read the error, `git restore`
-- **7–8** CLAUDE.md: add a rule; an approval box read against `git diff`
-- **9–10** A loop prompt run to a pass; a reviewer subagent on `lifeexp_gain.R`
+- **1–2** Read-only prompts: an explanation of the scraper; what a page
+  change would do
+- **3–4** Facts and checks: fill ten countries; a count per organization
+  with a hand check
+- **5–6** Break things on purpose: the pattern; the check; `git restore`
+- **7–8** CLAUDE.md and the reviewer: add a rule; review `by_year.R`
+- **9** Your own small project, reorganized under a `CLAUDE.md`
 
 :::
 
@@ -2475,59 +2465,47 @@ of them run in `gapminder-practice`, never in a graded repository.
 
 ```bash
 # Practice
-# Everything below runs in gapminder-practice, Claude Code in manual
-# mode, git status clean before each task. Never in a graded repository.
+# Everything below runs in placements, Claude Code in manual mode,
+# git status clean before each task. Never in a graded repository.
 
-# Read-only prompts, and scoping
-#  1. Ask for a line-by-line explanation of code/lifeexp_gain.R with
+# Read-only prompts
+#  1. Ask for a line-by-line explanation of code/placements.R with
 #     "Do not edit anything." Read it against the file. Mark every line
-#     where the explanation is a description ("computes the gain") rather
-#     than a fact ("lifeExp_to minus lifeExp_from").
-#  2. Ask what code/lifeexp_gain.R prints for Oceania, "without running
-#     it". Does the reply give a name, a method, or both? Which can you
-#     trust?
-#  3. Ask, without editing anything, which files it WOULD create to
-#     "analyze the Gapminder data". Count them. Then write the scoped
-#     version of the first one as a delegation in the four-part shape
-#     (goal, failure mode, artifact and path, what not to do). Do not
-#     send it yet.
+#     where the explanation describes ("finds the right table") rather
+#     than states ("keeps the table whose header equals wanted").
+#  2. Ask, without editing anything, what the script would do if the
+#     page added a fifth column to the table. Find the line that decides
+#     it. Is the reply right?
 
-# The loop again
-#  4. Delegate gdp_by_continent(d, yr): the population-weighted mean of
-#     gdpPercap by continent. Oceania 2007 on paper first (Australia
-#     34,435.37, New Zealand 25,185.01; the two pop values are in the
-#     "by hand" section). Run, compare, type the check, commit.
-#  5. Delegate n_countries(d, yr): the number of countries per continent
-#     in year yr. On paper: Oceania is 2 and the five numbers sum to 142.
-#     Type both as conditions of one check. Commit.
+# Facts and checks
+#  3. Fill in ten rows of data/countries.csv from the organizations' own
+#     websites. Source the script; count the NA. Commit the file with a
+#     message that says the countries are yours.
+#  4. Delegate code/by_org.R: the number of placements per organization,
+#     sorted, printed. On the page, count one organization by hand
+#     (Cornell University, any spelling). Type the check. Commit.
 
-# Breaking the check
-#  6. In RStudio, reverse the subtraction in code/lifeexp_gain.R (swap
-#     the two names, whatever they are). Source. Read the error. Then
-#     git restore code/lifeexp_gain.R and git status.
+# Breaking things on purpose
+#  5. In RStudio, change the postdoc pattern to "postdoc" only. Source.
+#     Read the error. git restore code/placements.R; git status.
+#  6. Delete the two hand counts from the script and ask the tool to
+#     "make the script pass on the current page". Read the diff: what
+#     did it change? Then git restore.
 
-# CLAUDE.md
-#  7. Add one Style rule to CLAUDE.md: "Every function has a one-line
-#     comment above it saying what it returns." Commit. Relaunch. Ask
-#     for a small function (median lifeExp by continent in a year). Was
-#     the rule followed? Where in the diff?
-#  8. Ask: "Add a comment header to code/lifeexp_gain.R saying what it
-#     reads and what it prints. Change nothing else." Read the approval
-#     box: any red line? Accept. Then git diff. Do the box and git diff
-#     agree line for line?
+# CLAUDE.md and the reviewer
+#  7. Add one rule to CLAUDE.md: "Every script ends by printing the number
+#     of rows it wrote or read." Commit. Relaunch. Ask for a small script
+#     (placements per year, saved to data/by_year.csv). Where in the diff
+#     is the rule?
+#  8. Ask the hand-check-reviewer subagent to review code/by_year.R
+#     against this rule: "every count is checked against the row count".
+#     Does the report quote the stopifnot() line? git status afterwards.
 
-# Loops and subagents
-#  9. Task 4 again, as a loop. If task 4 left code/gdp_by_continent.R,
-#     delete it first. Paste the loop prompt from the page (it keeps
-#     "the mean gdpPercap", ambiguous on purpose, and puts the hand check
-#     in the script). Count the Bash boxes. Then git diff: what did it
-#     change to make the check pass? Delete the file and repeat with
-#     29810 in the check. What passes now?
-# 10. Create .claude/agents/hand-check-reviewer.md from the page, commit
-#     it, relaunch, and ask the subagent to review code/lifeexp_gain.R
-#     against this rule: "a gain is lifeExp in year to minus lifeExp in
-#     year from, matched by country name". Does the report quote the
-#     subtraction line and the matching line? git status afterwards.
+# Your own project
+#  9. Take a small existing project of your own, write a CLAUDE.md for
+#     it, and ask Claude Code to reorganize it into a clean, reproducible
+#     pipeline with a master script that runs everything in order. You
+#     know the code, so the errors are easy to spot. Read every diff.
 ```
 
 ### Solutions
@@ -2537,86 +2515,55 @@ of them run in `gapminder-practice`, never in a graded repository.
 
 ```bash
 # 1
-#   The which.max line is where explanations go vague: "picks the
-#   country with the largest gain" is a fact; "finds the best country"
-#   is a description. Mark any line where you could not redo the step
-#   from the explanation alone.
-# expected: at least one line marked; the merge() line is the usual one
+#   The header-matching lines are where explanations go vague. Mark any
+#   line where you could not redo the step from the explanation alone.
+# expected: at least one line marked; vapply() is the usual one
 
 # 2
-#   Without running it the tool has only the code to go on; it may
-#   give "Australia" with the method (largest gain of two). Trust the
-#   method you can follow; the name only after Source prints it.
-# expected: a method you can check against the four rows; a name you then verify
+#   The header would no longer equal wanted, so no table matches and the
+#   script stops with the "Expected exactly one placements table" error.
+#   A reply that says the script "would still work" is wrong.
+# expected: the if (length(hit) != 1) stop(...) lines
 
 # 3
-#   A typical answer lists three to six files (a script, a figure, a
-#   summary, sometimes a README). None of them has a value you can work
-#   out by hand. The scoped version names one function, one failure
-#   mode, one path, and what not to do. One shape is below.
-# expected: a count, and one prompt in the four-part shape; Oceania on
-#           paper: 80.72 in 2007 and 69.255 in 1952 (simple means)
+#   Ten countries from ten websites; 99 NA remain (of 109). The commit
+#   message names you as the source of the ten.
+# expected: sum(is.na(read.csv("data/placements.csv")$country)) == 99
 
 # 4
-#   On paper, the same form as the lifeExp case (pop in millions):
-#   (34,435 x 20.43 + 25,185 x 4.12) / 24.55 = 32,883 (unweighted:
-#   29,810). A hand result from rounded inputs needs a loose tolerance:
-#   stopifnot(abs(res["Oceania"] - 32883) < 50)
-# expected: Oceania 32884.56 printed; 29810.19 means countries were averaged
+#   table(placements$organization) sorted; Cornell appears under several
+#   spellings on the page, so count the exact string you check:
+#   stopifnot(res["Cornell University"] == 1)  (captured page)
+# expected: one number you counted, one check that names it
 
 # 5
-#   tapply(sub$country, sub$continent, length) or table(sub$continent).
-#   stopifnot(res["Oceania"] == 2, sum(res) == 142)
-# expected: Africa 52, Americas 25, Asia 33, Europe 30, Oceania 2
+#   The pattern matches 15 rows; the script stops:
+#   Error: sum(placements$postdoc) == 25 is not TRUE. git restore puts the
+#   committed file back.
+# expected: the error names the check; git status clean afterwards
 
 # 6
-#   Error: res["Oceania"] == "Australia" is not TRUE
-#   (the reversed subtraction makes New Zealand the largest). Then
-#   git restore code/lifeexp_gain.R; git status prints clean.
-# expected: five names printed, then the stop; git restore puts the
-#           committed file back
+#   With no counts to satisfy, "make it pass" changes nothing, or it
+#   rewrites the counts to whatever the page has now. Either way the
+#   diff shows it; a check the tool may edit is no check.
+# expected: read the diff, then git restore
 
 # 7
-#   A one-line comment sits directly above the function in the + block,
-#   and it says what the function returns, not what it does line by
-#   line.
-# expected: the rule appears in the diff without being in the prompt
+#   The new script ends with a cat() or print() of nrow(); the rule is
+#   in the diff without being in the prompt.
+# expected: the rule appears in the last lines of the + block
 
 # 8
-#   The approval box shows only + lines above the function; git diff
-#   shows the same lines. A red line in either means the scope was not
-#   held: Esc, or git restore, and ask again.
-# expected: box and git diff agree line for line
+#   Rule, line, verdict: the stopifnot(sum(by_year$n_placements) ==
+#   nrow(placements)) line quoted; "follows". git status prints clean.
+# expected: three lines, the line quoted, nothing changed on disk
 
 # 9
-#   Two Rscript boxes and one edit box: the first run prints 29810.19
-#   and stops at the check; the edit weights by pop; the second run
-#   prints 32884.56. With 29810 in the check, the first run passes and
-#   the function stays unweighted. The check is the specification.
-# expected: two runs, one patch; with the wrong constant, wrong code passes
-
-# 10
-#   Three lines: the rule; the merge() line and the subtraction
-#   (both$lifeExp_to - both$lifeExp_from) quoted; "follows". git status
-#   prints clean: the subagent has no edit tool.
-# expected: rule, line, verdict; nothing changed on disk
-```
-
-```{.markdown filename="Prompt to paste into Claude Code (task 3, one scoped delegation)"}
-Write code/lifeexp_trend.R. It defines lifeexp_trend(d, cont): for one
-continent cont, the simple mean of lifeExp across its countries in each
-year, as a named numeric vector with the years as names. Each country
-counts once; do not weight by population. Base R only. At the bottom,
-read data/gapminder.csv into d and print lifeexp_trend(d, "Oceania").
-Do not run it. No other files. Do not use git.
-```
-
-```{.markdown filename="Prompt to paste into Claude Code (task 4)"}
-Write code/gdp_by_continent.R. It defines gdp_by_continent(d, yr): for each
-continent, the population-weighted mean of gdpPercap in year yr, as a named
-numeric vector. Weight by the pop column; do not average countries. Base R
-only. At the bottom, read data/gapminder.csv into d and print
-gdp_by_continent(d, 2007). Do not run it. No other files. Do not use git.
+#   A master script, one folder per stage, relative paths, and a diff
+#   you can read because you wrote the original. Errors you spot here
+#   are the ones you would have missed on code you did not know.
+# expected: a pipeline that runs from a clean session, and a list of
+#           what the tool got wrong
 ```
 
 :::
@@ -2629,7 +2576,7 @@ gdp_by_continent(d, 2007). Do not run it. No other files. Do not use git.
 
 ::: {.content-visible when-format="revealjs"}
 
-**Know the value before you run it, read the diff before you accept it, and keep the check in the script.**
+**Count it on the page before you run it, read the diff before you accept it, and keep facts you supply in a data file.**
 
 Every command, key, prompt shape and check from today, one line each, on
 the session page, with the things that bite.
@@ -2638,8 +2585,8 @@ the session page, with the things that bite.
 
 ::: {.content-hidden when-format="revealjs"}
 
-**Know the value before you run it, read the diff before you accept it,
-and keep the check in the script.**
+**Count it on the page before you run it, read the diff before you
+accept it, and keep facts you supply in a data file.**
 
 **Commands and keys**
 
@@ -2649,7 +2596,7 @@ and keep the check in the script.**
 | The trust question | ↓ once to *Yes, I trust this folder*, Enter; once per folder |
 | Check the mode | the status line reads `⏸ manual mode on` |
 | Send a prompt | type at `❯`, Enter |
-| Accept an edit / refuse it | `1` then Enter / Esc |
+| Accept an edit or a command / refuse it | `1` then Enter / Esc |
 | Interrupt | Esc |
 | Previous prompt | ↑ |
 | New conversation, same folder | `/clear` |
@@ -2659,30 +2606,33 @@ and keep the check in the script.**
 | Git while it runs | Tools → Terminal → New Terminal (Terminal 2) |
 | Diff of a new file | `git add code/x.R`, then `git diff --staged` |
 | Diff of an edited file | `git diff` |
-| Run the script | Session → Restart R, then Source |
+| Put a file back | `git restore code/x.R` |
+| Run the script yourself | Session → Restart R, then Source |
+| The scraping package, once | `install.packages("rvest")` in the Console |
 
 **Prompt shapes**
 
 | Ask for | Say |
 |:--|:--|
 | A look, no change | "... Do not edit anything." |
-| One function | goal with names; the failure mode; `code/<name>.R`; "Do not run it. No other files. Do not use git." |
-| A patch | "X prints A; by hand I get B because ...; change the line that ...; change nothing else." |
-| The permanent check | type it yourself; or "Add a check: stopifnot() that ...; change nothing else." and read the line before `1. Yes` |
-| A commit by the agent | "Commit code/x.R with the message: ..."; read the command in the box before `1. Yes`; manual mode only |
-| A function under CLAUDE.md | two or three sentences: name, what it returns, what to print at the bottom; the failure mode still stated |
-| A loop | the check in the script, from your paper; "run it with Rscript; if the check fails, change the function and run again; show me the output of the last run" |
+| Git from inside the tool | "Initialize a git repository ... and commit everything with the message ..." |
+| A script, run until it works | goal with names; `code/<name>.R`; "Run it with Rscript ...; if it fails, fix the script and run again; show me ..."; "Do not use git." |
+| One more column | "Add a column X: TRUE when ... Change nothing else. Run it again and tell me how many ..." |
+| A plan first | "Describe your approach before writing any code." |
+| A patch | "X prints A; on the page I count B because ...; change the line that ...; change nothing else." |
+| A fact you will supply | "... write the distinct values to data/<file>.csv with an empty column for me to fill in; read it; NA when missing. Change nothing else." |
 | A subagent review | "Use the <name> subagent to review code/x.R against this rule: ... Report what it says. Do not edit anything." |
+| A script under CLAUDE.md | one sentence: name, what it reads, what it prints or writes |
 
 **The loop**
 
-| Step | You do | It looks like |
+| Step | You do | Today |
 |:--|:--|:--|
-| 1 | state the goal and the failure mode | the prompt's first and second parts |
-| 2 | delegate one function | `1. Yes` on an approval box you read |
-| 3 | work out one case by hand | 81.06 on paper, from two rows |
-| 4 | verify | Source; compare; `git diff --staged`; the five questions |
-| 5 | keep the check | `stopifnot(abs(res["Oceania"] - 81.06) < 0.01)`; decimals with a tolerance, never `==` |
+| 1 | state the goal and the failure mode | the prompt's first parts; "Change nothing else" |
+| 2 | delegate one task | `1. Yes` on boxes you read |
+| 3 | count one case by hand | 16 rows for 2026 on the page; 15 + 9 + 1 postdoc spellings |
+| 4 | verify | the tool's run; your count; `git diff`; the five questions |
+| 5 | keep the check | `stopifnot(sum(placements$year == 2026) == 16, ...)`, dated in a comment |
 
 **The five questions for any diff**
 
@@ -2690,8 +2640,8 @@ and keep the check in the script.**
 |:--|:--|
 | 1 | Files: only the ones you named? (`git status`) |
 | 2 | Removals: every `-` line asked for? Read these first. |
-| 3 | The math line: does it do what the failure mode said? |
-| 4 | Names and constants: yours, no bare numbers? |
+| 3 | The line that does the work: does it do what you asked, and only that? |
+| 4 | Names and constants: yours? A table of literals is a constant you did not supply. |
 | 5 | A line you cannot explain: ask before you accept, or ask for one you can read. |
 
 **Things that bite**
@@ -2703,13 +2653,14 @@ and keep the check in the script.**
 | the trust question on every launch | the terminal opened outside the project; New Terminal from inside it |
 | status line says `auto mode` | `/exit`, then relaunch with `--permission-mode manual` |
 | `--permission-mode manual` is rejected | an older install; `--permission-mode default` is the same mode |
+| `there is no package called 'rvest'` | `install.packages("rvest")` in the Console; tell the tool to run again |
 | `git diff` shows nothing after a new file | untracked; `git add` it, then `git diff --staged` |
-| it wrote a file and ran it | not manual mode; `/exit`, relaunch, read `git status` |
-| it committed or pushed without asking | Auto mode; `git log --oneline` to see what, then relaunch in manual mode |
-| it asks to run `Rscript` or `R -e` | Esc (the last option, No); you run the script yourself in RStudio |
+| the reply says it cannot run commands | not manual mode, or the folder was not trusted; `/exit`, relaunch, read the status line |
+| it committed or pushed without asking | auto mode; `git log --oneline` to see what, then relaunch in manual mode |
 | the reply is a code block, no approval box | it did not write a file; say "Write code/x.R" first |
-| a clean run, a wrong number | the prompt left a reading open; name the failure mode; the value on paper is what caught it |
-| `stopifnot(x == 12.115)` fails on correct code | decimals: `round(81.235 - 69.120, 2)` is `12.11` in R; compare with `abs(x - 12.115) < 0.01` |
+| a clean run, a column of facts the page does not have | it typed them from memory; ask for a data file you fill and `NA`; next time, "Describe your approach before writing any code" |
+| the same prompt gives a different value on a second run | a guess, not a fact; the page is the source, or you are |
+| the count on the page differs from the check in the script | the page changed; recount, edit the number and the date, run again |
 | a red line you did not ask for | read it; Esc if it matters; put "change nothing else" in the next prompt |
 | `git commit` asks who you are | `git config --global user.name "Your Name"` and `git config --global user.email "netid@cornell.edu"`, then commit again |
 | Windows: `claude` opens the desktop app | an old desktop app; update it, retry |
@@ -2717,29 +2668,27 @@ and keep the check in the script.**
 | the login browser page did not open | press `c` in the Terminal to copy the link; paste it into a browser |
 | the login says `403`, or that your plan does not include Claude Code | the Pro subscription is not active; claude.ai → Settings → Billing, then `/login` |
 | you chose the Console login by mistake | `/login`, then the subscription login |
-| a *Bash command* box for `mkdir code` or `ls` | it only makes the folder or looks; `1. Yes` |
 
 **Terms**
 
 | Term | One line | Where |
 |:--|:--|:--|
-| delegation | one function handed to the tool, with a case you can check | [§](#scoping) |
-| failure mode | the plausible mistake, named in the prompt | [§](#the-task) |
-| expected value | the value worked out by hand before the run | [§](#by-hand) |
-| manual mode | it asks before every edit and every command that changes something | [§](#launch) |
-| approval box | the diff shown before it lands; `1. Yes` or Esc | [§](#approve-create) |
-| the five questions | files, removals, the math line, names, a line you cannot explain | [§](#judge-diff) |
-| patch | the smallest change that fixes the one failure | [§](#patch-prompt) |
-| the check | the hand check written as `stopifnot()` in the script | [§](#institutionalize) |
-| `/diff` | the uncommitted changes, from git, inside the tool | [§](#diff-on-screen) |
-| standing context | `CLAUDE.md`, read at every launch | [§](#claude-md) |
-| scope | what the prompt says not to do | [§](#prompt-shape) |
 | harness | the app around the model: a chat window, Cowork, Claude Code | [§](#harnesses) |
 | tool call | the model's request to read, search, run or edit; in manual mode the ones that change something ask first | [§](#tool-loop) |
 | context | what the model has in front of it: the system prompt, `CLAUDE.md`, your prompts, every file it read and every command output | [§](#tool-loop) |
-| loop | the tool runs the check itself and patches until it passes; the check becomes the specification | [§](#loop-run) |
+| delegation | one task handed to the tool, with a count you can do on the page | [§](#scoping) |
+| failure mode | the plausible mistake, named in the prompt or caught by the check | [§](#prompt-shape) |
+| hand count | the number counted on the page before the run | [§](#prompt-scrape) |
+| manual mode | it asks before every edit and every command that changes something | [§](#launch) |
+| approval box | the file, diff or command shown before it lands; `1. Yes` or Esc | [§](#approve-create) |
+| the five questions | files, removals, the working line, names and constants, a line you cannot explain | [§](#judge-diff) |
+| the check | the hand counts written as `stopifnot()` in the script, dated | [§](#hand-check) |
+| a fact from memory | a value the tool did not read from the page or a file; a guess | [§](#countries-lesson) |
+| plan first | "Describe your approach before writing any code." | [§](#catch-earlier) |
+| standing context | `CLAUDE.md`, read at every launch | [§](#claude-md) |
 | subagent | a separate conversation the tool starts for one task, with its own context and tool list; it returns a report | [§](#subagents) |
+| scope | "Change nothing else"; what the prompt says not to do | [§](#prompt-shape) |
 
-**Links:** [slides](09-ai-code-slides.html) · [Claude Code docs](https://code.claude.com/docs/en/quickstart) · [How Claude Code works](https://code.claude.com/docs/en/how-claude-code-works) · [best practices](https://code.claude.com/docs/en/best-practices) · [subagents](https://code.claude.com/docs/en/sub-agents) · [Syllabus](../syllabus.qmd) · [data/gapminder.csv](data/gapminder.csv)
+**Links:** [slides](09-ai-code-slides.html) · [the placements page](https://business.cornell.edu/admissions/graduate/phd-aem/for-hire/) · [Claude Code docs](https://code.claude.com/docs/en/quickstart) · [How Claude Code works](https://code.claude.com/docs/en/how-claude-code-works) · [best practices](https://code.claude.com/docs/en/best-practices) · [subagents](https://code.claude.com/docs/en/sub-agents) · [Syllabus](../syllabus.qmd)
 
 :::

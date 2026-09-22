@@ -150,3 +150,33 @@ manual mode. Same version as the September 14 captures.
   shortened to one line so the slide shows the whole file; the report on the
   page is the second run's. The subagent read the file and returned rule,
   line, verdict; nothing edited. `T22-subagent-review.txt`.
+
+## The placements project (2026-09-21, 23:30): the session's spine from this date
+
+The lecture was rebuilt around a project that starts from an empty
+folder (`placements.Rproj` only). All runs non-interactive
+(`env -u CLAUDECODE claude -p ... --output-format stream-json --verbose
+--no-chrome --strict-mcp-config --allowedTools ...`), one resumed
+conversation for M0-M3 and M6 (`--continue`), separate conversations for
+M4 (on a copy at the M2 state) and M5 (with the reviewer agent file in
+place). Same Claude Code version as the September 14 captures. The page
+snapshot is `phd-placements-page-2026-09-21.html` (109 rows, 2015-2026).
+
+| File | Prompt | What happened |
+|:--|:--|:--|
+| `M0-git-init.txt` | initialize git, .gitignore, commit "New project" | Write .gitignore; one Bash command `git init && git add -A && git commit ...`; the commit message carries a Co-Authored-By line |
+| `M1-scraper.txt` | write and run code/placements.R (rvest) | two `Rscript -e` looks at the page's two tables; Write; `Rscript`: 109 rows first try |
+| `M2-postdoc.txt` | add a postdoc column, run, count TRUE | listed 11 spellings; one line `grepl("post[- ]?doc", ..., ignore.case = TRUE)`; 25 of 109 |
+| `M3-country.txt`, `M3-country-block.R` | add a country column, run, counts | listed 107 organizations; typed a 16-pattern table plus default "United States" (77 rows); DTUM read as TUM, Germany. An earlier run the same evening (scratch repo `placements`, not shipped) read DTUM as DTU Management, Denmark |
+| `M4-plan-first.txt` | "Describe your approach before writing any code" (on the M2 state) | proposes a hand-curated lookup it would populate "from knowledge of the institutions" |
+| `M5-reviewer.txt` | hand-check-reviewer subagent, rule: country values only from the page or a data file | verdict breaks; lines 44-67 quoted; nothing edited |
+| `M6-fix-lookup.txt` | replace the table with data/countries.csv filled by hand, NA otherwise | 107-row file written once; three-line match; 109 of 109 NA |
+| `M7-by-year-under-claude-md.txt`, `by_year.R` | one sentence under `claude-md-placements-seed.txt` | header, constant, function, stopifnot on counts, "Not run, per the project rules." |
+| `placements-final.R`, `countries-head.csv` | the script after M6; the first rows of the lookup file | |
+
+Hand counts on the page snapshot: 109 rows; 16 for 2026; postdoc
+spellings 25 (find: "postdoc" 15, "post-doc" 9, "post doc" 1); 14
+organization strings name a place.
+
+Screens S01, S02, S03, S05, S10, S12, S14 stay in the deck as anatomy of
+the boxes, captioned as from another project.

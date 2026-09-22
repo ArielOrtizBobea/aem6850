@@ -1,0 +1,43 @@
+⏺ Reply:
+  Let me check how postdoc positions are spelled in the data so the match doesn't miss variants.
+⏺ Bash(Rscript -e 'd <- read.csv("data/placements.csv"); print(sort(unique(d$position[grepl("post", d$position, ignore.case = TRUE)])))')
+  ⎿ [1] "Earth Institute Postdoctoral Fellow"                     
+     [2] "Post Doctoral Fellow"                                    
+     [3] "post-doc"                                                
+     [4] "Post-doc"                                                
+     [5] "Post-doctoral associate"                                 
+     [6] "Post-Doctoral Associate"                                 
+     [7] "Postdoc"                                                 
+     [8] "Postdoctoral Associate"                                  
+     [9] "Postdoctoral Associate; Assistant Professor of Economics"
+    [10] "Postdoctoral Fellow"                                     
+    [11] "Postdoctoral Researcher"
+⏺ Reply:
+  Spellings vary ("Postdoc", "Post-doc", "Post Doctoral"), so I'll match `post[- ]?doc` case-insensitively.
+⏺ Edit(<project>code/placements.R)
+  - rownames(placements) <- NULL
+  - 
+  - dir.create
+  + rownames(placements) <- NULL
+  + 
+  + # Flag postdoc positions; spellings on the page include "Postdoc", "Post-doc",
+  + # "Post Doctoral Fellow" and "Postdoctoral Associate".
+  + placements$postdoc <- grepl("post[- ]?doc", placements$position, ignore.case = TRUE)
+  + 
+  + dir.create
+  ⎿ The file <project>code/placements.R has been updated successfully.
+⏺ Bash(Rscript code/placements.R && Rscript -e 'd <- read.csv("data/placements.csv"); print(head(d, 3)); cat("rows:", nrow(d), " postdoc TRUE:", sum(d$postdoc), "\n")')
+  ⎿ Wrote 109 rows to data/placements.csv 
+      year               name                       position
+    1 2026 Trevor Dean Arnold                        Postdoc
+    2 2026 Molly Jane Doruska            Assistant Professor
+    3 2026          Sijia Fan Assistant Professor of Finance
+                                           organization postdoc
+    1     University of Calgary Department of Economics    TRUE
+    2                               Clarkson University   FALSE
+    3 University of Ottawa, Telfer School of Management   FALSE
+    rows: 109  postdoc TRUE: 25
+⏺ Reply:
+  Added the `postdoc` column (just before the `write.csv`) and re-ran: **25 of 109 rows are TRUE**.
+  
+  The flag is `grepl("post[- ]?doc", position, ignore.case = TRUE)`, which covers all the variants on the page: "Postdoc", "Post-doc", "Post Doctoral Fellow", "Postdoctoral Associate/Fellow/Researcher". One judgment call to flag: "Postdoctoral Associate; Assistant Professor of Economics" (a graduate listed with both) is counted as TRUE since the position starts with a postdoc — say the word if you'd rather it be FALSE.

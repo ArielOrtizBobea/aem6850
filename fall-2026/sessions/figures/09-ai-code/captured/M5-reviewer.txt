@@ -1,0 +1,47 @@
+⏺ Agent(subagent_type: hand-check-reviewer)
+  prompt: Review the R script at code/placements.R (repo root: <project>) against this single rule:
+
+"Every value in the country column must come from the page or from a data file, never from a table typed into the code."
+
+Trace how the `country` column is populated. Report every place a country value could originate from a literal/lookup table typed into the code (e.g. named vectors, case_when/switch/ifelse with string literals, recode maps, hardcoded data frames), with file:line references. Also note which values do come from the page/scraped content or from a data file. State clearly whether the script passes or fails the rule, and why. Do not edit anything.
+⏺ Read(<project>code/placements.R)
+  ⎿ (the file)
+  ⎿ Rule: "Every value in the country column must come from the page or from a data file, never from a table typed into the code."
+    
+    Line that breaks it (`<project>code/placements.R`, lines 44-67):
+    ```r
+    country_patterns <- c(
+      "Australia"    = "Monash|New South Wales|University of Sydney",
+      ...
+      "Zambia"       = "Zambia"
+    )
+    placements$country <- "United States"
+    for (ctry in names(country_patterns)) {
+      hit <- grepl(country_patterns[[ctry]], placements$organization) &
+        placements$country == "United States"
+      placements$country[hit] <- ctry
+    }
+    ```
+    
+    Verdict: breaks.
+    
+    Trace of how `country` is populated:
+    - Line 62: every row is first set to the string literal `"United States"` typed in the code. Any organization that matches no pattern keeps this literal value.
+    - Lines 44-61: `country_patterns` is a named character vector typed into the code, a 16-entry lookup table mapping regex patterns on `organization` to country names (`"Australia"`, `"Canada"`, `"China"`, ..., `"Zambia"`). Line 66 assigns `ctry`, which is the name from this hardcoded vector, into `placements$country`.
+    - The comment on lines 39-43 confirms the page does not list the country and it is "inferred from the organization name" using the table below; it also encodes editorial choices in the code (IMF/World Bank/IDB/USAID assigned to headquarters country, "DTUM" read as TUM).
+    - There is no other assignment to `country` and no data file is read anywhere in the script (the only input is `read_html(url)` on line 10; the only file I/O is `write.csv` on line 70).
+    
+    What does come from the page: `year`, `name`, `position`, `organization` (lines 24-28, from `html_table` on the scraped table) and `postdoc` (line 37, derived by regex from the scraped `position`). The `organization` string is used as the match key for country, but the country strings themselves never come from the page or from a data file — 100% of `country` values originate in the literals on lines 44-62. Hence the script fails the rule.
+⏺ Reply:
+  The reviewer's verdict: **`code/placements.R` fails the rule.**
+  
+  **Where it breaks** (`code/placements.R:44-67`):
+  
+  - **Line 62** — `placements$country <- "United States"` sets every row to a string literal typed in the code. Any organization matching no pattern keeps this value.
+  - **Lines 44-61** — `country_patterns` is a 16-entry named vector typed into the code, mapping regexes on `organization` (e.g. `"Monash|New South Wales|University of Sydney"`) to country names (`"Australia"`, `"Canada"`, `"China"`, … `"Zambia"`). Line 66 writes those hardcoded names into `placements$country`.
+  - The comment at lines 39-43 acknowledges the page doesn't list a country and it's "inferred from the organization name," and it embeds editorial choices in code (IMF/World Bank/IDB/USAID → headquarters country; "DTUM" read as TUM).
+  - No data file is read anywhere — the only input is `read_html(url)` on line 10; the only file I/O is `write.csv` on line 70.
+  
+  **What does come from the page:** `year`, `name`, `position`, `organization` (lines 24-28, via `html_table`) and `postdoc` (line 37, regex on scraped `position`). `organization` is used as the match key, but 100% of the `country` strings originate in the literals on lines 44-62.
+  
+  No edits were made.
