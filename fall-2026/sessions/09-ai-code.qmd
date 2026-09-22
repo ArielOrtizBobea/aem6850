@@ -49,7 +49,7 @@ semester; it is worth the investment. Cornell is working on access for
 students; until that exists, plan on Pro: choose it on the [pricing
 page](https://claude.com/pricing). If you decide not to subscribe,
 follow the captured run on the slides in class and pair with a
-neighbour for the two exercises.
+neighbour at the keyboard.
 
 **2. Install Claude Code.** *Mac:* in RStudio, **Tools → Terminal → New
 Terminal**, paste this line, Enter:
@@ -120,16 +120,14 @@ By the end of this session you can:
 - Hand the tool one task at a time, with a number you counted yourself
   on the web page it reads; let it run the script; compare.
 - Read the box that shows each edit, and `git diff`, before accepting
-  it, and find a value the tool typed from memory rather than read from
-  the page.
+  it, and say where every value in the result came from.
 - Write a `CLAUDE.md` for the project and a read-only reviewer agent,
   and say what each one changes.
 
 ::: {.content-visible when-format="revealjs"}
 
 ::: {.notes}
-Five things, and you do each of them on your own laptop in the two
-exercises.
+Five things, and you do each of them on your own laptop as we go.
 :::
 
 :::
@@ -528,7 +526,28 @@ screen will differ. The prompts, the checks and the lesson do not.
 ::: {.notes}
 Eight steps, one slide each from here on. Step 7 is the exact sentence,
 short; the full prompt, with the file names and the commit message, is
-five slides on. Nobody types ahead: we do them together.
+five slides on. Nobody types ahead: we do them together, and everyone
+gets to step 8 before Prompt 2.
+
+When it fails, say:
+
+- `command not found: claude`: Before class step 2; quit and reopen
+  RStudio; pair up for now.
+- The Terminal shows R's `>` prompt instead of `❯`: they typed `claude`
+  in the Console. Tools → Terminal → New Terminal, then again.
+- The status line says auto mode: `/exit`, then
+  `claude --permission-mode manual`.
+- The trust question again: the terminal is outside the project; Tools →
+  Terminal → New Terminal from inside it.
+- `there is no package called 'rvest'`: `install.packages("rvest")` in
+  the Console; then tell the tool to run again.
+- No Bash box for git and the reply says it cannot run commands: the
+  status line is not manual, or the folder was not trusted; `/exit`,
+  relaunch, look at the status line.
+- The box never appears and it prints code instead: it wrote nothing;
+  ask again with the artifact line, "Write code/placements.R", first.
+- The row count differs from the page: the page changed since capture;
+  the count for one year is the check that matters.
 :::
 
 :::
@@ -890,7 +909,7 @@ the captured run; paste it, do not retype it.
 |:--|:--|
 | "Do my analysis of the placements." | "Write `code/placements.R`: the table on the placements page, saved as `data/placements.csv`, four columns." |
 | "Make a report on placements." | "Add a column `postdoc`: TRUE when the position is a postdoc. Change nothing else." |
-| "Fix my script." | "Only the country column is wrong; replace the table in the code with a data file I fill in." |
+| "Fix my script." | "The 2015 rows are missing; change the line that filters the years, nothing else." |
 
 ::: {.content-visible when-format="revealjs"}
 
@@ -1376,12 +1395,15 @@ cat("Wrote", nrow(placements), "rows to", out, "\n")
 
 ## How to judge a model's diff: five questions {#judge-diff}
 
-1. **Files**: only the ones you named? (`git status`)
-2. **Removals**: every `-` line asked for? Read these first.
-3. **The line that does the work**: does it do what you asked, and only that?
-4. **Names and constants**: yours? A table of literals is a constant you did not supply.
-5. **A line you cannot explain**: ask before you accept, or ask for one
-   you can read.
+1. **Which files changed?** Only the ones you named? (`git status`)
+2. **What was deleted?** Read the red lines first. Did you ask for each
+   one to go?
+3. **Which line does the actual work?** Does it do what you asked, and
+   nothing more?
+4. **Where does each value in it come from?** Your data, or typed into
+   the code by the tool?
+5. **Is there a line you could not explain to someone?** Ask what it
+   does before you accept it.
 
 ::: {.content-visible when-format="revealjs"}
 
@@ -1398,103 +1420,15 @@ Five questions, in order, every time, whether the diff is in the
 approval box or in `git diff`. Are the only changed files the ones you
 named (`git status`)? Are there `-` lines, and did you ask for each
 removal? Which line does the math, and does it match the failure mode
-you named? Are the names and constants yours (the argument names, no
-bare numbers)? Is there a line you cannot explain? For the last one,
+you named? For every value the new lines contain, can you say where it
+came from: your data, your prompt, or the tool's own knowledge? Is there a line you cannot explain? For the last one,
 ask for an explanation before accepting, or ask for a version that uses
-only functions you know. Removals first: a removal you did not ask for
-is the dangerous kind. Question 4 is the one the country column fails:
-sixteen country names and a default are constants, and you did not
-supply them. Exercise 2 walks these five on that edit.
-
-:::
-
-## Exercise 1 {#exercise-1 .smaller}
-
-::: {.panel-tabset}
-
-### Exercise
-
-```bash
-# Exercise 1 (8 minutes). RStudio, the placements project from Before class.
-#
-# 1. Steps 3 to 6 of the list: New Terminal (prompt ends in placements),
-#    claude --permission-mode manual, trust, status line manual mode on.
-#    Enlarge the Terminal pane so the approval boxes fit.
-#
-# 2. Paste Prompt 1 (git). Read the Bash command box, then 1. Yes.
-#    Tools > Terminal > New Terminal (Terminal 2): git log --oneline.
-#
-# 3. On the page, count the rows for the most recent year. Write it down.
-#
-# 4. Paste Prompt 2 (the scraper). Boxes for R and for Rscript: read,
-#    1. Yes. What came back: how many rows?
-#
-# 5. Console: sum(read.csv("data/placements.csv")$year == 2026)
-#    (your year). Compare with your count.
-#
-# 6. Terminal 2: git add code/placements.R, then git diff --staged.
-#    The five questions. Which lines pick the table?
-#
-# Two answers to compare with the room: the number of rows, and the
-# count for the most recent year.
-```
-
-::: {.content-hidden when-format="revealjs"}
-
-*Paired with a neighbour?* One laptop, two readers: the one not typing
-reads each box aloud before `1. Yes`. A *Bash command* box that runs
-`Rscript -e` with `read_html` in it is the tool looking at the page;
-`1. Yes`. A box that asks for `curl` or `ls`: `1. Yes`. If the script
-fails with `there is no package called 'rvest'`, run
-`install.packages("rvest")` in the Console and tell the tool "rvest is
-installed now; run it again".
-
-:::
-
-### Solution
-
-On the page, 16 rows for 2026 when captured. The script printed "Wrote
-109 rows to data/placements.csv"; the Console prints `16`. The table is
-picked by the lines that compare each table's header with `year, name,
-position, organization` and stop unless exactly one matches.
-
-::: {.content-visible when-format="revealjs"}
-
-**109 rows, 16 for 2026** in the captured run; yours may differ if the
-page grew. The picking lines: `wanted`, `headers`, `hit`, and the
-`stop()`.
-
-:::
-
-:::
-
-::: {.content-visible when-format="revealjs"}
-
-::: {.notes}
-Debrief (2 min). Everyone's row count is the same number: the page is
-one source. A laptop whose year count differs from its page count:
-which rows are missing or doubled? That is the silent error, found.
-
-When it fails, say:
-
-- `command not found: claude`: Before class step 2; quit and reopen
-  RStudio; pair up for now.
-- The Terminal shows R's `>` prompt instead of `❯`: they typed `claude`
-  in the Console. Tools → Terminal → New Terminal, then again.
-- The status line says auto mode: `/exit`, then
-  `claude --permission-mode manual`.
-- The trust question again: the terminal is outside the project; Tools →
-  Terminal → New Terminal from inside it.
-- `there is no package called 'rvest'`: `install.packages("rvest")` in
-  the Console; then tell the tool to run again.
-- No Bash box for git and the reply says it cannot run commands: the
-  status line is not manual, or the folder was not trusted; `/exit`,
-  relaunch, look at the status line.
-- The box never appears and it prints code instead: it wrote nothing;
-  ask again with the artifact line, "Write code/placements.R", first.
-- The row count differs from the page: the page changed since capture;
-  the count for one year is the check that matters.
-:::
+only functions you know. Read the deletions first: a line removed
+without being asked for is the dangerous kind. Question 4 is the one
+worth slowing down on: a value that came neither from your data nor
+from your prompt came from the tool's memory, and memory is not a
+source. The country column, later today, is where these five questions
+earn their keep.
 
 :::
 
@@ -1589,7 +1523,7 @@ the same object `git diff` prints.
 
 :::
 
-## Writing the hand counts into the script {#hand-check}
+## Your own check, typed into the script and committed with it {#hand-check}
 
 ```diff
  placements$postdoc <- grepl("post[- ]?doc", placements$position, ignore.case = TRUE)
@@ -1601,27 +1535,42 @@ the same object `git diff` prints.
 
 ::: {.content-visible when-format="revealjs"}
 
-- You type it, in RStudio. The checker is not the thing being checked.
-- The numbers are the ones you counted; the comment says when.
-- When the page changes, the script stops and says so. That is the
-  point, not a nuisance.
-- Then commit: `git add code/placements.R`, `git commit -m "Scrape
-  placements, flag postdocs (Claude Code); two hand counts"`.
+- The two numbers you counted yourself, 16 and 25, written as one line
+  the script must satisfy every time it runs.
+- You type it, in RStudio, not the tool: the checker is not the thing
+  being checked.
+- It is committed with the code, so the check travels with the script
+  and runs for whoever opens it next.
+- If the page changes, or a later edit breaks the scraper, the script
+  stops here instead of writing a wrong CSV.
+- Commit both: `git add code/placements.R`, `git commit -m "Scrape
+  placements, flag postdocs (Claude Code); my two counts"`.
 
 ::: {.notes}
-Step five of the loop. Two counts you did by hand, now run on every
-Source. The commit message says who wrote what.
+This is the answer to "how would you ever notice". Say it plainly: you
+checked once by hand, and now the script does that check on every run,
+for good, because it is in the file and in the commit.
 :::
 
 :::
 
 ::: {.content-hidden when-format="revealjs"}
 
-The hand counts were done once, by a person. They become a line the
-script runs every time. Type it yourself in RStudio, after the `postdoc`
-line and before `write.csv`, save, Session → Restart R, Source: no
-error. The checker is not the thing being checked, so in a graded
-repository typing it yourself is the default.
+You counted two things yourself: 16 rows for the most recent year, on
+the page, and 25 postdocs, with the browser's find box. So far those
+counts live in your head and on a scrap of paper, and they check the
+script once. One line turns them into a check the script makes every
+time anyone runs it. `stopifnot()` does nothing when its conditions are
+true and stops the script, naming the condition, when one is false.
+
+Type it yourself in RStudio, after the `postdoc` line and before
+`write.csv`, save, then Session → Restart R and Source: no error, which
+means the script reproduced both of your numbers. Type it rather than
+asking the tool for it: the checker should not be the thing being
+checked. Then commit the script, check and all. From that commit on,
+the check is part of the code: it travels with the file, it runs for
+whoever opens the project next, and it is in the history with your
+name on it.
 
 The counts will go stale: the page adds a class every year. When it
 does, the script stops with `Error: sum(placements$year == 2026) == 16
@@ -1630,9 +1579,9 @@ and the counts need redoing. Recount on the page, edit the numbers and
 the date in the comment, run again. A check that never fails is a
 check on nothing.
 
-Then commit, with a message that says who wrote what: the scraper and
-the flag are the tool's, patched by nobody; the counts are yours. The
-same sentence fills the disclosure block of a submission.
+The commit message says who wrote what: the scraper and the flag came
+from the tool, the counts are yours. That one sentence is also what
+fills the disclosure block of a submission.
 
 ```bash
 git add code/placements.R
@@ -1651,48 +1600,39 @@ Add a column country with the country of the organization. Change nothing
 else. Run it again and show me the number of rows per country.
 ```
 
-```r
-# Country of the organization. The page does not list it, so it is inferred
-# from the organization name: the first matching pattern below wins, and
-# anything unmatched is treated as United States (the large majority).
-# ... "DTUM" is read as TUM (Munich).
-country_patterns <- c(
-  "Australia"    = "Monash|New South Wales|University of Sydney",
-  "Canada"       = "Alberta|Calgary|Ottawa",
-  ...                                        # sixteen entries in all
-)
-placements$country <- "United States"
+```{.default filename="What it printed after running the script again"}
+United States 77   China 7   India 4   Australia 3   Canada 3
+Germany 2   Hong Kong 2   Singapore 2   Finland 1   France 1
+New Zealand 1   Norway 1   Saudi Arabia 1   South Korea 1
+Switzerland 1   Vietnam 1   Zambia 1
 ```
 
 ::: {.content-visible when-format="revealjs"}
 
-- It listed the 107 organizations, then typed sixteen patterns and a
-  default. 77 rows are "United States" because no pattern matched.
-- Its reply: the page does not list countries, so they are inferred;
-  the non-US assignments "all look right".
+- It added the column, ran the script, and printed the counts. 109
+  rows, 17 countries, no error.
+- Its reply ends: the assignments "all look right".
+- Before you accept it: open the diff and read the new lines. The next
+  slide is that diff.
 
 ::: {.notes}
-Read the green lines in the box. Every country name in them is a fact
-the page does not contain.
+Say nothing yet about how it got the countries. Let them look at the
+diff on the next slide and answer question 4 themselves.
 :::
 
 :::
 
 ::: {.content-hidden when-format="revealjs"}
 
-The same shape of prompt as the postdoc flag, and a different kind of
-answer. The tool listed the 107 distinct organizations, looked up five
-of them it did not recognize, and then typed into the script a table of
-sixteen patterns mapping fragments of organization names to countries,
-with a default: every organization no pattern matches is "United
-States". It ran the script and reported the counts, 77 United States,
-7 China, 4 India, and so on, and added that the page does not list
-countries, that they are therefore inferred from the names, and that
-the non-US assignments "all look right". Two judgment calls were
-flagged: "DTUM", which it read as the Technical University of Munich,
-and international organizations counted at their headquarters.
+The prompt is the same shape as the postdoc flag: one column, change
+nothing else, run it again, report. What came back looks like the same
+kind of success. The tool listed the 107 distinct organizations, added
+the column, ran the script and printed the counts above: 109 rows and
+seventeen countries, no error. Its reply said the assignments "all look
+right" and flagged two it was unsure of.
 
-The block as written, in full:
+Read the next section before you decide what to do with that. The lines
+it added, in full:
 
 ```{.r filename="code/placements.R (the country block, Prompt 4)"}
 # Country of the organization. The page does not list it, so it is inferred
@@ -1725,6 +1665,63 @@ for (ctry in names(country_patterns)) {
   placements$country[hit] <- ctry
 }
 ```
+
+:::
+
+## The diff for the country column: where does each value come from? {#country-diff}
+
+```r
+country_patterns <- c(
+  "Australia"    = "Monash|New South Wales|University of Sydney",
+  "Canada"       = "Alberta|Calgary|Ottawa",
+  "China"        = "Beijing|Peking|Renmin|Xi.an Jiaotong",
+  "Germany"      = "Ludwig-Maximilian|DTUM",
+  ...                                        # sixteen countries in all
+)
+placements$country <- "United States"
+for (ctry in names(country_patterns)) { ... }
+```
+
+::: {.content-visible when-format="revealjs"}
+
+- Question 4, on this diff: for each value the column can take, where
+  did it come from?
+- `"Australia"`, `"Canada"`, `"China"`, and thirteen more: typed here.
+- `"United States"`: typed here too, and given to every row that
+  matches nothing. That is 77 of the 109.
+
+::: {.notes}
+Give them a minute on the code before the next slide. Ask the room:
+which of these seventeen countries is written anywhere on the page they
+scraped? The answer is on the next slide.
+
+When it fails, say:
+
+- The pattern matched fewer than the page count: it matched one
+  spelling; the check would have caught it; ask for a patch naming the
+  missing spelling.
+- No country table, it wrote NA for everything: a better run than the
+  captured one; read its reply for why, and go to step 5 anyway.
+- It asked to fetch the organizations' web pages: Esc; that is a
+  different task, and today the facts are yours to supply.
+- `git diff` shows the postdoc line removed: "Change nothing else" was
+  not held; `git restore code/placements.R` and ask again.
+:::
+
+:::
+
+::: {.content-hidden when-format="revealjs"}
+
+Question 4 of the five, asked of this diff: for each value the new
+column can take, where did it come from? The `organization` column
+comes from the page, and the code matches fragments of it. But every
+country name in the result is typed into the script: sixteen of them in
+the table, and `"United States"` as the value every row starts with and
+keeps if no pattern matches it, which is 77 of the 109 rows.
+
+So the column is not read from anywhere. It is produced by the tool's
+own knowledge of these institutions, written into your code as if it
+were data. The next section counts how much of it the page can support.
 
 :::
 
@@ -1780,8 +1777,9 @@ and both replies said the assignments looked right. That is what
    code." The captured reply proposes a lookup table it would "populate
    myself from knowledge of the institutions" and mark "the handful I'm
    unsure about". You read that and say no.
-2. **Question 4 of the five.** Names and constants yours? A
-   sixteen-entry table of literals is a constant you did not supply.
+2. **Question 4 of the five, asked of the diff.** Where does each
+   value come from? Sixteen country names sit in the code, and none of
+   them came from the page or from you.
 3. **A reviewer with fresh eyes.** A second Claude that never saw this
    conversation, later today, found it in one turn.
 
@@ -1805,8 +1803,9 @@ flagged. A reader who owns the question stops there: the source is the
 model's memory, so the column is not wanted in that form.
 
 The second is question 4 of the five questions for any diff: are the
-names and constants yours? A table of sixteen literals is a constant,
-and you did not supply it. The third is a reviewer that never saw the
+where does each value come from? Sixteen country names and a default
+sit in the code itself. None came from the page, and none came from
+your prompt. The third is a reviewer that never saw the
 conversation, the subagent in the seventh part of this page, which
 reported the table and the default with line numbers in one turn.
 
@@ -1976,88 +1975,6 @@ cat(length(orgs), "organizations\n")'; head -5 data/countries.csv)
 
 :::
 
-## Exercise 2 {#exercise-2 .smaller}
-
-::: {.panel-tabset}
-
-### Exercise
-
-```bash
-# Exercise 2 (8 minutes). Same project: Claude Code in Terminal 1, git in
-# Terminal 2.
-#
-# 1. On the page, Ctrl+F (Cmd+F on a Mac): "postdoc", "post-doc",
-#    "post doc". Add the three counts. Write the sum down.
-#
-# 2. Paste Prompt 3 (postdoc). Read the edit box: which spellings does
-#    the pattern cover? 1. Yes. Compare its count with yours.
-#
-# 3. Paste Prompt 4 (country). Read the edit box before 1. Yes: where
-#    does each country come from? Count the country names typed into
-#    the code. Then 1. Yes, and read the table it prints.
-#
-# 4. Terminal 2: git diff. How many + lines are facts the page does not
-#    contain?
-#
-# 5. Paste Prompt 5, the fix (previous slide). Read the box, 1. Yes.
-#    Terminal 2: git status, then git add -A and a commit whose message
-#    says which lines are the tool's.
-#
-# Two answers to compare with the room: your postdoc count, and the
-# country your run gave DTUM.
-```
-
-::: {.content-hidden when-format="revealjs"}
-
-*Paired up?* Swap roles: the reader from Exercise 1 types now. In step
-3, the reader says each country aloud and the typist says whether the
-page states it. In step 5, the box shows red lines for the whole
-pattern table; that is the removal you asked for.
-
-:::
-
-### Solution
-
-Step 1: 15 + 9 + 1 = 25 when captured. Step 2: the box names three or
-four spellings; the count matches. Step 3: about sixteen country names
-in the code, plus "United States" as the default, none from the page.
-Step 4: every `+` line with a country name in it. Step 5: `git status`
-lists `code/placements.R` modified and `data/countries.csv` new; after
-the commit, `git log --oneline` starts with your message.
-
-::: {.content-visible when-format="revealjs"}
-
-**25**; sixteen names plus a default, none from the page; DTUM varies
-from run to run (Denmark and Germany on the same evening); after the
-fix, 109 `NA`.
-
-:::
-
-:::
-
-::: {.content-visible when-format="revealjs"}
-
-::: {.notes}
-Debrief (2 min). Hands: who got Denmark for DTUM, who got Germany, who
-got something else? Same prompt, same page. Then: who read the box and
-pressed Esc instead of 1. Yes? That was the right call too; the fix
-prompt works from either state.
-
-When it fails, say:
-
-- The pattern matched fewer than the page count: it matched one
-  spelling; the check would have caught it; ask for a patch naming the
-  missing spelling.
-- No country table, it wrote NA for everything: a better run than the
-  captured one; read its reply for why, and go to step 5 anyway.
-- It asked to fetch the organizations' web pages: Esc; that is a
-  different task, and today the facts are yours to supply.
-- `git diff` shows the postdoc line removed: "Change nothing else" was
-  not held; `git restore code/placements.R` and ask again.
-:::
-
-:::
-
 ## CLAUDE.md: standing instructions, read at every launch {#claude-md}
 
 - A markdown file at the root, read at every launch.
@@ -2095,10 +2012,12 @@ with the code.
 ![](figures/09-ai-code/S14-init-create-box.png){width="100%" fig-alt="Claude Code's approval box after /init: Create file, CLAUDE.md, the first lines of the draft, and the 1. Yes row, with the file name and the 1. Yes row circled in red."}
 :::
 ::: {.column width="40%"}
-1. **`/init`**: reads the folder, proposes the file
-2. **The same approval box**
-3. **`1. Yes`**, then read it
-4. A draft. Replace it next.
+1. There is no `CLAUDE.md` in this project. Nothing created one for
+   you; everything so far ran without it.
+2. **`/init`** reads the folder and writes the first draft.
+3. The same box as any new file: `1. Yes`, then read what it wrote.
+4. It is a draft of what it found, not of how you want code written.
+   You replace it on the next slide.
 :::
 ::::
 
@@ -2113,8 +2032,12 @@ code written.
 
 ![`/init` proposes a CLAUDE.md in the same approval box as any new file. The screen is from another project; the box is the same.](figures/09-ai-code/S14-init-create-box.png){fig-align="center" fig-alt="Claude Code's approval box after /init: Create file, CLAUDE.md, the first lines of the draft, and the 1. Yes row, with the file name and the 1. Yes row circled in red."}
 
-Type `/init` at the prompt. It reads the folder and proposes a
-`CLAUDE.md`, shown in the same approval box as any new file. Accept it,
+Until now this project has had no `CLAUDE.md`, and nothing created one
+implicitly: the tool read the folder itself at each launch and took the
+rest from your prompts, which is why those prompts had to repeat "base
+R", "do not use git" and the rest. Type `/init` at the prompt. It reads
+the folder and proposes a `CLAUDE.md`, shown in the same box as any new
+file. Accept it,
 read it, and treat it as a draft: it describes what it found, not what
 you want, and it knows nothing about where facts may come from. The
 next section replaces it.
@@ -2795,9 +2718,9 @@ accept it, and keep facts you supply in a data file.**
 | # | Question |
 |:--|:--|
 | 1 | Files: only the ones you named? (`git status`) |
-| 2 | Removals: every `-` line asked for? Read these first. |
+| 2 | What was deleted: did you ask for each red line to go? Read these first. |
 | 3 | The line that does the work: does it do what you asked, and only that? |
-| 4 | Names and constants: yours? A table of literals is a constant you did not supply. |
+| 4 | Where does each value come from: your data, your prompt, or the tool? |
 | 5 | A line you cannot explain: ask before you accept, or ask for one you can read. |
 
 **Things that bite**
@@ -2837,7 +2760,7 @@ accept it, and keep facts you supply in a data file.**
 | hand count | a number you work out yourself, before the script runs, so the comparison afterwards is a comparison | [§](#prompt-scrape) |
 | manual mode | it asks before every edit and every command that changes something | [§](#launch) |
 | approval box | the file, diff or command shown before it lands; `1. Yes` or Esc | [§](#approve-create) |
-| the five questions | files, removals, the working line, names and constants, a line you cannot explain | [§](#judge-diff) |
+| the five questions | which files changed, what was deleted, the line that does the work, where each value came from, a line you cannot explain | [§](#judge-diff) |
 | the check | the hand counts written as `stopifnot()` in the script, dated | [§](#hand-check) |
 | a fact from memory | a value the tool did not read from the page or a file; a guess | [§](#countries-lesson) |
 | plan first | "Describe your approach before writing any code." | [§](#catch-earlier) |
