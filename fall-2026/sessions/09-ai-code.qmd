@@ -541,7 +541,14 @@ to do that part, and you watch it happen. If you did Before class, steps
 1 and 2 are done; open the project (File → Recent Projects →
 `placements`) and start at step 3.
 
-Without RStudio, the same eight steps in a terminal:
+Everything on this page also works without RStudio, in a plain
+terminal or in VS Code; the slides show the RStudio path because that
+is where the course runs R.
+
+::: {.callout-note collapse="true"}
+## The same steps in a plain terminal, or in VS Code
+
+**A plain terminal** (Terminal on a Mac, PowerShell on Windows):
 
 ```bash
 mkdir -p ~/github/placements
@@ -549,8 +556,24 @@ cd ~/github/placements
 claude --permission-mode manual
 ```
 
-then the trust question, the welcome screen, and Prompt 0; git goes in a
-second terminal window opened in the same folder.
+Then the trust question, the welcome screen and Prompt 0 as on the
+slides. Git goes in a second terminal window opened in the same folder
+(`cd ~/github/placements`, then `git log --oneline` or `git diff`). Run
+a script with `Rscript code/placements.R` from that folder, or open the
+folder in RStudio when you want the Console.
+
+**VS Code**: File → Open Folder → `placements`. View → Terminal opens a
+terminal in that folder; type `claude --permission-mode manual` there.
+The `+` button on the terminal panel opens a second terminal for git.
+To read what changed, open the Source Control view (the branch icon in
+the left bar): it lists every changed file, and clicking one opens the
+diff side by side, the same lines `git diff` prints. Anthropic also
+ships a [Claude Code extension for VS
+Code](https://code.claude.com/docs/en/vs-code) that shows each proposed
+edit in a diff window with accept and reject buttons; the boxes on the
+slides are the terminal's form of the same question.
+
+:::
 
 :::
 
@@ -732,7 +755,10 @@ Tools → Terminal → New Terminal opens *Terminal 2*; the dropdown at the
 top of the Terminal pane switches between them. Leave Claude Code in
 Terminal 1 and type git in Terminal 2. If the Terminal shows R's `>`
 prompt instead of `❯`, you typed `claude` in the Console: Tools →
-Terminal → New Terminal, then again.
+Terminal → New Terminal, then again. Outside RStudio, a second terminal
+window in the same folder does the same job; in VS Code the `+` button
+on the terminal panel opens it, and the Source Control view lists the
+changed files and shows each diff when clicked.
 
 ![Two Terminal tabs: Claude Code stays in Terminal 1, git goes in Terminal 2. The dropdown switches between them.](figures/09-ai-code/S13-terminal-dropdown.png){fig-align="center" fig-alt="RStudio's Terminal pane with its dropdown open, listing Terminal 1 running Claude Code and Terminal 2 at the shell prompt, both circled in red."}
 
@@ -1230,7 +1256,10 @@ have read it rather than been told it.
 
 A new file has no earlier version, so `git diff` alone shows nothing;
 `git add` it, then `git diff --staged` prints every line with a `+`.
-That is the whole of what the tool did. Read it once from the top. The
+That is the whole of what the tool did. Read it once from the top. In
+VS Code, the Source Control view shows the same new file with every
+line green; reading it there and reading it in the terminal are the
+same act. The
 lines above are the ones that carry the risk: they collect every table
 on the page, keep the one whose header is exactly the four names, and
 stop the script if there is not exactly one such table. A future change
@@ -1497,7 +1526,9 @@ comment the tool rewrote although nobody asked. It is harmless, and it
 is the kind of extra change the red lines exist to show. `1. Yes`
 accepts. The postdoc edit is one comment and one line, all green; the
 country edit is thirty green lines, and every country name in them is
-question 4.
+question 4. Editor extensions show the same edit in a diff window with
+accept and reject buttons; whichever window you read it in, the diff is
+the same object `git diff` prints.
 
 :::
 
@@ -2667,6 +2698,16 @@ accept it, and keep facts you supply in a data file.**
 | Put a file back | `git restore code/x.R` |
 | Run the script yourself | Session → Restart R, then Source |
 | The scraping package, once | `install.packages("rvest")` in the Console |
+
+**The same steps outside RStudio**
+
+| Step | Plain terminal | VS Code |
+|:--|:--|:--|
+| The folder | `mkdir -p ~/github/placements`, then `cd` into it | File → Open Folder |
+| Launch | `claude --permission-mode manual` in that folder | View → Terminal, then the same command |
+| Git while it runs | a second terminal window, `cd` to the folder | the `+` button on the terminal panel |
+| Read what changed | `git status`, `git diff` | Source Control view; click a file for the diff |
+| Run the script | `Rscript code/placements.R` | the terminal, or RStudio's Console |
 
 **Prompt shapes**
 
