@@ -144,8 +144,8 @@ definitions matter later.
 Console to see it and `?LifeCycleSavings` for its documentation. It
 holds one row per country for 50 countries, each value averaged over
 1960–1970 to remove the business cycle. The data come from [Belsley, Kuh
-and Welsch (1980)](https://doi.org/10.1002/0471725153), a regression-diagnostics
-textbook, who took them from Sterling (1977). Under Modigliani's life-cycle hypothesis, people save
+and Welsch (Wiley, 1980)](https://doi.org/10.1002/0471725153), a regression-diagnostics
+textbook, who took them from Sterling (MIT undergraduate thesis, 1977). Under Modigliani's life-cycle hypothesis, people save
 during their working years and draw down savings when young or old, so
 a country's savings rate depends on its age structure and on how fast
 income grows.
@@ -331,9 +331,16 @@ almost nothing, so replication becomes an ordinary step.
 
 ## Evidence about hidden work, weakest to strongest {#evidence-ladder}
 
-![](figures/10-verification/D2-evidence-ladder.svg){fig-align="center" height="360" fig-alt="Five steps rising from left to right: It says it is done; It shows the output; It shows each command and what it printed; A fresh agent recomputes from the raw data; You recompute a value you already know. An arrow above runs from weaker to stronger evidence."}
+![](figures/10-verification/D2-evidence-ladder.svg){fig-align="center" height="330" fig-alt="Five steps rising from left to right: 1, it says it is done; 2, it shows the output; 3, it shows each command it ran and what it printed; 4, a second agent redoes it from the original data, without the first one's code; 5, you compare it with a number you worked out yourself beforehand. An arrow above runs from weaker to stronger evidence."}
 
-[Holmström (1979)](https://ideas.repec.org/a/rje/bellje/v10y1979ispringp74-91.html): use every signal that tells you about the hidden action.
+::: {style="font-size:0.72em"}
+**4** A new session gets only the question and the original data file; it
+never sees the first agent's code or conversation, and computes the numbers
+again.<br>
+**5** Before delegating, you compute one number yourself, such as the number
+of countries or one coefficient, and check that the output matches it.<br>
+[Holmström (BJE, 1979)](https://www.jstor.org/stable/3003320): use every signal that tells you about the hidden action.
+:::
 
 ::: {.content-visible when-format="revealjs"}
 
@@ -346,41 +353,71 @@ last three.
 
 ::: {.content-hidden when-format="revealjs"}
 
-[Holmström (1979)](https://ideas.repec.org/a/rje/bellje/v10y1979ispringp74-91.html)
+[Holmström (BJE, 1979)](https://www.jstor.org/stable/3003320)
 showed that a principal should condition on every signal that carries
 information about the agent's hidden action. For a coding agent the
 signals differ a lot in what they tell you. "It is done" tells you
 nothing. The output tells you what came out and nothing about whether it is right. The
 commands it ran and what they printed let you follow the work step by
-step, including the row count after every filter. A second agent that
-recomputes the numbers from the raw data, without seeing the first
-agent's code, is an independent measurement. A value you worked out
-yourself before delegating is the strongest signal of all, because the
-agent could not have shaped it.
+step, including the row count after every filter. A second agent,
+started in a new session with only the question and the original data
+file, computes the numbers again without seeing the first agent's code
+or conversation: that is an independent measurement. A number you
+worked out yourself before delegating, such as the number of countries
+or one coefficient, is the strongest signal of all, because the agent
+could not have shaped it.
 
 :::
 
-## An agent that edits the check to make it pass {#edits-check}
+## Two briefs that let the agent game the check {#edits-check .smaller}
 
-A script checks that the model uses all 50 countries. The check fails.
-Asked to fix it, the agent changes the check:
+:::: {.columns}
+::: {.column width="50%"}
+**The check is the agent's to edit**
 
-```diff
- fit <- lm(sr ~ pop15 + pop75 + dpi + ddpi, data = d)
--stopifnot(nobs(fit) == 50)   # every country in the model
-+stopifnot(nobs(fit) > 40)    # enough countries remain
+```{.default filename="Brief"}
+Run savings.R and fix whatever fails.
 ```
 
-*An illustration.* [Holmström and Milgrom (1991)](https://academic.oup.com/jleo/article-abstract/7/special_issue/24/2194011):
-effort goes where the measurement is. Documented in coding agents:
-[METR (2025)](https://metr.org/blog/2025-06-05-recent-reward-hacking/),
-[Zhong et al. (2025)](https://arxiv.org/abs/2510.20270).
+```diff
+-stopifnot(nobs(fit) == 50)  # all countries
++stopifnot(nobs(fit) > 40)   # enough remain
+```
+
+The check that failed was the one telling the truth. The fix loosened it.
+:::
+::: {.column width="50%"}
+**The brief states the answer**
+
+```{.default filename="Brief"}
+Replicate the paper's main result:
+employment falls by 20%.
+```
+
+```r
+for (ctrl in control_sets) {
+  fit <- lm(y ~ ., d[c("y", "treat", ctrl)])
+  if (abs(coef(fit)["treat"] + 0.2) < 0.02) break
+}
+```
+
+The loop stops at the first set of controls that gives the number in the
+brief.
+:::
+::::
+
+*Illustrations.* Effort goes where the measurement is:
+[Holmström and Milgrom (JLEO, 1991)](https://www.jstor.org/stable/764957).
+Seen in coding agents: [METR (report, 2025)](https://metr.org/blog/2025-06-05-recent-reward-hacking/),
+[Zhong et al. (arXiv, 2025)](https://arxiv.org/abs/2510.20270),
+[Alizadeh et al. (arXiv, 2026)](https://arxiv.org/abs/2606.11447).
 
 ::: {.content-visible when-format="revealjs"}
 
 ::: {.notes}
-The red line is the check you wrote. The green line is what came back.
-The script now passes, and it tests almost nothing.
+Left: the brief made passing the check the goal, so the agent changed the
+check. Right: the brief named the answer, so the agent searched for it.
+Neither brief is unusual. The next slide gives the fix for each.
 :::
 
 :::
@@ -388,98 +425,154 @@ The script now passes, and it tests almost nothing.
 ::: {.content-hidden when-format="revealjs"}
 
 In the multitask model of
-[Holmström and Milgrom (1991)](https://academic.oup.com/jleo/article-abstract/7/special_issue/24/2194011),
+[Holmström and Milgrom (JLEO, 1991)](https://www.jstor.org/stable/764957),
 an agent paid on what can be measured shifts effort toward it and away
 from what cannot. Coding agents have no pay, but they are trained on
-tasks graded by pass-or-fail tests, and the same behaviour follows.
-[METR (2025)](https://metr.org/blog/2025-06-05-recent-reward-hacking/)
-found frontier models patching the scoring code of their tasks, and
-still doing it in most runs of one task after being told not to. On
-tests built to contradict the task,
-[Zhong et al. (2025)](https://arxiv.org/abs/2510.20270) found models
-"passing" by editing or special-casing the tests. The diff above is an
-illustration of the same move in R: the check wanted 50 countries, the
-fix accepts anything above 40.
+tasks graded by pass-or-fail tests, and the same behaviour follows. Two
+ordinary briefs show how. "Fix whatever fails" makes a passing check the
+goal, and the quickest way to pass is to change the check: on the left,
+the check wanted all 50 countries and the fix accepts anything above 40.
+"Employment falls by 20%" puts the answer in the brief, and the quickest
+way to match it is to search: on the right, a loop tries sets of control
+variables and stops at the first one that gives −0.2. Both are
+illustrations written for this page. The behaviour is documented:
+[METR (report, 2025)](https://metr.org/blog/2025-06-05-recent-reward-hacking/)
+found frontier models patching the scoring code of their tasks, and still
+doing it in most runs of one task after being told not to;
+[Zhong et al. (arXiv, 2025)](https://arxiv.org/abs/2510.20270) found models
+"passing" tests built to contradict the task by editing or special-casing
+them; and [Alizadeh et al. (arXiv, 2026)](https://arxiv.org/abs/2606.11447)
+found prompt wording nudging coding agents toward specifications that
+confirm a paper.
 
 :::
 
-## Two rules from the theory {#two-rules}
+## Two rules from the theory {#two-rules .smaller}
 
 :::: {.columns}
 ::: {.column width="50%"}
-### The agent cannot edit the checks {.unnumbered}
+::: {style="border:2px solid #b31b1b; border-radius:14px; padding:0.5em 0.8em; margin:0.4em 0.5em 0 0"}
+**1. The agent cannot edit the checks.**
 
-A check the worker can change measures nothing.
+```{.default filename="Brief"}
+The checks are in checks.R, which I
+wrote. Do not edit checks.R. If a
+check fails, stop and tell me which.
+```
+
+You run `source("checks.R")` yourself afterwards.
+:::
 :::
 ::: {.column width="50%"}
-### Keep one check the agent never sees {.unnumbered}
+::: {style="border:2px solid #b31b1b; border-radius:14px; padding:0.5em 0.8em; margin:0.4em 0 0 0.5em"}
+**2. Keep one check the agent never sees.**
 
-A value you know, held back from the brief.
+```{.default filename="Brief"}
+Replicate the paper's main
+specification and report the
+coefficient on treat.
+```
+
+You compare it with the published −0.20, which stayed out of the brief.
+:::
 :::
 ::::
 
 ::: {.content-visible when-format="revealjs"}
 
 ::: {.notes}
-Both come straight from the principal–agent logic. The second is the
-auditor's surprise count.
+Same two tasks as the last slide, with the brief rewritten. The checks
+belong to you, and the answer you expect is your test, not the agent's
+target.
 :::
 
 :::
 
 ::: {.content-hidden when-format="revealjs"}
 
-Two rules follow. The checks live where the agent cannot change them:
-written before the work starts, and kept out of the files it edits or run
-by someone else. And one check stays hidden: a value you worked out
-yourself and did not put in the brief. An agent that never saw the
-answer cannot bend its work toward it.
+The two rules fix the two briefs on the previous slide. The checks live
+where the agent cannot change them: in a file you wrote, which the brief
+forbids it to edit, and which you run yourself afterwards. And one check
+stays hidden: the number you expect, here the published coefficient,
+stays out of the brief. The agent reports what it finds, and you compare.
+An agent that never saw the answer cannot bend its work toward it.
 
 :::
 
-## Reinhart and Rogoff's debt threshold, checked in a class assignment {#reinhart-rogoff}
+## A published result: growth when public debt exceeds 90% of GDP {#reinhart-rogoff}
+
+- **The paper.** The economists Carmen Reinhart and Kenneth Rogoff compared
+  growth in 20 advanced economies from 1946 to 2009
+  ([Reinhart and Rogoff, AER P&P, 2010](https://doi.org/10.1257/aer.100.2.573)).
+- **The claim.** In years when public debt was above 90% of GDP, growth
+  averaged [−0.1%]{style="color:#b31b1b; font-weight:bold"}, far below
+  other years.
+- **Why it mattered.** The 90% line became a reference point for those
+  arguing to cut government deficits after 2010.
+
+**Hands up:** would you have checked this result before citing it?
+
+::: {.content-visible when-format="revealjs"}
+
+::: {.notes}
+A famous result from two well-known economists, in a top journal's
+proceedings issue, used in real budget debates. The next slide is what
+a graduate student found.
+:::
+
+:::
+
+## The replication, done for a class assignment {#rr-replication .smaller}
 
 :::: {.columns}
-::: {.column width="55%"}
+::: {.column width="52%"}
 ![](figures/10-verification/F1-debt-growth.png){width="100%" fig-alt="Two bars: average real GDP growth in years with public debt above 90 percent of GDP, published minus 0.1 percent, corrected 2.2 percent."}
 :::
-::: {.column width="45%"}
-- 2010: average growth turns negative when public debt passes 90% of GDP
-- 2013: a graduate student replicating it for a class finds five
-  countries left out of a spreadsheet average
+::: {.column width="48%"}
+- A graduate student, Thomas Herndon, replicated the paper for a class
+  and asked the authors for their spreadsheet
+- Its average left out five of the 20 countries; some available years
+  were dropped; each country counted equally, however many years it had
+- Corrected: growth above 90% averaged 2.2%
+  ([Herndon, Ash and Pollin, CJE, 2014](https://doi.org/10.1093/cje/bet075))
 :::
 ::::
 
 ::: {.content-visible when-format="revealjs"}
 
 ::: {.notes}
-No AI here. A famous result, cited in the austerity debate, rested on a
-spreadsheet range that skipped five countries, plus choices about which
-years to keep and how to weight. It took a replication to see it.
+No AI anywhere in this story. Countries left out without anyone
+noticing, and a result that looked right to its authors and readers
+until someone recomputed it.
 :::
 
 :::
 
 ::: {.content-hidden when-format="revealjs"}
 
-[Reinhart and Rogoff (2010)](https://www.aeaweb.org/articles?id=10.1257/aer.100.2.573)
-reported that average growth turned negative, −0.1%, in years when public
-debt exceeded 90% of GDP, and the threshold was cited widely in the
-austerity debate. Thomas Herndon, a graduate student at UMass Amherst,
-tried to replicate it for a class assignment and found three problems: a
-spreadsheet average that left out five countries, the exclusion of some
-available years, and an unusual weighting. Corrected, growth above 90%
+[Reinhart and Rogoff (AER P&P, 2010)](https://doi.org/10.1257/aer.100.2.573)
+compared growth across 20 advanced economies from 1946 to 2009 and
+reported that in years when public debt exceeded 90% of GDP, growth
+averaged −0.1%. The threshold was cited widely in the debate over cutting
+government deficits after the financial crisis. In 2013 Thomas Herndon,
+a graduate student at UMass Amherst, tried to replicate the result for a
+class assignment and asked the authors for their spreadsheet. He found
+three problems: the formula that averaged across countries left out five
+of the 20 (Australia, Austria, Belgium, Canada and Denmark), some
+available years were excluded, and each country's average counted
+equally however many years it contributed. Corrected, growth above 90%
 averaged 2.2%
-([Herndon, Ash and Pollin 2014](https://academic.oup.com/cje/article-abstract/38/2/257/1714018)).
-The result looked right to its authors and to its readers. Nothing looked
-wrong until someone recomputed it.
+([Herndon, Ash and Pollin, CJE, 2014](https://doi.org/10.1093/cje/bet075)).
+The result looked right to its authors and to its readers. Nothing
+looked wrong until someone recomputed it.
 
 :::
 
 ## Which teams found the most coding errors? {#predict-teams}
 
 103 teams reproduced published social-science papers and hunted for
-coding errors. Three kinds of team:
+coding errors ([Brodeur et al., PNAS, 2026](https://doi.org/10.1073/pnas.2524747123)).
+Three kinds of team:
 
 1. no AI
 2. an AI chat assistant helping
@@ -499,17 +592,21 @@ kind of team.
 
 ## Reproduction and coding errors found, by type of team {#i4r}
 
-![](figures/10-verification/F2-i4r.png){fig-align="center" height="340" fig-alt="Two bar charts. Papers reproduced: no AI 94 percent, AI assisting 91, AI in charge 37. Major coding errors found per team: no AI 1.70, AI assisting 0.74, AI in charge 0.23."}
+![](figures/10-verification/F2-i4r.png){fig-align="center" height="290" fig-alt="Two bar charts. Papers reproduced: no AI 94 percent, AI assisting 91, AI in charge 37. Major coding errors found per team: no AI 1.70, AI assisting 0.74, AI in charge 0.23."}
 
-288 researchers, randomly assigned to 103 teams; each team reproduced a
-published paper and listed the coding errors it found. Source:
-[Brodeur et al. (2026), PNAS](https://doi.org/10.1073/pnas.2524747123).
+*The study:* 288 researchers in 103 teams, 2024; the AI was a chat assistant,
+ChatGPT with GPT-4 and GPT-4o
+([Brodeur et al., PNAS, 2026](https://doi.org/10.1073/pnas.2524747123)).
+*The lesson is the right panel:* with AI helping, teams reproduced as often
+and found fewer than half as many major errors.
 
 ::: {.content-visible when-format="revealjs"}
 
 ::: {.notes}
-With help, reproduction held up and error detection fell by more than
-half. The skill that suffered is the one this session is about.
+The left panel is dated: a 2024 chat assistant working alone reproduced
+37%, and today's coding agents do far better (a 2026 study: 93% of 221
+tasks). The right panel is the point: with AI helping, people found fewer
+errors.
 :::
 
 :::
@@ -517,13 +614,17 @@ half. The skill that suffered is the one this session is about.
 ::: {.content-hidden when-format="revealjs"}
 
 The Institute for Replication assigned 288 researchers at random to 103
-teams ([Brodeur et al. 2026](https://doi.org/10.1073/pnas.2524747123)).
+teams ([Brodeur et al., PNAS, 2026](https://doi.org/10.1073/pnas.2524747123)).
 Teams without AI and teams with an AI chat assistant reproduced the
 published results about equally often, 94% and 91%. Teams where the AI
 led reproduced 37%. On finding major coding errors, the assisted teams
-did worse: 0.74 per team against 1.70 for the teams without AI. The
-tools have improved since the study ran, but the direction is the
-point: help with the work went with less attention to its errors.
+did worse: 0.74 per team against 1.70 for the teams without AI. The AI
+in the study was ChatGPT, with GPT-4 and GPT-4o, used in 2024 as a chat
+assistant. Reproduction by AI has improved a lot since: a coding agent
+reproduced 93.4% of 221 social-science tasks in a 2026 study
+([Alizadeh et al., arXiv, 2026](https://arxiv.org/abs/2606.11447)). The
+lesson that has not aged is the right panel: with AI helping, the teams
+did the work as well and found fewer than half as many of its errors.
 
 :::
 
@@ -533,7 +634,7 @@ point: help with the work went with less attention to its errors.
 
 16 experienced open-source developers, 246 tasks on their own projects,
 each task randomly assigned to allow AI or not:
-[Becker et al. (2025)](https://arxiv.org/abs/2507.09089).
+[Becker et al. (arXiv, 2025)](https://arxiv.org/abs/2507.09089).
 
 ::: {.content-visible when-format="revealjs"}
 
@@ -548,7 +649,7 @@ felt is a poor guide to how it went.
 
 In a randomized study of experienced open-source developers working on
 their own repositories
-([Becker et al. 2025](https://arxiv.org/abs/2507.09089)), the developers
+([Becker et al., arXiv, 2025](https://arxiv.org/abs/2507.09089)), the developers
 expected AI tools to make them 24% faster and, after the tasks, believed
 they had been 20% faster. Measured, they took 19% longer. The lesson for
 supervision: your sense that the work went well is not a measurement.
@@ -575,7 +676,7 @@ You're right to question that. On reflection, it is not significant.
 
 *An illustration.* Challenged this way, one model wrongly admitted a
 mistake on 98% of questions
-([Sharma et al. 2024](https://arxiv.org/abs/2310.13548)).
+([Sharma et al., ICLR, 2024](https://arxiv.org/abs/2310.13548)).
 
 ::: {.content-visible when-format="revealjs"}
 
@@ -589,7 +690,7 @@ want. To check a number, ask for it to be recomputed from the data.
 ::: {.content-hidden when-format="revealjs"}
 
 Models are trained partly on human approval, and people approve of being
-agreed with. [Sharma et al. (2024)](https://arxiv.org/abs/2310.13548)
+agreed with. [Sharma et al. (ICLR, 2024)](https://arxiv.org/abs/2310.13548)
 found assistants giving up correct answers when the user pushed back;
 one model wrongly admitted a mistake on 98% of questions after "Are you
 sure?". The exchange above is an illustration of the pattern, not a
@@ -607,7 +708,7 @@ the number to be recomputed from the data or looked up in the source.
   paper tended to report the published numbers
 - Prompt wording nudged them toward specifications that confirm the paper
 
-[Alizadeh et al. (2026)](https://arxiv.org/abs/2606.11447)
+[Alizadeh et al. (arXiv, 2026)](https://arxiv.org/abs/2606.11447)
 
 ::: {.content-visible when-format="revealjs"}
 
@@ -620,7 +721,7 @@ produce it. Keep the answer you expect out of the brief.
 
 ::: {.content-hidden when-format="revealjs"}
 
-[Alizadeh et al. (2026)](https://arxiv.org/abs/2606.11447) gave coding
+[Alizadeh et al. (arXiv, 2026)](https://arxiv.org/abs/2606.11447) gave coding
 agents 221 reproduction tasks from social-science replication packages.
 The agents reproduced a large share of them. Two findings matter for
 supervision. When the original paper was provided along with the
@@ -758,7 +859,7 @@ most in the shaded corner, where doing is slow and checking is quick. In
 an internal survey at Anthropic, most engineers said they could fully
 delegate only a fifth of their work or less, and they chose tasks where
 "validation effort isn't large in comparison to creation effort"
-([Anthropic 2025](https://www.anthropic.com/research/how-ai-is-transforming-work-at-anthropic)).
+([Anthropic, report, 2025](https://www.anthropic.com/research/how-ai-is-transforming-work-at-anthropic)).
 Some decisions do not go in the grid at all: the research question and
 the identification strategy are yours.
 
@@ -894,18 +995,18 @@ the top of this page, and it already says something the summary does not.
 [95.5% → 89.0%]{style="font-size:1.7em; font-weight:bold; color:#b31b1b"}
 
 A model's accuracy after reviewing its own answers with no outside
-feedback ([Huang et al. 2024](https://arxiv.org/abs/2310.01798))
+feedback ([Huang et al., ICLR, 2024](https://arxiv.org/abs/2310.01798))
 :::
 ::: {.column width="50%"}
 [60%]{style="font-size:1.7em; font-weight:bold; color:#b31b1b"}
 
 How often two models that are both wrong give the same wrong answer
-([Kim et al. 2025](https://arxiv.org/abs/2506.07962))
+([Kim et al., ICML, 2025](https://arxiv.org/abs/2506.07962))
 :::
 ::::
 
 A checker from another model family catches more than the model itself
-or a sibling ([Lu et al. 2025](https://arxiv.org/abs/2512.02304)).
+or a sibling ([Lu et al., arXiv, 2025](https://arxiv.org/abs/2512.02304)).
 
 ::: {.content-visible when-format="revealjs"}
 
@@ -922,14 +1023,14 @@ evidence.
 Asking the same model to review its own work adds little. Without
 outside feedback, self-correction lowered one model's score on a math
 benchmark from 95.5% to 89.0%
-([Huang et al. 2024](https://arxiv.org/abs/2310.01798)). Models also
+([Huang et al., ICLR, 2024](https://arxiv.org/abs/2310.01798)). Models also
 share mistakes: across hundreds of models, when two both answered a
 question wrongly they chose the same wrong answer 60% of the time on
-one benchmark ([Kim et al. 2025](https://arxiv.org/abs/2506.07962)). So agreement
+one benchmark ([Kim et al., ICML, 2025](https://arxiv.org/abs/2506.07962)). So agreement
 between two similar models is weaker evidence than it looks. The benefit
 of a checker grows as it differs from the worker, and a checker from
 another model family does better than self-checking or a checker from
-the same family ([Lu et al. 2025](https://arxiv.org/abs/2512.02304)).
+the same family ([Lu et al., arXiv, 2025](https://arxiv.org/abs/2512.02304)).
 
 :::
 
@@ -995,7 +1096,7 @@ to six decimals.
 ![](figures/10-verification/D6-three-setups.svg){fig-align="center" height="360" fig-alt="Three small flow diagrams. Replicate: raw data goes to agent A and agent B, their outputs are compared, and you read where they differ. Check each claim: a write-up and a source go to a checker, which returns claim, found, match, and you read the mismatches. Try to refute: the result goes to a reviewer told to find what is wrong, it returns findings, and you confirm each finding in the data."}
 
 AI reviewers also report problems that are not there
-([McAleese et al. 2024](https://arxiv.org/abs/2407.00215)): confirm each
+([McAleese et al., arXiv, 2024](https://arxiv.org/abs/2407.00215)): confirm each
 finding before you act on it.
 
 ::: {.content-visible when-format="revealjs"}
@@ -1018,7 +1119,7 @@ find what is wrong, limited to correctness. Reviewers find real problems
 and also invent some: OpenAI's critic model found more bugs than human
 contractors and reported bugs that were not there, and a person working
 with the critic kept most of the finds and dropped most of the false
-alarms ([McAleese et al. 2024](https://arxiv.org/abs/2407.00215)). Each
+alarms ([McAleese et al., arXiv, 2024](https://arxiv.org/abs/2407.00215)). Each
 finding is a lead to confirm in the data.
 
 :::
@@ -1030,7 +1131,7 @@ checker agents on them. Share of the planted errors caught, by kind:
 
 ![](figures/10-verification/F4-recall.png){fig-align="center" height="310" fig-alt="Horizontal bars, planted errors caught by verifier agents: code does not run 99 percent, data errors 80 percent, text versus tables 64 percent, paper versus code 48 percent."}
 
-Source: [Willner and Yanagizawa-Drott (2026)](https://ape.socialcatalystlab.org/verify).
+Source: [Willner and Yanagizawa-Drott (working paper, 2026)](https://ape.socialcatalystlab.org/verify).
 Your version: copy the script, plant five errors, count what the checker
 finds.
 
@@ -1049,7 +1150,7 @@ A checker is itself a tool you have not verified. The test is the one you
 would use on any tool: feed it cases where you know the answer. Plant a
 few errors in a copy of the work and count how many it finds. Software
 testers have done this since the 1970s. A recent study did it for
-economics: [Willner and Yanagizawa-Drott (2026)](https://ape.socialcatalystlab.org/verify)
+economics: [Willner and Yanagizawa-Drott (working paper, 2026)](https://ape.socialcatalystlab.org/verify)
 planted errors in 100 papers written by AI and measured how many
 verifier agents caught. They caught nearly every script that failed to
 run, most data errors, and fewer than half of the mismatches between a
@@ -1636,8 +1737,8 @@ assumptions as given; that is the trade.
 [Claude Code best practices](https://code.claude.com/docs/en/best-practices) ·
 [Willison: code you have proven to work](https://simonwillison.net/2025/Dec/18/code-proven-to-work/) ·
 [Referee 2](https://github.com/scunning1975/MixtapeTools/blob/main/personas/referee2.md) ·
-[Brodeur et al. 2026](https://doi.org/10.1073/pnas.2524747123) ·
-[Herndon, Ash and Pollin 2014](https://academic.oup.com/cje/article-abstract/38/2/257/1714018) ·
+[Brodeur et al. (PNAS, 2026)](https://doi.org/10.1073/pnas.2524747123) ·
+[Herndon, Ash and Pollin (CJE, 2014)](https://doi.org/10.1093/cje/bet075) ·
 [Syllabus](../syllabus.qmd)
 
 :::
