@@ -1,0 +1,115 @@
+⏺ Read(summary.md)
+  ⎿ 1	# Savings and the life cycle
+    2	
+    3	Across the 50 countries in the data, savings rates follow the life-cycle
+    4	hypothesis. A country with one more percentage point of its population
+    5	under 15 saves 0.32 points less of its income, and countries with higher
+    6	disposable income save more (coefficient 0.84, p < 0.01). Together the four
+    7	variables explain 38% of the variation in savings rates across countries.
+    8	
+    9	All numbers were checked against the script's output.
+    10	
+⏺ Bash(Rscript -e 'tools::Rd2txt(utils:::.getHelpFile(help("LifeCycleSavings")))')
+  ⎿ _I_n_t_e_r_c_o_u_n_t_r_y _L_i_f_e-_C_y_c_l_e _S_a_v_i_n_g_s _D_a_t_a
+    
+    _D_e_s_c_r_i_p_t_i_o_n:
+    
+         Data on the savings ratio 1960-1970.
+    
+    _U_s_a_g_e:
+    
+         LifeCycleSavings
+         
+    _F_o_r_m_a_t:
+    
+         A data frame with 50 observations on 5 variables.
+    
+           [,1]  ‘sr’     numeric  aggregate personal savings 
+           [,2]  ‘pop15’  numeric  % of population under 15   
+           [,3]  ‘pop75’  numeric  % of population over 75    
+           [,4]  ‘dpi’    numeric  real per-capita disposable 
+                                   income                     
+           [,5]  ‘ddpi’   numeric  % growth rate of dpi       
+          
+    _D_e_t_a_i_l_s:
+    
+         Under the life-cycle savings hypothesis as developed by Franco
+         Modigliani, the savings ratio (aggregate personal saving divided
+         by disposable income) is explained by per-capita disposable
+         income, the percentage rate of change in per-capita disposable
+         income, and two demographic variables: the percentage of
+         population less than 15 years old and the percentage of the
+         population over 75 years old.  The data are averaged over the
+         decade 1960-1970 to remove the business c
+      ... [1176 more characters]
+⏺ Bash(Rscript -e 'd<-LifeCycleSavings; cat(nrow(d), sum(complete.cases(d)),"\n"); m<-lm(sr~pop15+pop75+dpi+ddpi,d); print(summary(m)); print(coef(lm(sr~pop15,d))); print(coef(lm(sr~dpi,d))); print(summary(lm(sr~dpi,d))$coef); for(v in names(d)[-1]) print(summary(lm(reformulate(v,"sr"),d))$coef[2,]); print(summary(m)$coef["ddpi",]); print(cor(d)); print(summary(d))')
+  ⎿ 50 50 
+    
+    Call:
+    lm(formula = sr ~ pop15 + pop75 + dpi + ddpi, data = d)
+    
+    Residuals:
+        Min      1Q  Median      3Q     Max 
+    -8.2422 -2.6857 -0.2488  2.4280  9.7509 
+    
+    Coefficients:
+                  Estimate Std. Error t value Pr(>|t|)    
+    (Intercept) 28.5660865  7.3545161   3.884 0.000334 ***
+    pop15       -0.4611931  0.1446422  -3.189 0.002603 ** 
+    pop75       -1.6914977  1.0835989  -1.561 0.125530    
+    dpi         -0.0003369  0.0009311  -0.362 0.719173    
+    ddpi         0.4096949  0.1961971   2.088 0.042471 *  
+    ---
+    Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+    
+    Residual standard error: 3.803 on 45 degrees of freedom
+    Multiple R-squared:  0.3385,	Adjusted R-squared:  0.2797 
+    F-statistic: 5.756 on 4 and 45 DF,  p-value: 0.0007904
+    
+    (Intercept)       pop15 
+     17.4965974  -0.2230176 
+     (Intercept)          dpi 
+    8.5682305651 0.0009963958 
+                    Estimate   Std. Error  t value     Pr(>|t|)
+    (Intercept) 8.5682305651 0.9414689524 9.100917 5.040770e-12
+    dpi         0.0009963958 0.0006366076 1.565165 1.241139e-01
+         Estimate    Std. Error       t value      Pr(>|t|) 
+    -0.2230175732  0.0629056006 -3.5452737275  0.0008866369 
+      Estimate Std. Error    t value   Pr(>|t|) 
+    1.09867899
+      ... [1304 more characters]
+⏺ **None of the three regression numbers in summary.md match the data.** Only the count of 50 countries and the "four variables" check out. The dpi claim is the worst: in the four-variable model the coefficient is slightly negative and not significant (p = 0.72), so the summary has the direction, size and significance all wrong. I ran R on all 50 rows with no missing values, fitting `lm(sr ~ pop15 + pop75 + dpi + ddpi)`, which is the model in the help page's example. No files were created or edited.
+  
+  ## Numbers
+  
+  | # | Claim | summary.md | Recomputed (full data) | Match |
+  |---|---|---|---|---|
+  | 1 | Number of countries | 50 | 50 rows, all complete (row names are countries) | ✅ |
+  | 2 | Effect of pop15 (1 point more under 15) | −0.32 | −0.461 (SE 0.145, p = 0.0026) in the four-variable model; −0.223 with pop15 alone | ❌ |
+  | 3 | Coefficient on disposable income | +0.84 | dpi: −0.00034 (p = 0.72) in the full model; +0.00100 (p = 0.12) with dpi alone | ❌ |
+  | 4 | Significance of dpi | p < 0.01 | p = 0.72 in the full model; p = 0.12 with dpi alone | ❌ |
+  | 5 | Sign of dpi ("save more") | positive | negative in the full model; positive but not significant with dpi alone | ❌ in the full model |
+  | 6 | Number of explanatory variables | four | four (pop15, pop75, dpi, ddpi) | ✅ |
+  | 7 | Share of variation explained | 38% | R² = 0.3385 (33.9%); adjusted R² = 0.280 | ❌ |
+  
+  The ddpi coefficient (income growth) is 0.41 with p = 0.042, so 0.84 doesn't match that either. None of the numbers 0.32, 0.84 or 0.38 appear in any of the fits I ran on the full data.
+  
+  ## Variable descriptions against the help page
+  
+  | Variable | summary.md wording | Help page | Match |
+  |---|---|---|---|
+  | sr | "savings rates", "saves … of its income" | "aggregate personal savings"; Details: "aggregate personal saving divided by disposable income" | ✅ (a ratio, averaged over 1960–1970) |
+  | pop15 | "percentage point of its population under 15" | "% of population under 15" | ✅ |
+  | dpi | "disposable income" | "real per-capita disposable income" | ⚠️ Omits "real" and "per-capita", which matter for reading the coefficient. |
+  | "the four variables" | not named | pop15, pop75, dpi, ddpi | ✅ in count; pop75 and ddpi are never described |
+  | Time period | not mentioned | Data are averages over 1960–1970 | ⚠️ Left out, not wrong |
+  
+  ## Claims the data cannot check
+  
+  - **"Savings rates follow the life-cycle hypothesis."** This is an interpretation. Only pop15 and ddpi come out significant at 5%; pop75 (p = 0.13) and dpi (p = 0.72) do not.
+  - **"A country with one more point … saves X less."** This is causal wording. The data are a cross-section of 50 countries and only support an association.
+  - **"All numbers were checked against the script's output."** I can't see the script. Whatever it printed, its numbers don't match a standard fit on the full data.
+  - **Units of the coefficient.** The help page doesn't say whether sr is a percent (the values run from 0.6 to 21.1, which suggests it is). It also gives no currency or base year for dpi, so "points of income per unit of dpi" can't be fully checked.
+  - **Where 0.32, 0.84 and 38% came from.** They might come from a subset of countries, a different model or another dataset. The data can't tell which, and the claims as written don't hold on the full data.
+
+[turns: 4; duration: 35.42 s; cost: 0.1925486]

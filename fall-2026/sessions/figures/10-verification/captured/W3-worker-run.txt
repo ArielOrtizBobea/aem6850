@@ -1,0 +1,105 @@
+⏺ Bash(ls; Rscript -e 'd<-LifeCycleSavings; str(d); print(summary(d)); print(colSums(is.na(d))); print(d[order(-d$ddpi),][1:4,]); print(sapply(c("ggplot2"), requireNamespace))')
+⏺ Skill({"skill": "dataviz"})
+  ⎿ 'data.frame':	50 obs. of  5 variables:
+     $ sr   : num  11.43 12.07 13.17 5.75 12.88 ...
+     $ pop15: num  29.4 23.3 23.8 41.9 42.2 ...
+     $ pop75: num  2.87 4.41 4.43 1.67 0.83 2.85 1.34 0.67 1.06 1.14 ...
+     $ dpi  : num  2330 1508 2108 189 728 ...
+     $ ddpi : num  2.87 3.93 3.82 0.22 4.56 2.43 2.67 6.51 3.08 2.8 ...
+           sr             pop15           pop75            dpi         
+     Min.   : 0.600   Min.   :21.44   Min.   :0.560   Min.   :  88.94  
+     1st Qu.: 6.970   1st Qu.:26.21   1st Qu.:1.125   1st Qu.: 288.21  
+     Median :10.510   Median :32.58   Median :2.175   Median : 695.66  
+     Mean   : 9.671   Mean   :35.09   Mean   :2.293   Mean   :1106.76  
+     3rd Qu.:12.617   3rd Qu.:44.06   3rd Qu.:3.325   3rd Qu.:1795.62  
+     Max.   :21.100   Max.   :47.64   Max.   :4.700   Max.   :4001.89  
+          ddpi       
+     Min.   : 0.220  
+     1st Qu.: 2.002  
+     Median : 3.000  
+     Mean   : 3.758  
+     3rd Qu.: 4.478  
+     Max.   :16.710  
+       sr pop15 pop75   dpi  ddpi 
+        0     0     0     0     0 
+               sr pop15 pop75     dpi  ddpi
+    Libya    8.89 43.69  2.07  123.58 16.71
+    Jamaica  7.72 41.12  1.73  380.47 10.23
+    Japan   21.10 27.01  1.91 1257.28  8.21
+    Malta   15.48 32.54  2.47  601.05  8.12
+    Loading required namespace
+      ... [26 more characters]
+  ⎿ Launching skill: dataviz
+⏺ Write(savings.R)
+  ⎿ File created successfully at: savings.R (file state is current in your context — no need to Read it back)
+⏺ Bash(Rscript savings.R && cat summary.md)
+  ⎿ Call:
+    lm(formula = sr ~ pop15 + pop75 + dpi + ddpi, data = d)
+    
+    Residuals:
+        Min      1Q  Median      3Q     Max 
+    -8.2422 -2.6857 -0.2488  2.4280  9.7509 
+    
+    Coefficients:
+                  Estimate Std. Error t value Pr(>|t|)    
+    (Intercept) 28.5660865  7.3545161   3.884 0.000334 ***
+    pop15       -0.4611931  0.1446422  -3.189 0.002603 ** 
+    pop75       -1.6914977  1.0835989  -1.561 0.125530    
+    dpi         -0.0003369  0.0009311  -0.362 0.719173    
+    ddpi         0.4096949  0.1961971   2.088 0.042471 *  
+    ---
+    Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+    
+    Residual standard error: 3.803 on 45 degrees of freedom
+    Multiple R-squared:  0.3385,	Adjusted R-squared:  0.2797 
+    F-statistic: 5.756 on 4 and 45 DF,  p-value: 0.0007904
+    
+    
+    Without Libya:
+                Estimate Std. Error t value Pr(>|t|)
+    (Intercept)  24.5240     8.2240  2.9820   0.0047
+    pop15        -0.3914     0.1579 -2.4789   0.0171
+    pop75        -1.2809     1.1452 -1.1185   0.2694
+    dpi          -0.0003     0.0009 -0.3432   0.7331
+    ddpi          0.6103     0.2688  2.2706   0.0281
+    # Life-cycle savings regression
+    
+    Across 50 countries (averages for 1960-1970), savings rates rise with income growth: each extra percentage point of gr
+      ... [645 more characters]
+⏺ Dropping Libya raises the growth coefficient, so the hard-coded word "shrinks" is wrong. The summary is also too dense for a non-specialist. I'll fix both.
+⏺ Edit(savings.R)
+  ⎿ The file savings.R has been updated successfully. (file state is current in your context — no need to Read it back)
+⏺ Edit(savings.R)
+  ⎿ The file savings.R has been updated successfully. (file state is current in your context — no need to Read it back)
+⏺ Bash(Rscript savings.R >/dev/null && cat summary.md && ls)
+⏺ Read(savings_growth.png)
+  ⎿ # Life-cycle savings regression
+    
+    In 50 countries over 1960-1970, households saved more where incomes were growing faster: each extra percentage point of annual income growth went with a savings rate about 0.4 points higher, comparing countries with similar age profiles and income levels (0.6 points if Libya, an extreme case of fast growth, is left out). Countries with more children saved less: 10 more percentage points of the population under 15 went with a savings rate about 4.6 points lower, as the life-cycle theory predicts, while the share over 75 and the level of income had no clear effect. These factors explain about a third (34%) of the differences in savings rates, which averaged 9.7% of disposable income.
+    
+    savings.R
+    savings_growth.png
+    summary.md
+  ⎿ 
+⏺ I wrote `savings.R`, ran it, and it produced `savings_growth.png` and `summary.md`. I checked the figure after rendering: the labels aren't clipped and the scales are right.
+  
+  **Cleaning.** The data didn't need any. It has 50 countries, no missing values, no duplicate countries, and every value is in a plausible range. The script checks all of this with `stopifnot`, so it will stop if the data ever changes. Libya's income growth is 16.7%, while the next highest country is at 10.2%. I kept Libya in the main regression and also report the fit without it.
+  
+  **Regression results** (sr on pop15, pop75, dpi, ddpi; n = 50, R² = 0.34)
+  
+  | | Estimate | SE | p |
+  |---|---|---|---|
+  | pop15 | −0.461 | 0.145 | 0.003 |
+  | pop75 | −1.691 | 1.084 | 0.126 |
+  | dpi | −0.0003 | 0.0009 | 0.719 |
+  | ddpi | 0.410 | 0.196 | 0.042 |
+  
+  These match the textbook estimates for this regression. Without Libya, the income-growth coefficient rises to 0.61 (p = 0.028) and pop15 is −0.39.
+  
+  **Figure.** It's a scatter of the savings rate against income growth, with a simple one-variable OLS line (slope 0.48) and its confidence band. Libya, Japan and Jamaica are labelled. The plotted line doesn't control for the other variables, so the subtitle gives both slopes: 0.48 for the plotted line and 0.41 once age structure and income level are held fixed.
+  
+  **Summary.** `summary.md` is three sentences in plain language. It covers the growth effect (0.4, or 0.6 without Libya), the under-15 effect (−4.6 points per 10 percentage points), the variables with no clear effect, and the R² of about a third. All the numbers are filled in by the script, so they update if the model changes.
+  
+  The script is split into `setup`, `data`, `regression`, `figure` and `summary` blocks using your block markers. This folder has no Makefile, so `make block name=figure` won't work yet; I can add a small dispatcher if you want that.
+
+[turns: 10; duration: 55.811 s; cost: 0.337466]

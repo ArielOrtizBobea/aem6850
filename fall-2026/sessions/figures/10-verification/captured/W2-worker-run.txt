@@ -1,0 +1,102 @@
+⏺ Bash(ls -la; Rscript -e 'str(LifeCycleSavings); print(colSums(is.na(LifeCycleSavings))); print(summary(LifeCycleSavings)); print(LifeCycleSavings[order(-LifeCycleSavings$ddpi),][1:3,])'; Rscript -e 'cat(requireNamespace("ggplot2"))')
+⏺ Skill({"skill": "dataviz"})
+  ⎿ total 0
+    drwxr-xr-x@  2 user  wheel   64 Sep 28 17:40 .
+    drwxr-xr-x@ 20 user  wheel  640 Sep 28 17:40 ..
+    'data.frame':	50 obs. of  5 variables:
+     $ sr   : num  11.43 12.07 13.17 5.75 12.88 ...
+     $ pop15: num  29.4 23.3 23.8 41.9 42.2 ...
+     $ pop75: num  2.87 4.41 4.43 1.67 0.83 2.85 1.34 0.67 1.06 1.14 ...
+     $ dpi  : num  2330 1508 2108 189 728 ...
+     $ ddpi : num  2.87 3.93 3.82 0.22 4.56 2.43 2.67 6.51 3.08 2.8 ...
+       sr pop15 pop75   dpi  ddpi 
+        0     0     0     0     0 
+           sr             pop15           pop75            dpi         
+     Min.   : 0.600   Min.   :21.44   Min.   :0.560   Min.   :  88.94  
+     1st Qu.: 6.970   1st Qu.:26.21   1st Qu.:1.125   1st Qu.: 288.21  
+     Median :10.510   Median :32.58   Median :2.175   Median : 695.66  
+     Mean   : 9.671   Mean   :35.09   Mean   :2.293   Mean   :1106.76  
+     3rd Qu.:12.617   3rd Qu.:44.06   3rd Qu.:3.325   3rd Qu.:1795.62  
+     Max.   :21.100   Max.   :47.64   Max.   :4.700   Max.   :4001.89  
+          ddpi       
+     Min.   : 0.220  
+     1st Qu.: 2.002  
+     Median : 3.000  
+     Mean   : 3.758  
+     3rd Qu.: 4.478  
+     Max.   :16.710  
+               sr pop15 pop75     dpi  ddpi
+    Libya    8.89 43.69  2.07  123.58 16.71
+    Jamaica  7.72 41.12  1.73  380.47 10.23
+    J
+      ... [79 more characters]
+  ⎿ Launching skill: dataviz
+⏺ Write(savings.R)
+  ⎿ File created successfully at: savings.R (file state is current in your context — no need to Read it back)
+⏺ Bash(Rscript savings.R && Rscript -e 'd<-LifeCycleSavings; print(coef(summary(lm(sr~ddpi,d)))); s<-summary(lm(sr~.,d)); print(s$r.squared)')
+  ⎿ Call:
+    lm(formula = sr ~ pop15 + pop75 + dpi + ddpi, data = savings)
+    
+    Residuals:
+        Min      1Q  Median      3Q     Max 
+    -8.2422 -2.6857 -0.2488  2.4280  9.7509 
+    
+    Coefficients:
+                  Estimate Std. Error t value Pr(>|t|)    
+    (Intercept) 28.5660865  7.3545161   3.884 0.000334 ***
+    pop15       -0.4611931  0.1446422  -3.189 0.002603 ** 
+    pop75       -1.6914977  1.0835989  -1.561 0.125530    
+    dpi         -0.0003369  0.0009311  -0.362 0.719173    
+    ddpi         0.4096949  0.1961971   2.088 0.042471 *  
+    ---
+    Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+    
+    Residual standard error: 3.803 on 45 degrees of freedom
+    Multiple R-squared:  0.3385,	Adjusted R-squared:  0.2797 
+    F-statistic: 5.756 on 4 and 45 DF,  p-value: 0.0007904
+    
+     country   leverage    cooks_d
+       Libya 0.53145676 0.26807042
+       Japan 0.22330989 0.14281625
+      Zambia 0.06433163 0.09663275
+                     all no_Libya
+    (Intercept) 28.56609 24.52405
+    pop15       -0.46119 -0.39144
+    pop75       -1.69150 -1.28087
+    dpi         -0.00034 -0.00032
+    ddpi         0.40969  0.61028
+                Estimate Std. Error  t value     Pr(>|t|)
+    (Intercept) 7.883021  1.0110011 7.797243 4.464697e-10
+    ddpi        0.475830  0.2146166 2.217117 3.
+      ... [24 more characters]
+⏺ Read(savings_growth.png)
+  ⎿ 
+⏺ Write(summary.md)
+  ⎿ File created successfully at: summary.md (file state is current in your context — no need to Read it back)
+⏺ I wrote and ran `savings.R`, which estimates the regression, saves `savings_growth.png` and prints the results; `summary.md` has the plain-language summary.
+  
+  **Cleaning.** The data had no missing values, so there was little to clean. I moved the country names from the row names into a `country` column and added checks that the values are in sensible ranges. All 50 countries are kept.
+  
+  **Results** (savings rate regressed on the four variables, n = 50, R² = 0.34):
+  
+  | Variable | Coefficient | p-value |
+  |---|---|---|
+  | pop15 (share under 15) | −0.461 | 0.003 |
+  | pop75 (share over 75) | −1.691 | 0.13 |
+  | dpi (income level) | −0.0003 | 0.72 |
+  | ddpi (income growth) | 0.410 | 0.042 |
+  
+  These match the published estimates for this data. Only the share of children and income growth are statistically significant.
+  
+  **Libya is a strong outlier.** Its income growth was 16.7%, against 10.2% for the next highest country, and it has more influence on the fit than any other country. The script prints the model re-estimated without Libya: the growth coefficient rises from 0.41 to 0.61. The summary mentions this, but the main estimate still uses all 50 countries.
+  
+  **Figure.** It shows the raw savings rate against income growth with a simple straight-line fit (slope 0.48) and its 95% band. That slope doesn't adjust for the other variables, so it differs from the 0.41 in the table. I checked the image and the labels are clear of each other.
+  
+  The script is split into `setup`, `data`, `model` and `fig_growth` blocks, following your block convention. I didn't add a Makefile, so `make block name=fig_growth` won't work in this folder yet.
+  
+  Files are in ``:
+  - `savings.R`
+  - `savings_growth.png`
+  - `summary.md`
+
+[turns: 8; duration: 46.307 s; cost: 0.2892744]
