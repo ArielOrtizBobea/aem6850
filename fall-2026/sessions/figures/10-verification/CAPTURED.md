@@ -7,7 +7,7 @@ check on the page uses that row name.
 
 ## Charts and diagrams
 
-- `F1`-`F6`: drawn by `make-figures.R` in this folder (base R). F1-F4 type
+- `F1`-`F7`: drawn by `make-figures.R` in this folder (base R). F1-F4 and F7 type
   numbers from the sources named in the script; F5-F6 come from the data.
 - `D1`-`D6`: hand-written SVG in the style of session 9's diagrams.
 

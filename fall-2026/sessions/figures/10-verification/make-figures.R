@@ -88,3 +88,23 @@ points(d$ddpi[out], d$sr[out], pch = 21, bg = "gold", cex = 2)
 text(d$ddpi[out], d$sr[out], rownames(d)[out], pos = 2, font = 2)
 abline(lm(sr ~ ddpi, data = d), lwd = 3, col = RED)
 dev.off()
+
+# 7) Recruiters given a better or a weaker AI ----
+# Dell'Acqua (working paper, 2022), "Falling Asleep at the Wheel", Tables 4
+# and 5: seconds per resume = control mean 20.2 plus the estimated effect
+# (+10.0 with the 75%-accurate AI, -1.4 with the 85%-accurate AI); accuracy
+# gain over no AI on the paper's 1-10 scale, column 3 (+0.29, +0.08).
+open_png("F7-recruiters.png", w = 1800, h = 780)
+par(mfrow = c(1, 2), mar = c(3, 2, 3, 1), cex = 1.25)
+lab <- c("No AI", "AI right 75%", "AI right 85%")
+v <- c(20.2, 20.2 + 10.0, 20.2 - 1.4)
+b <- barplot(v, names.arg = lab, col = c(GREY, GREY, RED), border = NA,
+             ylim = c(0, 36), axes = FALSE, main = "Seconds spent per résumé",
+             font.main = 1, cex.main = 1.1)
+text(b, v + 2.2, round(v), font = 2)
+v <- c(0.29, 0.08)
+b <- barplot(v, names.arg = lab[2:3], col = c(GREY, RED), border = NA,
+             ylim = c(0, 0.36), axes = FALSE, width = 0.6, space = 0.8,
+             main = "Accuracy gain over no AI (1-10 scale)", font.main = 1, cex.main = 1.1)
+text(b, v + 0.022, sprintf("+%.2f", v), font = 2)
+dev.off()
