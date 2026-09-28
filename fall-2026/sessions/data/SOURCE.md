@@ -168,5 +168,18 @@ written as CSV with `write.csv(row.names = FALSE)`; values unchanged.
 The data are from [gapminder.org](https://www.gapminder.org/data/),
 free to use under
 [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/). Used in
-sessions 8 and 9 as a small table that has nothing to do with the
+sessions 8, 9 and 11 as a small table that has nothing to do with the
 homework thread.
+
+## `income-life-draft.zip`
+
+The draft project for session 11, built for the course: a two-page
+draft paper, *Income and Life Expectancy across Countries*
+(`paper/draft.tex` and its PDF), the two scripts that make its Table 1
+and Figure 1, their outputs, and `data/gapminder.csv`, a copy of the
+file above. The paper types its numbers by hand, and five of them
+disagree with the code and the data on purpose; the session's agent
+sweep finds them. The source folder is `sessions/_income-life-draft/`;
+`sessions/_build-income-life-draft.sh` reruns the code, compiles the
+paper and rebuilds the zip.
+
