@@ -89,9 +89,10 @@ By the end of this session you can:
 
 ![](figures/11-reproducible-project/D1-draft-results.png){fig-align="center" width="95%" fig-alt="The Results section of a two-page draft paper: average life expectancy rose from 49.1 years in 1952 to 67.0 years in 2007; in 2007 it ranged from 39.6 years in Swaziland to 82.6 years in Japan, a gap of 42.8 years; Africa had 14.9 percent of the population, an average life expectancy of 54.8 years and a median GDP per capita of 1,452 dollars; the correlation is 0.81, the slope 7.2, and a 10 percent higher GDP per capita goes with 0.73 more years."}
 
-- Every number in this paragraph was copied from R's Console by hand.
-- The code has changed since the copying. Which numbers are still
-  right?
+- The Results section of a two-page draft paper on income and life
+  expectancy: Gapminder data, 142 countries, 1952 to 2007.
+- Every number in it was copied from R's Console by hand. The code has
+  changed since. Which numbers are still right?
 
 ::: {.content-visible when-format="revealjs"}
 
@@ -128,6 +129,9 @@ Some were updated by hand and some were not; part three finds which.
 - The problems the reports name most often: unclear data sources,
   missing package versions, and manual steps, such as tables copied
   into the paper by hand.
+
+Sources: the AEA Data and Code Availability Policy; the Data Editor's
+annual reports in the *AEA Papers and Proceedings*.
 
 ::: {.content-visible when-format="revealjs"}
 
@@ -223,8 +227,8 @@ In `r yr`, life expectancy was lowest in `r low$country`,
 at `r round(low$lifeExp, 1)` years.
 ````
 
-Rendered: In 2007, life expectancy was lowest in Swaziland, at 39.6
-years.
+Rendered, the last two lines read: "In 2007, life expectancy was
+lowest in Swaziland, at 39.6 years."
 
 ::: {.content-visible when-format="revealjs"}
 
@@ -521,6 +525,8 @@ tex <- knitr::kable(table1, format = "latex", booktabs = TRUE,
 writeLines(tex, "output/table1.tex")
 ```
 
+The first lines of `output/table1.tex`, for the draft's Table 1:
+
 ```latex
 \begin{tabular}{lrrr}
 \toprule
@@ -558,7 +564,7 @@ the rows:
 
 :::: {.columns}
 
-::: {.column width="55%"}
+::: {.column width="45%"}
 
 ```
 income-life-draft/
@@ -580,11 +586,13 @@ income-life-draft/
 
 :::
 
-::: {.column width="45%"}
+::: {.column width="55%"}
 
-- A two-page draft: abstract, three short sections, Table 1, Figure 1.
+- A two-page draft paper on income and life expectancy, with a Table 1
+  and a Figure 1.
+- Data: Gapminder, 142 countries, every fifth year from 1952 to 2007.
 - Two scripts write Table 1 and Figure 1.
-- Every number in the paper, the table included, was typed by hand.
+- Every number in the paper was typed by hand, the table included.
 
 :::
 
@@ -654,8 +662,10 @@ command; read each command, then choose `1. Yes`.
 - Read the three scripts, `output/table1.csv` and `paper/draft.tex`.
 - Ran one R command that computed every quantity in the paper from the
   data.
-- Wrote the report. In the captured run: 37 seconds, and two boxes
-  asking to run a command.
+- Wrote the report: 37 seconds in the captured run (Claude Code, the
+  prompt above, the draft project, September 2026).
+- It ran two commands; in the default mode, each one waits for your
+  approval.
 
 ::: {.content-hidden when-format="revealjs"}
 
@@ -709,6 +719,8 @@ a regression on base-10 logs.
 
 ## The agent's report {#sweep-report}
 
+The captured run's reply to the prompt, set out in three columns:
+
 | As printed | Where | What the code or data give |
 |:--|:--|:--|
 | 0.73 more years per 10% | Abstract | 0.69 (7.203 × log 1.1); 0.72 if taken as 7.203 × 0.1 |
@@ -751,6 +763,9 @@ figure note kept the old year.
 ## The five errors on the draft {#sweep-marked}
 
 ![](figures/11-reproducible-project/D4-draft-marked.png){fig-align="center" width="100%" fig-alt="The Results paragraph, Table 1 and the note under Figure 1 of the draft, with five numbers boxed in red: the gap of 42.8 years, the 0.73 more years, Asia's 69.2 and Europe's 28,504 in Table 1, and the year 2002 in the figure note."}
+
+The draft's Results section, Table 1 and the note under Figure 1, with
+the five numbers the agent flagged boxed in red.
 
 ::: {.content-visible when-format="revealjs"}
 
@@ -813,6 +828,8 @@ before submission does the replicator's check first, on your schedule.
 - Notes below the table: the sample, the definitions, and the source
   last.
 
+Source: the AER style guide; the other AEA journals use the same rules.
+
 ::: {.content-hidden when-format="revealjs"}
 
 These are the table rules in the [AER style
@@ -826,18 +843,19 @@ in detail; check the journal's own guide before you submit. `knitr::kable(format
 
 ## Figures for a journal {#journal-figures}
 
-- Charts as vector files, PDF or EPS. Photographs, maps made from images
-  and screenshots at 300 dpi.
-- Saved at the size it will print, so the text size is the real one:
-  at least 7 points at that size.
+- Charts as vector files (PDF, EPS); photographs and screenshots at
+  300 dpi.
+- Saved at the printed size, with text of at least 7 points at that
+  size.
 - `cairo_pdf()` embeds its fonts, as publishers ask; `pdf()` does not.
-- The title goes in the caption, below the figure, in the paper; leave
-  it out of the image.
+- The title goes in the caption, below the figure, in the paper.
 - One file per panel, lettered: `Figure1a.pdf`, `Figure1b.pdf`.
 
 ```r
 cairo_pdf("output/figure1.pdf", width = 6.5, height = 4, pointsize = 10)
 ```
+
+Sources: the AER style guide; Elsevier's artwork guidance (7 points).
 
 ::: {.content-hidden when-format="revealjs"}
 
@@ -887,11 +905,12 @@ income-life/
 
 ::: {.column width="50%"}
 
-- A README at the top. The AEA asks for it as a PDF.
-- The data, or the instructions to get them.
-- The code, with one script that runs everything in order.
-- Every table and figure in the paper, written by the code.
-- The software: the R version and every package, in `renv.lock`.
+- The draft project, fixed and ready to deposit.
+- A README at the top, as a PDF for the AEA.
+- The data, or how to get them.
+- The code: one script runs it all, in order.
+- Every table, figure and number in the paper, written by the code.
+- R and package versions, in `renv.lock`.
 
 :::
 
@@ -943,6 +962,8 @@ whatever the README leaves out, they have to guess.
 :::
 
 ## The data availability statement {#data-availability}
+
+For the draft project:
 
 > The data are the Gapminder excerpt distributed in the R package
 > `gapminder` (Bryan 2025, doi:10.32614/CRAN.package.gapminder),
@@ -1040,21 +1061,23 @@ page.
     ]
   },
   "Packages": {
+    ...
     "gapminder": {
       "Package": "gapminder",
       "Version": "1.0.1",
-      "Source": "Repository",
 ```
 
-- The R version, where the packages came from, and each package's
-  version.
+- From a project whose script loads gapminder: the R version, where
+  the packages came from, each package's version.
 - renv records the R version; it does not install it.
 
 ::: {.content-hidden when-format="revealjs"}
 
 The versions shown are the ones on the computer that wrote this file;
-yours will differ. Each package's entry also repeats its description,
-which makes the file long; the lines above are the ones that matter.
+yours will differ. The file lists twelve packages in alphabetical
+order: gapminder, renv itself, and ten that gapminder needs (tibble and
+the packages tibble uses); each entry also repeats the package's description,
+which makes the file long. The lines above are the ones that matter.
 renv does not capture the operating system or system libraries either,
 and restoring an old lockfile can mean installing old package versions
 from source, which needs compilers on a Mac or Windows laptop.
