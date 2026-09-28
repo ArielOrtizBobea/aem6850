@@ -7,7 +7,7 @@ RED  <- "#b31b1b"
 GREY <- "grey55"
 open_png <- function(file, w = 1600, h = 760) {
   png(file, width = w, height = h, res = 200)
-  par(las = 1, mar = c(4, 4.5, 1.5, 1), cex.axis = 0.9, cex.lab = 1)
+  par(las = 1, mar = c(4, 4.5, 1.5, 1), cex = 1.35, cex.axis = 0.9, cex.lab = 1)
 }
 
 # 1) Reinhart and Rogoff: growth when public debt is above 90% of GDP ----
@@ -27,7 +27,7 @@ dev.off()
 # 2) Institute for Replication experiment ----
 # Brodeur et al. (2026), PNAS 123(22), abstract and Table 1.
 open_png("F2-i4r.png", w = 1800, h = 780)
-par(mfrow = c(1, 2), mar = c(3, 4.5, 3, 1))
+par(mfrow = c(1, 2), mar = c(3, 2, 3, 1), cex = 1.25)
 lab <- c("No AI", "AI assisting", "AI in charge")
 b <- barplot(c(94, 91, 37), names.arg = lab, col = c(GREY, GREY, RED), border = NA,
              ylim = c(0, 110), axes = FALSE, main = "Papers reproduced (%)",
@@ -54,20 +54,20 @@ dev.off()
 # 4) Recall of verifier agents on planted errors ----
 # Willner & Yanagizawa-Drott (2026), "Verifying the Verifiers".
 open_png("F4-recall.png", w = 1600, h = 760)
-par(mar = c(4, 13, 1, 2))
+par(mar = c(4, 11, 1, 2), cex = 1.35)
 v <- c(99, 80, 64, 48)
 lab <- c("Code does not run", "Data errors", "Text vs. tables", "Paper vs. code")
 b <- barplot(rev(v), names.arg = rev(lab), horiz = TRUE, col = c(RED, GREY, GREY, GREY),
-             border = NA, xlim = c(0, 110), axes = FALSE,
+             border = NA, xlim = c(0, 122), axes = FALSE,
              xlab = "Planted errors caught (%)")
-text(rev(v) + 6, b, paste0(rev(v), "%"), font = 2)
+text(rev(v) + 9, b, paste0(rev(v), "%"), font = 2)
 dev.off()
 
 # 5) The figure in the deliverable, and the same figure with all 50 ----
 d <- LifeCycleSavings
 k <- d[d$ddpi < 10, ]
 open_png("F5-deliverable.png", w = 1400, h = 900)
-par(mar = c(4.5, 4.5, 1, 1))
+par(mar = c(4.5, 4.5, 1, 1), cex = 1.2)
 plot(k$ddpi, k$sr, pch = 19, col = "grey25",
      xlab = "Growth of disposable income (% a year)",
      ylab = "Savings rate (% of disposable income)")
@@ -75,7 +75,7 @@ abline(lm(sr ~ ddpi, data = k), lwd = 3, col = RED)
 dev.off()
 
 open_png("F6-reveal.png", w = 2000, h = 820)
-par(mfrow = c(1, 2), mar = c(4.5, 4.5, 3, 1))
+par(mfrow = c(1, 2), mar = c(4.5, 4.5, 3, 1), cex = 1.1)
 plot(k$ddpi, k$sr, pch = 19, col = "grey25", main = "In the deliverable",
      font.main = 1, xlab = "Growth of disposable income (% a year)",
      ylab = "Savings rate (%)")

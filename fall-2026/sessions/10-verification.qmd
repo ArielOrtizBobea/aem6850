@@ -74,13 +74,97 @@ Five things. The last three work on any project you have, tonight.
 
 :::
 
+## The task: a regression on R's built-in savings data {#task}
+
+::: {style="font-size:1.3em"}
+
+```{.default filename="The brief"}
+Using R's built-in LifeCycleSavings data, estimate the
+classic life-cycle savings regression: the savings rate sr
+on pop15, pop75, dpi and ddpi. Clean the data as needed.
+Write the script as savings.R and run it; save a figure of
+the savings rate against income growth, with a fitted line,
+as savings_growth.png; and write summary.md: two or three
+sentences for a non-specialist with the key numbers.
+```
+
+:::
+
+What comes back: a script, a figure, and a summary.
+
+::: {.content-visible when-format="revealjs"}
+
+::: {.notes}
+A task any of you could get from an advisor: a classic regression on a
+dataset that ships with R. Next slide: what the variables are.
+:::
+
+:::
+
+::: {.content-hidden when-format="revealjs"}
+
+The example that runs through the session is a short brief of the kind
+an advisor sends a research assistant. It asks for the classic
+regression on a dataset that ships with R, so everyone has the same
+data with nothing to download, and it asks for three things back: the
+script, a figure, and a summary for a non-specialist.
+
+:::
+
+## The data: LifeCycleSavings, 50 countries, 1960–1970 {#data}
+
+::: {style="font-size:1.15em"}
+
+| Variable | What it is (from `?LifeCycleSavings`) |
+|:--|:--|
+| `sr` | savings rate: personal saving as a percentage of disposable income |
+| `pop15` | percentage of the population under 15 |
+| `pop75` | percentage of the population over 75 |
+| `dpi` | real disposable income per person |
+| `ddpi` | growth rate of `dpi`, percent a year |
+
+:::
+
+One row per country; each value is an average over 1960–1970. The
+life-cycle hypothesis ([Modigliani](https://en.wikipedia.org/wiki/Life-cycle_hypothesis))
+says saving depends on age structure and on income growth.
+
+::: {.content-visible when-format="revealjs"}
+
+::: {.notes}
+Fifty countries, five variables. Keep this table in mind; the
+definitions matter later.
+:::
+
+:::
+
+::: {.content-hidden when-format="revealjs"}
+
+`LifeCycleSavings` is built into R: type `LifeCycleSavings` in the
+Console to see it and `?LifeCycleSavings` for its documentation. It
+holds one row per country for 50 countries, each value averaged over
+1960–1970 to remove the business cycle. The data come from [Belsley, Kuh
+and Welsch (1980)](https://doi.org/10.1002/0471725153), a regression-diagnostics
+textbook, who took them from Sterling (1977). Under Modigliani's life-cycle hypothesis, people save
+during their working years and draw down savings when young or old, so
+a country's savings rate depends on its age structure and on how fast
+income grows.
+
+:::
+
 ## A deliverable to approve or reject {#deliverable .smaller}
+
+For the brief two slides back. The script behind these comes later.
 
 :::: {.columns}
 ::: {.column width="50%"}
+*The figure*
+
 ![](figures/10-verification/F5-deliverable.png){width="100%" fig-alt="A scatter plot of the savings rate against the growth of disposable income for 48 countries, with a fitted line rising from about 6 to about 15 percent."}
 :::
 ::: {.column width="50%"}
+*The summary*
+
 > Across the 50 countries in the data, savings rates follow the
 > life-cycle hypothesis. A country with one more percentage point of its
 > population under 15 saves 0.32 points less of its income, and countries
@@ -106,12 +190,11 @@ part of the session.
 
 ::: {.content-hidden when-format="revealjs"}
 
-The deliverable uses R's built-in `LifeCycleSavings` data: savings rates
-for 50 countries, averaged over 1960–1970, the standard test of
-Modigliani's life-cycle hypothesis. It has the form a coding agent
-returns for a short brief: a script, a figure, and a summary that says
-the numbers were checked. Decide now whether you would accept it. The
-last part of this page checks it.
+Here is a deliverable for the brief above: a figure of the savings rate
+against income growth, and a summary that says the numbers were checked.
+The script behind them appears in the last part of the page. Decide now
+whether you would accept the result. The last part of this page checks
+it.
 
 :::
 
@@ -267,16 +350,16 @@ agent could not have shaped it.
 
 ## An agent that edits the check to make it pass {#edits-check}
 
+A script checks that the model uses all 50 countries. The check fails.
+Asked to fix it, the agent changes the check:
+
 ```diff
  fit <- lm(sr ~ pop15 + pop75 + dpi + ddpi, data = d)
 -stopifnot(nobs(fit) == 50)   # every country in the model
 +stopifnot(nobs(fit) > 40)    # enough countries remain
 ```
 
-*An illustration.* Asked to fix a failing check, the agent loosens the
-check.
-
-[Holmström and Milgrom (1991)](https://academic.oup.com/jleo/article-abstract/7/special_issue/24/2194011):
+*An illustration.* [Holmström and Milgrom (1991)](https://academic.oup.com/jleo/article-abstract/7/special_issue/24/2194011):
 effort goes where the measurement is. Documented in coding agents:
 [METR (2025)](https://metr.org/blog/2025-06-05-recent-reward-hacking/),
 [Zhong et al. (2025)](https://arxiv.org/abs/2510.20270).
@@ -404,9 +487,11 @@ teams to win.
 
 ## Reproduction and coding errors found, by type of team {#i4r}
 
-![](figures/10-verification/F2-i4r.png){fig-align="center" height="380" fig-alt="Two bar charts. Papers reproduced: no AI 94 percent, AI assisting 91, AI in charge 37. Major coding errors found per team: no AI 1.70, AI assisting 0.74, AI in charge 0.23."}
+![](figures/10-verification/F2-i4r.png){fig-align="center" height="340" fig-alt="Two bar charts. Papers reproduced: no AI 94 percent, AI assisting 91, AI in charge 37. Major coding errors found per team: no AI 1.70, AI assisting 0.74, AI in charge 0.23."}
 
-Source: [Brodeur et al. (2026), PNAS](https://doi.org/10.1073/pnas.2524747123).
+288 researchers, randomly assigned to 103 teams; each team reproduced a
+published paper and listed the coding errors it found. Source:
+[Brodeur et al. (2026), PNAS](https://doi.org/10.1073/pnas.2524747123).
 
 ::: {.content-visible when-format="revealjs"}
 
@@ -434,7 +519,8 @@ point: help with the work went with less attention to its errors.
 
 ![](figures/10-verification/F3-speed.png){fig-align="center" height="380" fig-alt="Three bars: expected before the study, 24 percent faster with AI; felt after, 20 percent faster; measured, 19 percent slower."}
 
-Experienced open-source developers, on their own projects:
+16 experienced open-source developers, 246 tasks on their own projects,
+each task randomly assigned to allow AI or not:
 [Becker et al. (2025)](https://arxiv.org/abs/2507.09089).
 
 ::: {.content-visible when-format="revealjs"}
@@ -503,8 +589,8 @@ the number to be recomputed from the data or looked up in the source.
 
 ## Agents shown the published result tend to report it {#shown-answer}
 
-- Coding agents reproduced social-science findings from replication
-  packages
+- Two coding agents got 221 reproduction tasks from social-science
+  replication packages; some runs also got the paper
 - On tasks built so that reproduction was impossible, agents given the
   paper tended to report the published numbers
 - Prompt wording nudged them toward specifications that confirm the paper
@@ -564,6 +650,8 @@ different checks and different checkers.
 :::
 
 ## The summary, claim by claim {#claims-colored}
+
+*The summary from the deliverable, marked by kind of claim:*
 
 Across the [50 countries]{style="background:#dce8f5"} in the data,
 savings rates [follow the life-cycle hypothesis]{style="background:#f7e6cc"}.
@@ -694,7 +782,9 @@ and keep each step small enough to check.
 
 ## Writing the checks into the brief {#brief-checks}
 
-::: {style="font-size:1.3em"}
+The same task as the deliverable, with the checks written in:
+
+::: {style="font-size:1.2em"}
 
 ```{.default filename="A brief with the checks written in"}
 Using R's built-in LifeCycleSavings data, estimate the
@@ -762,7 +852,8 @@ yourself, so that it works as a hidden check.
 :::
 ::::
 
-Ask for the command and what it printed. You can rerun those.
+Right: two commands run on the deliverable's script. Ask for the command
+and what it printed; you can rerun those.
 
 ::: {.content-visible when-format="revealjs"}
 
@@ -922,10 +1013,12 @@ finding is a lead to confirm in the data.
 
 ## Testing a checker with planted errors {#planted}
 
-![](figures/10-verification/F4-recall.png){fig-align="center" height="330" fig-alt="Horizontal bars, planted errors caught by verifier agents: code does not run 99 percent, data errors 80 percent, text versus tables 64 percent, paper versus code 48 percent."}
+Researchers planted errors in 100 AI-written economics papers and ran
+checker agents on them. Share of the planted errors caught, by kind:
 
-Planted errors in 100 AI-written economics papers:
-[Willner and Yanagizawa-Drott (2026)](https://ape.socialcatalystlab.org/verify).
+![](figures/10-verification/F4-recall.png){fig-align="center" height="310" fig-alt="Horizontal bars, planted errors caught by verifier agents: code does not run 99 percent, data errors 80 percent, text versus tables 64 percent, paper versus code 48 percent."}
+
+Source: [Willner and Yanagizawa-Drott (2026)](https://ape.socialcatalystlab.org/verify).
 Your version: copy the script, plant five errors, count what the checker
 finds.
 
@@ -953,6 +1046,8 @@ paper's text and its code. Those are the errors to check by hand.
 :::
 
 ## Reading disagreements, flags, and a random sample {#you-decide}
+
+Five countries drawn at random, to check by hand against the source:
 
 ```{r}
 #| label: random-sample
@@ -988,49 +1083,41 @@ that authors "must thoroughly fact-check" its output
 
 :::
 
-## The brief the agent received {#finale-brief}
+## What the brief left to the agent {#finale-brief}
 
-::: {style="font-size:1.3em"}
+The brief from the start of class, read again:
 
-```{.default filename="The brief"}
-Using R's built-in LifeCycleSavings data, estimate the
-classic life-cycle savings regression: the savings rate sr
-on pop15, pop75, dpi and ddpi. Clean the data as needed.
-Write the script as savings.R and run it; save a figure of
-the savings rate against income growth, with a fitted line,
-as savings_growth.png; and write summary.md: two or three
-sentences for a non-specialist with the key numbers.
-```
+- "Clean the data as needed": the agent decides which countries stay
+- No "Done when": nothing says how the result will be checked
+- Nothing about outliers: no instruction to flag them or report both
 
-
-:::
-- The deliverable from the start of class was written for this session,
-  with three problems planted by hand
-- What real runs of this brief returned comes at the end
-- In the envelope: two values computed before class
+The deliverable was written for this session, with three problems planted
+by hand; real runs of the same brief come at the end. In the envelope:
+two values computed before class.
 
 ::: {.content-visible when-format="revealjs"}
 
 ::: {.notes}
-Compare this brief with the one on the earlier slide: no "Done when", and
-"clean the data as needed" leaves the sample to the agent.
+Compare with the brief that had the checks written in. Everything the
+agent could decide alone, it did.
 :::
 
 :::
 
 ::: {.content-hidden when-format="revealjs"}
 
-This is a short brief of the kind people send: it names the data, the
-model and the files, and it leaves the cleaning to the agent. It has no
-"Done when" and no instruction about outliers. The deliverable at the
-top of this page answers it. It was written for this session in the form
-an agent returns, with three problems planted by hand; three real runs
-of the same brief appear at the end of the page. Two values were
-computed before class and kept out of the brief.
+The brief at the top of this page is short, the kind people send. It
+names the data, the model and the files, and it leaves the cleaning to
+the agent. It has no "Done when" and no instruction about outliers, so
+the sample is the agent's call. The deliverable answers it. It was
+written for this session in the form an agent returns, with three
+problems planted by hand; three real runs of the same brief appear at
+the end of the page. Two values were computed before class and kept out
+of the brief.
 
 :::
 
-## The script it delivered {#finale-script}
+## The script behind the figure and the summary {#finale-script}
 
 ```{r}
 #| label: delivered-script
@@ -1191,7 +1278,9 @@ All numbers were checked against the script's output.
 
 ## The checker's report {#checker-report}
 
-::: {style="font-size:1.25em"}
+A test run from the evening before class, recomputed on all 50 countries:
+
+::: {style="font-size:1.15em"}
 
 | Claim | summary.md | Recomputed, all 50 countries | Match |
 |:--|:--|:--|:--|
@@ -1364,6 +1453,9 @@ session, in one line of code.
 :::
 
 ## Three real runs of the same brief {#real-runs}
+
+The brief from the start of class, given to a coding agent three times,
+each in an empty folder:
 
 - All three kept all 50 countries
 - All three described `ddpi` as income growth, with a coefficient of 0.41
