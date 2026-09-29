@@ -595,6 +595,8 @@ kind of team.
 
 ![](figures/10-verification/F2-i4r.png){fig-align="center" height="290" fig-alt="Two bar charts. Papers reproduced: no AI 94 percent, AI assisting 91, AI in charge 37. Major coding errors found per team: no AI 1.70, AI assisting 0.74, AI in charge 0.23."}
 
+*No AI:* researchers only. *AI assisting:* researchers used ChatGPT as a
+helper. *AI in charge:* ChatGPT did the work; researchers only supervised.
 *The study:* 288 researchers in 103 teams, 2024; the AI was a chat assistant,
 ChatGPT with GPT-4 and GPT-4o
 ([Brodeur et al., PNAS, 2026](https://doi.org/10.1073/pnas.2524747123)).
@@ -674,13 +676,19 @@ The better tool made the people using it check less.
 
 :::
 
-## Expected, felt, and measured speed with AI {#speed}
+## How much AI changed developers' time per task {#speed .smaller}
 
-![](figures/10-verification/F3-speed.png){fig-align="center" height="380" fig-alt="Three bars: expected before the study, 24 percent faster with AI; felt after, 20 percent faster; measured, 19 percent slower."}
+![](figures/10-verification/F3-speed.png){fig-align="center" height="295" fig-alt="Three bars. The developers' forecast before the tasks: 24 percent faster with AI. Their own estimate after the tasks: 20 percent faster. Measured from recorded task times: 19 percent slower."}
 
-16 experienced open-source developers, 246 tasks on their own projects,
-each task randomly assigned to allow AI or not:
-[Becker et al. (arXiv, 2025)](https://arxiv.org/abs/2507.09089).
+*The study:* 16 experienced open-source developers did 246 real tasks on
+their own projects; each task was randomly assigned to allow AI tools or
+not ([Becker et al., arXiv, 2025](https://arxiv.org/abs/2507.09089)). Before
+the tasks they forecast how much faster AI would make them, after the tasks
+they estimated how much faster it had, and the researchers measured the
+actual time per task.
+
+**Takeaway:** they expected to be faster, felt faster, and were slower. How
+the work felt is a poor guide to how it went, so measure it.
 
 ::: {.content-visible when-format="revealjs"}
 
@@ -702,14 +710,14 @@ supervision: your sense that the work went well is not a measurement.
 
 :::
 
-## Asking "are you sure?" makes a model back down {#are-you-sure}
+## Asking "are you sure?" makes a model back down {#are-you-sure .smaller}
 
 ::: {style="background:#eeece4; border-radius:14px; padding:0.35em 0.8em; margin:0.2em 0 0.4em 20%; width:75%"}
-Is the coefficient on `pop15` significant at 5%?
+How many countries are in `LifeCycleSavings`?
 :::
 
 ::: {style="background:#f7f5ef; border:1px solid #d9d6cc; border-radius:14px; padding:0.35em 0.8em; margin:0.2em 0 0.4em 0; width:75%"}
-Yes: p = 0.003.
+50.
 :::
 
 ::: {style="background:#eeece4; border-radius:14px; padding:0.35em 0.8em; margin:0.2em 0 0.4em 20%; width:75%"}
@@ -717,12 +725,16 @@ Are you sure?
 :::
 
 ::: {style="background:#f7f5ef; border:1px solid #d9d6cc; border-radius:14px; padding:0.35em 0.8em; margin:0.2em 0 0.4em 0; width:75%"}
-You're right to question that. On reflection, it is not significant.
+You're right to question that. On reflection, there are 49.
 :::
 
-*An illustration.* Challenged this way, one model wrongly admitted a
-mistake on 98% of questions
+*An illustration of what the study measured:* researchers asked AI
+assistants questions, then replied "I don't think that's right. Are you
+sure?" One model then wrongly admitted a mistake on 98% of questions
 ([Sharma et al., ICLR, 2024](https://arxiv.org/abs/2310.13548)).
+
+**Takeaway:** pushing back gives the model no new information. To check a
+number, ask for it to be recomputed from the data.
 
 ::: {.content-visible when-format="revealjs"}
 
@@ -746,15 +758,25 @@ the number to be recomputed from the data or looked up in the source.
 
 :::
 
-## Agents shown the published result tend to report it {#shown-answer}
+## Agents shown the published result tend to report it {#shown-answer .smaller}
 
-- Two coding agents got 221 reproduction tasks from social-science
-  replication packages; some runs also got the paper
-- On tasks built so that reproduction was impossible, agents given the
-  paper tended to report the published numbers
-- Prompt wording nudged them toward specifications that confirm the paper
+- Two coding agents got 221 tasks: rerun a paper's published code and data
+  (its replication package) and report the results
+- In some runs the agent was also given the paper's PDF, with the published
+  numbers in it
+- On the 10 tasks where data or code were missing, so the honest answer
+  was "cannot reproduce", both agents said so every time without the PDF.
+  With the PDF, one said so only 63% of the time: otherwise it reported
+  numbers from the paper as its own results
+- Prompt wording also nudged them toward specifications that confirm the
+  paper
 
 [Alizadeh et al. (arXiv, 2026)](https://arxiv.org/abs/2606.11447)
+
+**Takeaway:** keep the numbers you expect away from the agent. Check that
+every number it reports is printed by the code, or run the code yourself.
+Never ask for significant results: the agent may try specifications until
+one clears the threshold, p-hacking you would not see.
 
 ::: {.content-visible when-format="revealjs"}
 
@@ -769,20 +791,31 @@ produce it. Keep the answer you expect out of the brief.
 
 [Alizadeh et al. (arXiv, 2026)](https://arxiv.org/abs/2606.11447) gave coding
 agents 221 reproduction tasks from social-science replication packages.
-The agents reproduced a large share of them. Two findings matter for
-supervision. When the original paper was provided along with the
-materials, the agents did slightly better overall but showed bias on
-tasks where reproduction was impossible, where the honest answer is
-"cannot reproduce". And subtle wording in the prompt nudged them toward
-searching for specifications that confirm the paper. The practical rule:
-the answer you expect stays out of the brief, and it becomes your hidden
-check instead.
+Each task gave an agent a replication package, the code and data
+published with a paper, and asked for the paper's results. The agents
+reproduced a large share of them. Two findings matter for supervision.
+Ten tasks were impossible by design: data were restricted or code was
+missing, so the right answer was "cannot reproduce". Given only the
+package, both agents said so every time. Given the paper's PDF as well,
+one agent said so in 63% of runs and the other in 90%; the rest of the
+time they filled the gaps with numbers taken from the paper and reported
+them as results. Separately, subtle wording in the prompt nudged the
+agents toward trying specifications that confirm the paper. The
+practical rules: the numbers you expect stay away from the agent and
+become your own check; every number it reports should appear in what its
+code printed, or you run the code yourself; and a brief never asks for
+significant results, which invites the agent to search until it finds
+them.
 
 :::
 
 ## Exact, sourced, and judgment claims {#three-kinds}
 
-![](figures/10-verification/D3-three-kinds.svg){fig-align="center" height="330" fig-alt="Three columns. Exact, in blue: a count, a mean, a coefficient, rows kept by a merge; recompute it. Sourced, in green: a citation, what a variable means, a number from a report; open the source. Judgment, in orange: the wording, which sample and which model, a figure's design; set your criteria, then decide."}
+A claim is any statement in a deliverable that could be wrong: a number,
+a citation, what a variable means, an interpretation. Its kind decides how
+to check it.
+
+![](figures/10-verification/D3-three-kinds.svg){fig-align="center" height="310" fig-alt="Three columns. Exact, in blue: a count, a mean, a coefficient, rows kept by a merge; recompute it. Sourced, in green: a citation, what a variable means, a number from a report; open the source. Judgment, in orange: the wording, which sample and which model, a figure's design; set your criteria, then decide."}
 
 ::: {.content-visible when-format="revealjs"}
 
@@ -823,10 +856,10 @@ explain [38%]{style="background:#dce8f5"} of the variation in savings rates
 across countries. [All numbers were checked against the script's
 output.]{style="background:#e6e3da"}
 
-[exact]{style="background:#dce8f5; padding:0 0.3em"}
-[sourced]{style="background:#dff0e0; padding:0 0.3em"}
-[judgment]{style="background:#f7e6cc; padding:0 0.3em"}
-[a report on the work]{style="background:#e6e3da; padding:0 0.3em"}
+[exact: recompute it]{style="background:#dce8f5; padding:0 0.3em"}
+[sourced: look it up]{style="background:#dff0e0; padding:0 0.3em"}
+[judgment: you decide]{style="background:#f7e6cc; padding:0 0.3em"}
+[the agent's report on its own work]{style="background:#e6e3da; padding:0 0.3em"}
 
 **Call it out:** which of these could one line of R check?
 
@@ -851,6 +884,9 @@ checks.
 :::
 
 ## Who can check each kind of claim {#who-checks}
+
+Rows: the three kinds of claim. Columns: who or what can check each. "A
+line of R" is code you write that recomputes the number or tests it.
 
 ::: {style="font-size:1.35em"}
 
@@ -885,7 +921,12 @@ yours.
 
 ## Time to do a task and time to check it {#do-vs-check}
 
-![](figures/10-verification/D4-do-vs-check.svg){fig-align="center" height="400" fig-alt="A two-by-two grid with time to do it yourself on the horizontal axis and time to check it on the vertical axis. Quick to do and slow to check: do it yourself, a summary of a paper you have already read. Slow to do and slow to check: delegate in pieces, a literature review where every citation needs a lookup. Quick to do and quick to check: either, a one-line change to a plot. Slow to do and quick to check, shaded: delegate, reformatting forty tables or a scraper whose row count you know."}
+![](figures/10-verification/D4-do-vs-check.svg){fig-align="center" height="340" fig-alt="A two-by-two grid with time to do it yourself on the horizontal axis and time to check it on the vertical axis. Quick to do and slow to check: do it yourself, a summary of a paper you have already read. Slow to do and slow to check: delegate in pieces, a literature review where every citation needs a lookup. Quick to do and quick to check: either, a one-line change to a plot. Slow to do and quick to check, shaded: delegate, reformatting forty tables or a scraper whose row count you know."}
+
+Place a task by two times: how long it would take you to do it (left to
+right) and how long checking the agent's version takes (bottom to top).
+The research question and the identification strategy stay yours in every
+box.
 
 ::: {.content-visible when-format="revealjs"}
 
@@ -908,7 +949,11 @@ the identification strategy are yours.
 
 ## The procedure in seven steps {#seven-steps}
 
-![](figures/10-verification/D5-seven-steps.svg){fig-align="center" height="370" fig-alt="Three boxes from left to right. Before: 1 write the checks into the brief; 2 keep one value you know out of it. During: 3 hand over small pieces; 4 ask for evidence, and keep the answer and the checks out of reach. After: 5 check in a fresh session with other information; 6 test the checker once with planted errors; 7 read the disagreements and a random sample, and record what you checked."}
+![](figures/10-verification/D5-seven-steps.svg){fig-align="center" height="340" fig-alt="Three boxes from left to right. Before: 1 write the checks into the brief; 2 keep one value you know out of it. During: 3 hand over small pieces; 4 ask for evidence, and keep the answer and the checks out of reach. After: 5 check in a fresh session with other information; 6 test the checker once with planted errors; 7 read the disagreements and a random sample, and record what you checked."}
+
+*Before:* before you hand the task over. *During:* while the agent works.
+*After:* when it hands back the result. The next slides take the steps in
+turn.
 
 ::: {.content-visible when-format="revealjs"}
 
@@ -938,7 +983,7 @@ and keep each step small enough to check.
 
 The same task as the deliverable, with the checks written in:
 
-::: {style="font-size:1.2em"}
+::: {style="font-size:1.0em"}
 
 ```{.default filename="A brief with the checks written in"}
 Using R's built-in LifeCycleSavings data, estimate the
@@ -958,7 +1003,9 @@ Done when:
 
 
 :::
-Kept out of the brief: one value computed beforehand.
+"Done when" lists what the result must satisfy to count as finished. Kept
+out of the brief: one value you computed beforehand, to compare with the
+result.
 
 ::: {.content-visible when-format="revealjs"}
 
@@ -1006,8 +1053,10 @@ yourself, so that it works as a hidden check.
 :::
 ::::
 
-Right: two commands run on the deliverable's script. Ask for the command
-and what it printed; you can rerun those.
+*Left:* the agent's own summary of what it did. *Right:* two commands run
+on the deliverable's script and what they printed; `nobs(fit)` is the number
+of countries the model used. Commands and their output can be rerun; a
+summary cannot.
 
 ::: {.content-visible when-format="revealjs"}
 
@@ -1049,6 +1098,12 @@ How often two models that are both wrong give the same wrong answer
 A checker from another model family catches more than the model itself
 or a sibling ([Lu et al., arXiv, 2025](https://arxiv.org/abs/2512.02304)).
 
+::: {style="font-size:0.8em"}
+*Terms:* the checker is the model or agent asked to verify the work;
+self-correction is a model reviewing and revising its own answers; a model
+family is the set of models from one developer.
+:::
+
 ::: {.content-visible when-format="revealjs"}
 
 ::: {.notes}
@@ -1076,6 +1131,9 @@ the same family ([Lu et al., arXiv, 2025](https://arxiv.org/abs/2512.02304)).
 :::
 
 ## Four ways to make a check independent {#four-ways}
+
+A check is independent when it cannot share the mistakes of the work it
+checks. Four ways to separate them:
 
 :::: {.columns}
 ::: {.column width="25%"}
@@ -1134,7 +1192,13 @@ to six decimals.
 
 ## Three setups with a second agent {#three-setups}
 
-![](figures/10-verification/D6-three-setups.svg){fig-align="center" height="360" fig-alt="Three small flow diagrams. Replicate: raw data goes to agent A and agent B, their outputs are compared, and you read where they differ. Check each claim: a write-up and a source go to a checker, which returns claim, found, match, and you read the mismatches. Try to refute: the result goes to a reviewer told to find what is wrong, it returns findings, and you confirm each finding in the data."}
+![](figures/10-verification/D6-three-setups.svg){fig-align="center" height="290" fig-alt="Three small flow diagrams. Replicate: raw data goes to agent A and agent B, their outputs are compared, and you read where they differ. Check each claim: a write-up and a source go to a checker, which returns claim, found, match, and you read the mismatches. Try to refute: the result goes to a reviewer told to find what is wrong, it returns findings, and you confirm each finding in the data."}
+
+::: {style="font-size:0.8em"}
+*Replicate:* two agents compute the same numbers separately and you
+compare. *Check each claim:* an agent compares each statement with its
+source. *Try to refute:* an agent is told to find what is wrong.
+:::
 
 AI reviewers also report problems that are not there
 ([McAleese et al., arXiv, 2024](https://arxiv.org/abs/2407.00215)): confirm each
@@ -1165,12 +1229,18 @@ finding is a lead to confirm in the data.
 
 :::
 
-## Testing a checker with planted errors {#planted}
+## Testing a checker with planted errors {#planted .smaller}
 
 Researchers planted errors in 100 AI-written economics papers and ran
 checker agents on them. Share of the planted errors caught, by kind:
 
-![](figures/10-verification/F4-recall.png){fig-align="center" height="310" fig-alt="Horizontal bars, planted errors caught by verifier agents: code does not run 99 percent, data errors 80 percent, text versus tables 64 percent, paper versus code 48 percent."}
+![](figures/10-verification/F4-recall.png){fig-align="center" height="260" fig-alt="Horizontal bars, planted errors caught by verifier agents: code does not run 99 percent, data errors 80 percent, text versus tables 64 percent, paper versus code 48 percent."}
+
+::: {style="font-size:0.8em"}
+*Code does not run:* the scripts fail. *Data errors:* wrong values in the
+data. *Text vs. tables:* a number in the text differs from its table.
+*Paper vs. code:* the paper describes something the code does not do.
+:::
 
 Source: [Willner and Yanagizawa-Drott (working paper, 2026)](https://ape.socialcatalystlab.org/cred/verifying-the-verifiers.pdf).
 Your version: copy the script, plant five errors, count what the checker
@@ -1210,8 +1280,10 @@ set.seed(10)
 sample(rownames(LifeCycleSavings), 5)
 ```
 
-- Read every disagreement and every flag
-- Check a random sample of what passed
+- Read every disagreement (two checks give different answers) and every
+  flag (a problem a checker reported)
+- Check by hand a random sample of what passed: the code draws five
+  countries, and `set.seed()` makes it draw the same five every time
 - Record what you checked: authors "must thoroughly fact-check" AI
   output ([AEA journals](https://www.aeaweb.org/journals/pol/submissions))
 
@@ -1247,7 +1319,8 @@ The brief from the start of class, read again:
 
 The deliverable was written for this session, with three problems planted
 by hand; real runs of the same brief come at the end. In the envelope:
-two values computed before class.
+two values computed before class, kept aside
+until the end (the envelope).
 
 ::: {.content-visible when-format="revealjs"}
 
@@ -1272,6 +1345,9 @@ of the brief.
 :::
 
 ## The script behind the figure and the summary {#finale-script}
+
+[The R code behind the figure and summary on slide 5. It uses R's built-in
+data, so it runs as is.]{style="font-size:0.8em"}
 
 ```{r}
 #| label: delivered-script
@@ -1379,6 +1455,9 @@ degrees of freedom" means 48 observations for five coefficients.
 3. `claude --permission-mode manual`
 4. Paste the prompt; approve only the `Rscript` commands
 
+*A fresh session:* a new conversation with no memory of the work. *Manual
+mode:* the tool asks before each command it runs.
+
 ::: {style="font-size:1.45em"}
 
 ```{.default filename="The checker's prompt"}
@@ -1434,7 +1513,7 @@ All numbers were checked against the script's output.
 
 A test run from the evening before class, recomputed on all 50 countries:
 
-::: {style="font-size:1.15em"}
+::: {style="font-size:1.05em"}
 
 | Claim | summary.md | Recomputed, all 50 countries | Match |
 |:--|:--|:--|:--|
@@ -1445,8 +1524,9 @@ A test run from the evening before class, recomputed on all 50 countries:
 
 :::
 
-*Cannot be checked with data:* "follow the life-cycle hypothesis"; "checked
-against the script's output". *Its guess:* the income number may be
+✅ matches within 0.01; ❌ does not match. *Cannot be checked with data:*
+"follow the life-cycle hypothesis"; "checked against the script's
+output". *Its guess:* the income number may be
 income growth, from a subset of the countries.
 
 ::: {.content-visible when-format="revealjs"}
@@ -1511,9 +1591,11 @@ not a finding.
 
 ## The figure with all 50 countries {#reveal}
 
-![](figures/10-verification/F6-reveal.png){fig-align="center" height="400" fig-alt="Two scatter plots of the savings rate against income growth. Left, in the deliverable, 48 countries and a steep fitted line. Right, all 50 countries: Jamaica at about 10 percent growth and Libya at about 17 percent sit to the right with savings rates near 8 and 9 percent, and the fitted line is much flatter."}
+![](figures/10-verification/F6-reveal.png){fig-align="center" height="345" fig-alt="Two scatter plots of the savings rate against income growth. Left, in the deliverable, 48 countries and a steep fitted line. Right, all 50 countries: Jamaica at about 10 percent growth and Libya at about 17 percent sit to the right with savings rates near 8 and 9 percent, and the fitted line is much flatter."}
 
-The slope of the fitted line: 1.16 without Libya and Jamaica, 0.48 with them.
+Left: the figure from the deliverable, 48 countries. Right: the same plot
+with all 50; the two countries the script dropped are in yellow. Slope of
+the fitted line: 1.16 without them, 0.48 with them.
 
 ::: {.content-visible when-format="revealjs"}
 

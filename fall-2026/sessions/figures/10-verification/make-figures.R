@@ -44,9 +44,12 @@ dev.off()
 # measured 19% slower (completion time).
 open_png("F3-speed.png", w = 1600, h = 800)
 v <- c(24, 20, -19)
-b <- barplot(v, names.arg = c("Expected, before", "Felt, after", "Measured"),
+par(mar = c(5.5, 4.5, 1.5, 1))
+b <- barplot(v, names.arg = rep("", 3),
              col = c(GREY, GREY, RED), border = NA, ylim = c(-30, 32), axes = FALSE,
-             ylab = "Faster (+) or slower (-) with AI, %")
+             ylab = "Faster (+) or slower (-), %")
+mtext(c("Developers' forecast\n(before the tasks)", "Developers' estimate\n(after the tasks)",
+        "Measured\n(recorded task times)"), side = 1, at = b, line = 2.6, cex = 1.2)
 axis(2, at = seq(-20, 30, 10)); abline(h = 0)
 text(b, v + ifelse(v < 0, -4, 4), paste0(ifelse(v > 0, "+", ""), v, "%"), font = 2, cex = 1.1)
 dev.off()
