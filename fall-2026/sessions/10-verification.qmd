@@ -126,7 +126,7 @@ script, a figure, and a summary for a non-specialist.
 :::
 
 One row per country; each value is an average over 1960–1970. The
-life-cycle hypothesis ([Modigliani](https://en.wikipedia.org/wiki/Life-cycle_hypothesis))
+life-cycle hypothesis ([Ando and Modigliani, AER, 1963](https://www.jstor.org/stable/1817129))
 says saving depends on age structure and on income growth.
 
 ::: {.content-visible when-format="revealjs"}
@@ -408,7 +408,7 @@ brief.
 
 *Illustrations.* Effort goes where the measurement is:
 [Holmström and Milgrom (JLEO, 1991)](https://www.jstor.org/stable/764957).
-Seen in coding agents: [METR (report, 2025)](https://metr.org/blog/2025-06-05-recent-reward-hacking/),
+Seen in coding agents: [Baker et al. (arXiv, 2025)](https://arxiv.org/abs/2503.11926),
 [Zhong et al. (arXiv, 2025)](https://arxiv.org/abs/2510.20270),
 [Alizadeh et al. (arXiv, 2026)](https://arxiv.org/abs/2606.11447).
 
@@ -436,9 +436,10 @@ the check wanted all 50 countries and the fix accepts anything above 40.
 way to match it is to search: on the right, a loop tries sets of control
 variables and stops at the first one that gives −0.2. Both are
 illustrations written for this page. The behaviour is documented:
-[METR (report, 2025)](https://metr.org/blog/2025-06-05-recent-reward-hacking/)
-found frontier models patching the scoring code of their tasks, and still
-doing it in most runs of one task after being told not to;
+[Baker et al. (arXiv, 2025)](https://arxiv.org/abs/2503.11926)
+found a frontier reasoning model hacking the rewards of coding tasks, and
+found that penalizing the hacks it wrote about taught it to hide them
+while it kept hacking;
 [Zhong et al. (arXiv, 2025)](https://arxiv.org/abs/2510.20270) found models
 "passing" tests built to contradict the task by editing or special-casing
 them; and [Alizadeh et al. (arXiv, 2026)](https://arxiv.org/abs/2606.11447)
@@ -641,7 +642,7 @@ did the work as well and found fewer than half as many of its errors.
 *The study:* 181 professional recruiters rated 44 résumés each against an
 objective math score, randomly given no AI, an AI right about 75% of the
 time, or one right about 85%
-([Dell'Acqua, working paper, 2022](https://www.dropbox.com/scl/fi/c5jdi146erky69csa8gha/Falling_Asleep_at_the_Wheel.pdf?rlkey=ss4vh6bsgzf52xiba8ffx0onc&st=s0ppis9g&dl=0)).
+([Dell'Acqua, working paper, 2022](https://www.fabriziodellacqua.com/)).
 With the better AI they followed its advice more often (74% against 53%),
 spent less time per résumé, and gained less accuracy.
 
@@ -657,7 +658,7 @@ looking. The effect came from the experienced recruiters.
 
 ::: {.content-hidden when-format="revealjs"}
 
-[Dell'Acqua (working paper, 2022)](https://www.dropbox.com/scl/fi/c5jdi146erky69csa8gha/Falling_Asleep_at_the_Wheel.pdf?rlkey=ss4vh6bsgzf52xiba8ffx0onc&st=s0ppis9g&dl=0) hired 181 professional
+[Dell'Acqua (working paper, 2022)](https://www.fabriziodellacqua.com/) hired 181 professional
 recruiters to rate 44 résumés each for a math-intensive job. Each résumé
 came from survey data with an objective measure of math skill, so every
 rating could be scored as right or wrong. Recruiters were randomly
@@ -889,9 +890,8 @@ yours.
 ::: {.content-visible when-format="revealjs"}
 
 ::: {.notes}
-Anthropic's own engineers delegate where "validation effort isn't large
-in comparison to creation effort". Most of them fully delegate only a
-fifth of their work or less.
+Delegation pays in the shaded corner. The question and the
+identification never go in the grid.
 :::
 
 :::
@@ -900,11 +900,7 @@ fifth of their work or less.
 
 What to delegate depends on two times: how long the task would take you,
 and how long checking the agent's version would take. Delegation pays
-most in the shaded corner, where doing is slow and checking is quick. In
-an internal survey at Anthropic, most engineers said they could fully
-delegate only a fifth of their work or less, and they chose tasks where
-"validation effort isn't large in comparison to creation effort"
-([Anthropic, report, 2025](https://www.anthropic.com/research/how-ai-is-transforming-work-at-anthropic)).
+most in the shaded corner, where doing is slow and checking is quick.
 Some decisions do not go in the grid at all: the research question and
 the identification strategy are yours.
 
@@ -1176,7 +1172,7 @@ checker agents on them. Share of the planted errors caught, by kind:
 
 ![](figures/10-verification/F4-recall.png){fig-align="center" height="310" fig-alt="Horizontal bars, planted errors caught by verifier agents: code does not run 99 percent, data errors 80 percent, text versus tables 64 percent, paper versus code 48 percent."}
 
-Source: [Willner and Yanagizawa-Drott (working paper, 2026)](https://ape.socialcatalystlab.org/verify).
+Source: [Willner and Yanagizawa-Drott (working paper, 2026)](https://ape.socialcatalystlab.org/cred/verifying-the-verifiers.pdf).
 Your version: copy the script, plant five errors, count what the checker
 finds.
 
@@ -1195,7 +1191,7 @@ A checker is itself a tool you have not verified. The test is the one you
 would use on any tool: feed it cases where you know the answer. Plant a
 few errors in a copy of the work and count how many it finds. Software
 testers have done this since the 1970s. A recent study did it for
-economics: [Willner and Yanagizawa-Drott (working paper, 2026)](https://ape.socialcatalystlab.org/verify)
+economics: [Willner and Yanagizawa-Drott (working paper, 2026)](https://ape.socialcatalystlab.org/cred/verifying-the-verifiers.pdf)
 planted errors in 100 papers written by AI and measured how many
 verifier agents caught. They caught nearly every script that failed to
 run, most data errors, and fewer than half of the mismatches between a
