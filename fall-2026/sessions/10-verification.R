@@ -8,6 +8,14 @@
 # (Mac) or Ctrl-Enter (Windows).
 # = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 
+# The data ----
+nrow(LifeCycleSavings)
+head(LifeCycleSavings)
+
+
+?LifeCycleSavings      # the documentation: what each variable means
+
+
 # A random sample to check by hand ----
 set.seed(10)
 sample(rownames(LifeCycleSavings), 5)
@@ -48,6 +56,37 @@ dev.off()
 # = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 
 
+
+
+# The checker: paste this into Claude Code, not into R ----
+# In a folder holding only summary.md, run claude --permission-mode manual
+# and paste:
+#
+# You have not seen how summary.md was made, and you cannot see the code
+# that made it. Check it. Using R's built-in LifeCycleSavings data and its
+# help page, recompute every number in summary.md with your own R code on
+# the full data, and compare every description of a variable with the help
+# page. Report a table with one row per claim: the claim, what summary.md
+# says, what you found, and whether they match (numbers within 0.01). List
+# any claim that data cannot check. Do not create or edit any file.
+
+
+# The same model on all 50 countries ----
+full <- lm(sr ~ pop15 + pop75 + dpi + ddpi, data = LifeCycleSavings)
+nobs(full)
+round(coef(full), 4)
+round(summary(full)$r.squared, 2)
+
+
+# The figure with all 50 countries ----
+d <- LifeCycleSavings
+dropped <- d$ddpi >= 10
+plot(d$ddpi, d$sr, pch = 19,
+     xlab = "Growth of disposable income (% a year)",
+     ylab = "Savings rate (% of disposable income)")
+points(d$ddpi[dropped], d$sr[dropped], pch = 21, bg = "gold", cex = 2)
+text(d$ddpi[dropped], d$sr[dropped], rownames(d)[dropped], pos = 2)
+abline(lm(sr ~ ddpi, data = d), lwd = 2)
 
 
 # Practice ----
