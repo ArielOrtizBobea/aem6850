@@ -1854,6 +1854,35 @@ it without you.
 
 :::
 
+::: {.content-hidden when-format="revealjs"}
+
+## Which checks for which task {#checks-by-task}
+
+Each step of a project breaks in its own ways, so each step has its own
+checks. The examples in the last column are made up, with numbers of the
+kind you would write into the check. One way to use the table: for each
+step in your script, find its row and write the checks listed.
+
+| Task | What usually goes wrong | Checks that catch it | Example (made up) |
+|:--|:--|:--|:--|
+| Reading a file | Wrong header row or delimiter; numbers or dates read as text; codes such as −999 standing for missing | Rows and columns against the source; `str()` for types; ranges; `summary()` | A daily file for one year has 365 rows and a `Date` column; daily maximum temperatures stay below 60 °C |
+| Filtering rows | Too many or too few rows kept; missing values dropped without notice | Rows before and after, against an expected number; NAs counted | Keeping January for 12 stations leaves 12 × 31 = 372 rows |
+| Merging two tables | Keys that fail to match; duplicated keys that multiply rows | Unique keys before the merge; non-matches counted and listed; rows after the merge | 190 countries merged with a table that spells Côte d'Ivoire differently: 189 match, and the list of non-matches shows the one that did not |
+| Reshaping, wide to long | Rows lost or duplicated | Rows in long form = rows in wide form × number of periods | 50 countries × 10 years in columns becomes 500 rows |
+| Aggregating: sums and means by group | Double counting; averages of averages; weights left out | Parts add up to the total; one group computed by hand; weighted against unweighted | Regional totals add up to the national total, within rounding |
+| Dates and times | Wrong time zone; days shifted by one; day and month swapped | Calendar facts; the date of an event you already know | A storm that hit on March 3 shows up on March 3, not March 2 |
+| Scraping a web page | Only the first page of results; a layout change that shifts columns | Rows against the count the page shows; a few random rows compared with the page | The page says "1–20 of 134"; the scraped table has 134 rows |
+| Downloading from an API | Partial downloads; rate limits; fields renamed without notice | Records against the total the API reports; first and last dates; the raw response saved | The API reports 2,408 records and the saved file has 2,408, from the first requested date to the last |
+| Classifying text with an LLM | Labels outside the allowed set; labels that drift across the sample | Allowed labels only; a random sample labeled by hand, and the agreement measured | 20 of 1,000 news items labeled by hand; the model agrees on 18 |
+| Pulling a table out of a PDF or a scan | Misread digits; shifted columns | The printed total against the sum of the rows; ranges; a few rows compared with the page | The printed total is 12,480 and the rows sum to 12,480 |
+| Spatial joins and maps | Coordinate systems that do not match; latitude and longitude swapped | The points drawn on a map; a location you know | A city you know falls inside its own country |
+| Running a regression | The sample changes silently when rows with NAs drop out; the wrong variable in the model | `nobs()`; each variable against its documentation; a published estimate; simulated data with a known answer | Simulate y = 2x + noise: the estimated slope comes out close to 2 |
+| Making a figure | The wrong series plotted; wrong units on an axis | One value read off the figure against the table; axis labels against the variable definitions | The highest point on the figure equals the maximum in the table |
+| Writing a summary or a literature review | Numbers that do not match the tables; citations that do not exist or say something else | Every number traced to printed output; every citation looked up | A sentence cites a paper: its DOI resolves, and the paper says what the sentence says |
+| Any task an agent did | All of the above, plus steps you did not see | The commands it ran and what they printed; the diff; a check in a fresh session | Ask for `nobs()` and the row count after every step that can drop rows |
+
+:::
+
 ## Practice {#practice}
 
 ::: {.content-visible when-format="revealjs"}
