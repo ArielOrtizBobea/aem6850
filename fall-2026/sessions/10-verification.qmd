@@ -1737,6 +1737,72 @@ between runs and versions.
 
 :::
 
+::: {.content-hidden when-format="revealjs"}
+
+## Checks to write into your code {#checks-reference}
+
+Two kinds of checks belong in any script, including one an agent wrote.
+Assertions run every time and stop the script when something is wrong. A
+look block, switched off by default, holds the plots and summaries you
+read yourself at the end of a project. Each kind of check catches a
+different kind of error, so a script needs several kinds.
+
+### Assertions that run every time
+
+| What goes wrong | The check | Example |
+|:--|:--|:--|
+| Rows vanish or multiply in a filter, merge or reshape | A count against an expected number, right after the step | `stopifnot(nrow(d) == 50)  # ?LifeCycleSavings: 50 countries` |
+| Rows fail to match in a merge | Count the non-matches | `stopifnot(sum(!a$id %in% b$id) == 0)` |
+| Duplicated keys multiply rows in a merge | Keys are unique before merging | `stopifnot(!anyDuplicated(a$id))` |
+| Missing values are dropped or zeroed silently | Count the NAs at each step | `stopifnot(sum(is.na(d$sr)) == 0)` |
+| Impossible values or wrong units | A range the values must fall in | `stopifnot(all(d$sr >= 0 & d$sr <= 100))` |
+| Identifiers mangled: leading zeros lost, codes read as numbers | Type and format | `stopifnot(is.character(d$fips), all(nchar(d$fips) == 5))` |
+| Parts that should add up do not | Internal consistency | `stopifnot(abs(sum(d$share) - 1) < 1e-8)` |
+| A number disagrees with a published one | The published or hand-counted value, with a tolerance | `stopifnot(abs(total - published) / published < 0.01)` |
+| A function computes the wrong thing | A known answer, on a case you can work out by hand | `stopifnot(my_mean(c(1, 3)) == 2)` |
+| Dates off by a day | Calendar facts | `stopifnot(length(unique(d$date)) == 31)  # January` |
+| Results change between runs | A fixed seed, and the same result twice | `set.seed(1)`, then `stopifnot(identical(r1, r2))` |
+
+Each assertion compares with a specific value, and a comment says where the
+value came from: the documentation, a published table, a count you made by
+hand. Compare decimals within a tolerance, never with `==`. A check that
+cannot fail, such as `nrow(d) > 0`, tells you nothing.
+
+### A look block for the end of the project
+
+| What you look at | Code | What it shows |
+|:--|:--|:--|
+| Every column's range and missing values | `summary(d)` | impossible minimums and maximums, NA counts per column |
+| The distribution of a key variable | `hist(d$pm25)` | sentinel codes such as −999, values a thousand times too large, piles of zeros |
+| A series over time | `plot(d$date, d$pm25, type = "l")` | gaps, a jump when an instrument or a unit changes, spikes |
+| Rows per period | `barplot(table(format(d$date, "%Y-%m")))` | missing months, a month loaded twice |
+| Categories | `table(d$country, useNA = "ifany")` | "USA", "US" and "United States" as three categories, stray NAs |
+| Coordinates | `plot(d$lon, d$lat)` | swapped latitude and longitude, a flipped sign, points in the ocean |
+| Two variables that should move together | `plot(d$pop15, d$pop75)` | points far off the pattern: typos, or real outliers |
+| A few random rows | `d[sample(nrow(d), 5), ]` | shifted columns, truncated text, problems no summary shows |
+
+Keep the block in the script behind a switch, so it does not run every
+time:
+
+```r
+LOOK <- FALSE   # TRUE at the end of the project, or when the data change
+
+# 1) Look at the raw data ----
+if (LOOK) {
+  summary(d)
+  hist(d$pm25)
+  plot(d$date, d$pm25, type = "l")
+  table(d$country, useNA = "ifany")
+  d[sample(nrow(d), 5), ]
+}
+```
+
+Run it yourself at the end of a project, and whenever the data change.
+When it shows a problem, write an assertion for it, so the next run checks
+it without you.
+
+:::
+
 ## Practice {#practice}
 
 ::: {.content-visible when-format="revealjs"}
