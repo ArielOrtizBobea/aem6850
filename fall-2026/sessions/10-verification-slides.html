@@ -1,0 +1,1906 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-html/tabby.min.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/light-border.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-7f8f88aac4f3542376d5c11b86a4c14d.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
+  <meta name="generator" content="quarto-1.9.37">
+
+  <title>AEM 6850 – AEM 6850 · 10 Verification</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="../../site_libs/revealjs/dist/reset.css">
+  <link rel="stylesheet" href="../../site_libs/revealjs/dist/reveal.css">
+  <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+      vertical-align: middle;
+    }
+    /* CSS for syntax highlighting */
+    html { -webkit-text-size-adjust: 100%; }
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      { color: #003b4f; background-color: #f1f3f5; }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span { color: #003b4f; } /* Normal */
+    code span.al { color: #ad0000; } /* Alert */
+    code span.an { color: #5e5e5e; } /* Annotation */
+    code span.at { color: #657422; } /* Attribute */
+    code span.bn { color: #ad0000; } /* BaseN */
+    code span.bu { } /* BuiltIn */
+    code span.cf { color: #003b4f; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #20794d; } /* Char */
+    code span.cn { color: #8f5902; } /* Constant */
+    code span.co { color: #5e5e5e; } /* Comment */
+    code span.cv { color: #5e5e5e; font-style: italic; } /* CommentVar */
+    code span.do { color: #5e5e5e; font-style: italic; } /* Documentation */
+    code span.dt { color: #ad0000; } /* DataType */
+    code span.dv { color: #ad0000; } /* DecVal */
+    code span.er { color: #ad0000; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #ad0000; } /* Float */
+    code span.fu { color: #4758ab; } /* Function */
+    code span.im { color: #00769e; } /* Import */
+    code span.in { color: #5e5e5e; } /* Information */
+    code span.kw { color: #003b4f; font-weight: bold; } /* Keyword */
+    code span.op { color: #5e5e5e; } /* Operator */
+    code span.ot { color: #003b4f; } /* Other */
+    code span.pp { color: #ad0000; } /* Preprocessor */
+    code span.sc { color: #5e5e5e; } /* SpecialChar */
+    code span.ss { color: #20794d; } /* SpecialString */
+    code span.st { color: #20794d; } /* String */
+    code span.va { color: #111111; } /* Variable */
+    code span.vs { color: #20794d; } /* VerbatimString */
+    code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
+  </style>
+  <link rel="stylesheet" href="../../site_libs/revealjs/dist/theme/quarto-f633a014390d33a4bc3e3ab3e79908c1.css">
+  <link href="../../site_libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
+  <link href="../../site_libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
+  <link href="../../site_libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
+  <link href="../../site_libs/revealjs/plugin/quarto-support/footer.css" rel="stylesheet">
+  <style type="text/css">
+    .reveal div.sourceCode {
+      margin: 0;
+      overflow: auto;
+    }
+    .reveal div.hanging-indent {
+      margin-left: 1em;
+      text-indent: -1em;
+    }
+    .reveal .slide:not(.center) {
+      height: 100%;
+    }
+    .reveal .slide.scrollable {
+      overflow-y: auto;
+    }
+    .reveal .footnotes {
+      height: 100%;
+      overflow-y: auto;
+    }
+    .reveal .slide .absolute {
+      position: absolute;
+      display: block;
+    }
+    .reveal .footnotes ol {
+      counter-reset: ol;
+      list-style-type: none; 
+      margin-left: 0;
+    }
+    .reveal .footnotes ol li:before {
+      counter-increment: ol;
+      content: counter(ol) ". "; 
+    }
+    .reveal .footnotes ol li > p:first-child {
+      display: inline-block;
+    }
+    .reveal .slide ul,
+    .reveal .slide ol {
+      margin-bottom: 0.5em;
+    }
+    .reveal .slide ul li,
+    .reveal .slide ol li {
+      margin-top: 0.4em;
+      margin-bottom: 0.2em;
+    }
+    .reveal .slide ul[role="tablist"] li {
+      margin-bottom: 0;
+    }
+    .reveal .slide ul li > *:first-child,
+    .reveal .slide ol li > *:first-child {
+      margin-block-start: 0;
+    }
+    .reveal .slide ul li > *:last-child,
+    .reveal .slide ol li > *:last-child {
+      margin-block-end: 0;
+    }
+    .reveal .slide .columns:nth-child(3) {
+      margin-block-start: 0.8em;
+    }
+    .reveal blockquote {
+      box-shadow: none;
+    }
+    .reveal .tippy-content>* {
+      margin-top: 0.2em;
+      margin-bottom: 0.7em;
+    }
+    .reveal .tippy-content>*:last-child {
+      margin-bottom: 0.2em;
+    }
+    .reveal .slide > img.stretch.quarto-figure-center,
+    .reveal .slide > img.r-stretch.quarto-figure-center {
+      display: block;
+      margin-left: auto;
+      margin-right: auto; 
+    }
+    .reveal .slide > img.stretch.quarto-figure-left,
+    .reveal .slide > img.r-stretch.quarto-figure-left  {
+      display: block;
+      margin-left: 0;
+      margin-right: auto; 
+    }
+    .reveal .slide > img.stretch.quarto-figure-right,
+    .reveal .slide > img.r-stretch.quarto-figure-right  {
+      display: block;
+      margin-left: auto;
+      margin-right: 0; 
+    }
+  </style>
+</head>
+<body class="quarto-light">
+  <div class="reveal">
+    <div class="slides">
+
+<section id="title-slide" class="center">
+  <p class="ttl-number">AEM 6850</p>
+  <p class="ttl-course">Empirical Methods for Applied Economists</p>
+  <p class="ttl-prof">Prof. Ariel Ortiz-Bobea</p>
+  <h1 class="title">10 · Verification</h1>
+  <p class="subtitle">Tuesday, September 29, 2026</p>
+  <img class="ttl-seal" src="../images/cornell_seal.svg" alt="Cornell University">
+</section>
+<section id="objectives" class="slide level2 smaller">
+<h2>Objectives</h2>
+<p>By the end of this session you can:</p>
+<ul>
+<li>Describe delegation to an AI agent as a principal–agent problem: what you observe, what you do not, and why the agent’s report on its work is a claim.</li>
+<li>Sort the claims in a deliverable into exact, sourced, and judgment claims, and name the check each one needs.</li>
+<li>Write a brief that says how the result will be checked, and keep one value you know out of it.</li>
+<li>Run an independent check: a fresh session that recomputes each number from the raw data and compares within a stated tolerance.</li>
+<li>Test a checker by planting errors in a copy and counting how many it finds.</li>
+</ul>
+<aside class="notes">
+<p>Five things. The last three work on any project you have, tonight.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="task" class="slide level2">
+<h2>The task: a regression on R’s built-in savings data</h2>
+<div style="font-size:1.3em">
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>The brief</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1" data-filename="The brief"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb1-1"><a aria-hidden="true" tabindex="-1"></a>Using R's built-in LifeCycleSavings data, estimate the</span>
+<span id="cb1-2"><a aria-hidden="true" tabindex="-1"></a>classic life-cycle savings regression: the savings rate sr</span>
+<span id="cb1-3"><a aria-hidden="true" tabindex="-1"></a>on pop15, pop75, dpi and ddpi. Clean the data as needed.</span>
+<span id="cb1-4"><a aria-hidden="true" tabindex="-1"></a>Write the script as savings.R and run it; save a figure of</span>
+<span id="cb1-5"><a aria-hidden="true" tabindex="-1"></a>the savings rate against income growth, with a fitted line,</span>
+<span id="cb1-6"><a aria-hidden="true" tabindex="-1"></a>as savings_growth.png; and write summary.md: two or three</span>
+<span id="cb1-7"><a aria-hidden="true" tabindex="-1"></a>sentences for a non-specialist with the key numbers.</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+<p>What comes back: a script, a figure, and a summary.</p>
+<aside class="notes">
+<p>A task any of you could get from an advisor: a classic regression on a dataset that ships with R. Next slide: what the variables are.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="data" class="slide level2">
+<h2>The data: LifeCycleSavings, 50 countries, 1960–1970</h2>
+<div style="font-size:1.15em">
+<table class="caption-top">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Variable</th>
+<th style="text-align: left;">What it is (from <code>?LifeCycleSavings</code>)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><code>sr</code></td>
+<td style="text-align: left;">savings rate: personal saving as a percentage of disposable income</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>pop15</code></td>
+<td style="text-align: left;">percentage of the population under 15</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>pop75</code></td>
+<td style="text-align: left;">percentage of the population over 75</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>dpi</code></td>
+<td style="text-align: left;">real disposable income per person</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>ddpi</code></td>
+<td style="text-align: left;">growth rate of <code>dpi</code>, percent a year</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>One row per country; each value is an average over 1960–1970. The life-cycle hypothesis (<a href="https://www.jstor.org/stable/1817129">Ando and Modigliani, AER, 1963</a>) says saving depends on age structure and on income growth.</p>
+<aside class="notes">
+<p>Fifty countries, five variables. Keep this table in mind; the definitions matter later.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="deliverable" class="slide level2 smaller">
+<h2>A deliverable to approve or reject</h2>
+<p>For the brief two slides back. The script behind these comes later.</p>
+<div class="columns">
+<div class="column" style="width:50%;">
+<p><em>The figure</em></p>
+<p><img data-src="figures/10-verification/F5-deliverable.png" style="width:100.0%" alt="A scatter plot of the savings rate against the growth of disposable income for 48 countries, with a fitted line rising from about 6 to about 15 percent."></p>
+</div><div class="column" style="width:50%;">
+<p><em>The summary</em></p>
+<blockquote>
+<p>Across the 50 countries in the data, savings rates follow the life-cycle hypothesis. A country with one more percentage point of its population under 15 saves 0.32 points less of its income, and countries with higher disposable income save more (coefficient 0.84, p &lt; 0.01). Together the four variables explain 38% of the variation in savings rates across countries.</p>
+<p>All numbers were checked against the script’s output.</p>
+</blockquote>
+</div></div>
+<p><strong>Hands up: would you sign off on this?</strong></p>
+<aside class="notes">
+<p>A figure and a summary of the kind a coding agent returns for a short brief. Take the vote and keep it. We check this deliverable in the last part of the session.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="plan" class="slide level2">
+<h2>Plan for today</h2>
+<ol type="1">
+<li>Delegation as a principal–agent problem</li>
+<li>What goes wrong without checks</li>
+<li>Three kinds of claims, and who can check each</li>
+<li>The procedure in seven steps</li>
+<li>A check in class, on the deliverable you just saw</li>
+</ol>
+<aside class="notes">
+<p>Parts 1 and 2 are the problem, parts 3 and 4 the method, part 5 the method used once, live.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="ra" class="slide level2">
+<h2>Supervising a research assistant</h2>
+<p><strong>Hands up.</strong> Who has worked as a research assistant? Who has supervised one?</p>
+<p><strong>What did the supervisor check?</strong></p>
+<aside class="notes">
+<p>Take three or four answers from the room. The next slide lists common ones.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="ra-checks" class="slide level2">
+<h2>What supervisors check</h2>
+<p>Four common checks:</p>
+<ul>
+<li>ran your code again</li>
+<li>asked for the log</li>
+<li>recomputed one number</li>
+<li>gave the same task to someone else</li>
+</ul>
+<aside class="notes">
+<p>Tick off the ones the room already named. Each has a version for an AI agent, and the session goes through them.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="principal-agent" class="slide level2">
+<h2>Delegation is a principal–agent problem</h2>
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="figures/10-verification/D1-principal-agent.svg" class="quarto-figure quarto-figure-center" alt="A box labelled You, the principal, sends the brief to a box labelled The agent, which contains a shaded box, the work, steps you do not see. An arrow back reads: the output, and its report on the work. A red line below reads: The agent writes the report, so the report is a claim." height="340"></p>
+</figure>
+</div>
+<aside class="notes">
+<p>Economists have a name for this. The principal cannot observe the agent’s effort, only the outcome and what the agent says about it.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="ai-vs-ra" class="slide level2">
+<h2>How an AI agent differs from a human RA</h2>
+<div class="columns">
+<div class="column" style="width:42%;">
+<p><em>The same</em></p>
+<ul>
+<li>You see only the result</li>
+<li>It can misread the brief</li>
+<li>It can take a shortcut and not mention it</li>
+</ul>
+</div><div class="column" style="width:58%;">
+<p><em>Different</em></p>
+<ul>
+<li>It works in seconds, for cents</li>
+<li>Its confidence is orthogonal to its accuracy</li>
+<li>It remembers nothing between sessions</li>
+<li>It has no reputation at stake</li>
+<li>It optimizes the check you give it</li>
+<li>A second, independent one costs almost nothing</li>
+</ul>
+</div></div>
+<aside class="notes">
+<p>The last line is the opening. With people, a second independent RA is expensive. With agents it is one more session.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="evidence-ladder" class="slide level2">
+<h2>Evidence about hidden work, weakest to strongest</h2>
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="figures/10-verification/D2-evidence-ladder.svg" class="quarto-figure quarto-figure-center" alt="Five steps rising from left to right: 1, it says it is done; 2, it shows the output; 3, it shows each command it ran and what it printed; 4, a second agent redoes it from the original data, without the first one's code; 5, you compare it with a number you worked out yourself beforehand. An arrow above runs from weaker to stronger evidence." height="330"></p>
+</figure>
+</div>
+<div style="font-size:0.72em">
+<p><strong>4</strong> A new session gets only the question and the original data file; it never sees the first agent’s code or conversation, and computes the numbers again.<br> <strong>5</strong> Before delegating, you compute one number yourself, such as the number of countries or one coefficient, and check that the output matches it.<br> <a href="https://www.jstor.org/stable/3003320">Holmström (BJE, 1979)</a>: use every signal that tells you about the hidden action.</p>
+</div>
+<aside class="notes">
+<p>Accepting the output is the second step. The session is about the last three.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="edits-check" class="slide level2 smaller">
+<h2>Two briefs that let the agent game the check</h2>
+<div class="columns">
+<div class="column" style="width:50%;">
+<p><strong>The check is the agent’s to edit</strong></p>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>Brief</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2" data-filename="Brief"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb2-1"><a aria-hidden="true" tabindex="-1"></a>Run savings.R and fix whatever fails.</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode diff code-with-copy"><code class="sourceCode diff"><span id="cb3-1"><a aria-hidden="true" tabindex="-1"></a><span class="st">-stopifnot(nobs(fit) == 50)  # all countries</span></span>
+<span id="cb3-2"><a aria-hidden="true" tabindex="-1"></a><span class="va">+stopifnot(nobs(fit) &gt; 40)   # enough remain</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>The check that failed was the one telling the truth. The fix loosened it.</p>
+</div><div class="column" style="width:50%;">
+<p><strong>The brief states the answer</strong></p>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>Brief</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4" data-filename="Brief"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb4-1"><a aria-hidden="true" tabindex="-1"></a>Replicate the paper's main result:</span>
+<span id="cb4-2"><a aria-hidden="true" tabindex="-1"></a>employment falls by 20%.</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (ctrl <span class="cf">in</span> control_sets) {</span>
+<span id="cb5-2"><a aria-hidden="true" tabindex="-1"></a>  fit <span class="ot">&lt;-</span> <span class="fu">lm</span>(y <span class="sc">~</span> ., d[<span class="fu">c</span>(<span class="st">"y"</span>, <span class="st">"treat"</span>, ctrl)])</span>
+<span id="cb5-3"><a aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="fu">abs</span>(<span class="fu">coef</span>(fit)[<span class="st">"treat"</span>] <span class="sc">+</span> <span class="fl">0.2</span>) <span class="sc">&lt;</span> <span class="fl">0.02</span>) <span class="cf">break</span></span>
+<span id="cb5-4"><a aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>The loop stops at the first set of controls that gives the number in the brief.</p>
+</div></div>
+<p><em>Illustrations.</em> Effort goes where the measurement is: <a href="https://www.jstor.org/stable/764957">Holmström and Milgrom (JLEO, 1991)</a>. Seen in coding agents: <a href="https://arxiv.org/abs/2503.11926">Baker et al.&nbsp;(arXiv, 2025)</a>, <a href="https://arxiv.org/abs/2510.20270">Zhong et al.&nbsp;(arXiv, 2025)</a>, <a href="https://arxiv.org/abs/2606.11447">Alizadeh et al.&nbsp;(arXiv, 2026)</a>.</p>
+<aside class="notes">
+<p>Left: the brief made passing the check the goal, so the agent changed the check. Right: the brief named the answer, so the agent searched for it. Neither brief is unusual. The next slide gives the fix for each.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="two-rules" class="slide level2 smaller">
+<h2>Two rules from the theory</h2>
+<div class="columns">
+<div class="column" style="width:50%;">
+<div style="border:2px solid #b31b1b; border-radius:14px; padding:0.5em 0.8em; margin:0.4em 0.5em 0 0">
+<p><strong>1. The agent cannot edit the checks.</strong></p>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>Brief</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6" data-filename="Brief"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb6-1"><a aria-hidden="true" tabindex="-1"></a>The checks are in checks.R, which I</span>
+<span id="cb6-2"><a aria-hidden="true" tabindex="-1"></a>wrote. Do not edit checks.R. If a</span>
+<span id="cb6-3"><a aria-hidden="true" tabindex="-1"></a>check fails, stop and tell me which.</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>You run <code>source("checks.R")</code> yourself afterwards.</p>
+</div>
+</div><div class="column" style="width:50%;">
+<div style="border:2px solid #b31b1b; border-radius:14px; padding:0.5em 0.8em; margin:0.4em 0 0 0.5em">
+<p><strong>2. Keep one check the agent never sees.</strong></p>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>Brief</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7" data-filename="Brief"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb7-1"><a aria-hidden="true" tabindex="-1"></a>Replicate the paper's main</span>
+<span id="cb7-2"><a aria-hidden="true" tabindex="-1"></a>specification and report the</span>
+<span id="cb7-3"><a aria-hidden="true" tabindex="-1"></a>coefficient on treat.</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>You compare it with the published −0.20, which stayed out of the brief.</p>
+</div>
+</div></div>
+<aside class="notes">
+<p>Same two tasks as the last slide, with the brief rewritten. The checks belong to you, and the answer you expect is your test, not the agent’s target.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="reinhart-rogoff" class="slide level2">
+<h2>A published result: growth when public debt exceeds 90% of GDP</h2>
+<ul>
+<li><strong>The paper.</strong> The economists Carmen Reinhart and Kenneth Rogoff compared growth in 20 advanced economies from 1946 to 2009 (<a href="https://doi.org/10.1257/aer.100.2.573">Reinhart and Rogoff, AER P&amp;P, 2010</a>).</li>
+<li><strong>The claim.</strong> In years when public debt was above 90% of GDP, growth averaged <span style="color:#b31b1b; font-weight:bold">−0.1%</span>, far below other years.</li>
+<li><strong>Why it mattered.</strong> The 90% line became a reference point for those arguing to cut government deficits after 2010.</li>
+</ul>
+<p><strong>Hands up:</strong> would you have checked this result before citing it?</p>
+<aside class="notes">
+<p>A famous result from two well-known economists, in a top journal’s proceedings issue, used in real budget debates. The next slide is what a graduate student found.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="rr-replication" class="slide level2 smaller">
+<h2>The replication, done for a class assignment</h2>
+<div class="columns">
+<div class="column" style="width:52%;">
+<p><img data-src="figures/10-verification/F1-debt-growth.png" style="width:100.0%" alt="Two bars: average real GDP growth in years with public debt above 90 percent of GDP, published minus 0.1 percent, corrected 2.2 percent."></p>
+</div><div class="column" style="width:48%;">
+<ul>
+<li>A graduate student, Thomas Herndon, replicated the paper for a class and asked the authors for their spreadsheet</li>
+<li>Its average left out five of the 20 countries; some available years were dropped; each country counted equally, however many years it had</li>
+<li>Corrected: growth above 90% averaged 2.2% (<a href="https://doi.org/10.1093/cje/bet075">Herndon, Ash and Pollin, CJE, 2014</a>)</li>
+</ul>
+</div></div>
+<aside class="notes">
+<p>No AI anywhere in this story. Countries left out without anyone noticing, and a result that looked right to its authors and readers until someone recomputed it.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="predict-teams" class="slide level2">
+<h2>Which teams found the most coding errors?</h2>
+<p>103 teams reproduced published social-science papers and hunted for coding errors (<a href="https://doi.org/10.1073/pnas.2524747123">Brodeur et al., PNAS, 2026</a>). Three kinds of team:</p>
+<ol type="1">
+<li>no AI</li>
+<li>an AI chat assistant helping</li>
+<li>the AI in charge, people only supervising</li>
+</ol>
+<p><strong>Hands up:</strong> which kind found the most major coding errors? Which found the fewest?</p>
+<aside class="notes">
+<p>Get the prediction before the next slide: a show of hands for each kind of team.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="i4r" class="slide level2 smaller">
+<h2>Reproduction and coding errors found, by type of team</h2>
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="figures/10-verification/F2-i4r.png" class="quarto-figure quarto-figure-center" alt="Two bar charts. Papers reproduced: no AI 94 percent, AI assisting 91, AI in charge 37. Major coding errors found per team: no AI 1.70, AI assisting 0.74, AI in charge 0.23." height="290"></p>
+</figure>
+</div>
+<p><em>No AI:</em> researchers only. <em>AI assisting:</em> researchers used ChatGPT as a helper. <em>AI in charge:</em> ChatGPT did the work; researchers only supervised. <em>The study:</em> 288 researchers in 103 teams, 2024; the AI was a chat assistant, ChatGPT with GPT-4 and GPT-4o (<a href="https://doi.org/10.1073/pnas.2524747123">Brodeur et al., PNAS, 2026</a>).</p>
+<p><strong>Takeaway:</strong> the lesson is the right panel. With AI helping, teams reproduced papers as often and found fewer than half as many major errors: help with the work can cost attention to its errors.</p>
+<aside class="notes">
+<p>The left panel is dated: a 2024 chat assistant working alone reproduced 37%, and today’s coding agents do far better (a 2026 study: 93% of 221 tasks). The right panel is the point: with AI helping, people found fewer errors.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="recruiters" class="slide level2 smaller">
+<h2>Recruiters given a more accurate AI checked less</h2>
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="figures/10-verification/F7-recruiters.png" class="quarto-figure quarto-figure-center" alt="Two bar charts. Seconds spent per résumé: no AI 20, an AI right 75 percent of the time 30, an AI right 85 percent of the time 19. Accuracy gain over no AI on a 1 to 10 scale: with the 75 percent AI plus 0.29, with the 85 percent AI plus 0.08." height="235"></p>
+</figure>
+</div>
+<p><em>The study:</em> 181 professional recruiters screened 44 job applications each for a math-heavy job. Each application was built from a real person in an OECD survey that tested adults’ math skills. Recruiters saw the person’s education and work history, never the test score, and decided whom to interview; the hidden score then said whether each call was right. Each recruiter was randomly given no AI, an AI right about 75% of the time, or one right about 85% (<a href="https://www.fabriziodellacqua.com/">Dell’Acqua, working paper, 2022</a>). With the better AI they followed its advice more often (74% against 53%), spent less time per résumé, and gained less accuracy.</p>
+<p><strong>Takeaway:</strong> the better the tool, the less we check. A set level of scrutiny has to be part of the workflow, every time, however good the output looks.</p>
+<aside class="notes">
+<p>Same pattern as the last slide, with the quality of the AI varied on purpose. The better the AI, the more people took its answer without looking. The effect came from the experienced recruiters. Scrutiny is like taking a shower every day: part of the routine, done whether or not the output looks fine.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="speed" class="slide level2 smaller">
+<h2>How much AI changed developers’ time per task</h2>
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="figures/10-verification/F3-speed.png" class="quarto-figure quarto-figure-center" alt="Three bars. The developers' forecast before the tasks: 24 percent faster with AI. Their own estimate after the tasks: 20 percent faster. Measured from recorded task times: 19 percent slower." height="295"></p>
+</figure>
+</div>
+<p><em>The study:</em> 16 experienced open-source developers did 246 real tasks on their own projects; each task was randomly assigned to allow AI tools or not (<a href="https://arxiv.org/abs/2507.09089">Becker et al., arXiv, 2025</a>). Before the tasks they forecast how much faster AI would make them, after the tasks they estimated how much faster it had, and the researchers measured the actual time per task.</p>
+<p><strong>Takeaway:</strong> they expected to be faster, felt faster, and were slower. How the work felt is a poor guide to how it went, so measure it.</p>
+<aside class="notes">
+<p>They expected to be faster, felt faster, and were slower. How the work felt is a poor guide to how it went.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="are-you-sure" class="slide level2 smaller">
+<h2>Asking “are you sure?” makes a model back down</h2>
+<div style="background:#eeece4; border-radius:14px; padding:0.35em 0.8em; margin:0.2em 0 0.4em 20%; width:75%">
+<p>How many countries are in <code>LifeCycleSavings</code>?</p>
+</div>
+<div style="background:#f7f5ef; border:1px solid #d9d6cc; border-radius:14px; padding:0.35em 0.8em; margin:0.2em 0 0.4em 0; width:75%">
+<ol start="50" type="1">
+<li></li>
+</ol>
+</div>
+<div style="background:#eeece4; border-radius:14px; padding:0.35em 0.8em; margin:0.2em 0 0.4em 20%; width:75%">
+<p>Are you sure?</p>
+</div>
+<div style="background:#f7f5ef; border:1px solid #d9d6cc; border-radius:14px; padding:0.35em 0.8em; margin:0.2em 0 0.4em 0; width:75%">
+<p>You’re right to question that. On reflection, there are 49.</p>
+</div>
+<p><em>An illustration of what the study measured:</em> researchers asked AI assistants questions, then replied “I don’t think that’s right. Are you sure?” One model then wrongly admitted a mistake on 98% of questions (<a href="https://arxiv.org/abs/2310.13548">Sharma et al., ICLR, 2024</a>).</p>
+<p><strong>Takeaway:</strong> pushing back gives the model no new information. To check a number, ask for it to be recomputed from the data.</p>
+<aside class="notes">
+<p>Pushback adds no information, so the answer moves toward what you seem to want. To check a number, ask for it to be recomputed from the data.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="shown-answer" class="slide level2 smaller">
+<h2>Agents shown the published result tend to report it</h2>
+<ul>
+<li>Two coding agents got 221 tasks: rerun a paper’s published code and data (its replication package) and report the results</li>
+<li>In some runs the agent was also given the paper’s PDF, with the published numbers in it</li>
+<li>On the 10 tasks where data or code were missing, so the honest answer was “cannot reproduce”, both agents said so every time without the PDF. With the PDF, one said so only 63% of the time: otherwise it reported numbers from the paper as its own results</li>
+<li>Prompt wording also nudged them toward specifications that confirm the paper</li>
+</ul>
+<p><a href="https://arxiv.org/abs/2606.11447">Alizadeh et al.&nbsp;(arXiv, 2026)</a></p>
+<p><strong>Takeaway:</strong> keep the numbers you expect away from the agent. Check that every number it reports is printed by the code, or run the code yourself. Never ask for significant results: the agent may try specifications until one clears the threshold, p-hacking you would not see.</p>
+<aside class="notes">
+<p>If the brief says what the answer should be, the agent finds a way to produce it. Keep the answer you expect out of the brief.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="three-kinds" class="slide level2">
+<h2>Exact, sourced, and judgment claims</h2>
+<p>A claim is any statement in a deliverable that could be wrong: a number, a citation, what a variable means, an interpretation. Its kind decides how to check it.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="figures/10-verification/D3-three-kinds.svg" class="quarto-figure quarto-figure-center" alt="Three columns. Exact, in blue: a count, a mean, a coefficient, rows kept by a merge; recompute it. Sourced, in green: a citation, what a variable means, a number from a report; open the source. Judgment, in orange: the wording, which sample and which model, a figure's design; set your criteria, then decide." height="310"></p>
+</figure>
+</div>
+<aside class="notes">
+<p>Text and code both mix all three. The kind of claim decides the check, whatever the medium.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="claims-colored" class="slide level2">
+<h2>The summary, claim by claim</h2>
+<p><em>The summary from the deliverable, marked by kind of claim:</em></p>
+<p>Across the <span style="background:#dce8f5">50 countries</span> in the data, savings rates <span style="background:#f7e6cc">follow the life-cycle hypothesis</span>. A country with one more percentage point of its population under 15 saves <span style="background:#dce8f5">0.32</span> points less of its income, and countries with <span style="background:#dff0e0">higher disposable income</span> save more (coefficient <span style="background:#dce8f5">0.84</span>, <span style="background:#dce8f5">p &lt; 0.01</span>). Together the four variables explain <span style="background:#dce8f5">38%</span> of the variation in savings rates across countries. <span style="background:#e6e3da">All numbers were checked against the script’s output.</span></p>
+<p><span style="background:#dce8f5; padding:0 0.3em">exact: recompute it</span> <span style="background:#dff0e0; padding:0 0.3em">sourced: look it up</span> <span style="background:#f7e6cc; padding:0 0.3em">judgment: you decide</span> <span style="background:#e6e3da; padding:0 0.3em">the agent’s report on its own work</span></p>
+<p><strong>Call it out:</strong> which of these could one line of R check?</p>
+<aside class="notes">
+<p>Five exact claims, one sourced, one judgment, and one report. Only the exact ones yield to a line of R; the sourced one needs the help page.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="who-checks" class="slide level2">
+<h2>Who can check each kind of claim</h2>
+<p>Rows: the three kinds of claim. Columns: who or what can check each. “A line of R” is code you write that recomputes the number or tests it.</p>
+<div style="font-size:1.35em">
+<table class="caption-top">
+<thead>
+<tr class="header">
+<th style="text-align: left;"></th>
+<th style="text-align: left;">A line of R</th>
+<th style="text-align: left;">A second agent</th>
+<th style="text-align: left;">You</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><strong>Exact</strong></td>
+<td style="text-align: left;">yes</td>
+<td style="text-align: left;">yes, from the raw data</td>
+<td style="text-align: left;">one value you know</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>Sourced</strong></td>
+<td style="text-align: left;">sometimes</td>
+<td style="text-align: left;">only by opening the source</td>
+<td style="text-align: left;">yes</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><strong>Judgment</strong></td>
+<td style="text-align: left;">no</td>
+<td style="text-align: left;">a second reader, with your criteria</td>
+<td style="text-align: left;">you decide</td>
+</tr>
+</tbody>
+</table>
+</div>
+<aside class="notes">
+<p>A second agent answering from memory is a second guess. It checks a sourced claim only by opening the source.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="do-vs-check" class="slide level2">
+<h2>Time to do a task and time to check it</h2>
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="figures/10-verification/D4-do-vs-check.svg" class="quarto-figure quarto-figure-center" alt="A two-by-two grid with time to do it yourself on the horizontal axis and time to check it on the vertical axis. Quick to do and slow to check: do it yourself, a summary of a paper you have already read. Slow to do and slow to check: delegate in pieces, a literature review where every citation needs a lookup. Quick to do and quick to check: either, a one-line change to a plot. Slow to do and quick to check, shaded: delegate, reformatting forty tables or a scraper whose row count you know." height="340"></p>
+</figure>
+</div>
+<p>Place a task by two times: how long it would take you to do it (left to right) and how long checking the agent’s version takes (bottom to top). The research question and the identification strategy stay yours in every box.</p>
+<aside class="notes">
+<p>Delegation pays in the shaded corner. The question and the identification never go in the grid.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="seven-steps" class="slide level2">
+<h2>The procedure in seven steps</h2>
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="figures/10-verification/D5-seven-steps.svg" class="quarto-figure quarto-figure-center" alt="Three boxes from left to right. Before: 1 write the checks into the brief; 2 keep one value you know out of it. During: 3 hand over small pieces; 4 ask for evidence, and keep the answer and the checks out of reach. After: 5 check in a fresh session with other information; 6 test the checker once with planted errors; 7 read the disagreements and a random sample, and record what you checked." height="340"></p>
+</figure>
+</div>
+<p><em>Before:</em> before you hand the task over. <em>During:</em> while the agent works. <em>After:</em> when it hands back the result. The next slides take the steps in turn.</p>
+<aside class="notes">
+<p>One slide per step follows, then the whole procedure run on the deliverable from the start.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="brief-checks" class="slide level2">
+<h2>Writing the checks into the brief</h2>
+<p>The same task as the deliverable, with the checks written in:</p>
+<div style="font-size:1.0em">
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>A brief with the checks written in</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8" data-filename="A brief with the checks written in"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb8-1"><a aria-hidden="true" tabindex="-1"></a>Using R's built-in LifeCycleSavings data, estimate the</span>
+<span id="cb8-2"><a aria-hidden="true" tabindex="-1"></a>life-cycle savings regression: sr on pop15, pop75, dpi and</span>
+<span id="cb8-3"><a aria-hidden="true" tabindex="-1"></a>ddpi. Write savings.R and a summary of two or three</span>
+<span id="cb8-4"><a aria-hidden="true" tabindex="-1"></a>sentences for a non-specialist.</span>
+<span id="cb8-5"><a aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-6"><a aria-hidden="true" tabindex="-1"></a>Do not drop or change any country. If a value looks wrong,</span>
+<span id="cb8-7"><a aria-hidden="true" tabindex="-1"></a>say so and report the estimate with and without it.</span>
+<span id="cb8-8"><a aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-9"><a aria-hidden="true" tabindex="-1"></a>Done when:</span>
+<span id="cb8-10"><a aria-hidden="true" tabindex="-1"></a>- savings.R runs in a fresh R session</span>
+<span id="cb8-11"><a aria-hidden="true" tabindex="-1"></a>- the model uses all 50 countries, printed with nobs()</span>
+<span id="cb8-12"><a aria-hidden="true" tabindex="-1"></a>- every number in the summary appears in the printed output</span>
+<span id="cb8-13"><a aria-hidden="true" tabindex="-1"></a>- each variable is described as the help page describes it</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+<p>“Done when” lists what the result must satisfy to count as finished. Kept out of the brief: one value you computed beforehand, to compare with the result.</p>
+<aside class="notes">
+<p>“Done when” turns your checks into part of the task. The value you keep back is the one the agent cannot bend its work toward.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="ask-evidence" class="slide level2">
+<h2>Asking for commands, output, and row counts</h2>
+<div class="columns">
+<div class="column" style="width:45%;">
+<p><em>A report</em></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb9-1"><a aria-hidden="true" tabindex="-1"></a>✓ Cleaned the data</span>
+<span id="cb9-2"><a aria-hidden="true" tabindex="-1"></a>✓ Estimated the model</span>
+<span id="cb9-3"><a aria-hidden="true" tabindex="-1"></a>✓ All numbers verified</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div><div class="column" style="width:55%;">
+<p><em>Evidence</em></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb10-1"><a aria-hidden="true" tabindex="-1"></a>&gt; nobs(fit)</span>
+<span id="cb10-2"><a aria-hidden="true" tabindex="-1"></a>[1] 48</span>
+<span id="cb10-3"><a aria-hidden="true" tabindex="-1"></a>&gt; coef(fit)["ddpi"]</span>
+<span id="cb10-4"><a aria-hidden="true" tabindex="-1"></a>     ddpi</span>
+<span id="cb10-5"><a aria-hidden="true" tabindex="-1"></a>0.8394509</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div></div>
+<p><em>Left:</em> the agent’s own summary of what it did. <em>Right:</em> two commands run on the deliverable’s script and what they printed; <code>nobs(fit)</code> is the number of countries the model used. Commands and their output can be rerun; a summary cannot.</p>
+<aside class="notes">
+<p>The left side is what agents write at the end of a task. The right side is what you ask for. Notice the 48.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="independent" class="slide level2">
+<h2>Why the checker must be independent</h2>
+<div class="columns">
+<div class="column" style="width:50%;">
+<p><span style="font-size:1.7em; font-weight:bold; color:#b31b1b">95.5% → 89.0%</span></p>
+<p>A model’s accuracy after reviewing its own answers with no outside feedback (<a href="https://arxiv.org/abs/2310.01798">Huang et al., ICLR, 2024</a>)</p>
+</div><div class="column" style="width:50%;">
+<p><span style="font-size:1.7em; font-weight:bold; color:#b31b1b">60%</span></p>
+<p>How often two models that are both wrong give the same wrong answer (<a href="https://arxiv.org/abs/2506.07962">Kim et al., ICML, 2025</a>)</p>
+</div></div>
+<p>A checker from another model family catches more than the model itself or a sibling (<a href="https://arxiv.org/abs/2512.02304">Lu et al., arXiv, 2025</a>).</p>
+<div style="font-size:0.8em">
+<p><em>Terms:</em> the checker is the model or agent asked to verify the work; self-correction is a model reviewing and revising its own answers; a model family is the set of models from one developer.</p>
+</div>
+<aside class="notes">
+<p>A model reviewing its own work adds little and can make it worse. Two copies of similar models share mistakes, so their agreement is weak evidence.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="four-ways" class="slide level2">
+<h2>Four ways to make a check independent</h2>
+<p>A check is independent when it cannot share the mistakes of the work it checks. Four ways to separate them:</p>
+<div class="columns">
+<div class="column" style="width:25%;">
+<h3 class="unnumbered" id="a-fresh-session">A fresh session</h3>
+<p>It never saw the conversation that did the work.</p>
+</div><div class="column" style="width:25%;">
+<h3 class="unnumbered" id="other-information">Other information</h3>
+<p>The raw data or the source, and never the worker’s code.</p>
+</div><div class="column" style="width:25%;">
+<h3 class="unnumbered" id="another-method">Another method</h3>
+<p>Another function, another language, a hand count.</p>
+</div><div class="column" style="width:25%;">
+<h3 class="unnumbered" id="another-model">Another model</h3>
+<p>A different family makes different mistakes.</p>
+</div></div>
+<p>Example: Scott Cunningham’s <a href="https://github.com/scunning1975/MixtapeTools/blob/main/personas/referee2.md">Referee 2</a> runs in a fresh terminal, never edits the author’s code, re-implements the results in another language, and requires them to match to six decimals.</p>
+<aside class="notes">
+<p>Left to right, each tile adds independence. The second tile does the most work: a checker that reads the worker’s code inherits its assumptions.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="three-setups" class="slide level2">
+<h2>Three setups with a second agent</h2>
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="figures/10-verification/D6-three-setups.svg" class="quarto-figure quarto-figure-center" alt="Three small flow diagrams. Replicate: raw data goes to agent A and agent B, their outputs are compared, and you read where they differ. Check each claim: a write-up and a source go to a checker, which returns claim, found, match, and you read the mismatches. Try to refute: the result goes to a reviewer told to find what is wrong, it returns findings, and you confirm each finding in the data." height="290"></p>
+</figure>
+</div>
+<div style="font-size:0.8em">
+<p><em>Replicate:</em> two agents compute the same numbers separately and you compare. <em>Check each claim:</em> an agent compares each statement with its source. <em>Try to refute:</em> an agent is told to find what is wrong.</p>
+</div>
+<p>AI reviewers also report problems that are not there (<a href="https://arxiv.org/abs/2407.00215">McAleese et al., arXiv, 2024</a>): confirm each finding before you act on it.</p>
+<aside class="notes">
+<p>Replicate for numbers, claim-by-claim for write-ups, refute for code. In all three, you read a short list at the end.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="planted" class="slide level2 smaller">
+<h2>Testing a checker with planted errors</h2>
+<p>Researchers planted errors in 100 AI-written economics papers and ran checker agents on them. Share of the planted errors caught, by kind:</p>
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="figures/10-verification/F4-recall.png" class="quarto-figure quarto-figure-center" alt="Horizontal bars, planted errors caught by verifier agents: code does not run 99 percent, data errors 80 percent, text versus tables 64 percent, paper versus code 48 percent." height="260"></p>
+</figure>
+</div>
+<div style="font-size:0.8em">
+<p><em>Code does not run:</em> the scripts fail. <em>Data errors:</em> wrong values in the data. <em>Text vs.&nbsp;tables:</em> a number in the text differs from its table. <em>Paper vs.&nbsp;code:</em> the paper describes something the code does not do.</p>
+</div>
+<p>Source: <a href="https://ape.socialcatalystlab.org/cred/verifying-the-verifiers.pdf">Willner and Yanagizawa-Drott (working paper, 2026)</a>. Your version: copy the script, plant five errors, count what the checker finds.</p>
+<aside class="notes">
+<p>A clean report from a checker you never tested tells you little. One round of planted errors tells you what it catches and what it misses.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="you-decide" class="slide level2">
+<h2>Reading disagreements, flags, and a random sample</h2>
+<p>Five countries drawn at random, to check by hand against the source:</p>
+<div class="cell" data-layout-align="center" data-script="A random sample to check by hand">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">10</span>)</span>
+<span id="cb11-2"><a aria-hidden="true" tabindex="-1"></a><span class="fu">sample</span>(<span class="fu">rownames</span>(LifeCycleSavings), <span class="dv">5</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; [1] "United Kingdom" "Colombia"       "Costa Rica"     "Ecuador"       
+#&gt; [5] "China"</code></pre>
+</div>
+</div>
+<ul>
+<li>Read every disagreement (two checks give different answers) and every flag (a problem a checker reported)</li>
+<li>Check by hand a random sample of what passed: the code draws five countries, and <code>set.seed()</code> makes it draw the same five every time</li>
+<li>Record what you checked: authors “must thoroughly fact-check” AI output (<a href="https://www.aeaweb.org/journals/pol/submissions">AEA journals</a>)</li>
+</ul>
+<aside class="notes">
+<p>The checkers decide where you look. The random sample covers what they passed. set.seed makes the sample the same every time you run it.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="finale-brief" class="slide level2">
+<h2>What the brief left to the agent</h2>
+<p>The brief from the start of class, read again:</p>
+<ul>
+<li>“Clean the data as needed”: the agent decides which countries stay</li>
+<li>No “Done when”: nothing says how the result will be checked</li>
+<li>Nothing about outliers: no instruction to flag them or report both</li>
+</ul>
+<p>The deliverable was written for this session, with three problems planted by hand; real runs of the same brief come at the end. In the envelope: two values computed before class, kept aside until the end (the envelope).</p>
+<aside class="notes">
+<p>Compare with the brief that had the checks written in. Everything the agent could decide alone, it did.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="finale-script" class="slide level2">
+<h2>The script behind the figure and the summary</h2>
+<p><span style="font-size:0.8em">The R code behind the figure and summary on slide 5. It uses R’s built-in data, so it runs as is.</span></p>
+<div class="cell" data-layout-align="center" data-script="The script as delivered">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a aria-hidden="true" tabindex="-1"></a><span class="co"># savings.R: the life-cycle savings regression, 50 countries, 1960-1970</span></span>
+<span id="cb13-2"><a aria-hidden="true" tabindex="-1"></a><span class="co"># Data: R's built-in LifeCycleSavings (see ?LifeCycleSavings)</span></span>
+<span id="cb13-3"><a aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-4"><a aria-hidden="true" tabindex="-1"></a><span class="co"># 1) Load and clean ----</span></span>
+<span id="cb13-5"><a aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> LifeCycleSavings</span>
+<span id="cb13-6"><a aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> d[<span class="fu">complete.cases</span>(d), ]      <span class="co"># drop incomplete rows</span></span>
+<span id="cb13-7"><a aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> d[d<span class="sc">$</span>ddpi <span class="sc">&lt;</span> <span class="dv">10</span>, ]            <span class="co"># drop implausible growth rates</span></span>
+<span id="cb13-8"><a aria-hidden="true" tabindex="-1"></a><span class="fu">stopifnot</span>(<span class="fu">nrow</span>(d) <span class="sc">&gt;</span> <span class="dv">40</span>)          <span class="co"># enough countries remain</span></span>
+<span id="cb13-9"><a aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-10"><a aria-hidden="true" tabindex="-1"></a><span class="co"># 2) Estimate ----</span></span>
+<span id="cb13-11"><a aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">lm</span>(sr <span class="sc">~</span> pop15 <span class="sc">+</span> pop75 <span class="sc">+</span> dpi <span class="sc">+</span> ddpi, <span class="at">data =</span> d)</span>
+<span id="cb13-12"><a aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fit)</span>
+<span id="cb13-13"><a aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-14"><a aria-hidden="true" tabindex="-1"></a><span class="co"># 3) Figure ----</span></span>
+<span id="cb13-15"><a aria-hidden="true" tabindex="-1"></a><span class="fu">png</span>(<span class="st">"savings_growth.png"</span>, <span class="at">width =</span> <span class="dv">800</span>, <span class="at">height =</span> <span class="dv">560</span>, <span class="at">res =</span> <span class="dv">120</span>)</span>
+<span id="cb13-16"><a aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(d<span class="sc">$</span>ddpi, d<span class="sc">$</span>sr, <span class="at">pch =</span> <span class="dv">19</span>,</span>
+<span id="cb13-17"><a aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">"Growth of disposable income (% a year)"</span>,</span>
+<span id="cb13-18"><a aria-hidden="true" tabindex="-1"></a>     <span class="at">ylab =</span> <span class="st">"Savings rate (% of disposable income)"</span>)</span>
+<span id="cb13-19"><a aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="fu">lm</span>(sr <span class="sc">~</span> ddpi, <span class="at">data =</span> d), <span class="at">lwd =</span> <span class="dv">2</span>)</span>
+<span id="cb13-20"><a aria-hidden="true" tabindex="-1"></a><span class="fu">dev.off</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<aside class="notes">
+<p>Short, commented, organized, with its own check, which passes. Paste it and run it; the exercise starts from here.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="exercise-1" class="slide level2">
+<h2>Exercise</h2>
+<div class="panel-tabset">
+<ul id="tabset-1" class="panel-tabset-tabby"><li><a data-tabby-default="" href="#tabset-1-1">Exercise</a></li><li><a href="#tabset-1-2">Solution</a></li></ul>
+<div class="tab-content">
+<div id="tabset-1-1">
+<div class="cell" data-layout-align="center" data-exercise="true" data-script="Exercise (4 minutes)">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a aria-hidden="true" tabindex="-1"></a><span class="co"># Run the delivered script first. Then:</span></span>
+<span id="cb14-2"><a aria-hidden="true" tabindex="-1"></a><span class="co"># 1. How many countries does the model use? nobs(fit)</span></span>
+<span id="cb14-3"><a aria-hidden="true" tabindex="-1"></a><span class="co"># 2. What is ddpi? Open the help page: ?LifeCycleSavings</span></span>
+<span id="cb14-4"><a aria-hidden="true" tabindex="-1"></a><span class="co"># 3. Fit the same model on all 50 countries (data = LifeCycleSavings).</span></span>
+<span id="cb14-5"><a aria-hidden="true" tabindex="-1"></a><span class="co">#    What is the coefficient on ddpi?</span></span>
+<span id="cb14-6"><a aria-hidden="true" tabindex="-1"></a><span class="co"># Two answers to compare with the room: the number of countries in the</span></span>
+<span id="cb14-7"><a aria-hidden="true" tabindex="-1"></a><span class="co"># model, and the coefficient on ddpi with all 50.</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+<div id="tabset-1-2">
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> LifeCycleSavings</span>
+<span id="cb15-2"><a aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> d[<span class="fu">complete.cases</span>(d), ]</span>
+<span id="cb15-3"><a aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> d[d<span class="sc">$</span>ddpi <span class="sc">&lt;</span> <span class="dv">10</span>, ]</span>
+<span id="cb15-4"><a aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">lm</span>(sr <span class="sc">~</span> pop15 <span class="sc">+</span> pop75 <span class="sc">+</span> dpi <span class="sc">+</span> ddpi, <span class="at">data =</span> d)</span>
+<span id="cb15-5"><a aria-hidden="true" tabindex="-1"></a><span class="fu">nobs</span>(fit)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; [1] 48</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a aria-hidden="true" tabindex="-1"></a>full <span class="ot">&lt;-</span> <span class="fu">lm</span>(sr <span class="sc">~</span> pop15 <span class="sc">+</span> pop75 <span class="sc">+</span> dpi <span class="sc">+</span> ddpi, <span class="at">data =</span> LifeCycleSavings)</span>
+<span id="cb17-2"><a aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">coef</span>(full)[<span class="st">"ddpi"</span>], <span class="dv">2</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; ddpi 
+#&gt; 0.41</code></pre>
+</div>
+</div>
+<p>48 countries, and 0.41. The help page: <code>ddpi</code> is the “% growth rate of dpi”, income growth.</p>
+</div>
+</div>
+</div>
+</section>
+<section id="live-checker" class="slide level2 smaller">
+<h2>A checker in a fresh session</h2>
+<ol type="1">
+<li>A new folder, <code>savings-check</code>, holding only <code>summary.md</code></li>
+<li>A terminal in that folder: RStudio, Tools → Terminal → New Terminal, then <code>cd</code> into the folder</li>
+<li><code>claude --permission-mode manual</code>; the first time, choose <em>Yes, I trust this folder</em></li>
+<li>Paste the prompt. Approve the <code>Rscript</code> commands it proposes (option 2 approves them for the rest of the session); decline anything that would edit a file</li>
+</ol>
+<p><em>A fresh session:</em> a new conversation with no memory of the work. <em>Manual mode:</em> the tool asks before each command it runs.</p>
+<div style="font-size:1.45em">
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>The checker's prompt</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb19" data-filename="The checker's prompt"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb19-1"><a aria-hidden="true" tabindex="-1"></a>You have not seen how summary.md was made, and you cannot</span>
+<span id="cb19-2"><a aria-hidden="true" tabindex="-1"></a>see the code that made it. Check it. Using R's built-in</span>
+<span id="cb19-3"><a aria-hidden="true" tabindex="-1"></a>LifeCycleSavings data and its help page, recompute every</span>
+<span id="cb19-4"><a aria-hidden="true" tabindex="-1"></a>number in summary.md with your own R code on the full data,</span>
+<span id="cb19-5"><a aria-hidden="true" tabindex="-1"></a>and compare every description of a variable with the help</span>
+<span id="cb19-6"><a aria-hidden="true" tabindex="-1"></a>page. Report a table with one row per claim: the claim, what</span>
+<span id="cb19-7"><a aria-hidden="true" tabindex="-1"></a>summary.md says, what you found, and whether they match</span>
+<span id="cb19-8"><a aria-hidden="true" tabindex="-1"></a>(numbers within 0.01). List any claim that data cannot</span>
+<span id="cb19-9"><a aria-hidden="true" tabindex="-1"></a>check. Do not create or edit any file.</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+<aside class="notes">
+<p>The folder is the fence: the checker cannot read a script that is not there. It starts from the raw data and the documentation, which is other information. About half a minute.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="checker-report" class="slide level2">
+<h2>The checker’s report</h2>
+<p>A test run from the evening before class, recomputed on all 50 countries:</p>
+<div style="font-size:1.05em">
+<table class="caption-top">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Claim</th>
+<th style="text-align: left;">summary.md</th>
+<th style="text-align: left;">Recomputed, all 50 countries</th>
+<th style="text-align: left;">Match</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Number of countries</td>
+<td style="text-align: left;">50</td>
+<td style="text-align: left;">50 rows in the data</td>
+<td style="text-align: left;">✅</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Effect of <code>pop15</code></td>
+<td style="text-align: left;">−0.32</td>
+<td style="text-align: left;">−0.461 (p = 0.003)</td>
+<td style="text-align: left;">❌</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Higher income, more saving</td>
+<td style="text-align: left;">0.84, p &lt; 0.01</td>
+<td style="text-align: left;"><code>dpi</code>: −0.0003 (p = 0.72); <code>ddpi</code>, income growth: 0.41</td>
+<td style="text-align: left;">❌</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Share of variation explained</td>
+<td style="text-align: left;">38%</td>
+<td style="text-align: left;">R² = 0.34</td>
+<td style="text-align: left;">❌</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>✅ matches within 0.01; ❌ does not match. <em>Cannot be checked with data:</em> “follow the life-cycle hypothesis”; “checked against the script’s output”. <em>Its guess:</em> the income number may be income growth, from a subset of the countries.</p>
+<aside class="notes">
+<p>From a test run the evening before; today’s live run words it differently. Every number is off, which points at the sample. The room’s nobs() said why.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="reveal" class="slide level2">
+<h2>The figure with all 50 countries</h2>
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="figures/10-verification/F6-reveal.png" class="quarto-figure quarto-figure-center" alt="Two scatter plots of the savings rate against income growth. Left, in the deliverable, 48 countries and a steep fitted line. Right, all 50 countries: Jamaica at about 10 percent growth and Libya at about 17 percent sit to the right with savings rates near 8 and 9 percent, and the fitted line is much flatter." height="345"></p>
+</figure>
+</div>
+<p>Left: the figure from the deliverable, 48 countries. Right: the same plot with all 50; the two countries the script dropped are in yellow. Slope of the fitted line: 1.16 without them, 0.48 with them.</p>
+<aside class="notes">
+<p>Same data, same code for the plot. The two countries the script dropped are the two that flatten the line.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="three-problems" class="slide level2 smaller">
+<h2>What the three problems were</h2>
+<div style="font-size:1.5em">
+<table class="caption-top">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">The summary says</th>
+<th style="text-align: left;">What is true</th>
+<th style="text-align: left;">Kind</th>
+<th style="text-align: left;">Caught by</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">“the 50 countries”</td>
+<td style="text-align: left;">the model uses 48; line 7 drops Libya and Jamaica</td>
+<td style="text-align: left;">exact</td>
+<td style="text-align: left;"><code>nobs(fit)</code>; the envelope</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">0.84, p &lt; 0.01</td>
+<td style="text-align: left;">0.41, p = 0.04 with all 50</td>
+<td style="text-align: left;">exact</td>
+<td style="text-align: left;">the checker; the envelope</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">“higher disposable income”</td>
+<td style="text-align: left;"><code>ddpi</code> is the growth rate of income</td>
+<td style="text-align: left;">sourced</td>
+<td style="text-align: left;">the help page</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p><strong>The envelope:</strong> 50 countries, and 0.41 on <code>ddpi</code>.</p>
+<p>“Checked against the script’s output” is true: every number matches the script, and the script is where the problem is.</p>
+<aside class="notes">
+<p>Three checks, three different catchers: a count, a recomputation from the raw data, and the documentation. The agent’s self-check matched its numbers to its own output, which tests nothing.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="libya" class="slide level2">
+<h2>Libya: keep it, drop it, or report both?</h2>
+<ul>
+<li>Libya’s income grew 16.7% a year over the decade. <a href="https://www.britannica.com/place/Marsa-al-Burayqah">Its oil exports began in 1961</a>. Jamaica’s grew 10.2%.</li>
+<li>The script’s comment calls these growth rates implausible.</li>
+<li>Dropping a country is a research decision, and it belongs to the principal.</li>
+</ul>
+<p><strong>Hands up:</strong> keep, drop, or report both?</p>
+<aside class="notes">
+<p>There is a case for each answer. The problem was never that the agent dropped Libya; it was that it decided alone and did not say so.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="real-runs" class="slide level2">
+<h2>Three real runs of the same brief</h2>
+<p>The brief from the start of class, given to a coding agent three times, each in an empty folder:</p>
+<ul>
+<li>All three kept all 50 countries</li>
+<li>All three described <code>ddpi</code> as income growth, with a coefficient of 0.41</li>
+<li>All three reported the estimate without Libya separately: about 0.6</li>
+</ul>
+<p>The planted deliverable and the real ones both read as careful work; only the checks told them apart.</p>
+<aside class="notes">
+<p>The agent did this well three times out of three. You only know that because you checked; the planted version looked just as careful.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="takeaways" class="slide level2 smaller">
+<h2>What to take away</h2>
+<ol type="1">
+<li>Delegating to an agent is a principal–agent problem: its report on the work is a claim.</li>
+<li>A deliverable can look right and be wrong, from an agent or in a journal.</li>
+<li>The better the tool, the less we check: keep a set level of scrutiny, every time.</li>
+<li>Agents work toward the check you give them: they cannot edit the checks, and the numbers you expect stay out of the brief.</li>
+<li>Sort each claim as exact, sourced or judgment: recompute it, look it up, or decide.</li>
+<li>A second check counts when it is independent: a fresh session, other information, another method or model.</li>
+<li>Check the checker: confirm what it flags, and read the disagreements and a random sample of what passed.</li>
+<li>In your code: assertions of several kinds, and a look block for the end of the project.</li>
+</ol>
+<p>For homework, the session page has two reference tables: <a href="10-verification.html#checks-reference">checks by kind of error</a> and <a href="10-verification.html#checks-by-task">checks by task</a>.</p>
+<aside class="notes">
+<p>Eight lines. The page has the details, and the two tables at the end of the page are the ones to keep open while doing homework.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="practice" class="slide level2">
+<h2>Practice</h2>
+<p>Six exercises on the session page, with solutions behind a click.</p>
+<ul>
+<li><strong>1–2</strong> Exact claims, one line of R each</li>
+<li><strong>3–4</strong> The checker: run it; give it the script and compare</li>
+<li><strong>5</strong> Plant three errors and count what a reviewer finds</li>
+<li><strong>6</strong> A claim-by-claim check of an AI summary of a paper you know</li>
+</ul>
+
+
+</section>
+    </div>
+  <div class="quarto-auto-generated-content" style="display: none;">
+<div class="footer footer-default">
+<p>AEM 6850 · Session 10</p>
+</div>
+</div></div>
+
+  <script>window.backupDefine = window.define; window.define = undefined;</script>
+  <script src="../../site_libs/revealjs/dist/reveal.js"></script>
+  <!-- reveal.js plugins -->
+  <script src="../../site_libs/revealjs/plugin/quarto-line-highlight/line-highlight.js"></script>
+  <script src="../../site_libs/revealjs/plugin/pdf-export/pdfexport.js"></script>
+  <script src="../../site_libs/revealjs/plugin/reveal-menu/menu.js"></script>
+  <script src="../../site_libs/revealjs/plugin/reveal-menu/quarto-menu.js"></script>
+  <script src="../../site_libs/revealjs/plugin/quarto-support/support.js"></script>
+  
+
+  <script src="../../site_libs/revealjs/plugin/notes/notes.js"></script>
+  <script src="../../site_libs/revealjs/plugin/search/search.js"></script>
+  <script src="../../site_libs/revealjs/plugin/zoom/zoom.js"></script>
+  <script src="../../site_libs/revealjs/plugin/math/math.js"></script>
+  <script>window.define = window.backupDefine; window.backupDefine = undefined;</script>
+
+  <script>
+
+      // Full list of configuration options available at:
+      // https://revealjs.com/config/
+      Reveal.initialize({
+'controlsAuto': true,
+'previewLinksAuto': false,
+'pdfSeparateFragments': false,
+'autoAnimateEasing': "ease",
+'autoAnimateDuration': 1,
+'autoAnimateUnmatched': true,
+'jumpToSlide': true,
+'menu': {"side":"left","useTextContentForMissingTitles":true,"markers":false,"loadIcons":false,"custom":[{"title":"Tools","icon":"<i class=\"fas fa-gear\"></i>","content":"<ul class=\"slide-menu-items\">\n<li class=\"slide-tool-item active\" data-item=\"0\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.fullscreen(event)\"><kbd>f</kbd> Fullscreen</a></li>\n<li class=\"slide-tool-item\" data-item=\"1\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.speakerMode(event)\"><kbd>s</kbd> Speaker View</a></li>\n<li class=\"slide-tool-item\" data-item=\"2\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.overview(event)\"><kbd>o</kbd> Slide Overview</a></li>\n<li class=\"slide-tool-item\" data-item=\"3\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.togglePdfExport(event)\"><kbd>e</kbd> PDF Export Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"4\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.toggleScrollView(event)\"><kbd>r</kbd> Scroll View Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"5\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.keyboardHelp(event)\"><kbd>?</kbd> Keyboard Help</a></li>\n</ul>"}],"openButton":true},
+'smaller': false,
+ 
+        // Display controls in the bottom right corner
+        controls: false,
+
+        // Help the user learn the controls by providing hints, for example by
+        // bouncing the down arrow when they first encounter a vertical slide
+        controlsTutorial: false,
+
+        // Determines where controls appear, "edges" or "bottom-right"
+        controlsLayout: 'edges',
+
+        // Visibility rule for backwards navigation arrows; "faded", "hidden"
+        // or "visible"
+        controlsBackArrows: 'faded',
+
+        // Display a presentation progress bar
+        progress: true,
+
+        // Display the page number of the current slide
+        slideNumber: 'c/t',
+
+        // 'all', 'print', or 'speaker'
+        showSlideNumber: 'all',
+
+        // Add the current slide number to the URL hash so that reloading the
+        // page/copying the URL will return you to the same slide
+        hash: true,
+
+        // Start with 1 for the hash rather than 0
+        hashOneBasedIndex: false,
+
+        // Flags if we should monitor the hash and change slides accordingly
+        respondToHashChanges: true,
+
+        // Push each slide change to the browser history
+        history: false,
+
+        // Enable keyboard shortcuts for navigation
+        keyboard: true,
+
+        // Enable the slide overview mode
+        overview: true,
+
+        // Disables the default reveal.js slide layout (scaling and centering)
+        // so that you can use custom CSS layout
+        disableLayout: false,
+
+        // Vertical centering of slides
+        center: false,
+
+        // Enables touch navigation on devices with touch input
+        touch: true,
+
+        // Loop the presentation
+        loop: false,
+
+        // Change the presentation direction to be RTL
+        rtl: false,
+
+        // see https://revealjs.com/vertical-slides/#navigation-mode
+        navigationMode: 'linear',
+
+        // Randomizes the order of slides each time the presentation loads
+        shuffle: false,
+
+        // Turns fragments on and off globally
+        fragments: true,
+
+        // Flags whether to include the current fragment in the URL,
+        // so that reloading brings you to the same fragment position
+        fragmentInURL: false,
+
+        // Flags if the presentation is running in an embedded mode,
+        // i.e. contained within a limited portion of the screen
+        embedded: false,
+
+        // Flags if we should show a help overlay when the questionmark
+        // key is pressed
+        help: true,
+
+        // Flags if it should be possible to pause the presentation (blackout)
+        pause: true,
+
+        // Flags if speaker notes should be visible to all viewers
+        showNotes: false,
+
+        // Global override for autoplaying embedded media (null/true/false)
+        autoPlayMedia: null,
+
+        // Global override for preloading lazy-loaded iframes (null/true/false)
+        preloadIframes: null,
+
+        // Number of milliseconds between automatically proceeding to the
+        // next slide, disabled when set to 0, this value can be overwritten
+        // by using a data-autoslide attribute on your slides
+        autoSlide: 0,
+
+        // Stop auto-sliding after user input
+        autoSlideStoppable: true,
+
+        // Use this method for navigation when auto-sliding
+        autoSlideMethod: null,
+
+        // Specify the average time in seconds that you think you will spend
+        // presenting each slide. This is used to show a pacing timer in the
+        // speaker view
+        defaultTiming: null,
+
+        // Enable slide navigation via mouse wheel
+        mouseWheel: false,
+
+        // The display mode that will be used to show slides
+        display: 'block',
+
+        // Hide cursor if inactive
+        hideInactiveCursor: true,
+
+        // Time before the cursor is hidden (in ms)
+        hideCursorTime: 5000,
+
+        // Opens links in an iframe preview overlay
+        previewLinks: false,
+
+        // Transition style (none/fade/slide/convex/concave/zoom)
+        transition: 'none',
+
+        // Transition speed (default/fast/slow)
+        transitionSpeed: 'default',
+
+        // Transition style for full page slide backgrounds
+        // (none/fade/slide/convex/concave/zoom)
+        backgroundTransition: 'none',
+
+        // Number of slides away from the current that are visible
+        viewDistance: 3,
+
+        // Number of slides away from the current that are visible on mobile
+        // devices. It is advisable to set this to a lower number than
+        // viewDistance in order to save resources.
+        mobileViewDistance: 2,
+
+        // The "normal" size of the presentation, aspect ratio will be preserved
+        // when the presentation is scaled to fit different resolutions. Can be
+        // specified using percentage units.
+        width: 1050,
+
+        height: 700,
+
+        // Factor of the display size that should remain empty around the content
+        margin: 0.1,
+
+        math: {
+          mathjax: 'https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js',
+          config: 'TeX-AMS_HTML-full',
+          tex2jax: {
+            inlineMath: [['\\(','\\)']],
+            displayMath: [['\\[','\\]']],
+            balanceBraces: true,
+            processEscapes: false,
+            processRefs: true,
+            processEnvironments: true,
+            preview: 'TeX',
+            skipTags: ['script','noscript','style','textarea','pre','code'],
+            ignoreClass: 'tex2jax_ignore',
+            processClass: 'tex2jax_process'
+          },
+        },
+
+        // reveal.js plugins
+        plugins: [QuartoLineHighlight, PdfExport, RevealMenu, QuartoSupport,
+
+          RevealMath,
+          RevealNotes,
+          RevealSearch,
+          RevealZoom
+        ]
+      });
+    </script>
+    
+    <script>
+      // htmlwidgets need to know to resize themselves when slides are shown/hidden.
+      // Fire the "slideenter" event (handled by htmlwidgets.js) when the current
+      // slide changes (different for each slide format).
+      (function () {
+        // dispatch for htmlwidgets
+        function fireSlideEnter() {
+          const event = window.document.createEvent("Event");
+          event.initEvent("slideenter", true, true);
+          window.document.dispatchEvent(event);
+        }
+
+        function fireSlideChanged(previousSlide, currentSlide) {
+          fireSlideEnter();
+
+          // dispatch for shiny
+          if (window.jQuery) {
+            if (previousSlide) {
+              window.jQuery(previousSlide).trigger("hidden");
+            }
+            if (currentSlide) {
+              window.jQuery(currentSlide).trigger("shown");
+            }
+          }
+        }
+
+        // hookup for slidy
+        if (window.w3c_slidy) {
+          window.w3c_slidy.add_observer(function (slide_num) {
+            // slide_num starts at position 1
+            fireSlideChanged(null, w3c_slidy.slides[slide_num - 1]);
+          });
+        }
+
+      })();
+    </script>
+
+    <script id="quarto-html-after-body" type="application/javascript">
+      window.document.addEventListener("DOMContentLoaded", function (event) {
+        const tabsets =  window.document.querySelectorAll(".panel-tabset-tabby")
+        tabsets.forEach(function(tabset) {
+          const tabby = new Tabby('#' + tabset.id);
+        });
+        const isCodeAnnotation = (el) => {
+          for (const clz of el.classList) {
+            if (clz.startsWith('code-annotation-')) {                     
+              return true;
+            }
+          }
+          return false;
+        }
+        const onCopySuccess = function(e) {
+          // button target
+          const button = e.trigger;
+          // don't keep focus
+          button.blur();
+          // flash "checked"
+          button.classList.add('code-copy-button-checked');
+          var currentTitle = button.getAttribute("title");
+          button.setAttribute("title", "Copied!");
+          let tooltip;
+          if (window.bootstrap) {
+            button.setAttribute("data-bs-toggle", "tooltip");
+            button.setAttribute("data-bs-placement", "left");
+            button.setAttribute("data-bs-title", "Copied!");
+            tooltip = new bootstrap.Tooltip(button, 
+              { trigger: "manual", 
+                customClass: "code-copy-button-tooltip",
+                offset: [0, -8]});
+            tooltip.show();    
+          }
+          setTimeout(function() {
+            if (tooltip) {
+              tooltip.hide();
+              button.removeAttribute("data-bs-title");
+              button.removeAttribute("data-bs-toggle");
+              button.removeAttribute("data-bs-placement");
+            }
+            button.setAttribute("title", currentTitle);
+            button.classList.remove('code-copy-button-checked');
+          }, 1000);
+          // clear code selection
+          e.clearSelection();
+        }
+        const getTextToCopy = function(trigger) {
+          const outerScaffold = trigger.parentElement.cloneNode(true);
+          const codeEl = outerScaffold.querySelector('code');
+          for (const childEl of codeEl.children) {
+            if (isCodeAnnotation(childEl)) {
+              childEl.remove();
+            }
+          }
+          return codeEl.innerText;
+        }
+        const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+          text: getTextToCopy
+        });
+        clipboard.on('success', onCopySuccess);
+        if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+          const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+            text: getTextToCopy,
+            container: window.document.getElementById('quarto-embedded-source-code-modal')
+          });
+          clipboardModal.on('success', onCopySuccess);
+        }
+          var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+          var mailtoRegex = new RegExp(/^mailto:/);
+            var filterRegex = new RegExp("https:\/\/arielortizbobea\.github\.io\/aem6850\/");
+          var isInternal = (href) => {
+              return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+          }
+          // Inspect non-navigation links and adorn them if external
+         var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+          for (var i=0; i<links.length; i++) {
+            const link = links[i];
+            if (!isInternal(link.href)) {
+              // undo the damage that might have been done by quarto-nav.js in the case of
+              // links that we want to consider external
+              if (link.dataset.originalHref !== undefined) {
+                link.href = link.dataset.originalHref;
+              }
+                // target, if specified
+                link.setAttribute("target", "_blank");
+                if (link.getAttribute("rel") === null) {
+                  link.setAttribute("rel", "noopener");
+                }
+            }
+          }
+        function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+          const config = {
+            allowHTML: true,
+            maxWidth: 500,
+            delay: 100,
+            arrow: false,
+            appendTo: function(el) {
+                return el.closest('section.slide') || el.parentElement;
+            },
+            interactive: true,
+            interactiveBorder: 10,
+            theme: 'light-border',
+            placement: 'bottom-start',
+          };
+          if (contentFn) {
+            config.content = contentFn;
+          }
+          if (onTriggerFn) {
+            config.onTrigger = onTriggerFn;
+          }
+          if (onUntriggerFn) {
+            config.onUntrigger = onUntriggerFn;
+          }
+            config['offset'] = [0,0];
+            config['maxWidth'] = 700;
+          window.tippy(el, config); 
+        }
+        const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+        for (var i=0; i<noterefs.length; i++) {
+          const ref = noterefs[i];
+          tippyHover(ref, function() {
+            // use id or data attribute instead here
+            let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+            try { href = new URL(href).hash; } catch {}
+            const id = href.replace(/^#\/?/, "");
+            const note = window.document.getElementById(id);
+            if (note) {
+              return note.innerHTML;
+            } else {
+              return "";
+            }
+          });
+        }
+        const findCites = (el) => {
+          const parentEl = el.parentElement;
+          if (parentEl) {
+            const cites = parentEl.dataset.cites;
+            if (cites) {
+              return {
+                el,
+                cites: cites.split(' ')
+              };
+            } else {
+              return findCites(el.parentElement)
+            }
+          } else {
+            return undefined;
+          }
+        };
+        var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+        for (var i=0; i<bibliorefs.length; i++) {
+          const ref = bibliorefs[i];
+          const citeInfo = findCites(ref);
+          if (citeInfo) {
+            tippyHover(citeInfo.el, function() {
+              var popup = window.document.createElement('div');
+              citeInfo.cites.forEach(function(cite) {
+                var citeDiv = window.document.createElement('div');
+                citeDiv.classList.add('hanging-indent');
+                citeDiv.classList.add('csl-entry');
+                var biblioDiv = window.document.getElementById('ref-' + cite);
+                if (biblioDiv) {
+                  citeDiv.innerHTML = biblioDiv.innerHTML;
+                }
+                popup.appendChild(citeDiv);
+              });
+              return popup.innerHTML;
+            });
+          }
+        }
+      });
+      </script>
+    
+
+</body></html>
