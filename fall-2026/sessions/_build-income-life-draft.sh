@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# Rebuilds the session 11 draft project and the zip students download.
+# Rebuilds the session 11 draft project, the zip students download, and
+# a copy of the paper, data/income-life-draft.pdf, that the slides link.
 #
 #   fall-2026/sessions/_build-income-life-draft.sh
 #
@@ -29,4 +30,5 @@ cp -R "$SRC" "$TMP/income-life-draft"
 find "$TMP" -name .DS_Store -delete
 (cd "$TMP" && zip -qrX income-life-draft.zip income-life-draft)
 mv "$TMP/income-life-draft.zip" data/income-life-draft.zip
+cp "$SRC/paper/draft.pdf" data/income-life-draft.pdf
 unzip -l data/income-life-draft.zip

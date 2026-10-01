@@ -183,3 +183,9 @@ sweep finds them. The source folder is `sessions/_income-life-draft/`;
 `sessions/_build-income-life-draft.sh` reruns the code, compiles the
 paper and rebuilds the zip.
 
+## `income-life-draft.pdf`
+
+The draft paper from the zip above, `paper/draft.pdf`, posted on its
+own so the slides can link it. The build script copies it here each
+time it rebuilds the zip.
+
