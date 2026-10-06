@@ -35,7 +35,7 @@ One figure, and a note.
 It is your HW1 figure with one new panel. Panel **A** is unchanged.
 Panel **B** is new: wind speed across the wind monitors, each day,
 summarised exactly the way panel A summarises PM2.5. Panel **C** is
-HW1's heat map, unchanged.
+HW1's heat map, relettered but otherwise unchanged.
 
 ![Target figure](https://arielortizbobea.github.io/assets/data/hw2_target.png)
 
@@ -105,7 +105,7 @@ protecting at read time, the way `Site ID` did in HW1.
 
 > <https://arielortizbobea.github.io/assets/data/epa_pm25_la_fires_2024_2025.csv>
 
-## The rules the figures follow
+## The rules the figure follows
 
 1. **Everything HW1's figure encoded still holds:** the window, what a
    monitor is, the 60-of-90-days rule, distance from the Eaton Fire, the
@@ -129,11 +129,11 @@ protecting at read time, the way `Site ID` did in HW1.
    shared set of margins so the three x axes line up. The red line runs
    from the top of A to the bottom of C.
 8. **Output:** `figures/hw2_target.png`, 183 × 270 mm, 300 dpi. The page
-   is taller than HW1's so the heat map keeps its row height.
+   is taller than HW1's to make room for the third row.
 
 ## How to organise it
 
-Your HW1 layout, plus one script and the note:
+Your HW1 layout, unchanged, plus the note:
 
 | file | job |
 |:--|:--|
@@ -247,7 +247,7 @@ session 10, and the AI rule below covers the rest.
 
 | task | functions | session |
 |:--|:--|:--|
-| get the second file | `download.file()`, `file.exists()` | [3](https://arielortizbobea.github.io/aem6850/fall-2026/sessions/03-r-essentials-ii.html), [6](https://arielortizbobea.github.io/aem6850/fall-2026/sessions/06-how-to-code.html) |
+| get the second file, into a folder you make | `download.file()`, `file.exists()`, `dir.create()` | [3](https://arielortizbobea.github.io/aem6850/fall-2026/sessions/03-r-essentials-ii.html), [6](https://arielortizbobea.github.io/aem6850/fall-2026/sessions/06-how-to-code.html) |
 | read it, protecting three columns | `read.csv()` with `colClasses` | [3](https://arielortizbobea.github.io/aem6850/fall-2026/sessions/03-r-essentials-ii.html) |
 | an ISO date | `as.Date()` needs no `format` | [2](https://arielortizbobea.github.io/aem6850/fall-2026/sessions/02-r-essentials.html) |
 | build the key, check it | `paste()`, `anyDuplicated()`, `stopifnot()` | [3](https://arielortizbobea.github.io/aem6850/fall-2026/sessions/03-r-essentials-ii.html), [6](https://arielortizbobea.github.io/aem6850/fall-2026/sessions/06-how-to-code.html) |
@@ -278,8 +278,11 @@ HW1's `Site ID`. You do not need it this week, but it is how HW3 will
 match a wind monitor to a PM2.5 monitor at the same site.
 
 **Restart and source before you submit.** Session > Restart R, then
-`source("code/run_everything.R")`. It must run top to bottom, with both
-files absent from `data/`, and write the figure.
+`source("code/run_everything.R")`. It must run top to bottom and write
+the figure. Test it the way the grader will: **delete the `data/` and
+`data_clean/` folders**, not just the files inside them. A fresh clone
+of your repo has neither, so your script has to create them before it
+downloads or saves anything.
 
 ## How to submit
 
@@ -338,7 +341,7 @@ buttons; session 7 shows all three ways.
 Leave `data/` and `data_clean/` out; the `.gitignore` in your repo
 already does that for you. You do not need to commit the figures either.
 The grader clones your repo fresh, runs `code/run_everything.R`, which
-downloads both CSVs and rebuilds everything, and grades the figures your
+downloads both CSVs and rebuilds everything, and grades the figure your
 code draws.
 
 **Before you push for the last time:** Session > Restart R, then
@@ -362,8 +365,9 @@ chat tier:
   against the code you pasted.
 - **Debug the shrinking text.** Describe what you see. Ask why. Then check
   the reason in `?layout`.
-- **Draft the README.** It can write prose from your code. Your note it
-  cannot write, see above.
+- **Explain an argument you have not used.** Paste your `layout()` call
+  and ask what `heights` does to the panels, or why the labels shrank.
+  Then check the answer in `?layout` before you believe it.
 - **Ask where it could go wrong quietly.** Give it the wind file's header
   and the steps your script takes, and ask which mistakes would still
   draw a figure. Then ask for one line that would catch each. Read them
