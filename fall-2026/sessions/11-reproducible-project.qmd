@@ -80,7 +80,7 @@ By the end of this session you can:
    replicability · journal policies · the AEA's checks]{.topics}
 2. **The replication package**\
    [Contents and README · data availability · package versions with
-   renv · a test on another computer]{.topics}
+   renv · a test on another computer · submitting homework]{.topics}
 3. **GitHub and DOIs for replication packages**\
    [Git tags for submitted versions · publishing only the tagged version
    · the AEA deposit · DOIs · licenses]{.topics}
@@ -533,6 +533,7 @@ CFR, 2022](https://doi.org/10.1561/104.00000053)).
 - Data availability and restricted data
 - Package versions with renv
 - A test run on another computer
+- Submitting homework the same way
 
 :::
 
@@ -837,6 +838,53 @@ documentation you provide, without interacting with you in any other
 way." A fresh clone in a new folder on your own laptop catches missing
 files and paths that exist only on your disk; with renv, it also starts
 from an empty package library. Someone else's laptop catches the rest.
+
+:::
+
+## Submitting homework as a small replication package {#homework .smaller}
+
+- The grader opens your homework repository in a fresh R session and
+  sources `code/run_everything.R`. Nothing else.
+- `run_everything.R` runs the numbered scripts in `code/` in order.
+- The scripts read or download the data and write every figure, table
+  and number to a file.
+- Paths start at the project folder: `"data/..."`, never
+  `"/Users/you/..."`.
+- A short README says what each script does and what it writes.
+- Before you submit, clone your repository into a new folder, restart
+  R, and source `run_everything.R` there.
+- Do not commit `data/` or `data_clean/`: the code rebuilds them. The
+  last commit on `main` at the deadline is the one graded.
+
+::: {.content-visible when-format="revealjs"}
+
+::: {.notes}
+The homework rubric's replicability points come down to the second-last
+bullet: it runs in a clean copy, or it does not. A clone in a new
+folder is the cheapest test of what the grader will do.
+:::
+
+:::
+
+::: {.content-hidden when-format="revealjs"}
+
+Each homework repository works like the packages in this part, on a
+small scale. The grader does what a journal's data editor does: it
+starts from your repository, not your laptop, opens it in a fresh R
+session, sources `code/run_everything.R`, and compares what the code
+writes with what the assignment asks for. A script that depends on an
+object left in your environment, a file on your desktop, or a step you
+did by hand fails there even when it works for you.
+
+The most direct test is the one on the previous slide: clone your
+repository into a new folder (`git clone` and the repository's
+address), open its `.Rproj`, restart R, and source `run_everything.R`.
+If it stops, the message names what the clean copy is missing. Raw
+data stay out of the repository when the code downloads them, and
+anything computed goes in `data_clean/`, which the code rebuilds; the
+assignment says which files to commit. The collection script takes the
+last commit on the main branch at or before the deadline, so push
+before the deadline and check on GitHub that the commit is there.
 
 :::
 

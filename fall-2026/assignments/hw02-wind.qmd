@@ -1,6 +1,6 @@
 ---
 title: "HW2 · What was the wind doing?"
-subtitle: "Out Thu Sep 17 · due Thu Sep 24, 8:40 am"
+subtitle: "Out Wed Oct 7 · due Wed Oct 14, 11:59 pm"
 pagetitle: "AEM 6850 · HW2"
 ---
 
@@ -55,10 +55,17 @@ The format is below.
 
 ## What you get
 
-**Your HW1 project.** This assignment builds on it. Copy the whole
-project, rename `hw1.Rproj` to `hw2.Rproj`, and work from there. If your
-HW1 did not run, start from the posted solution instead and say so in
-the first line of your note.
+**Your own HW1, already in the repo.** Clone `hw2-<your username>` and
+your HW1 submission is sitting there as the first commit, with
+`hw1.Rproj` renamed `hw2.Rproj`. Nothing to download, nothing to copy
+across. Start from what you wrote.
+
+No solution to HW1 is posted. If your figure did not match the HW1
+target, closing that gap is part of this assignment: the target is still
+on [the HW1 page](hw01-air.qmd) along with the rules it follows, and
+`CHANGES.md` is where you say what you repaired. Open your PNG and the
+target side by side at the same size and work through the differences.
+That comparison is the assignment as much as the wind panel is.
 
 **The wind data.** One file, cut from EPA's
 [pre-generated annual files](https://aqs.epa.gov/aqsweb/airdata/download_files.html)
@@ -145,12 +152,16 @@ the length of your diff.
 
 ## The note
 
-`CHANGES.md`, at the project root, half a page at most, in three parts:
+`CHANGES.md`, at the project root, half a page at most, written in your
+own words:
 
 ```
 # What changed from HW1
 
-Base: my own HW1 submission | the posted solution.
+Base: my own HW1 submission.
+
+## Files and folders
+- ...what you renamed, moved, split or added, and why...
 
 ## code/1_get_clean_data.R
 - ...one bullet per change, with the reason...
@@ -161,6 +172,13 @@ Base: my own HW1 submission | the posted solution.
 ## code/3_plot_scatter.R (new)
 - ...
 
+## Layout
+- ...page size, the three rows and their heights, margins, what you had
+  to change so the panels still line up and the labels still fit...
+
+## What I fixed from my HW1
+- ...anything your feedback flagged, and what you did about it...
+
 ## What I checked
 - ...
 
@@ -169,6 +187,10 @@ Base: my own HW1 submission | the posted solution.
 - Used for: what you asked them to do
 - Checked: what you verified, and how
 ```
+
+Prose, not a diff. "Moved the three scripts into `code/` so the project
+matches the layout the assignment asks for" is a sentence; a list of
+changed line numbers is not.
 
 The grader reads the note first, then compares your HW2 code with your
 HW1 code. Every change in the code should be in the note, and nothing in
@@ -220,20 +242,50 @@ match a wind monitor to a PM2.5 monitor at the same site.
 `source("code/run_everything.R")`. It must run top to bottom, with both
 files absent from `data/`, and write both figures.
 
-## What to submit
+## How to submit
 
-Seven files, committed to your HW2 repository:
+Your repository is **`hw2-<your github username>`**, inside the course
+organization. It is already there, and your HW1 submission is already in
+it. Find it at <https://github.com/aem6850-cornell> or in the
+repositories list on your GitHub home page.
+
+This is the first assignment you submit with git. Three commands, from
+[session 7](https://arielortizbobea.github.io/aem6850/fall-2026/sessions/07-git.html):
+
+```bash
+git clone https://github.com/aem6850-cornell/hw2-<your username>.git
+# ... work, as often as you like ...
+git add -A
+git commit -m "what you changed"
+git push
+```
+
+Commit as you go. The grader reads the last commit pushed before the
+deadline, and a history of small commits makes your `CHANGES.md` easy to
+believe. RStudio's Git pane and VS Code do the same three steps with
+buttons; session 7 shows all three ways.
+
+**What has to be in that final commit:**
 
 - `code/1_get_clean_data.R`
 - `code/2_plot_figure.R`
 - `code/3_plot_scatter.R`
 - `code/run_everything.R`
-- `figures/hw2_target.png`
-- `figures/hw2_scatter.png`
 - `CHANGES.md`
 
-Do not upload `data/` or `data_clean/`. The grader runs your scripts from
-a fresh clone and they download and rebuild everything.
+Leave `data/` and `data_clean/` out; the `.gitignore` in your repo
+already does that for you. You do not need to commit the figures either.
+The grader clones your repo fresh, runs `code/run_everything.R`, which
+downloads both CSVs and rebuilds everything, and grades the figures your
+code draws.
+
+**Before you push for the last time:** Session > Restart R, then
+`source("code/run_everything.R")`. If it writes both figures with no
+errors, you are done.
+
+**Stuck on git?** Office hours, or ask in the course channel. Do not let
+a push problem cost you the deadline: a repo that will not push is a
+problem to raise on the day, not the night before.
 
 ## AI on this one
 
@@ -300,7 +352,7 @@ matching. Panel C must still be HW1's panel B, cell for cell.
 
 | | |
 |:--|:--|
-| **3** | Every change in the code is in the note with its reason, and nothing in the note is absent from the code. What was checked is stated. The disclosure names the tools, the uses and the checks. |
-| **2** | One change missing or unexplained, or the checks vague. |
+| **3** | Every change in the code is in the note with its reason, and nothing in the note is absent from the code. Files that moved, split or were renamed are named. The layout changes are described. What was checked is stated. The disclosure names the tools, the uses and the checks. |
+| **2** | One change missing or unexplained, or the file and layout changes glossed over, or the checks vague. |
 | **1** | The note is present but does not describe the changes, or the disclosure is missing. |
 | **0** | No note. |
