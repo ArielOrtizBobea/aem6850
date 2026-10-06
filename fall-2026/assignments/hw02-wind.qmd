@@ -382,13 +382,28 @@ an integrity violation.
 
 ## Rubric
 
-**12 points.** Four dimensions, three points each. The grader clones
+**15 points.** Five dimensions, three points each. The grader clones
 your repo into an empty folder, sources `code/run_everything.R` in a
 fresh R session, compares the figure with the target, reads the checks
 your script makes, and reads your note against your commits, the first
 of which is your HW1.
 
-### Replicability (3 points)
+### Similarity (3 points)
+
+| | |
+|:--|:--|
+| **3** | The figure is virtually identical to the target. One has to really pay attention to see any difference. |
+| **2** | One or two clear differences from the target: panel B on the wrong scale or missing a summary, the red line stopping short, labels missing, a panel letter missing. Wind speed left in knots lands here, where the line has the right shape and sits a little over half as high as it should. |
+| **1** | Three or more clear differences, or a panel missing, or the series does not line up with the calendar, so the wind peak falls on a day other than 7 January. |
+| **0** | No figure, or a figure of something else. |
+
+Similarity is judged on what the figure encodes, not on pixel-level
+matching. Font sizes, margins and tick placement are not differences.
+Panel C is judged against the HW1 target: if your heat map was wrong in
+HW1, repairing it is part of this assignment and you are not scored
+against your own version.
+
+### Reproducibility (3 points)
 
 | | |
 |:--|:--|
@@ -397,34 +412,52 @@ of which is your HW1.
 | **1** | The code requires several edits to run, or runs with errors, or does not produce the figure. |
 | **0** | The code does not run. |
 
-### Similarity (3 points)
+Two things cost points here every year. **Absolute paths:**
+`read.csv("/Users/you/Desktop/hw2/data/...")` works on your laptop and
+nowhere else; open the `.Rproj` and use `"data/..."`. **Session
+leftovers:** a script that works because an object is still in your
+environment from twenty minutes ago is not a script that works. Restart
+R and source it before you push. Every time.
+
+### Coding structure (3 points)
 
 | | |
 |:--|:--|
-| **3** | The figure is virtually identical to the target. One has to really pay attention to see any difference. |
-| **2** | The figure is similar but has some clear differences from the target: panel B on the wrong scale or missing a summary, the red line stopping short, labels missing. |
-| **1** | The figure is clearly different from the target. |
-| **0** | No figure. |
-
-Similarity is judged on what the figure encodes, not on pixel-level
-matching. Panel C is judged against the HW1 target: if your heat map was wrong in
-HW1, repairing it is part of this assignment and you are not scored
-against your own version.
-
-### Coding (3 points)
-
-| | |
-|:--|:--|
-| **3** | The code (1) has clear and logical sections, (2) has a clearly identified parameter section that can be modified to produce slightly different versions of the output, including the new file, the parameter code and the unit conversion, (3) is well annotated, (4) is concise but spacious: one drawing for panels A and B, not two, and (5) checks its own data where this week's data can go wrong, with at least one check that stops the script and that could have failed on a mistake the student could make. |
-| **2** | The code has at most one of the following: (1) no clear structure, (2) parameters hard-coded within the core of the script, (3) missing key annotations, (4) too dense or too verbose, (5) no check beyond the one rule 2 already asks for, or only checks that cannot fail: a row count compared with a number taken from the same run, a bound so wide that both the right and the wrong answer pass, a test that the line above ran. |
+| **3** | The code (1) has clear and logical sections, (2) has a clearly identified parameter section that can be modified to produce slightly different versions of the output, including the new file, the parameter code and the unit conversion, (3) is well annotated, and (4) is concise but spacious: one drawing for panels A and B, not two. |
+| **2** | The code has at most one of the following: (1) no clear structure, (2) parameters hard-coded within the core of the script, (3) missing key annotations, (4) too dense or too verbose. |
 | **1** | The code has more than one of those. |
 | **0** | There is no code, or the code cannot perform the basic steps needed to generate the output. |
+
+"A clearly identified parameter section" means the URLs, the file names,
+the dates, the parameter code, the knots conversion and the layout
+heights live together at the top of each script, named, and are used by
+name below.
+
+### Verification (3 points)
+
+| | |
+|:--|:--|
+| **3** | The script says what it expects of the data and stops when the data disagrees, at the places this week's data can go wrong. At least one check could have failed on a mistake you could actually have made, and `CHANGES.md` says for each check what it would have caught. |
+| **2** | Checking is thin: one place covered and the obvious one left open, or a bound so wide that the right answer and the wrong answer both pass, or the note lists the checks without saying what any of them would catch. |
+| **1** | The only check is the one rule 2 already asks for, or every check is one that cannot fail: a row count compared with a number taken from the same run, a test that the line above ran. |
+| **0** | The script makes no check of its own data. |
+
+"Checking as you go" above names the two places that matter this week
+and shows one of them written out. A check earns its point by being able
+to fail.
 
 ### The note and the history (3 points)
 
 | | |
 |:--|:--|
-| **3** | The repo's first commit is still the one the course made, and your HW2 scripts are that code edited: your object names, your section headers and your comments are still in them. The work arrives in separable commits in a sensible order, each message naming what that commit did. `CHANGES.md` gives every change with its reason, names the files that moved and the layout changes, says for each check what it would have caught, and discloses the tools, the uses and the checks. |
-| **2** | One of those falls short: the whole assignment arrives in a single commit, or the messages say only "update", or the order contradicts the note, or a change in the code is missing from the note, or the file and layout changes are glossed over, or the checks are stated vaguely. A push problem you raised on the day is not counted here. |
+| **3** | The repo's first commit is still the one the course made, and your HW2 scripts are that code edited: your object names, your section headers and your comments are still in them. The work arrives in separable commits in a sensible order, each message naming what that commit did. `CHANGES.md` gives every change with its reason, names the files that moved and the layout changes, and discloses the tools, the uses and the checks. |
+| **2** | One of those falls short: the whole assignment arrives in a single commit, or the messages say only "update", or the order contradicts the note, or a change in the code is missing from the note, or the file and layout changes are glossed over. A push problem you raised on the day is not counted here. |
 | **1** | Two or more fall short. Also here, whatever else is true: your HW2 scripts share nothing with the first commit's, not an object name, not a section header, not a comment, so they did not grow out of your HW1. Files you moved from the repo root into `code/` count as moved, not replaced. |
 | **0** | No note, or you pushed no commit of your own. Also here: the repo's first commit is no longer the one the course made, because the repository was replaced or the history rewritten. If that first commit holds no R code, because you did not submit HW1 or your HW1 arrived as a zip, say so in the first line of `CHANGES.md`: you have nothing to build on, and this dimension is then scored on your commits and your note alone. |
+
+### The one thing that scores below zero
+
+AI use is recommended and must be disclosed. Undisclosed AI use, and
+code taken from anyone else without saying whose, are misrepresentation
+under the syllabus and are treated as integrity violations rather than
+as grading matters.
