@@ -48,3 +48,8 @@ image_write(image_background(row, "white"), file.path(img, "F08-three-versions.p
 pair <- image_append(c(thumb(agent, 520, "Claude Code's figure"), gap,
                        thumb(target, 520, "Target")))
 image_write(image_background(pair, "white"), file.path(img, "F09-matched-and-target.png"))
+
+# 4). Claude Code's figure alone, for the table of checks ----
+system2("pdftoppm", c("-r", 150, "-png", "-singlefile",
+                      file.path(tests, "brute", "figure1_brute.pdf"),
+                      file.path(img, "F10-matched")))

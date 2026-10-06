@@ -959,15 +959,17 @@ for fonts that are not embedded.]{.source}
 
 ## The checking script on three versions of Figure 1 {#checker .smaller}
 
-![](figures/12-publication-graphics/F08-three-versions.png){fig-alt="Three versions of Figure 1 side by side: the default code's square page with small black-and-red maps, the figure Claude Code matched to a picture in Part 2, and the target."}
-
-| Check | Default code | Claude Code (Part 2) | Target |
-|:------------|:-----|:-----|:-----|
-| width | FAIL, 177.8 mm | PASS | PASS |
-| fonts embedded | FAIL, 0 of 2 | PASS | PASS |
-| text size | FAIL, up to 9.2 pt | FAIL, up to 7.3 pt | PASS, 6 to 7 pt |
-| panel letters | FAIL, none | FAIL, 7.3 pt | PASS, 8 pt |
-| the other five checks | PASS | PASS | PASS |
+```{=html}
+<table class="versions">
+<colgroup><col style="width:27%"><col style="width:13%"><col style="width:14%"><col style="width:17%"><col style="width:15%"><col style="width:14%"></colgroup>
+<thead><tr><th>Figure</th><th>Width</th><th>Fonts embedded</th><th>Text size</th><th>Panel letters</th><th>Other five checks</th></tr></thead>
+<tbody>
+<tr><td><img src="figures/12-publication-graphics/F02-figure1-default.png" style="height:72px; width:auto; max-width:none; border:1px solid #bbb; margin:0" alt="The default figure: a square page with three small panels."><br>Default code</td><td>FAIL, 177.8 mm</td><td>FAIL, 0 of 2</td><td>FAIL, up to 9.2 pt</td><td>FAIL, none</td><td>PASS</td></tr>
+<tr><td><img src="figures/12-publication-graphics/F10-matched.png" style="height:72px; width:auto; max-width:none; border:1px solid #bbb; margin:0" alt="Claude Code's figure from Part 2."><br>Claude Code (Part 2)</td><td>PASS</td><td>PASS</td><td>FAIL, up to 7.3 pt</td><td>FAIL, 7.3 pt</td><td>PASS</td></tr>
+<tr><td><img src="figures/12-publication-graphics/F01-figure1-nature.png" style="height:72px; width:auto; max-width:none; border:1px solid #bbb; margin:0" alt="The target: Figure 1 for Nature."><br>Target</td><td>PASS</td><td>PASS</td><td>PASS, 6 to 7 pt</td><td>PASS, 8 pt</td><td>PASS</td></tr>
+</tbody>
+</table>
+```
 
 ```{.bash filename="Terminal, in the project folder: one run per PDF"}
 Rscript tools/check_fig.R figures/default/figure1.pdf nature
