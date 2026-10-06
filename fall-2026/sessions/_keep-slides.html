@@ -1,0 +1,15 @@
+<script>
+  // Keep slide-by-slide navigation in narrow windows, such as a side pane.
+  // Reveal switches to a scrolling page when the window is 435 px wide or
+  // less; a width of 0 turns that off.
+  (function () {
+    function keepSlides() {
+      Reveal.configure({ scrollActivationWidth: 0 });
+      Reveal.layout();
+    }
+    window.addEventListener("load", function () {
+      if (!window.Reveal) return;
+      if (Reveal.isReady()) keepSlides(); else Reveal.on("ready", keepSlides);
+    });
+  })();
+</script>
