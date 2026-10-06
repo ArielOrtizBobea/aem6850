@@ -55,6 +55,16 @@ your HW1 submission is sitting there as the first commit, with
 `hw1.Rproj` renamed `hw2.Rproj`. Nothing to download, nothing to copy
 across. Start from what you wrote.
 
+**Building on it is required, and it is graded.** That first commit is
+your HW1 exactly as you handed it in, and HW2 is the change you make to
+it. The grader opens that commit beside your last one. Scripts that
+still carry your object names, your section headers and your comments
+read as yours, however heavily you edited them; scripts deleted and
+replaced by a fresh project do not. How far your HW1 was from the target
+costs you nothing here. If that first commit holds no R code, because
+you did not submit HW1 or your HW1 arrived as a zip, say so in the first
+line of `CHANGES.md` and nothing is held against you.
+
 No solution to HW1 is posted. If your figure did not match the HW1
 target, closing that gap is part of this assignment: the target is still
 on [the HW1 page](hw01-air.qmd) along with the rules it follows, and
@@ -103,7 +113,10 @@ protecting at read time, the way `Site ID` did in HW1.
    red line at 7 January.
 2. **A wind monitor is a site plus a `POC`.** Build the key from the
    three site columns and the POC. It is unique on any given day within
-   parameter 61103, and your script checks that it is.
+   parameter 61103, and your script checks that it is. That test is worth
+   more than it looks: drop the `61103` filter and the file still holds a
+   speed row and a direction row for the same instrument on the same day,
+   so the test stops the script.
 3. **Keep the wind speed rows only**, parameter `61103`.
 4. **Convert knots to km/h**, multiplying by 1.852. The constant lives
    in the parameters block, with its name.
@@ -138,6 +151,47 @@ it twice. Session 6 was about this. It is not a rule, but the Coding score
 looks for it, and the alternative, a copy of panel A with edits, doubles
 the length of your diff.
 
+## Checking as you go
+
+Panel B draws whether or not the numbers behind it are right. Wind speed
+left in knots gives you the same shape, the same 7 January peak, a line
+about half as high, and no error anywhere. Session 10 covered the
+answer: the script says what it expects and stops when the data
+disagrees.
+
+Put a check where this week's data can go wrong, and write it so that it
+could actually fail. The size of the wind numbers is the one that matters
+most. The tips below give you the scale: an ordinary day across the
+network reads 3 to 5 km/h and the Santa Ana reads 13.
+
+```r
+  # after the wind grid is built, in code/1_get_clean_data.R
+  daily <- apply(grid_wind, 2, mean, na.rm = TRUE)
+  stopifnot(median(daily) > 3,    # it is 2.7 if the conversion never ran
+            median(daily) < 8)    # it is 9.1 if it ran twice
+```
+
+In km/h that median is 4.9 and the script carries on. Both bounds can
+fail on a mistake you could actually make, which is what makes the line
+worth writing. It also catches a parameter code mistyped as `61104`,
+where the median comes out above 300.
+
+Rule 2's key test is the other one. It costs one line and it stops the
+script if the `61103` filter never ran. What it cannot see is a filter
+that ran on the wrong code, which is why the two checks are worth having
+together.
+
+**A check that cannot fail earns nothing.** `max(grid_wind) < 150`
+passes on knots and on km/h alike, because the fastest cell in this file
+is 38 km/h. `stopifnot(nrow(w) == 6702)` passes today, says nothing
+about whether what you did to the rows was right, and breaks the week EPA
+regenerates the file.
+
+Printing the number of rows after each step that can drop rows, and the
+number of monitors before and after the 60-of-90 rule, is worth doing
+and worth quoting in `CHANGES.md`. The check the rubric looks for is one
+that stops.
+
 ## The note
 
 `CHANGES.md`, at the project root, half a page at most, written in your
@@ -165,7 +219,7 @@ Base: my own HW1 submission.
 - ...anything your feedback flagged, and what you did about it...
 
 ## What I checked
-- ...
+- ...one line per check: where it sits, and what it would have caught...
 
 ## AI disclosure
 - Tools: which ones, by name
@@ -188,8 +242,8 @@ what you did, in your words.
 
 ## Cheat sheet
 
-Everything you need was covered in sessions 2 to 6, and the AI rule below
-covers the rest.
+Everything you need was covered in sessions 2 to 6, with the checks from
+session 10, and the AI rule below covers the rest.
 
 | task | functions | session |
 |:--|:--|:--|
@@ -200,6 +254,7 @@ covers the rest.
 | monitor × day grid, again | `factor()` with `levels =`, `tapply()`, `apply()` | [3](https://arielortizbobea.github.io/aem6850/fall-2026/sessions/03-r-essentials-ii.html) |
 | one drawing, two panels | `function()` | [6](https://arielortizbobea.github.io/aem6850/fall-2026/sessions/06-how-to-code.html) |
 | three panels, one file | `layout()` with `heights =`, `par(cex = )` | [5](https://arielortizbobea.github.io/aem6850/fall-2026/sessions/05-basic-plots-ii.html) |
+| check what you built | `stopifnot()`, `median()`, a count you print | [10](https://arielortizbobea.github.io/aem6850/fall-2026/sessions/10-verification.html) |
 
 ## Tips
 
@@ -244,9 +299,33 @@ git commit -m "what you changed"
 git push
 ```
 
-Commit as you go. The grader reads the last commit pushed before the
-deadline, and a history of small commits makes your `CHANGES.md` easy to
-believe. RStudio's Git pane and VS Code do the same three steps with
+**Commit in the order you work.** The grader reads `git log` first and
+grades the last commit pushed before the deadline. A reasonable
+sequence:
+
+1. Repair your HW1 figure against the HW1 target. Nothing about wind
+   yet; the project still draws one figure and still runs.
+2. Move the project into the layout above, if it is not already there,
+   and source it from a restarted session.
+3. Add the wind file to `code/1_get_clean_data.R`: the URL, the three
+   character columns, the speed rows, the conversion, the checks. The
+   figure does not change yet.
+4. Turn panel A's drawing into a function and call it once for panel A.
+   The figure is identical to the previous commit's.
+5. Add panel B by calling the same function on the wind grid, with the
+   three-row layout and the longer red line.
+
+Then `CHANGES.md`, written last, from the history you already have.
+Messages like "Repair the percentile lines in panel A" and "Add wind to
+script 1, with the unit and key checks". The number of commits is yours,
+and a step that took two tries is two commits. What is graded is that
+the repair, the data and the drawing are separable and in a sensible
+order, and that each message names what changed. If your HW1 figure
+already matched its target, skip step 1 and say so in the note. The
+whole assignment arriving as one commit costs you under the last
+dimension even when everything in it is right. If a push problem is what
+kept you to one commit, say so on the day and it is not counted against
+you. RStudio's Git pane and VS Code do the same three steps with
 buttons; session 7 shows all three ways.
 
 **What has to be in that final commit:**
@@ -285,6 +364,13 @@ chat tier:
   the reason in `?layout`.
 - **Draft the README.** It can write prose from your code. Your note it
   cannot write, see above.
+- **Ask where it could go wrong quietly.** Give it the wind file's header
+  and the steps your script takes, and ask which mistakes would still
+  draw a figure. Then ask for one line that would catch each. Read them
+  before you keep any: several will pass on this file whatever you did,
+  and one of them will quietly drop rows to make the data agree. Keep the
+  ones that can fail, and say in the disclosure which you asked for and
+  which you wrote.
 
 Three rules, from the syllabus and session 8. **Ask for the script, not
 the answer:** a number a chatbot typed is not a result. **Verify one
@@ -296,10 +382,11 @@ an integrity violation.
 
 ## Rubric
 
-**12 points.** Four dimensions, three points each. The grader opens your
-repo in a fresh R session, sources `code/run_everything.R`, compares the
-figure with the target, and reads your note against the difference
-between your HW1 and HW2 code.
+**12 points.** Four dimensions, three points each. The grader clones
+your repo into an empty folder, sources `code/run_everything.R` in a
+fresh R session, compares the figure with the target, reads the checks
+your script makes, and reads your note against your commits, the first
+of which is your HW1.
 
 ### Replicability (3 points)
 
@@ -319,23 +406,25 @@ between your HW1 and HW2 code.
 | **1** | The figure is clearly different from the target. |
 | **0** | No figure. |
 
-Similarity is judged on what the figures encode, not on pixel-level
-matching. Panel C must still be HW1's panel B, cell for cell.
+Similarity is judged on what the figure encodes, not on pixel-level
+matching. Panel C is judged against the HW1 target: if your heat map was wrong in
+HW1, repairing it is part of this assignment and you are not scored
+against your own version.
 
 ### Coding (3 points)
 
 | | |
 |:--|:--|
-| **3** | The code (1) has clear and logical sections, (2) has a clearly identified parameter section that can be modified to produce slightly different versions of the output, including the new file, the parameter code and the unit conversion, (3) is well annotated, and (4) is concise but spacious: one drawing for panels A and B, not two. |
-| **2** | The code has at most one of the following: (1) no clear structure, (2) parameters hard-coded within the core of the script, (3) missing key annotations, (4) too dense or too verbose. |
+| **3** | The code (1) has clear and logical sections, (2) has a clearly identified parameter section that can be modified to produce slightly different versions of the output, including the new file, the parameter code and the unit conversion, (3) is well annotated, (4) is concise but spacious: one drawing for panels A and B, not two, and (5) checks its own data where this week's data can go wrong, with at least one check that stops the script and that could have failed on a mistake the student could make. |
+| **2** | The code has at most one of the following: (1) no clear structure, (2) parameters hard-coded within the core of the script, (3) missing key annotations, (4) too dense or too verbose, (5) no check beyond the one rule 2 already asks for, or only checks that cannot fail: a row count compared with a number taken from the same run, a bound so wide that both the right and the wrong answer pass, a test that the line above ran. |
 | **1** | The code has more than one of those. |
 | **0** | There is no code, or the code cannot perform the basic steps needed to generate the output. |
 
-### The note (3 points)
+### The note and the history (3 points)
 
 | | |
 |:--|:--|
-| **3** | Every change in the code is in the note with its reason, and nothing in the note is absent from the code. Files that moved, split or were renamed are named. The layout changes are described. What was checked is stated. The disclosure names the tools, the uses and the checks. |
-| **2** | One change missing or unexplained, or the file and layout changes glossed over, or the checks vague. |
-| **1** | The note is present but does not describe the changes, or the disclosure is missing. |
-| **0** | No note. |
+| **3** | The repo's first commit is still the one the course made, and your HW2 scripts are that code edited: your object names, your section headers and your comments are still in them. The work arrives in separable commits in a sensible order, each message naming what that commit did. `CHANGES.md` gives every change with its reason, names the files that moved and the layout changes, says for each check what it would have caught, and discloses the tools, the uses and the checks. |
+| **2** | One of those falls short: the whole assignment arrives in a single commit, or the messages say only "update", or the order contradicts the note, or a change in the code is missing from the note, or the file and layout changes are glossed over, or the checks are stated vaguely. A push problem you raised on the day is not counted here. |
+| **1** | Two or more fall short. Also here, whatever else is true: your HW2 scripts share nothing with the first commit's, not an object name, not a section header, not a comment, so they did not grow out of your HW1. Files you moved from the repo root into `code/` count as moved, not replaced. |
+| **0** | No note, or you pushed no commit of your own. Also here: the repo's first commit is no longer the one the course made, because the repository was replaced or the history rewritten. If that first commit holds no R code, because you did not submit HW1 or your HW1 arrived as a zip, say so in the first line of `CHANGES.md`: you have nothing to build on, and this dimension is then scored on your commits and your note alone. |
