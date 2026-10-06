@@ -222,9 +222,10 @@ to the figure."
   accepted articles but is optional at the time of submission."
 - **PNAS:** each figure as a separate high-quality PDF or EPS file, with
   the revised manuscript.
-- Most journals want the final files only at acceptance, some at
-  revision. With the journal's rules in a file and a figure script that
-  reads them (Part 3), the final files are one run of the script.
+- Journals ask for the final files at revision (Nature, PNAS) or at
+  acceptance (AER). With the journal's rules in a file and a figure
+  script that reads them (Part 3), the final files are one run of the
+  script.
 
 [Pages: [Nature, initial submission](https://www.nature.com/nature/for-authors/initial-submission);
 [AER, submissions](https://www.aeaweb.org/journals/aer/submissions);
@@ -482,6 +483,9 @@ A width of **7.20 in** (183 / 25.4), and **lwd = 1.33** (1 / 0.75).
 ::: {.content-visible when-format="revealjs"}
 
 ::: {.notes}
+Before students start: start the Part 2 demo so it runs during the
+exercise (slide 18 has the prompt; in a terminal in match/, claude,
+Shift+Tab, paste, "don't ask again" for Rscript and pdftoppm).
 Debrief (1 min). Both answers come straight from the table: divide mm by
 25.4 for inches, and points by 0.75 for lwd. Ask what happens to the
 text if the same file is shrunk into one column (it halves to 3.5 pt,
@@ -772,6 +776,9 @@ Three runs of the prompt before class, in a chat, with no code run:
 ::: {.content-visible when-format="revealjs"}
 
 ::: {.notes}
+Optional, before students start: start the rewrite demo so it runs
+during the exercise (slide 35: in match/, cp -R ../specs . then claude,
+paste the prompt; about 4 minutes).
 Debrief (1 min). Ask who got the size right (most will: it is in the
 pixels and the dpi), then who got 6-pt tick labels and 0.75-pt axes.
 Different answers around the room are the point of the next slide.
@@ -877,8 +884,8 @@ line_pt:
     or `house` for our own choice where the pages say nothing
 - This file comes with the session's project. We wrote it before class
   and checked each quote against Nature's pages.
-- In the live demo on the next slide, Claude Code writes it again from
-  Nature's pages.
+- Later in this part, live, Claude Code writes it again from Nature's
+  pages.
 
 :::
 
@@ -1007,7 +1014,7 @@ nothing, write "not stated".
 - The prompt names `specs/aer.yml` as the format to copy, since that
   file is still there.
 - You do not need to run it: the project you download already has the
-  file on the previous slide.
+  file shown on "The spec file for Nature".
 
 ::: {.content-visible when-format="revealjs"}
 
@@ -1136,7 +1143,6 @@ The next slide is the test run's result.
 
 ## What the rewrite produced {#wrap-result .smaller}
 
-- The test run took about four minutes.
 - `R/fig_style.R`, 92 lines: `read_spec()`, `open_fig()`, a panel-label
   function, and one it added unasked, to undo the text shrink of R's
   `layout()`.
@@ -1555,7 +1561,7 @@ that the author already decided, and it should not stop asking.
   much" is easy to read.
 - **The colours.** Five hues from blue to red make each class easy to
   find on the map. The cost: green and orange look alike for deuteranopia
-  and in gray, as on the colour-scales slide.
+  and in gray.
 - **Which changes to keep**, after reading each one against the
   measurement and the spec.
 
