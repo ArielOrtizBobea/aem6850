@@ -28,9 +28,10 @@ user downloads them. Cite them as their terms ask:
 
 ## Running it
 
-AEM 6850 students: download the data folder from the course's Canvas
-page and replace this project's `data` folder with it; the scripts below
-then run without any API key. Everyone else:
+AEM 6850 students: download the data (Cornell NetID login) from
+https://cornell.box.com/s/mx2eg35oytjt2a7xjsapuh8tbq2e6edc
+and replace this project's `data` folder with the `data` folder in that
+zip; the scripts below then run without any API key. Everyone else:
 
 Two free API keys go in `~/.Renviron`, one line each:
 `NASS_API_KEY=...` (https://quickstats.nass.usda.gov/api) and
