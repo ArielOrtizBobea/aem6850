@@ -30,24 +30,19 @@ the two records side by side and asks: **was it the wind?**
 
 ## What you produce
 
-Two figures, and a note.
+One figure, and a note.
 
-**Figure 1** is your HW1 figure with one new panel. Panel **A** is
-unchanged. Panel **B** is new: wind speed across the wind monitors, each
-day, summarised exactly the way panel A summarises PM2.5. Panel **C** is
+It is your HW1 figure with one new panel. Panel **A** is unchanged.
+Panel **B** is new: wind speed across the wind monitors, each day,
+summarised exactly the way panel A summarises PM2.5. Panel **C** is
 HW1's heat map, unchanged.
 
-![Target figure 1](https://arielortizbobea.github.io/assets/data/hw2_target.png)
+![Target figure](https://arielortizbobea.github.io/assets/data/hw2_target.png)
 
-**Figure 2** is one point per day: the network's average wind speed
-against the network's average PM2.5, with the six days after ignition in
-red and the days that stand out labelled.
-
-![Target figure 2](https://arielortizbobea.github.io/assets/data/hw2_scatter.png){width=60%}
-
-Study both before you write a line. Every one of December's bad days
-sits in the calm corner of figure 2. The fire days are the only days
-the basin was windy and dirty at once.
+Study it before you write a line. The network's worst days, in early
+December and at New Year, are days when the wind across the basin
+averaged under 5 km/h. The fire week is the one stretch where the basin
+was windy and dirty at the same time.
 
 **The note** is a short file, `CHANGES.md`, that says what you changed
 from your HW1 project and why, what you checked, and how you used AI.
@@ -122,12 +117,6 @@ protecting at read time, the way `Site ID` did in HW1.
    from the top of A to the bottom of C.
 8. **Output:** `figures/hw2_target.png`, 183 × 270 mm, 300 dpi. The page
    is taller than HW1's so the heat map keeps its row height.
-9. **Figure 2:** one point per day. x is the day's mean wind speed across
-   wind monitors, y its mean PM2.5 across PM2.5 monitors, the same two
-   series panels A and B draw in black. Axes 0 to 16 km/h and 0 to 30
-   µg/m³. The six days from 7 January to 12 January are red. Label, with
-   the date, every red day and every day above 21 µg/m³ or above 11 km/h.
-   `figures/hw2_scatter.png`, 100 × 100 mm, 300 dpi.
 
 ## How to organise it
 
@@ -137,7 +126,6 @@ Your HW1 layout, plus one script and the note:
 |:--|:--|
 | `code/1_get_clean_data.R` | HW1's script, plus: download the wind file, keep the window and the speed rows, build one row per wind monitor, save **both** grids in the one clean object |
 | `code/2_plot_figure.R` | HW1's script, plus panel B |
-| `code/3_plot_scatter.R` | new: read the clean object, draw figure 2 |
 | `code/run_everything.R` | `source()` the three, in order |
 | `CHANGES.md` | the note |
 
@@ -167,9 +155,6 @@ Base: my own HW1 submission.
 - ...one bullet per change, with the reason...
 
 ## code/2_plot_figure.R
-- ...
-
-## code/3_plot_scatter.R (new)
 - ...
 
 ## Layout
@@ -215,7 +200,6 @@ covers the rest.
 | monitor × day grid, again | `factor()` with `levels =`, `tapply()`, `apply()` | [3](https://arielortizbobea.github.io/aem6850/fall-2026/sessions/03-r-essentials-ii.html) |
 | one drawing, two panels | `function()` | [6](https://arielortizbobea.github.io/aem6850/fall-2026/sessions/06-how-to-code.html) |
 | three panels, one file | `layout()` with `heights =`, `par(cex = )` | [5](https://arielortizbobea.github.io/aem6850/fall-2026/sessions/05-basic-plots-ii.html) |
-| the scatter | `plot()` with `pch = 21` and `bg =`, `text()` with `pos =`, `legend()` | [4](https://arielortizbobea.github.io/aem6850/fall-2026/sessions/04-basic-plots.html) |
 
 ## Tips
 
@@ -240,7 +224,7 @@ match a wind monitor to a PM2.5 monitor at the same site.
 
 **Restart and source before you submit.** Session > Restart R, then
 `source("code/run_everything.R")`. It must run top to bottom, with both
-files absent from `data/`, and write both figures.
+files absent from `data/`, and write the figure.
 
 ## How to submit
 
@@ -269,7 +253,6 @@ buttons; session 7 shows all three ways.
 
 - `code/1_get_clean_data.R`
 - `code/2_plot_figure.R`
-- `code/3_plot_scatter.R`
 - `code/run_everything.R`
 - `CHANGES.md`
 
@@ -280,7 +263,7 @@ downloads both CSVs and rebuilds everything, and grades the figures your
 code draws.
 
 **Before you push for the last time:** Session > Restart R, then
-`source("code/run_everything.R")`. If it writes both figures with no
+`source("code/run_everything.R")`. If it writes the figure with no
 errors, you are done.
 
 **Stuck on git?** Office hours, or ask in the course channel. Do not let
@@ -315,26 +298,26 @@ an integrity violation.
 
 **12 points.** Four dimensions, three points each. The grader opens your
 repo in a fresh R session, sources `code/run_everything.R`, compares the
-two figures with the targets, and reads your note against the difference
+figure with the target, and reads your note against the difference
 between your HW1 and HW2 code.
 
 ### Replicability (3 points)
 
 | | |
 |:--|:--|
-| **3** | The code runs start to finish, without any edits, and writes both figures. Paths are relative to the project root. Nothing depends on objects left over from an earlier session. |
+| **3** | The code runs start to finish, without any edits, and writes the figure. Paths are relative to the project root. Nothing depends on objects left over from an earlier session. |
 | **2** | The code requires one minor edit to run: a stray absolute path, a folder it expected to exist, a `library()` call for something base R already does. |
-| **1** | The code requires several edits to run, or runs with errors, or does not produce the figures. |
+| **1** | The code requires several edits to run, or runs with errors, or does not produce the figure. |
 | **0** | The code does not run. |
 
 ### Similarity (3 points)
 
 | | |
 |:--|:--|
-| **3** | Both figures are virtually identical to the targets. One has to really pay attention to see any difference. |
-| **2** | The figures are similar but have some clear differences from the targets: panel B on the wrong scale or missing a summary, the red line stopping short, the wrong days red in figure 2, labels missing. |
-| **1** | The figures are clearly different from the targets, or one of them is missing. |
-| **0** | No figures. |
+| **3** | The figure is virtually identical to the target. One has to really pay attention to see any difference. |
+| **2** | The figure is similar but has some clear differences from the target: panel B on the wrong scale or missing a summary, the red line stopping short, labels missing. |
+| **1** | The figure is clearly different from the target. |
+| **0** | No figure. |
 
 Similarity is judged on what the figures encode, not on pixel-level
 matching. Panel C must still be HW1's panel B, cell for cell.
