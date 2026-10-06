@@ -52,9 +52,10 @@ Replace the project's `data` folder with the `data` folder in that zip.
    [The default code · the target picture · Claude Code edits the code
    (live) · what it changed · where it misses · what it costs]{.topics}
 3. **Using agents to write spec files and switch journals**\
-   [Why a file · YAML · a script that checks a PDF against it · Claude
-   Code writes Nature's spec file (live) · the AER's · rewriting the
-   script to read the spec · switching journals]{.topics}
+   [Why write the requirements in a file · YAML · a script that checks a
+   PDF against the spec · Claude Code writes Nature's spec file (live) ·
+   the AER's spec file · Claude Code rewrites the script to read the
+   specs (live) · switching journals]{.topics}
 
 ::: {.content-visible when-format="revealjs"}
 
@@ -106,17 +107,17 @@ text sizes, its letters, came from a list of rules that R read.
 ::: {.column width="56%"}
 
 The same data, with `pdf()`, `par(mfrow = c(1, 3))`,
-`map(fill = TRUE)`, `cut(x, 6)` and `plot()`. Nothing else set. The
+`map(fill = TRUE)`, `cut(x, 6)` and `plot()`, with nothing else set. The
 code is at the start of Part 2.
 
 1. A 7 × 7 in page; no journal prints that size, and two thirds of it
    is blank
-2. Fonts named in the file, not embedded in it
+2. Fonts not embedded: the file holds no copy of the typeface
 3. Six classes of equal width: one outlier stretches them, and 3,052 of
    3,053 counties get the same red
 4. No key, and black county borders that turn the East solid
-5. Axis labels are variable names, `d$house_ratio`; the y label is cut
-   off
+5. The x label is a variable name, `d$house_ratio`; the y label does
+   not show
 
 :::
 
@@ -233,11 +234,6 @@ to the figure."
 
 ## What studies show about presentation and referees {#presentation-evidence .smaller}
 
-- Clear writing and readable tables and figures help a paper with
-  referees.
-- No study has sent the same paper to referees in the journal's format
-  and in a plain one.
-
 ::: {.dashes}
 
 - **An experiment on writing**: [Feld, Lines and Ross (JEBO,
@@ -248,18 +244,24 @@ to the figure."
     percentage points more likely to accept them for a conference.
 - **Referees' reasons for rejecting**: [Bordage (Acad Med,
   2001)](https://doi.org/10.1097/00001888-200109000-00010)
-  - Among the top ten reasons for 123 manuscripts: text difficult to
-    follow, and defective tables or figures.
+  - On 123 conference submissions that at least one reviewer wanted to
+    reject, text difficult to follow and defective tables or figures were
+    among the ten most common reasons.
 - **A format rule and authors**: [Card and DellaVigna (JEP,
   2014)](https://doi.org/10.1257/jep.28.3.149)
   - After the AER capped submissions at 40 pages in 2008, 21% came in at
     39 or 40 pages, up from 6%.
 - **The look of the page**: [Huang (arXiv,
   2018)](https://arxiv.org/abs/1812.08775)
-  - A model that saw only page images of computer-vision papers set aside
-    half of the weak ones and 0.4% of the good ones.
+  - A model that saw only page images of computer-vision papers flagged
+    half of the workshop papers (a stand-in for rejected ones) and 0.4%
+    of the conference papers. Referees were not part of the test.
 
 :::
+
+**Takeaway:** clear writing and readable figures help a paper with
+referees. No study has sent the same paper to referees in the journal's
+format and in a plain one.
 
 ::: {.content-hidden when-format="revealjs"}
 
@@ -289,15 +291,16 @@ size the reader sees.
 |:------|:--------|
 | 89 mm wide, one column (183 mm for two) | `cairo_pdf(width = 89 / 25.4)`: R takes inches |
 | Helvetica or Arial, embedded in the file | `family = "Helvetica"`; `cairo_pdf()` embeds the font |
-| Text from 5 to 7 pt | `pointsize = 7` for 7-pt text; `cex.axis = 6 / 7` for 6-pt tick labels |
+| Text from 5 to 7 pt | `pointsize = 7` for 7-pt text; `cex.axis = 6 / 7` for 6-pt tick labels (printed size = `pointsize` × `cex`) |
 | Panel letters, 8 pt bold | `mtext("a", font = 2, cex = 8 / 7)` |
 | Lines from 0.25 to 1 pt | `lwd = 0.5 / 0.75` for a 0.5-pt line (`lwd = 1` is 0.75 pt) |
 | A vector file | `cairo_pdf()` writes one |
 
 [*Point (pt)*: a length, 1/72 inch or about 0.35 mm; a font's size in
 points is the height from the top of an h to the bottom of a p. With
-`layout()` or `mfrow` and three or more panels, R multiplies every text
-size by 0.66: add `par(cex = 1)` after it.]{.source}
+`layout()` or `mfrow` and three or more rows or columns, R multiplies
+every text size by 0.66 (0.83 for two by two): add `par(cex = 1)` after
+it.]{.source}
 
 ::: {.content-hidden when-format="revealjs"}
 
@@ -326,8 +329,9 @@ cairo_pdf("cars-nature.pdf",
           width = 89 / 25.4, height = 70 / 25.4,
           pointsize = 7, family = "Helvetica")
 par(mar = c(3, 3.2, 1.6, 0.6), mgp = c(1.8, 0.5, 0),
-    cex.axis = 6 / 7,          # 6-pt tick labels
-    lwd = 0.5 / 0.75, las = 1) # 0.5-pt box; axes stay 0.75 pt
+    cex.axis = 6 / 7,  # 6-pt tick labels
+    lwd = 0.5 / 0.75,  # 0.5-pt box; axes 0.75 pt
+    las = 1)
 plot(cars$speed, cars$dist, pch = 16, cex = 0.5,
      xlab = "Speed (mph)",
      ylab = "Stopping distance (ft)")
@@ -342,13 +346,14 @@ dev.off()
 
 ![](figures/12-publication-graphics/F03-cars-nature.png){style="border: 1px solid #ccc;" fig-alt="A scatter of R's cars data, speed against stopping distance, drawn 89 mm wide with 7-point axis titles, 6-point tick labels and a bold letter a at the top left."}
 
-The file the code writes, 89 × 70 mm.
+The PDF, 89 × 70 mm.
 
 :::
 
 ::::
 
-- Every number in the code comes from the table on the previous slide.
+- The width, font, text sizes and line weight come from the table on the
+  previous slide.
 
 ::: {.content-hidden when-format="revealjs"}
 
@@ -484,11 +489,11 @@ A width of **7.20 in** (183 / 25.4), and **lwd = 1.33** (1 / 0.75).
 
 ::: {.notes}
 Before students start: start the Part 2 demo so it runs during the
-exercise (slide 18 has the prompt; in a terminal in match/, claude,
-Shift+Tab, paste, "don't ask again" for Rscript and pdftoppm).
+exercise (slide 18 has the prompt; in a terminal in match/: claude,
+accept the trust dialog, paste).
 Debrief (1 min). Both answers come straight from the table: divide mm by
 25.4 for inches, and points by 0.75 for lwd. Ask what happens to the
-text if the same file is shrunk into one column (it halves to 3.5 pt,
+text if the same file is shrunk into one column (it shrinks to 3.4 pt,
 below Nature's 5 pt).
 :::
 
@@ -582,7 +587,7 @@ before the Interstate highways, which began in 1956.
 
 ::: {.column width="60%"}
 
-```{.r filename="code/figure1_default.R (part); runs after code/2_clean_data.R has built data_clean/ from the two licensed files"}
+```{.r filename="code/figure1_default.R (part); needs data_clean/ from code/2_clean_data.R"}
 library(maps)
 d <- readRDS("data_clean/counties.rds")
 poly <- map("county", plot = FALSE, namesonly = TRUE)
@@ -641,7 +646,7 @@ county but one.
 - The prompt says "Use only the files in this folder", and Claude Code
   asks before it reads anything outside it.
 
-## Live demo: Claude Code edits the code to match the picture {#match-live .smaller}
+## Live demo: Claude Code edits the code to match the picture {#match-live}
 
 ```{.markdown filename="Prompt to paste into Claude Code"}
 code/figure1_default.R draws figures/default/figure1.pdf. target/figure1.png
@@ -655,17 +660,17 @@ changes you made.
 ```
 
 - Claude Code runs live, in `match/`. It takes about six minutes.
-- It asks before it edits a file or runs a command. Press Shift+Tab once
-  to accept its edits, and answer "don't ask again" the first time it
-  asks to run `Rscript` and `pdftoppm` (PDF to picture).
+- `match/.claude/settings.json`, which comes in the project, lets it
+  edit files and run `Rscript` and `pdftoppm` (PDF to picture) without
+  asking. Other commands still ask.
 
 ::: {.content-visible when-format="revealjs"}
 
 ::: {.notes}
 From scratch, in the unzipped land-house-figure folder (see the Plan
 slide's notes for the data steps): cd match, type claude, accept the
-trust dialog, press Shift+Tab once (accept edits), paste the prompt.
-At its first Rscript and pdftoppm requests choose "don't ask again".
+trust dialog, paste the prompt. The folder's settings allow edits,
+Rscript and pdftoppm; if it asks anyway, answer "don't ask again".
 Let it run to the end; the test run took 335 seconds and 12 rounds.
 Talk through what it does: draws, turns the PDF into a picture, reads
 the picture, edits. If it asks to read anything outside match/,
@@ -712,8 +717,8 @@ kx <- (362 + 125.2 * (0:5)) / 2000
 
 | Text | Nature's rule (Part 1) | Claude Code's code (test run) | Size in print |
 |:------|:------|:------|:------|
-| Panel titles | at most 7 pt | `cex = 1.05` at `pointsize = 7` | 7.35 pt |
-| Panel letters | 8-pt bold | `font = 2, cex = 1.05` | 7.35 pt |
+| Panel and axis titles | at most 7 pt | `cex = 1.05` and `1.04` at `pointsize = 7` | 7.35 and 7.28 pt |
+| Panel letters | 8-pt bold | `font = 2, cex = 1.05` | 7 × 1.05 = 7.35 pt |
 
 - A picture shows how a figure looks, without the numbers behind it.
   Claude Code set the sizes to match the widths of words in pixels: at
@@ -748,9 +753,10 @@ you can: size, font, text sizes, line weights, labels, point style and the
 letter. Give me the full code.
 ```
 
-3. Compare its numbers with the code on "One Nature column": width and
-   height, `pointsize`, `cex.axis`, `lwd`, the letter's `cex`, and the
-   PDF function (`pdf()` or `cairo_pdf()`).
+3. Compare its numbers with the code that drew the picture:
+   `cairo_pdf()`, 89 × 70 mm, `pointsize = 7`, `cex.axis = 6 / 7`,
+   `lwd = 0.5 / 0.75` for the box (axes stay 0.75 pt), letter
+   `cex = 8 / 7`.
 
 Two answers to compare with the room: which numbers it matched, and
 which it guessed.
@@ -768,7 +774,7 @@ Three runs of the prompt before class, in a chat, with no code run:
 | PDF function | `cairo_pdf()` | `pdf()` | `pdf()` | `pdf()` |
 
 - All three got the size and the 7-pt Helvetica.
-- Each run typed different numbers for the rest.
+- The runs disagree on the tick labels, the axis lines and the letter.
 - In the picture the axes (0.75 pt) look heavier than the box (0.5 pt).
   All three runs saw that and overshot, past Nature's 1-pt maximum.
 - All three used `pdf()`, so the fonts are not embedded.
@@ -788,12 +794,12 @@ Different answers around the room are the point of the next slide.
 
 :::
 
-## What matching a picture costs {#match-costs .smaller}
+## What matching a picture costs {#match-costs}
 
 - Every number is typed into the script: the page size, the text sizes,
   the colours, and positions measured in the picture's pixels.
-- Some numbers are guesses: the titles came out 0.35 pt over Nature's
-  limit, the panel letters 0.65 pt short.
+- Some numbers are guesses: the titles came out up to 0.35 pt over
+  Nature's limit, the panel letters 0.65 pt short.
 - The same prompt gives different numbers on each run.
 - The next figure in the paper needs the same work again.
 - A second journal needs a new target picture and another run.
@@ -805,15 +811,17 @@ Different answers around the room are the point of the next slide.
 
 - Why write the requirements in a file, and what YAML is
 - The spec file for Nature, and a script that checks a PDF against it
-- Claude Code writes the spec file for Nature (live), and checking it
+- Claude Code writes the spec file for Nature (live), and how to check it
 - The spec file for the AER
-- Claude Code rewrites the script to read the spec files
+- Claude Code rewrites the script to read the spec files (live)
 - `open_fig()`, panel labels, and switching journals
 
 :::
 
 ## Why write the requirements in a file {#why-file .smaller}
 
+- In Part 2 the agent had only a picture, so it guessed the sizes. With
+  the rules in a file, it reads them.
 - The file is `specs/nature.yml`, a short text file of Nature's
   requirements: widths, fonts, text sizes, panel labels, line weights.
 - Each requirement carries the journal's own words and the page they
@@ -822,8 +830,6 @@ Different answers around the room are the point of the next slide.
   - R, to set the size and fonts when it draws
   - The checking script, `tools/check_fig.R`, to measure the PDF
   - Claude Code, when it writes or edits figure code
-- In Part 2 the agent had only a picture, so it guessed the sizes. With
-  the spec it reads them.
 - Edit a value in the file, and every figure drawn after that uses the
   new value.
 
@@ -871,7 +877,8 @@ panel_label:
 
 line_pt:
   value: {min: 0.25, max: 1}
-  quote: "Line weights and strokes should be set between 0.25 and 1 pt at the final size (lines thinner than 0.25 pt may vanish in print)."
+  quote: "Line weights and strokes should be set between 0.25 and 1 pt at the
+    final size (lines thinner than 0.25 pt may vanish in print)."
   source: final
 ```
 
@@ -882,8 +889,8 @@ line_pt:
   - `quote`: Nature's sentence, word for word
   - `source`: the page, listed under `pages:` at the top of the file,
     or `house` for our own choice where the pages say nothing
-- This file comes with the session's project. We wrote it before class
-  and checked each quote against Nature's pages.
+- This file comes with the project, with each quote checked against
+  Nature's pages.
 - Later in this part, live, Claude Code writes it again from Nature's
   pages.
 
@@ -907,8 +914,8 @@ line_pt:
   figure.
 - It comes in the project zip, in `tools/`, written with Claude Code
   before class: 137 lines of R.
-- It needs poppler's command-line tools (on a Mac, `brew install
-  poppler`) and the R packages yaml and magick.
+- It needs poppler, a free set of command-line tools that read PDFs (on
+  a Mac, `brew install poppler`), and the R packages yaml and magick.
 
 :::
 
@@ -928,12 +935,14 @@ drawn 89 x 70 mm with 7-pt text, 6-pt tick labels, an 8-pt bold letter a
 and 0.5-pt lines, with embedded fonts, so it should pass every Nature rule.
 ```
 
-- The test run took about 8 minutes and wrote a 461-line script.
+- A test run before class took about 8 minutes and wrote a 461-line
+  script, a different file from the project's 137-line checker.
 - On Claude Code's Part 2 figure it found the same two failures as the
-  project's script, and it passed the target.
-- It also passed the default figure's missing panel letters ("single
-  panel?"), where the project's script fails them: check a generated
-  checker on files whose answers you know.
+  project's script. It passed the target.
+- On the default figure, which has no panel letters, it printed PASS for
+  the letters ("single panel?"). The project's script prints FAIL.
+- **Takeaway:** test a checker an agent wrote on PDFs whose right answers
+  you know.
 
 ## How the checking script measures the width {#checker-how .smaller}
 
@@ -978,6 +987,8 @@ for fonts that are not embedded.]{.source}
 </table>
 ```
 
+[Other five checks: height, font, text on page, line weight, vector only.]{.source}
+
 ```{.bash filename="Terminal, in the project folder: one run per PDF"}
 Rscript tools/check_fig.R figures/default/figure1.pdf nature
 ```
@@ -992,9 +1003,7 @@ nature. Compare with the table (the test run's figure).
 
 :::
 
-## Live demo: Claude Code writes the spec file for Nature {#spec-live .smaller}
-
-::: {style="font-size:1.1em"}
+## Live demo: Claude Code writes the spec file for Nature {#spec-live}
 
 ```{.markdown filename="Prompt to paste into Claude Code"}
 Read Nature's instructions for figures on these two pages:
@@ -1006,8 +1015,6 @@ tools/check_fig.R can read it. Add height_mm_max. For each rule give the
 value, the exact words it comes from, and which page. Where the pages say
 nothing, write "not stated".
 ```
-
-:::
 
 - Claude Code runs live, in the project folder, with the shipped
   `specs/nature.yml` moved aside. It takes about two minutes.
@@ -1084,7 +1091,9 @@ letter goes, and colours that stay distinct in gray.
 ```{.yaml filename="specs/aer.yml (part)"}
 panel_label:
   value: {placement: title}
-  quote: "Be sure to label your figure files clearly, taking special care to use letters for indicating individual panels (e.g., Figure1a.ppt, Figure1b.ppt, Figure1c.ppt, etc.)."
+  quote: "Be sure to label your figure files clearly, taking special care to use
+    letters for indicating individual panels (e.g., Figure1a.ppt, Figure1b.ppt,
+    Figure1c.ppt, etc.)."
   source: style (letters in file names); house ("Panel A." in the title)
 
 width_mm:
@@ -1105,7 +1114,7 @@ Our house rules: one file per panel, "Panel A." in the title, panels
 115 mm wide, text 7 to 9 pt, lines 0.5 to 1.5 pt, colours that stay
 distinct in gray.]{.source}
 
-## Claude Code rewrites the script to read the spec files {#wrap-prompt .smaller}
+## Live demo: Claude Code rewrites the script to read the spec files {#wrap-prompt .smaller}
 
 ```{.markdown filename="Prompt to paste into Claude Code, in match/, after copying the project's specs/ into it"}
 code/figure1_default.R draws Figure 1 for Nature, with every width, font,
@@ -1126,8 +1135,8 @@ list what you changed.
 
 - The goal: take the typed numbers out of Claude Code's Part 2 script,
   so that one word at the top picks the journal.
-- Live, in `match/` after `cp -R ../specs .`. The test run took about
-  four minutes.
+- Claude Code runs live, in `match/`, after `cp -R ../specs .` copies in
+  the spec files. It takes about four minutes.
 
 ::: {.content-visible when-format="revealjs"}
 
@@ -1552,9 +1561,8 @@ that the author already decided, and it should not stop asking.
 
 ## Decisions you make as the author {#author-decisions .smaller}
 
-- **The question.** Farmland against homes, from 1940, before the
-  Interstate highways (begun in 1956). The data allowed it; no agent
-  chose it.
+- **The question.** Did farmland values rise more where home values
+  rose more, from 1940 (before the Interstate highways) to 2022?
 - **What the reader compares.** Two maps with one key, and the scatter
   beside them.
 - **The class breaks.** Classes that each double, because "twice as
@@ -1567,10 +1575,10 @@ that the author already decided, and it should not stop asking.
 
 ## What to take away {#takeaways .smaller}
 
-1. Draw at the printed width, in the journal's units: what you set is
-   what prints.
-2. A journal's rules are numbers you can measure. A reader's needs are
-   judgments.
+1. Open the PDF at the printed width, `width = mm / 25.4`, and set text
+   and lines in points: `pointsize`, `cex`, `lwd = pt / 0.75`.
+2. Check the technical requirements with a script that measures the PDF,
+   and readability by looking at the figure.
 3. An agent can match a picture of a figure closely and still miss a
    rule by a fraction of a point, which a measurement of the PDF finds.
 4. Matching a picture types every number into the script, and each run
@@ -1591,11 +1599,11 @@ marked "data" need the licensed files described in its README.
 
 - **1–2** Sizes: Figure 1 in one Nature column; the column-and-a-half
   width in the checking script
-- **3–4** Spec files: AJAE's rules; a page behind a bot check
+- **3–4** Spec files: AJAE's rules; Science's rules, behind a bot check
 - **5–6** Colours and checks: another palette, checked in gray and for
   deuteranopia; a units check in `check_fig.R`
-- **7–10** Agents: the reviewer and the editor that ship with the
-  project (see the page); your own house rules for the AER
+- **7–10** Agents: the figure-critic and figure-builder agents (see the
+  page); your own house rules for the AER
 - **11** Matching a figure: a Nature figure's style, on Figure 1's data
 
 :::
