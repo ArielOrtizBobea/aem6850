@@ -1,0 +1,69 @@
+---
+title: "19 · Audio I: speech to text"
+subtitle: "Tuesday, Nov 3, 2026"
+pagetitle: "AEM 6850 · 19 Audio I: speech to text"
+---
+
+::: {.callout-note appearance="simple"}
+Materials for this session are not published yet. They appear here
+before class.
+:::
+
+## Objectives {#objectives}
+
+By the end of this session you can:
+
+- Transcribe a recording with a speech-to-text model, a program that
+  listens to a recording and writes out the words it hears, and keep
+  the timestamps for each word.
+- Label who is speaking and join the speaker labels to the words by
+  time.
+- Build an utterance table with one row per utterance (one unbroken
+  turn by one speaker): speaker, text, start and end.
+- Save the raw model output so the table rebuilds without transcribing
+  again.
+- Transcribe a short clip by hand and compute the word-error rate of the
+  model's transcript against it.
+
+## What we cover {#coverage}
+
+- What recorded speech, once written down, has measured in economics.
+  [Hassan et al. (QJE, 2019)](https://doi.org/10.1093/qje/qjz021)
+  measured each firm's political risk as the share of its earnings calls
+  (the quarterly calls where managers present results and answer
+  analysts' questions) spent on political risks.
+  [Hansen, McMahon & Prat (QJE, 2018)](https://doi.org/10.1093/qje/qjx045)
+  measured how members of the Federal Reserve committee that sets US
+  interest rates changed the way they deliberated once they knew their
+  meeting transcripts would be published.
+  [Sautner et al. (JF, 2023)](https://doi.org/10.1111/jofi.13219)
+  measured firms' exposure to climate change from the attention it gets
+  on earnings calls. All three work from transcripts typed by
+  professionals; a speech-to-text model produces that text for
+  recordings that come without one.
+- Where recordings come from, and the terms attached to public archives
+  and licensed collections. The running example: Federal Reserve press
+  conferences, whose official transcripts are the reference for
+  measuring the model's errors.
+- Speech-to-text models return the transcript, the word-for-word record
+  of what was said, with a timestamp (seconds from the start of the
+  recording) for the start and end of each word or segment, a stretch
+  of speech returned as one piece. You can run one locally, on your own
+  computer so the audio never leaves your machine, or send the audio to
+  a provider's API.
+- Speaker diarization is a separate step that marks which voice is
+  talking when, labelling them Speaker 1, Speaker 2 and so on. You join
+  those labels to the words by their timestamps.
+- The utterance table is the deliverable. The raw model output sits
+  next to it, saved exactly as it came back, so every cleaning step can
+  be rerun from it.
+- Word-error rate (WER) counts substitutions (wrong words), deletions
+  (missing words) and insertions (extra words), and divides by the
+  number of words in a reference transcript, a careful hand transcript
+  of a short clip. To verify a transcript, write the reference before
+  you read the model's version, compute the rate, and listen again to
+  the passages where it is worst. Errors tend to cluster on names,
+  numbers and overlapping speech.
+- Running the models yourself needs Python and a few large installs. A
+  setup guide comes with the session materials, and the model output is
+  provided too, so every step also runs in R alone.

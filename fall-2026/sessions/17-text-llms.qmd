@@ -1,7 +1,7 @@
 ---
-title: "17 · Text II — LLMs"
+title: "17 · Text II: LLMs"
 subtitle: "Tuesday, Oct 27, 2026"
-pagetitle: "AEM 6850 · 17 Text II — LLMs"
+pagetitle: "AEM 6850 · 17 Text II: LLMs"
 ---
 
 ::: {.callout-note appearance="simple"}
@@ -13,41 +13,57 @@ before class.
 
 By the end of this session you can:
 
-- Call an LLM from R with schema-constrained output.
-- Write prompts that state the failure mode.
-- Cache model responses so a pipeline re-runs deterministically.
-- Estimate what a batch job will cost before running it.
-- Spot-verify a sample against the source.
+- Define a label: a category assigned to each item, with a written
+  definition for every category.
+- Call a large language model from R through its provider's API and
+  get answers back in a fixed format.
+- Draw a hand-labeled sample with a seed and measure how often the
+  model agrees with it.
+- Read a confusion table to see which categories the model mixes up.
+- Set up the pipeline so every result reproduces from saved responses.
 
 ## What we cover {#coverage}
 
-- What this unlocks: classifying millions of documents; structured
-  extraction at a scale hand-coding cannot touch.
-- `ellmer`; schemas that force the output shape you need.
-- Temperature, consistency, and cost.
-- Hallucination as the native failure mode.
-- The five duties of a pipeline with a model in it: pin the exact
-  model version in code; set temperature to zero; cache every
-  response to disk and commit the cache; store the raw response, not
-  just the label; document model and prompt in the README. If you
-  cannot do all five, it does not go in a paper.
-- What the cache buys, honestly: your results re-run byte-for-byte
-  from the committed responses; the live API is the weaker link, and
-  the cache keeps it out of the analysis.
-- **The gold set, and how to design one.** A small subset you label by
-  hand so it can grade the machine. The design questions are the whole
-  thing: how big, drawn how, from what frame. Draw it with `sample()`
-  and a seed so the draw itself re-runs, and label it before you look
-  at the model's answers.
-- Agreement rates, and when they mislead. A 95% rate on a category that
-  is 95% of the data tells you nothing.
-- Confusion tables: not how often the model is wrong, but *which
-  categories it mixes up*. The pattern usually points at the prompt.
-- Error analysis: sort the mistakes into kinds, then pick the fix.
-  Re-prompt, re-tool, or hand-code the residual. Guessing which one
-  without sorting first is how people waste a week.
-- In class: hand-label twenty items yourself, compare with the model,
+- [Moreno-Medina et al. (QJE, 2025)](https://doi.org/10.1093/qje/qjaf004)
+  fine-tuned a small language model (trained it further on labeled
+  examples) to sort 1.8 million TV news captions into crime and
+  non-crime, hand-read a sample of the flagged stories, and measured how
+  often police-killing coverage leaves out who fired.
+  [Doh, Song & Yang (AEJ: Macro, 2026)](https://doi.org/10.1257/mac.20220312)
+  fine-tuned a language model on the dovish and hawkish drafts Fed staff
+  write before each meeting, then placed each actual statement between
+  them to measure its stance. From finance,
+  [Lopez-Lira & Tang (JFE, 2026)](https://doi.org/10.1016/j.jfineco.2026.104335)
+  asked a large language model (a program trained on vast amounts of
+  text that replies to written instructions) whether each headline was
+  good, bad or unclear for the stock; the answers predict later returns.
+- What a label is: the category assigned to one item, such as positive
+  or negative for a sentence. The codebook you would hand a research
+  assistant, a written definition of each category with a rule for the
+  cases in between, becomes the prompt, the instructions plus the item
+  you send to the model.
+- Calling the model from R with `ellmer`: the API key stored in
+  `~/.Renviron`, and a schema that fixes the output to one label per
+  item from a set list. The running example: the same Federal Reserve
+  statements labeled hawkish, dovish or neutral, set beside a dictionary
+  score of the same text. Where the two disagree, your hand labels show
+  which one is right.
+- Verifying the labels against a hand-labeled sample. Draw it with
+  `sample()` and a seed (a number that fixes the random draw), and label
+  it before you see the model's answers. The agreement rate is the share
+  of items where the model's label matches yours; 95% agreement tells
+  you nothing when 95% of items share one label (the base rate). The
+  confusion table, your labels as rows and the model's as columns, shows
+  which categories the model mixes up, and the pattern usually points at
+  the prompt.
+- Whether the results reproduce: the model pinned (its exact version
+  written once in one constant), the temperature (how much replies vary)
+  set to zero, every raw response cached to disk and committed, and the
+  model and prompt named in the README. Reruns read the cache, so the
+  numbers hold when the provider updates the model.
+- Error analysis and the validation paragraph: sort the mistakes into
+  kinds before choosing between a new prompt, new categories and hand
+  coding, then write the methods paragraph that reports the model, the
+  prompt, the sample, the agreement rate and the confusion table.
+- In class: hand-label twenty items, compare them with the model, and
   report the agreement rate and the confusion table.
-
-**Verification habit.** Spot-verify a sample of the model's answers
-against the source, and report the agreement rate you got.

@@ -1,0 +1,68 @@
+---
+title: "27 · Satellite II: Earth Engine"
+subtitle: "Thursday, Dec 3, 2026"
+pagetitle: "AEM 6850 · 27 Satellite II: Earth Engine"
+---
+
+::: {.callout-note appearance="simple"}
+Materials for this session are not published yet. They appear here
+before class.
+:::
+
+## Objectives {#objectives}
+
+By the end of this session you can:
+
+- Say when to send the computation to the data instead of downloading
+  the data to your machine.
+- Find a dataset in the catalog and read its documentation.
+- Filter an image collection by date, place and cloud cover.
+- Reduce a collection over your own polygons and load the table in R.
+- Estimate golf-course water use from evapotranspiration data and
+  compare it with the water budgets an agency publishes.
+
+## What we cover {#coverage}
+
+- Satellite archives in economics:
+  - [Burgess et al. (QJE, 2012)](https://doi.org/10.1093/qje/qjs034) built yearly deforestation
+    data for Indonesia from satellite imagery and found that splitting districts raised
+    deforestation.
+  - [Assunção, Gandour & Rocha (AEJ: Applied, 2023)](https://doi.org/10.1257/app.20200196) used
+    Brazil's satellite deforestation alerts, with clouds that block detection as a source of
+    variation in enforcement, to show that monitoring curbs clearing in the Amazon.
+  - [Garg, Jagnani & Pullabhotla (AEJ: Policy, 2024)](https://doi.org/10.1257/pol.20220422)
+    counted satellite fire detections within 10 km of about 11,000 Indian villages and found
+    that new rural roads raised crop burning and downwind infant mortality.
+- **Sending the computation to the data.** Some questions need more pixels than your disk holds,
+  such as a decade of images over a continent. Google Earth Engine, a Google service that holds
+  satellite archives, runs your code on the computers that store the data (server-side
+  computation), and only the result comes back.
+- The data catalog, the searchable list of datasets the service holds: Landsat, Sentinel, MODIS
+  and derived products. Reading a documentation page for units, cloud masks and the scale
+  factor, the number you multiply stored values by to get real units.
+- Filtering an image collection (a stack of images of one kind, such as every Landsat image of a
+  region) by date range, bounding box and cloud cover. Print the number of images left and
+  compare it with the count you expect from how often the satellite passes over.
+- Server-side thinking. A loop that works in R hangs in Earth Engine, because the work runs on
+  remote machines. You map a function over the collection (apply it to every image) and then
+  apply a reducer, which collapses many values into one, such as a mean. Each call takes a
+  scale, the pixel size in metres at which the calculation runs.
+- **`reduceRegions()`.** Zonal statistics over your own polygons (closed shapes on a map, such
+  as fields or counties) summarise the pixel values inside each one, such as mean rainfall per
+  county or greenness per field. Export the table as a file, load it in R as a data frame, and
+  verify it by reducing one small polygon with `terra` and comparing the two numbers.
+- Derived products and where each is weakest: land-cover maps, and evapotranspiration (water
+  leaving the land as vapour, from soil evaporation plus water released by plants) from OpenET,
+  a public dataset estimated from satellite images at 30-metre pixels across the contiguous US.
+- **Application: golf-course water use under drought restrictions.** When a drought brings
+  limits on outdoor watering, do golf courses cut back? Golf-course polygons combined with OpenET
+  evapotranspiration. Compare each course with the land around it to see whether it is watered,
+  then convert the difference to consumptive use (water that evaporates or is taken up by plants
+  and does not return to rivers or aquifers) in acre-feet per year (an acre-foot covers one acre
+  one foot deep). Reconcile each estimate with the water budget, the yearly amount a regional
+  agency says the course needs or may use.
+- **When to stay local.** Small areas, one scene, or work you must rerun exactly. Cache the
+  exported table and commit it.
+- Access: register for noncommercial Earth Engine use at least a week before class, since
+  approval can take a few days. A setup guide with a first test script comes with the session
+  materials.

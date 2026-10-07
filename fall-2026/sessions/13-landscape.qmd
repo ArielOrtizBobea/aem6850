@@ -13,26 +13,52 @@ before class.
 
 By the end of this session you can:
 
-- Map an economic question to candidate data families.
-- Apply the granularity / frequency / signal checklist to a research
-  idea.
-- Classify a data source's access class.
-- Name each acquisition channel and when it applies.
+- For a research question, say where the signal shows up and which kind
+  of data records it.
+- Write down a research idea's data requirements (granularity, frequency,
+  where the signal appears) and judge whether a source meets them.
+- Classify a data source by access class: open, licensed, restricted or
+  self-collected.
+- Say what a given source misses about the thing you want to measure.
 
 ## What we cover {#coverage}
 
-- Part II opens with the problems → data map: growth measured from
-  nightlights, policy from text, history from scans, monetary policy
-  from vocal tone, environment from satellites, prices from scraped
-  listings.
-- The six data families, and the sources triad: open, licensed,
-  self-collected — plus replication packages.
-- Channels and licensing; what we skip (video, networks) and why.
-- The formats data actually arrives in, one line each: Excel files
-  (`readxl`), Stata files (`haven`), R's own `.rds`, semicolon CSVs
-  (`read.csv2`), and `fread()` when the file is big.
-- The requirements checklist: at what granularity, at what frequency,
-  and in which fields does your phenomenon leave a signal?
-
-**Verification habit.** For any question — where would the signal
-live?
+- The question-to-data map, built from published examples.
+  [Henderson, Storeygard & Weil (AER, 2012)](https://doi.org/10.1257/aer.102.2.994)
+  measured income growth from night lights (satellite images of light
+  given off at night) in countries where official accounts are weak.
+  Lights work there as a proxy, a variable you can observe that moves
+  with one you cannot.
+  [Baker, Bloom & Davis (QJE, 2016)](https://doi.org/10.1093/qje/qjw024)
+  counted newspaper articles that mention the economy, policy and
+  uncertainty to build a monthly index, and compared the counts with
+  human readings of 12,000 articles.
+  [Dell & Olken (REStud, 2020)](https://doi.org/10.1093/restud/rdz017)
+  digitised handwritten 1850s colonial records of about 10,000 Javanese
+  villages forced to grow sugarcane, and matched about 6,400 of them to
+  modern locations. Each example starts with its context: a map or
+  photo, the dates and the headline numbers.
+- The map's legend: text, documents and scans, audio, photographs,
+  spatial data and satellite imagery. Much spatial data comes gridded,
+  one value per square of a regular net laid over the map for each date.
+- Data requirements. The signal is the trace your subject leaves in some
+  record. Granularity is the size of the unit the data describe (a
+  country, a county, a one-kilometre square), and frequency is how often
+  a value is recorded. Name the unit of observation, the thing one row
+  describes, and write down where the signal should appear before you
+  search. Then verify that the source you pick records it at the
+  granularity and frequency you need.
+- Access classes, meaning who may obtain a dataset and how. A licence
+  sets what you may do with data: use it, share it, publish it or resell
+  it. Restricted data can be used only under a signed agreement, often
+  on a secure computer, and may not be passed on. Both decide what goes
+  into a replication package, the data, code and instructions that let
+  someone else rerun your analysis and get the same results.
+- What each instrument misses. Coverage is the places, people and years
+  a source includes, and measurement error is the gap between what it
+  records and the true value. The Java records have a coverage gap:
+  about a third of the villages could not be placed on a modern map.
+- The formats data ships in (CSV, Excel, Stata, shapefile and others),
+  one line each, with the R function that reads it. Read the codebook,
+  the document that explains each variable's meaning, units and
+  collection, before the data.

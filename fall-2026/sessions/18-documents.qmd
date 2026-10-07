@@ -1,7 +1,7 @@
 ---
-title: "18 · Documents — PDFs & scans"
+title: "18 · Documents & scans"
 subtitle: "Thursday, Oct 29, 2026"
-pagetitle: "AEM 6850 · 18 Documents — PDFs & scans"
+pagetitle: "AEM 6850 · 18 Documents & scans"
 ---
 
 ::: {.callout-note appearance="simple"}
@@ -13,19 +13,57 @@ before class.
 
 By the end of this session you can:
 
-- Extract tables from born-digital and scanned PDFs.
-- Use the totals printed on a page as reconciliation targets.
-- Choose between OCR, a vision model, and hand entry.
-- Name the two signature failure modes: partial extraction and
-  fabrication.
+- Tell a born-digital PDF from a scanned one and pick the extraction
+  method that fits.
+- Extract text and tables from a born-digital PDF.
+- Run OCR on a scanned page, and send a page image to a vision model.
+- Rebuild a table that runs across several pages.
+- Reconcile the rows you extracted with the totals printed on the page.
+- Recognize the two ways extraction fails: rows that go missing and
+  numbers a model invents.
 
 ## What we cover {#coverage}
 
-- What the archives hold: historical statistics, filings, government
-  reports — full of tables nobody has mined.
-- Born-digital vs scanned: two different problems.
-- OCR vs vision-language models; multi-page tables; page images as
-  model input.
-
-**Verification habit.** Reconcile extracted totals against the totals
-printed on the page — the document carries its own check.
+- [Correia, Luck & Verner (QJE, 2026)](https://doi.org/10.1093/qje/qjaf044)
+  ran OCR (software that reads the letters in a page image and writes
+  them out as text) on national-bank balance sheets in the Comptroller
+  of the Currency's annual reports up to 1941, re-read the output by
+  hand wherever assets did not equal liabilities plus capital, and added
+  later records to build a bank panel from 1863 to 2024 showing that
+  failures are predictable.
+  [Donaldson (AER, 2018)](https://doi.org/10.1257/aer.20101199) built
+  district-level series of crop prices, output, rainfall and trade from
+  colonial India's printed government records, never digitized before,
+  and showed that railroads cut trade costs and raised real incomes.
+  [Hanlon (REStat, 2024)](https://doi.org/10.1162/rest_a_01190)
+  digitized a century of weekly London death counts from the Registrar
+  General's printed reports, dated heavy fogs from the reports' daily
+  weather notes, and estimated the deaths that fog-trapped pollution
+  caused. Archives still hold many tables nobody has turned into data.
+- Born-digital and scanned PDFs. A born-digital file is made by software
+  and stores its words in a text layer you can select, search and copy.
+  A scan is a picture of a page and holds no text until OCR runs; at a
+  low resolution (dots per inch), OCR misreads more characters.
+- Table extraction (pulling a printed table's rows and columns into a
+  data frame) from born-digital files, OCR on scans, and a vision model,
+  an AI model that takes a picture of a page and returns its text or
+  table. Layout detection locates columns, rows, headings and footnotes
+  before anything is read.
+- Multi-page tables that run across page breaks: headers that repeat,
+  rows split across a break, and footnote markers (symbols attached to a
+  value) mixed into the numbers.
+- In class: handwritten historical records, such as old restaurant
+  menus with prices, census pages or ship logbooks, read by a vision
+  model and compared with transcriptions volunteers typed by hand.
+- Choosing between OCR, a vision model and hand entry, by the number of
+  pages and what an error would cost the analysis. Hand entry is usually
+  double keyed: two people type the same table, and every cell where
+  they differ is re-read against the page.
+- The two common failures. Partial extraction drops rows without
+  warning, and fabrication returns a plausible number that is not on the
+  page. Reconcile the extracted rows with the total row most statistical
+  tables print, and verify that a balance sheet obeys its accounting
+  identity (a relation that must hold exactly, such as assets equal to
+  liabilities plus capital). A sum that falls short points to dropped
+  rows, and a cell that breaks the identity points to a misread or
+  invented number.

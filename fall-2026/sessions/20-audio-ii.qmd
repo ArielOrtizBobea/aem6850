@@ -1,0 +1,70 @@
+---
+title: "20 · Audio II: tone & emotion"
+subtitle: "Thursday, Nov 5, 2026"
+pagetitle: "AEM 6850 · 20 Audio II: tone & emotion"
+---
+
+::: {.callout-note appearance="simple"}
+Materials for this session are not published yet. They appear here
+before class.
+:::
+
+## Objectives {#objectives}
+
+By the end of this session you can:
+
+- Start from a transcript with word timestamps and speaker labels, and
+  add measures of how each utterance (one unbroken turn by one speaker)
+  was said.
+- Measure pauses and speaking rate from the word timestamps, and count
+  filler words.
+- Extract pitch and energy for each utterance and compare each speaker
+  with their own baseline.
+- Attach the scores of an emotion model to the utterance table.
+- Measure how closely a tone score agrees with a sample of utterances
+  you rated by ear.
+
+## What we cover {#coverage}
+
+- What vocal tone has measured in economics.
+  [Gorodnichenko, Pham & Talavera (AER, 2023)](https://doi.org/10.1257/aer.20220129)
+  scored Federal Reserve chairs' answers at press conferences with a
+  voice-emotion model trained on actors' labelled speech, and found that
+  a positive tone raises share prices beyond what the words and the
+  policy decision convey.
+  [Mayew & Venkatachalam (JF, 2012)](https://doi.org/10.1111/j.1540-6261.2011.01705.x)
+  measured managers' positive and negative emotion from the audio of
+  earnings calls, the quarterly calls where they present results, and
+  found it predicts the firm's future performance beyond the words used.
+  [Hu & Ma (JF, 2025)](https://doi.org/10.1111/jofi.13471) scored the
+  delivery of startup pitch videos and found that positive delivery
+  raises the odds of funding, while funded startups with the most
+  positive pitches go on to underperform.
+- The starting point, loaded from file: one row per utterance with
+  speaker, text, start and end, plus a timestamp for every word.
+- Timing measures: the pause before each answer (the silence between
+  the question's last word and the answer's first), speaking rate in
+  words per second, and filler words such as "um" and "uh", sounds that
+  fill a gap without adding meaning, counted with a pattern.
+- The waveform is the recorded sound stored as a long series of
+  numbers, one per tiny slice of time; the sampling rate is how many
+  per second, often 16,000 for speech. Pitch is how high or low a voice
+  sounds, the number of vocal-cord vibrations per second, reported in
+  hertz (Hz). Energy is the size of the wave's swings, heard as
+  loudness. Both are summarized per utterance and set against the
+  speaker's baseline, their own typical value.
+- Emotion models are trained on voice clips labelled by emotion and
+  return a score for each label. They are least reliable on speech
+  unlike their training data, so verify them on yours: draw a sample
+  of utterances with a random seed so the draw repeats exactly, rate
+  each by ear on a fixed scale before seeing the model's score, then
+  compare and listen to the clips where you disagree most.
+- Some of these models need Python and large installs. A setup guide
+  comes with the session materials, and their output is also provided as
+  files you read into R.
+- Text sentiment, a score for how positive or negative the words are
+  regardless of delivery, set beside the vocal measures to find the
+  utterances where the two disagree.
+- Application: the Federal Reserve chair's tone of voice through the
+  2021-2023 inflation surge and around each rate decision, set beside
+  the words.

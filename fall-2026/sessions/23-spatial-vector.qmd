@@ -1,0 +1,65 @@
+---
+title: "23 · Spatial I: vector"
+subtitle: "Tuesday, Nov 17, 2026"
+pagetitle: "AEM 6850 · 23 Spatial I: vector"
+---
+
+::: {.callout-note appearance="simple"}
+Materials for this session are not published yet. They appear here
+before class.
+:::
+
+## Objectives {#objectives}
+
+By the end of this session you can:
+
+- Load and inspect vector data with `sf`: geometries, attributes and
+  the coordinate reference system.
+- Confirm the coordinate reference system of every layer and choose a
+  projection for what you will measure.
+- Run a spatial join and compare the row count before and after.
+- Flag the homes inside a fire perimeter and measure how far every
+  other home lies from it.
+- Compare an area computed with `st_area()` against the published
+  value.
+
+## What we cover {#coverage}
+
+- Published work built on vector data, map features stored as points,
+  lines or polygons (closed shapes such as a county or a burned area),
+  each paired with a row of information in a table.
+  [Black (QJE, 1999)](https://doi.org/10.1162/003355399556070) compared
+  house prices on either side of school attendance-zone boundaries in
+  Massachusetts to measure what parents pay for higher test scores.
+  [Aaronson, Hartley & Mazumder (AEJ: Policy, 2021)](https://doi.org/10.1257/pol.20190414)
+  compared neighbourhoods on either side of the lines drawn on the 1930s
+  redlining maps and traced long-run effects on home ownership, house
+  values, rents and segregation. Both use a boundary discontinuity
+  design, which compares places on either side of a border, close
+  enough to share surroundings and subject to different rules.
+  [Currie et al. (AER, 2015)](https://doi.org/10.1257/aer.20121656)
+  measured house prices and infant health by distance from 1,600
+  industrial plants that opened or closed, and found the effects within
+  about a mile of a plant.
+- An `sf` object is a data frame with a geometry column (the coordinates
+  that place each feature and give it its shape) beside its attributes
+  (values such as a county's name or a home's sale price), so filtering
+  and joining work as they do on any table. Shapefiles and GeoPackages,
+  the common file formats, store the two together.
+- The coordinate reference system (CRS), the rule linking a file's
+  numbers to places on Earth, read from the file and confirmed against
+  the documentation and a basemap of a place you know. Measuring needs a
+  projection, a method for flattening the curved Earth that stretches
+  distances, areas or shapes somewhere. Areas need an equal-area
+  projection, which keeps every region's area correct; distances need a
+  local projected system in metres.
+- Spatial joins, which match rows from two layers by location, such as
+  attaching to each home the county it sits in. Compare the row count
+  before and after, since a point on a shared border can match two
+  polygons and duplicate a row.
+- Areas: `st_area()` against the Census Bureau's published land area
+  (ALAND). Reconcile one county's two values and explain the gap.
+- Application: a fire perimeter and the homes around it. A point in
+  polygon test (which shape, if any, contains each point) flags the
+  homes inside the burned area. Distances run from each home to the
+  nearest edge; verify that every home inside shows zero.

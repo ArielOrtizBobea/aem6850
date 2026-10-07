@@ -1,7 +1,7 @@
 ---
-title: "14 · Channels I — APIs"
+title: "14 · Channels I: APIs"
 subtitle: "Thursday, Oct 15, 2026"
-pagetitle: "AEM 6850 · 14 Channels I — APIs"
+pagetitle: "AEM 6850 · 14 Channels I: APIs"
 ---
 
 ::: {.callout-note appearance="simple"}
@@ -13,21 +13,55 @@ before class.
 
 By the end of this session you can:
 
-- Call an API and flatten JSON into a data frame.
-- Keep credentials out of code with `.Renviron`.
-- Handle rate caps and pagination.
-- Snapshot raw responses so a pipeline re-runs deterministically.
+- Request data from an API and turn the JSON response into a data frame.
+- Store an API key in `~/.Renviron` and read it from R.
+- Page through results within the rate limit, and compare the rows you
+  received with the total the API reports.
+- Save each raw response so the pipeline reruns from disk.
+- Send a prompt to a large language model through its provider's API
+  from R, read the reply, and count the tokens it used.
+- Convert UTC timestamps to local time.
 
 ## What we cover {#coverage}
 
-- What runs on API data: ACS demographics, FRED macro series, Census
-  microdata — the pulls behind published papers.
-- Endpoints, queries, JSON → data frames.
-- Keys in `.Renviron`, never in code; caps and pagination.
-- The snapshot convention: commit the raw response, so the pipeline
-  re-runs even when the server changes — with `saveRDS()` and
-  `readRDS()` as the cache format for anything that isn't a flat
-  table.
-
-**Verification habit.** Check your counts against the publisher's own
-documented totals.
+- Published work built on an API, a service that lets your program
+  request data from another computer and receive a structured reply.
+  [Akbar et al. (AER, 2023)](https://doi.org/10.1257/aer.20181662)
+  queried Google Maps for 57 million simulated car trips in 180 Indian
+  cities, choosing destinations through the Google Places API, to measure
+  travel speed and congestion, then compared them with data on actual
+  trips.
+  [Fujiwara, Müller & Schwarz (JEEA, 2024)](https://doi.org/10.1093/jeea/jvad058)
+  pulled the profiles of about 658,000 followers of a festival's Twitter
+  account through Twitter's API, and used their join dates and locations
+  to estimate Twitter's effect on US presidential votes. From finance,
+  [Lopez-Lira & Tang (JFE, 2026)](https://doi.org/10.1016/j.jfineco.2026.104335)
+  sent firm news headlines to a large language model (a program trained
+  on vast amounts of text that writes a reply to what you send) through
+  its provider's API, scored each as good or bad news, and tested whether
+  the scores predict stock returns.
+- Every call has the same shape: a key, a request and a response. The
+  response carries a status code (200 means it worked, 429 too many
+  requests) and, when it worked, data in JSON, a plain-text format of
+  named values and nested lists that you turn into a data frame.
+- Endpoints (the web address that answers one kind of request) and query
+  parameters (named values, such as a year or a state, that narrow what
+  comes back). Long results arrive in pages you request one after another
+  (pagination), within a rate limit, the most requests a service accepts
+  from you per minute, hour or day. Compare the number of rows you
+  collected with the total the API reports.
+- An API key is a private string that identifies you and counts your
+  requests. Keys live in `~/.Renviron` as environment variables (named
+  values set outside your code and loaded when R starts) and are read with
+  `Sys.getenv()`, so they never appear in a script or a commit.
+- Saving the raw response, the reply exactly as the server sent it, with
+  `saveRDS()` and reading it back with `readRDS()`, so the pipeline still
+  runs when the server changes or goes down.
+- A model call sends a prompt (the instructions and material in one
+  request) from R to a large language model, with its key stored the same
+  way. Read the raw reply to verify anything parsed from it. The
+  temperature setting controls how much replies vary; at zero a rerun
+  gives close to the same answer. Each reply reports its usage in tokens,
+  the chunks of text a model reads, writes and bills by.
+- Timestamps that arrive in UTC, the world reference clock, converted to
+  local time with `lubridate`, daylight saving included.

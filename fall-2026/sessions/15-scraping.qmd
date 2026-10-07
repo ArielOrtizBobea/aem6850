@@ -1,7 +1,7 @@
 ---
-title: "15 · Channels II — scraping"
+title: "15 · Channels II: scraping"
 subtitle: "Tuesday, Oct 20, 2026"
-pagetitle: "AEM 6850 · 15 Channels II — scraping"
+pagetitle: "AEM 6850 · 15 Channels II: scraping"
 ---
 
 ::: {.callout-note appearance="simple"}
@@ -13,20 +13,57 @@ before class.
 
 By the end of this session you can:
 
-- Target page elements with CSS selectors.
-- Scrape politely and legally.
-- Catch silent pagination truncation.
-- Choose between scraping, an API, and buying the data.
+- Pull fields from a web page with `rvest` and CSS selectors.
+- Follow pagination and confirm you collected every item.
+- Decide whether a site may be scraped, from its terms of use, its
+  robots.txt, copyright and any personal data on the page.
+- Scrape without getting blocked by pausing between requests,
+  identifying yourself, caching pages and backing off when the server
+  asks.
+- Have an AI coding agent write and run a scraper, then compare what it
+  collected with the live pages.
 
 ## What we cover {#coverage}
 
-- What scraping has measured: prices, job postings, housing listings —
-  data nobody packaged.
-- `rvest` and CSS selectors.
-- Politeness: robots.txt, delays, identifying yourself.
-- Pagination's silent failures; snapshot the HTML you scraped.
-- When scraping is the wrong tool: an API existed, or the terms forbid
-  it.
-
-**Verification habit.** Check expected counts — and spot-check the
-*last* item, not the first.
+- Published work built on web scraping, where a program reads pages
+  built for people and copies chosen pieces into a table.
+  [Cavallo (AER, 2017)](https://doi.org/10.1257/aer.20160542) built a
+  scraping robot for each of 56 large retailers in 10 countries and
+  compared their online prices with prices in the same retailers' stores.
+  [Kuhn & Shen (QJE, 2013)](https://doi.org/10.1093/qje/qjs046)
+  collected over a million ads from a Chinese online job board with a
+  crawler (a program that follows links from page to page and saves each
+  one) and measured how often employers ask for a particular gender.
+  [Christensen & Timmins (QJE, 2023)](https://doi.org/10.1093/qje/qjad029)
+  used a bot to collect every three-bedroom, two-bathroom rental listing
+  on a major platform in five US cities, recorded toxic-pollution data
+  for each, and sent inquiries from renters with distinct names to
+  measure discrimination.
+- `rvest` and CSS selectors. HTML is the text behind every web page,
+  made of labelled pieces called elements, such as a heading, a link or
+  a table cell. A CSS selector is a short pattern that picks out
+  elements by label, class name or position. You find the element in
+  the browser's inspector, the panel that shows the HTML behind whatever
+  you point at, and pull its text into a data frame.
+- The running example: the policy statements and press-conference
+  transcripts the Federal Reserve posts after each meeting, collected by
+  following the links on its meeting calendar.
+- Pagination, a list split across numbered pages the scraper visits in
+  turn. Compare the count you collected with the count the site shows,
+  and open the last item next to its page, since a truncated scrape loses
+  the end of the list.
+- Whether scraping is allowed. Terms of use are a site's legal rules for
+  visitors and may forbid automated copying. The robots.txt file at the
+  site's main address lists pages automated programs are asked to skip.
+  Copyright gives a creator control over copies of a work, though in the
+  US bare facts such as prices are not covered. Personal data is anything
+  that identifies a living person, such as a name or a photo. When an
+  API exists or the data can be bought, use that instead.
+- Avoiding blocks: a delay between requests, a user agent (the name your
+  program sends with each request) that says who you are, and caching,
+  saving every page to disk the first time so you never fetch it twice.
+  When the server answers HTTP 429 ("too many requests"), back off by
+  waiting longer after each refusal, often doubling the wait.
+- An AI coding agent, a tool that writes and runs code on your computer
+  from plain-language instructions, writes and runs the scraper. You
+  then verify what it collected against the live pages.

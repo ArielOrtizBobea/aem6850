@@ -1,0 +1,65 @@
+---
+title: "26 · Satellite I: on your machine"
+subtitle: "Tuesday, Dec 1, 2026"
+pagetitle: "AEM 6850 · 26 Satellite I: on your machine"
+---
+
+::: {.callout-note appearance="simple"}
+Materials for this session are not published yet. They appear here
+before class.
+:::
+
+## Objectives {#objectives}
+
+By the end of this session you can:
+
+- Say what each sensor type records and which questions it can answer.
+- Match a sensor's spatial, temporal and spectral resolution to a
+  research question.
+- Compute NDVI from two bands and say what it proxies.
+- Choose between a ready-made product and classifying your own, and
+  measure the accuracy of a map you classified.
+- Download one scene and process it in R on your own machine.
+
+## What we cover {#coverage}
+
+- Remote sensing (measuring the Earth's surface from a distance, here from satellites) in economics:
+  - [Henderson, Storeygard & Weil (AER, 2012)](https://doi.org/10.1257/aer.102.2.994) measured
+    economic growth from night lights seen from space.
+  - [Burchfield et al. (QJE, 2006)](https://doi.org/10.1162/qjec.2006.121.2.587) measured urban
+    sprawl across the US from land use mapped on 30-metre cells.
+  - [Jack et al. (AER: Insights, 2025)](https://doi.org/10.1257/aeri.20230431) detected
+    crop-residue burning on farms in a randomized trial in Punjab, India, with a classifier
+    trained on field-labelled pixels.
+- What each sensor records. A band is one range of light wavelengths, stored as its own grid
+  of numbers.
+  - Visible bands: a true-colour picture, close to what the eye sees.
+  - Near-infrared, light just beyond red and invisible to the eye: healthy leaves reflect much
+    of it.
+  - Thermal infrared: heat given off by the surface, converted into surface temperature.
+  - Radar: the sensor sends its own signal and records the echo, which shows surface
+    roughness and moisture through cloud and at night.
+  - Night lights: artificial light after dark, a stand-in for local economic activity.
+  - Solar-induced fluorescence: the faint glow plants give off while using sunlight to grow,
+    which tracks plant activity more closely than greenness does.
+- Three resolutions decide what a sensor can answer. Spatial resolution is the ground size of
+  one pixel, such as 10 by 10 metres. Temporal resolution, or revisit time, is how often the
+  satellite images the same place. Spectral resolution is how many bands it records and how
+  narrow each one is. A sharper pixel usually comes with a longer wait between images, so
+  confirm the pixel is small enough to resolve the unit you study, such as a field or a village.
+- Band algebra: NDVI (near-infrared minus red, divided by their sum, with values near 1 for
+  dense green plants), and related indices for water and burned area. Read the index at a
+  forest, a parking lot, a lake and an irrigated field, where you know roughly what to expect.
+- Land-cover products (ready-made maps labelling each pixel as forest, water, cropland,
+  built-up land and so on), burned area and crop type, against supervised classification
+  (training a model on pixels you labelled by hand so it labels all the others). NAIP's
+  1-metre aerial imagery for the US helps with the labelling. Hold back part of your ground
+  truth (labels collected on the ground or read from sharper imagery) to verify the map:
+  measure its accuracy on those pixels, and compare your classes with a ready-made land-cover
+  map over the same area.
+- One scene (one image of a fixed patch of ground on one date) end to end: find it, download
+  it, read the bands with `terra`, apply the cloud mask (a layer marking pixels hidden by
+  cloud or shadow), crop to your area and compute the index.
+- Big downloads: read the file listing, loop through download, extract and delete so the disk
+  survives, cache the large intermediate with `saveRDS()`, and have the script beep when an
+  hour-long job finishes.

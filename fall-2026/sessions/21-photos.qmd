@@ -1,0 +1,68 @@
+---
+title: "21 · Photographs I: pixels & vision models"
+subtitle: "Tuesday, Nov 10, 2026"
+pagetitle: "AEM 6850 · 21 Photographs I: pixels & vision models"
+---
+
+::: {.callout-note appearance="simple"}
+Materials for this session are not published yet. They appear here
+before class.
+:::
+
+## Objectives {#objectives}
+
+By the end of this session you can:
+
+- Read a photo into R as a grid of numbers and pull out the pixels (the
+  tiny squares that each hold one colour) of one region, such as the
+  patch of sky.
+- Compute pixel features, numbers built from the pixels, by hand, such
+  as sky colour and contrast.
+- Score haze with a vision model, an AI model that takes an image and
+  returns text or numbers about it, through its provider's API.
+- Relate each score to PM2.5 (the weight of airborne particles 2.5
+  micrometres across or smaller in each cubic metre of air) with
+  `cor()` and a short `lm()` and `predict()` step.
+- Compare both methods against the monitor on held-out photos and say
+  which predicts PM2.5 better, and by how much.
+
+## What we cover {#coverage}
+
+- What photographs have measured in economics.
+  [Ludwig & Mullainathan (QJE, 2024)](https://doi.org/10.1093/qje/qjad055)
+  trained an algorithm on only the pixels of defendants' mug shots and
+  found it accounts for up to half of the predictable variation in
+  judges' jailing decisions.
+  [Obaid & Pukthuanthong (JFE, 2022)](https://doi.org/10.1016/j.jfineco.2021.06.002)
+  classified news photos by sentiment to build a daily pessimism index
+  that predicts reversals in market returns and trading volume.
+  [Aubry et al. (JF, 2023)](https://doi.org/10.1111/jofi.13203)
+  predicted art auction prices from images of the works and their other
+  characteristics, and compared the predictions with the auction
+  houses' own estimates. Here the same idea is applied to air quality.
+- The data: 365 daily sky photos, one per day for a year, matched to
+  same-day PM2.5 readings from a monitor. The monitor is the ground
+  truth, the trusted measurement every score is verified against.
+- A photo is an image array, a grid with one layer per colour, so each
+  pixel has RGB values: its amounts of red, green and blue light.
+- The baseline you build yourself: average the sky's pixels for colour,
+  take their variance for contrast (how much brightness varies; haze
+  makes a scene flatter and greyer), and you have a haze score in about
+  thirty lines of plain R.
+- The model route: a vision model gets each photo and a scoring rule,
+  written instructions on what to judge and on what scale, and returns
+  structured output, one number per photo in a fixed format that code
+  reads directly. Every raw response is saved.
+- From score to PM2.5: `cor()` for the correlation, how closely the two
+  move together on a scale from -1 to 1, then `lm()` fitted on the
+  training photos and `predict()` on the held-out ones, explained step
+  by step.
+- Holding out photos: split the days into a training set and a held-out
+  set with a seed, so the split repeats exactly. All tuning, such as
+  choosing the sky region or rewording the prompt, uses the training
+  photos; the held-out photos stay untouched until the final comparison.
+- Both scores compared against the monitor on the same held-out photos,
+  with the prediction error of each method (the average gap between
+  predicted and measured PM2.5) and the gap between them.
+- An out-of-sample test: webcam images from a wildfire smoke event that
+  neither method saw while it was being built.

@@ -1,0 +1,70 @@
+---
+title: "22 · Photographs II: classifying & counting"
+subtitle: "Thursday, Nov 12, 2026"
+pagetitle: "AEM 6850 · 22 Photographs II: classifying & counting"
+---
+
+::: {.callout-note appearance="simple"}
+Materials for this session are not published yet. They appear here
+before class.
+:::
+
+## Objectives {#objectives}
+
+By the end of this session you can:
+
+- Turn photos into image embeddings and train a simple classifier, a
+  rule that assigns each photo to one of a few categories, on them.
+- Count cars and people in a photo with an object-detection model, and
+  choose its confidence cutoff.
+- Pull street-level images, photos taken from roads by camera-carrying
+  cars, for a set of locations and score them.
+- Score faces for emotion and state the ethics constraints that face
+  data demands.
+- Measure each classifier's agreement with hand labels on held-out
+  photos, and the error of each count.
+
+## What we cover {#coverage}
+
+- What these methods have measured in economics.
+  [Adukia et al. (QJE, 2023)](https://doi.org/10.1093/qje/qjad028)
+  detected faces in a century of children's-book illustrations and
+  classified their skin colour, race, gender and age to measure who is
+  shown and how that changed.
+  [Naik, Raskar & Hidalgo (AER P&P, 2016)](https://doi.org/10.1257/aer.p20161030),
+  a short proceedings paper, scored street-level images of 19 US cities
+  for perceived safety and related the scores to density, income and
+  inequality.
+  [Hu & Ma (JF, 2025)](https://doi.org/10.1111/jofi.13471) scored
+  facial expressions, voice and words in startup pitch videos and found
+  that positive delivery raises the odds of funding, with women judged
+  more on delivery in single-gender teams.
+- Image embeddings: a model turns each photo into a long list of
+  numbers, and photos that look alike get similar lists.
+- A simple classifier on the embeddings: a logistic regression with
+  `glm()`, which turns the numbers into a probability between 0 and 1
+  that a label applies, explained step by step. It is trained on a few
+  hundred photos with hand labels (the category a person assigned by
+  looking), and some labelled photos are held out from training. The
+  agreement rate, the share of held-out photos where the classifier
+  matches the hand label, is the number you report.
+- Counting objects: object detection finds every car or person in a
+  photo and marks each with a bounding box, the rectangle where it sits,
+  and a confidence score between 0 and 1. Detections below the
+  confidence cutoff are dropped, so the count you report depends on the
+  cutoff you pick. Verify each count against a hand count on held-out
+  photos, and look at the false positives (counting something that is
+  not there) and false negatives (missing something that is).
+- Street-level imagery: what exists, its terms of use, and its coverage
+  (which places and dates have imagery), which is uneven across both.
+  Mapillary, a crowdsourced platform where people upload street photos
+  from phones and dashcams, offers an open licence and a free API.
+- Faces and emotion: face detection finds where faces are, and a facial
+  emotion classifier labels each face with an emotion such as happy or
+  angry, scored against hand labels. Face recognition, matching a face
+  to a named person, raises the sharpest privacy concerns. The ethics
+  face data demands include consent, identifying people, and error
+  rates that differ across groups, such as by skin tone or age.
+- Running the embedding and detection models yourself needs Python. A
+  setup guide comes with the session materials, and their output is also
+  provided.

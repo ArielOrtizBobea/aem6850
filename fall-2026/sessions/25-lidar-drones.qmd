@@ -1,0 +1,68 @@
+---
+title: "25 · LiDAR & drone imagery"
+subtitle: "Tuesday, Nov 24, 2026 · taught remotely"
+pagetitle: "AEM 6850 · 25 LiDAR & drone imagery"
+---
+
+::: {.callout-note appearance="simple"}
+Materials for this session are not published yet. They appear here
+before class.
+:::
+
+## Objectives {#objectives}
+
+By the end of this session you can:
+
+- Explain what LiDAR measures and how a cloud of laser returns becomes
+  an elevation raster.
+- Build a terrain model, a surface model and a canopy-height raster
+  from public LiDAR data with `lidR` and `terra`.
+- Compute slope from an elevation raster and summarise it over
+  polygons.
+- Read a drone orthomosaic into R and line it up with other layers.
+- Say what plane and drone data resolve that satellite imagery cannot,
+  and what they give up in area covered and visits repeated.
+
+## What we cover {#coverage}
+
+- Published work built on elevation and aerial imagery.
+  [Henderson, Regan & Venables (REStud, 2021)](https://doi.org/10.1093/restud/rdaa042)
+  traced every Nairobi building from aerial photographs for 2003 and
+  2015, measured 2015 building heights with LiDAR, and tracked
+  demolition, rebuilding and the conversion of slums.
+  [Saiz (QJE, 2010)](https://doi.org/10.1162/qjec.2010.125.3.1253)
+  measured the land too steep or wet to build on around US metro areas
+  from elevation and water data, and showed that it limits housing
+  supply. [Duflo & Pande (QJE, 2007)](https://doi.org/10.1162/qjec.122.2.601)
+  computed slope across each Indian district and along its rivers from a
+  global elevation grid, and used river gradient to estimate how large
+  dams affect farm output and poverty.
+- How LiDAR works: a laser scanner on a plane times each reflected
+  pulse and turns it into a distance. The result is a point cloud,
+  millions of points with a location and a height, classified as
+  ground, vegetation or buildings. Each echo is a return; the first
+  often comes from treetops or roofs and the last from the ground, and
+  pulses that slip between leaves give the terrain under a forest
+  canopy. Points come as LAS files, or LAZ when compressed.
+- From points to rasters: a digital terrain model (DTM, often called a
+  DEM), the bare ground's height, from ground returns; a digital surface
+  model, the height of whatever stands on top, from first returns; and
+  canopy height as the difference, cell by cell. Both models must share
+  a vertical datum, the zero level of all heights. Compare one LiDAR
+  height with a building of known height.
+- Slope, how steeply the ground rises, computed from height differences
+  between neighbouring cells and averaged over polygons.
+- Where to get it: public LiDAR collections cover much of the United
+  States, along with the elevation rasters derived from them.
+- Drone imagery: photos with a ground sample distance (the ground width
+  one pixel covers) of a few centimetres, stitched into an orthomosaic,
+  one image with true map distances everywhere. It shows single trees,
+  crop rows and roof damage that a satellite pixel averages together.
+  Georeferencing pins it to the map at ground control points, spots
+  with surveyed positions. Overlay a basemap to verify a road lines up.
+- Application: what each home can see, such as a lake or a new wind
+  turbine, computed from the surface model and set beside sale prices;
+  and buildings that changed between two LiDAR flights of the same area.
+
+This page is written for self-study: every step runs from the code
+shown, on data downloaded within the page.

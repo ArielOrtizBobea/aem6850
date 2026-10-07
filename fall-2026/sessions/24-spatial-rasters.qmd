@@ -1,0 +1,65 @@
+---
+title: "24 · Spatial II: rasters"
+subtitle: "Thursday, Nov 19, 2026"
+pagetitle: "AEM 6850 · 24 Spatial II: rasters"
+---
+
+::: {.callout-note appearance="simple"}
+Materials for this session are not published yet. They appear here
+before class.
+:::
+
+## Objectives {#objectives}
+
+By the end of this session you can:
+
+- Load, crop and align rasters with `terra`, and combine them with
+  raster algebra.
+- Compute zonal statistics over polygons with `exactextractr`.
+- Choose between area and population weights, and predict which way
+  the choice moves a county average.
+- Turn daily gridded weather into a county-by-day table.
+- Convert u/v wind components into speed and direction, and flag the
+  areas downwind of a fire.
+
+## What we cover {#coverage}
+
+- Published work built on rasters, grids of equal-size cells covering
+  the ground, each holding one value such as temperature.
+  [Deschênes & Greenstone (AER, 2007)](https://doi.org/10.1257/aer.97.1.354)
+  averaged 4-kilometre temperature and rainfall cells over each county's
+  farmland and related year-to-year swings in weather to farm profits,
+  with degree days taken from weather stations.
+  [Dell, Jones & Olken (AEJ: Macro, 2012)](https://doi.org/10.1257/mac.4.3.66)
+  averaged a global half-degree grid to countries, weighting cells by
+  population or by land area, to estimate how hot years affect growth.
+  [Deryugina et al. (AER, 2019)](https://doi.org/10.1257/aer.20180279)
+  used shifts in daily county wind direction, computed from gridded wind
+  components, to estimate how fine particles affect elderly mortality
+  and medical costs.
+- A raster is a matrix with coordinates attached. Resolution is the
+  ground width of one cell; extent is the rectangle the grid covers.
+  Raster algebra, arithmetic cell by cell across grids, needs matching
+  resolution, extent, origin and map coordinate system, so first
+  resample one grid onto the other's cells or project it.
+- A zonal statistic summarises the cells inside each polygon, such as a
+  county's mean temperature; `exactextractr` weights each cell by its
+  coverage fraction, the share inside the polygon. Area weights count a
+  cell by its share of the county's land, population weights by the
+  people in it. The two differ most in large, thinly populated places.
+- Application: daily gridded weather to one row per county and day.
+  Gridded weather products fill a grid with estimates from stations and
+  satellites; a reanalysis rebuilds past weather by running old
+  observations through a forecasting model. Hand-compute one county's
+  average and compare it with the table.
+- Application: the areas downwind of a fire, where the wind carries its
+  smoke. Wind arrives as east-west (u) and north-south (v) components.
+  Weather data reports where it comes from, clockwise from north;
+  `atan2(v, u)` gives where it blows toward, counterclockwise from east.
+  Convert first, then compare the flag with smoke imagery or monitor data.
+- The fast method: store the cell-to-county weights once as a sparse
+  matrix (mostly zeros, so only the nonzero entries are kept), and each
+  day's county averages take one matrix multiply. Time it against the
+  canned function with `system.time()` and verify the two agree.
+- Gridded products disagree. Several cover the same place with different
+  answers, so name yours and the reason in the methods section.

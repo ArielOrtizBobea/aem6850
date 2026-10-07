@@ -1,7 +1,7 @@
 ---
-title: "16 · Text I — regex"
+title: "16 · Text I: regex"
 subtitle: "Thursday, Oct 22, 2026"
-pagetitle: "AEM 6850 · 16 Text I — regex"
+pagetitle: "AEM 6850 · 16 Text I: regex"
 ---
 
 ::: {.callout-note appearance="simple"}
@@ -13,25 +13,56 @@ before class.
 
 By the end of this session you can:
 
-- Read and write practical regular expressions.
-- Extract structured fields from messy text.
-- Pair every pattern with positive and negative tests.
-- Judge when a regex beats a model, and when it doesn't.
+- Write regular expressions with `stringr`, from literal matches to
+  groups.
+- Extract structured fields, such as dates and dollar amounts, from
+  messy text.
+- Count word frequencies in a set of documents after dropping stop
+  words.
+- Score each document with a sentiment dictionary by counting its
+  positive and negative words.
+- Pair every pattern with a should-match test and a should-not-match
+  test.
 
 ## What we cover {#coverage}
 
-- What text has measured: media slant, FOMC language, skills in job
-  ads — the text-as-data classics.
-- `stringr`; regex from literals to character classes, quantifiers,
-  anchors, and groups.
-- Counting words: tokenize, `table()`, stop words, term
-  frequencies — the dictionary tier that answered those classic
-  papers, and still the right first move on any corpus. Readability
-  metrics in one slide; fixing a broken character encoding in one
-  line.
-- Regex and counting as the cheap, deterministic tools you try
-  *before* reaching for a model — session 17 is for what they can't
-  do.
-
-**Verification habit.** Every pattern ships with a should-match test
-*and* a should-NOT-match test.
+- [Baker, Bloom & Davis (QJE, 2016)](https://doi.org/10.1093/qje/qjw024)
+  built a keyword index, the monthly share of newspaper articles with a
+  term from each of three lists (economy, policy, uncertainty), and had
+  people read 12,000 articles to confirm it tracks policy uncertainty.
+  [Shapiro & Wilson (REStud, 2022)](https://doi.org/10.1093/restud/rdab094)
+  scored the tone of Fed meeting transcripts with a finance word list,
+  compared the scores with research assistants' ratings of a sample, and
+  estimated the Fed's implicit inflation target at about 1.5 percent.
+  [Djourelova (AER, 2023)](https://doi.org/10.1257/aer.20211537) counted
+  articles with the phrase "illegal immigrant" before and after the
+  Associated Press banned it, and found that exposed readers grew less
+  supportive of restrictive immigration policy.
+- `stringr` and regular expressions (regex), written patterns that
+  describe the text to find: literals, character classes (a set in
+  brackets, any one of which can match, such as `[0-9]`), quantifiers
+  (how often the piece before may repeat, such as `+` for one or more),
+  anchors (`^` and `$` pin the start and the end) and groups.
+- Extracting fields with capture groups, the parts of a pattern inside
+  parentheses that come out as their own column. Each pattern carries
+  should-match and should-not-match tests, strings it must catch and
+  strings it must skip, rerun after every change. A row caught by
+  mistake is a false positive; one missed is a false negative.
+- The corpus: the Federal Reserve's policy statements and
+  press-conference transcripts, provided as a file.
+- Counting words: split each document in the corpus (the full set of
+  documents you analyze) into tokens, usually single words, tabulate
+  with `table()`, drop stop words such as "the" and "of", and compare
+  term frequencies (a word's share of the document's words).
+- Dictionary sentiment: a published list of positive and negative
+  words, a count of each per document, and a net tone score (positive
+  minus negative, over the word count). A dictionary built for one
+  domain misreads another; "liability" and "tax" carry no sentiment in
+  a company report. A human audit reads the top- and bottom-scoring
+  documents and a random sample by hand to verify the score matches a
+  person's judgment.
+- Readability metrics in one slide, and a one-line fix for a broken
+  character encoding, the rule that stores letters as numbers ("café"
+  read with the wrong rule shows up as "cafÃ©").
+- Regex and word counts are cheap and give the same answer on every
+  run, which makes them the first thing to try on a new corpus.
