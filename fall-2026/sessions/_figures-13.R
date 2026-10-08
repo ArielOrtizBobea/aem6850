@@ -48,17 +48,20 @@ fips <- cf$fips[match(nm, cf$polyname)]
 val <- v[match(fips, oa$fips)]
 br <- quantile(v, c(0, .2, .4, .6, .8, 1), na.rm = TRUE)
 cls <- cut(val, br, include.lowest = TRUE)
-blues <- hcl.colors(5, "Blues 3", rev = TRUE)
-png(file.path(out, "F03-opportunity-atlas-county.png"), width = 1800, height = 1100, res = 150)
+cols5 <- hcl.colors(5, "Blue-Red", rev = TRUE)   # red for low, blue for high
+png(file.path(out, "F03-opportunity-atlas-county.png"), width = 1800, height = 1150, res = 150)
+layout(matrix(1:2, nrow = 2), heights = c(10, 1.4))
 par(mar = c(0, 0, 0, 0), family = "Helvetica")
-map("county", fill = TRUE, col = ifelse(is.na(cls), "grey85", blues[cls]), border = NA,
+map("county", fill = TRUE, col = ifelse(is.na(cls), "white", cols5[cls]), border = NA,
     projection = "albers", parameters = c(29.5, 45.5), resolution = 0)
 map("state", add = TRUE, col = "white", lwd = 0.6,
     projection = "albers", parameters = c(29.5, 45.5), resolution = 0)
 labs <- paste0(round(100 * br[-6]), " to ", round(100 * br[-1]))
-legend("bottomleft", inset = c(0.02, 0.06), fill = blues, border = NA, bty = "n", cex = 1.15,
-       title = "Average adult income rank (percentile)\nof children from 25th-percentile families",
-       legend = labs)
+par(mar = c(0, 0, 0, 0))
+plot.new()
+legend("center", horiz = TRUE, fill = cols5, border = NA, bty = "n", cex = 1.25,
+       legend = labs, title = "Average adult income rank (percentile) of children from 25th-percentile families",
+       x.intersp = 0.6, text.width = NA)
 dev.off()
 cat("F3: counties", nrow(oa), "mapped", sum(!is.na(val)), "\n")
 
