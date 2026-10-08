@@ -1,0 +1,1313 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.37">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>AEM 6850 · HW2 – AEM 6850</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-7f8f88aac4f3542376d5c11b86a4c14d.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-9e1fa279bf766a6aa9044cbdb2ba542d.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="../../styles.css">
+</head>
+
+<body class="nav-sidebar docked quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../fall-2026/assignments.html">Homework</a></li><li class="breadcrumb-item"><a href="../../fall-2026/assignments/hw02-wind.html">2 What was the wind doing?</a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="../../">AEM 6850</a> 
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Home</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/syllabus.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Syllabus</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">Part I — Foundations</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/01-overview.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"> 1 Overview</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/02-r-essentials.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"> 2 R essentials I</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/03-r-essentials-ii.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"> 3 R essentials II</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/03b-wrangling.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">   Wrangling: dplyr</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/04-basic-plots.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"> 4 Basic plots I</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/05-basic-plots-ii.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"> 5 Basic plots II</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/06-how-to-code.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"> 6 How to code</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/07-git.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"> 7 Version control with git</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/08-ai-chat.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"> 8 AI I: chatbots</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/09-ai-code.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"> 9 AI II: coding agents</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/10-verification.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">10 Verification</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/11-reproducible-project.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">11 Reproducible projects</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/12-ggplot.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">12 Publication graphics</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
+ <span class="menu-text">Part II — Applications</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/13-landscape.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">13 The data economists use</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/14-apis.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">14 Channels I: APIs</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/15-scraping.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">15 Channels II: scraping</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/16-text-regex.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">16 Text I: regex</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/17-text-llms.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">17 Text II: LLMs</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/18-documents.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">18 Documents &amp; scans</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/19-audio.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">19 Audio I: speech to text</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/20-audio-ii.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">20 Audio II: tone &amp; emotion</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/21-photos.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">21 Photographs I</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/22-photos-ii.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">22 Photographs II</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/23-spatial-vector.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">23 Spatial I: vector</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/24-spatial-rasters.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">24 Spatial II: rasters</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/25-lidar-drones.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">25 LiDAR &amp; drone imagery</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/26-satellite-local.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">26 Satellite I: on your machine</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/27-satellite-gee.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">27 Satellite II: Earth Engine</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/28-moving-forward.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">28 Moving forward</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../../fall-2026/assignments.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Homework</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/assignments/hw01-air.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">1 How bad was the air?</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/assignments/hw02-wind.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">2 What was the wind doing?</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../../fall-2026/resources.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Resources</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/resources.html#stata" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Coming from Stata</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/resources.html#r" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Learning R</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/resources.html#economists" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Coding guides</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/resources.html#unstuck" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Getting unstuck</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#what-happened" id="toc-what-happened" class="nav-link active" data-scroll-target="#what-happened">What happened</a></li>
+  <li><a href="#what-you-produce" id="toc-what-you-produce" class="nav-link" data-scroll-target="#what-you-produce">What you produce</a></li>
+  <li><a href="#what-you-get" id="toc-what-you-get" class="nav-link" data-scroll-target="#what-you-get">What you get</a></li>
+  <li><a href="#the-rules-the-figure-follows" id="toc-the-rules-the-figure-follows" class="nav-link" data-scroll-target="#the-rules-the-figure-follows">The rules the figure follows</a></li>
+  <li><a href="#how-to-organise-it" id="toc-how-to-organise-it" class="nav-link" data-scroll-target="#how-to-organise-it">How to organise it</a></li>
+  <li><a href="#checking-as-you-go" id="toc-checking-as-you-go" class="nav-link" data-scroll-target="#checking-as-you-go">Checking as you go</a></li>
+  <li><a href="#the-note" id="toc-the-note" class="nav-link" data-scroll-target="#the-note">The note</a></li>
+  <li><a href="#cheat-sheet" id="toc-cheat-sheet" class="nav-link" data-scroll-target="#cheat-sheet">Cheat sheet</a></li>
+  <li><a href="#tips" id="toc-tips" class="nav-link" data-scroll-target="#tips">Tips</a></li>
+  <li><a href="#how-to-submit" id="toc-how-to-submit" class="nav-link" data-scroll-target="#how-to-submit">How to submit</a></li>
+  <li><a href="#ai-on-this-one" id="toc-ai-on-this-one" class="nav-link" data-scroll-target="#ai-on-this-one">AI on this one</a></li>
+  <li><a href="#rubric" id="toc-rubric" class="nav-link" data-scroll-target="#rubric">Rubric</a>
+  <ul class="collapse">
+  <li><a href="#similarity-3-points" id="toc-similarity-3-points" class="nav-link" data-scroll-target="#similarity-3-points">Similarity (3 points)</a></li>
+  <li><a href="#reproducibility-3-points" id="toc-reproducibility-3-points" class="nav-link" data-scroll-target="#reproducibility-3-points">Reproducibility (3 points)</a></li>
+  <li><a href="#coding-structure-3-points" id="toc-coding-structure-3-points" class="nav-link" data-scroll-target="#coding-structure-3-points">Coding structure (3 points)</a></li>
+  <li><a href="#verification-3-points" id="toc-verification-3-points" class="nav-link" data-scroll-target="#verification-3-points">Verification (3 points)</a></li>
+  <li><a href="#the-note-and-the-history-3-points" id="toc-the-note-and-the-history-3-points" class="nav-link" data-scroll-target="#the-note-and-the-history-3-points">The note and the history (3 points)</a></li>
+  <li><a href="#the-one-thing-that-scores-below-zero" id="toc-the-one-thing-that-scores-below-zero" class="nav-link" data-scroll-target="#the-one-thing-that-scores-below-zero">The one thing that scores below zero</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../fall-2026/assignments.html">Homework</a></li><li class="breadcrumb-item"><a href="../../fall-2026/assignments/hw02-wind.html">2 What was the wind doing?</a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title">HW2 · What was the wind doing?</h1>
+<p class="subtitle lead">Out Wed Oct 7 · due Wed Oct 14, 11:59 pm</p>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p><strong>AI assistance is recommended on this one.</strong> See the rule near the bottom: use it, disclose it, and write the change note yourself.</p>
+<hr>
+<section id="what-happened" class="level2">
+<h2 class="anchored" data-anchor-id="what-happened">What happened</h2>
+<p>HW1 ended on a puzzle. The air across the Los Angeles basin was worse in early December than in the week of the fires, on days when nothing was burning anywhere in the state. And the fire’s own smoke, from two fires that burned for three weeks, was gone from the monitors within days.</p>
+<p>Both fires were driven by the <a href="https://en.wikipedia.org/wiki/Santa_Ana_winds">Santa Ana winds</a>, a dry wind that blows from the desert, over the mountains, and out to sea. On the night of 7 January 2025 it gusted past 100 km/h. The rest of the winter the basin’s air mostly sat still, and Los Angeles in winter is famous for inversions: a lid of warm air that traps whatever is emitted underneath it.</p>
+<p>Many of the sites that measure PM2.5 also measure wind, and EPA publishes that record too, every day, for every instrument. This assignment puts the two records side by side and asks: <strong>was it the wind?</strong></p>
+</section>
+<section id="what-you-produce" class="level2">
+<h2 class="anchored" data-anchor-id="what-you-produce">What you produce</h2>
+<p>One figure, and a note.</p>
+<p>It is your HW1 figure with one new panel. Panel <strong>A</strong> is unchanged. Panel <strong>B</strong> is new: wind speed across the wind monitors, each day, summarised exactly the way panel A summarises PM2.5. Panel <strong>C</strong> is HW1’s heat map, relettered but otherwise unchanged.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://arielortizbobea.github.io/assets/data/hw2_target.png" class="img-fluid figure-img"></p>
+<figcaption>Target figure</figcaption>
+</figure>
+</div>
+<p>Study it before you write a line. The network’s worst days, in early December and at New Year, are days when the wind across the basin averaged under 5 km/h. The fire week is the one stretch where the basin was windy and dirty at the same time.</p>
+<p><strong>The note</strong> is a short file, <code>CHANGES.md</code>, that says what you changed from your HW1 project and why, what you checked, and how you used AI. The format is below.</p>
+</section>
+<section id="what-you-get" class="level2">
+<h2 class="anchored" data-anchor-id="what-you-get">What you get</h2>
+<p><strong>Your own HW1, already in the repo.</strong> Clone <code>hw2-&lt;your username&gt;</code> and your HW1 submission is sitting there as the first commit, with <code>hw1.Rproj</code> renamed <code>hw2.Rproj</code>. Nothing to download, nothing to copy across. Start from what you wrote.</p>
+<p><strong>Building on it is required, and it is graded.</strong> That first commit is your HW1 exactly as you handed it in, and HW2 is the change you make to it. The grader opens that commit beside your last one. Scripts that still carry your object names, your section headers and your comments read as yours, however heavily you edited them; scripts deleted and replaced by a fresh project do not. How far your HW1 was from the target costs you nothing here. If that first commit holds no R code, because you did not submit HW1 or your HW1 arrived as a zip, say so in the first line of <code>CHANGES.md</code> and nothing is held against you.</p>
+<p>No solution to HW1 is posted. If your figure did not match the HW1 target, closing that gap is part of this assignment: the target is still on <a href="../../fall-2026/assignments/hw01-air.html">the HW1 page</a> along with the rules it follows, and <code>CHANGES.md</code> is where you say what you repaired. Open your PNG and the target side by side at the same size and work through the differences. That comparison is the assignment as much as the wind panel is.</p>
+<p><strong>The wind data.</strong> One file, cut from EPA’s <a href="https://aqs.epa.gov/aqsweb/airdata/download_files.html">pre-generated annual files</a> (<code>daily_WIND_2024.zip</code> and <code>daily_WIND_2025.zip</code>) to the same area and window as HW1’s file: every wind monitor within 150 km of the Eaton Fire, 1 December 2024 to 28 February 2025. The columns are exactly as EPA ships them.</p>
+<blockquote class="blockquote">
+<p><a href="https://arielortizbobea.github.io/assets/data/epa_wind_la_fires_2024_2025.csv" class="uri">https://arielortizbobea.github.io/assets/data/epa_wind_la_fires_2024_2025.csv</a></p>
+</blockquote>
+<p>6,702 rows, 38 sites, 2.2 MB. Two parameters share the file: <code>Parameter Code</code> <strong>61103</strong> is wind speed, <strong>61104</strong> is wind direction. This assignment uses speed; direction waits for HW3.</p>
+<p>The layout is not the one HW1’s file used. EPA’s download tool does not offer wind, so this file comes from a different EPA product with its own conventions:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">what</th>
+<th style="text-align: left;">HW1’s PM2.5 file</th>
+<th style="text-align: left;">this file</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">site</td>
+<td style="text-align: left;"><code>Site ID</code>, one column, <code>060371103</code></td>
+<td style="text-align: left;">three columns: <code>State Code</code> <code>06</code>, <code>County Code</code> <code>037</code>, <code>Site Num</code> <code>1103</code></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">instrument</td>
+<td style="text-align: left;"><code>POC</code></td>
+<td style="text-align: left;"><code>POC</code></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">date</td>
+<td style="text-align: left;"><code>Date</code>, <code>01/07/2025</code></td>
+<td style="text-align: left;"><code>Date Local</code>, <code>2025-01-07</code></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">the value</td>
+<td style="text-align: left;"><code>Daily Mean PM2.5 Concentration</code></td>
+<td style="text-align: left;"><code>Arithmetic Mean</code>, the day’s average</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">units</td>
+<td style="text-align: left;">µg/m³</td>
+<td style="text-align: left;"><code>Units of Measure</code> says <strong>Knots</strong>; 1 knot is 1.852 km/h</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">the fastest hour</td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"><code>1st Max Value</code>, <code>1st Max Hour</code></td>
+</tr>
+</tbody>
+</table>
+<p>All three site columns are labels with leading zeros, so all three need protecting at read time, the way <code>Site ID</code> did in HW1.</p>
+<p><strong>The PM2.5 data</strong> is HW1’s file, at the same address:</p>
+<blockquote class="blockquote">
+<p><a href="https://arielortizbobea.github.io/assets/data/epa_pm25_la_fires_2024_2025.csv" class="uri">https://arielortizbobea.github.io/assets/data/epa_pm25_la_fires_2024_2025.csv</a></p>
+</blockquote>
+</section>
+<section id="the-rules-the-figure-follows" class="level2">
+<h2 class="anchored" data-anchor-id="the-rules-the-figure-follows">The rules the figure follows</h2>
+<ol type="1">
+<li><strong>Everything HW1’s figure encoded still holds:</strong> the window, what a monitor is, the 60-of-90-days rule, distance from the Eaton Fire, the row order, EPA’s six colours, the two summaries in panel A, the one red line at 7 January.</li>
+<li><strong>A wind monitor is a site plus a <code>POC</code>.</strong> Build the key from the three site columns and the POC. It is unique on any given day within parameter 61103, and your script checks that it is. That test is worth more than it looks: drop the <code>61103</code> filter and the file still holds a speed row and a direction row for the same instrument on the same day, so the test stops the script.</li>
+<li><strong>Keep the wind speed rows only</strong>, parameter <code>61103</code>.</li>
+<li><strong>Convert knots to km/h</strong>, multiplying by 1.852. The constant lives in the parameters block, with its name.</li>
+<li><strong>Keep wind monitors that reported at least 60 of the 90 days</strong>, the same rule as for PM2.5.</li>
+<li><strong>Panel B:</strong> for each day, the mean across the wind monitors that reported, and the 10th and 90th percentile of those same readings. Axis from 0 to 30 km/h. Same lines, same colours, same key as panel A.</li>
+<li><strong>Layout:</strong> three rows, heights in the ratio 1 : 0.75 : 2.6, one shared set of margins so the three x axes line up. The red line runs from the top of A to the bottom of C.</li>
+<li><strong>Output:</strong> <code>figures/hw2_target.png</code>, 183 × 270 mm, 300 dpi. The page is taller than HW1’s to make room for the third row.</li>
+</ol>
+</section>
+<section id="how-to-organise-it" class="level2">
+<h2 class="anchored" data-anchor-id="how-to-organise-it">How to organise it</h2>
+<p>Your HW1 layout, unchanged, plus the note:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">file</th>
+<th style="text-align: left;">job</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><code>code/1_get_clean_data.R</code></td>
+<td style="text-align: left;">HW1’s script, plus: download the wind file, keep the window and the speed rows, build one row per wind monitor, save <strong>both</strong> grids in the one clean object</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>code/2_plot_figure.R</code></td>
+<td style="text-align: left;">HW1’s script, plus panel B</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>code/run_everything.R</code></td>
+<td style="text-align: left;"><code>source()</code> the two, in order</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>CHANGES.md</code></td>
+<td style="text-align: left;">the note</td>
+</tr>
+</tbody>
+</table>
+<p>Raw data in <code>data/</code>, computed objects in <code>data_clean/</code>, figures in <code>figures/</code>, paths relative to the project root. As before.</p>
+<p><strong>Panels A and B are the same drawing on two grids.</strong> Write it once as a function that takes a grid, a panel letter and an axis label, and call it twice. Session 6 was about this. It is not a rule, but the Coding score looks for it, and the alternative, a copy of panel A with edits, doubles the length of your diff.</p>
+</section>
+<section id="checking-as-you-go" class="level2">
+<h2 class="anchored" data-anchor-id="checking-as-you-go">Checking as you go</h2>
+<p>Panel B draws whether or not the numbers behind it are right. Wind speed left in knots gives you the same shape, the same 7 January peak, a line about half as high, and no error anywhere. Session 10 covered the answer: the script says what it expects and stops when the data disagrees.</p>
+<p>Put a check where this week’s data can go wrong, and write it so that it could actually fail. The size of the wind numbers is the one that matters most. The tips below give you the scale: an ordinary day across the network reads 3 to 5 km/h and the Santa Ana reads 13.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>  <span class="co"># after the wind grid is built, in code/1_get_clean_data.R</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  daily <span class="ot">&lt;-</span> <span class="fu">apply</span>(grid_wind, <span class="dv">2</span>, mean, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stopifnot</span>(<span class="fu">median</span>(daily) <span class="sc">&gt;</span> <span class="dv">3</span>,    <span class="co"># it is 2.7 if the conversion never ran</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>            <span class="fu">median</span>(daily) <span class="sc">&lt;</span> <span class="dv">8</span>)    <span class="co"># it is 9.1 if it ran twice</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>In km/h that median is 4.9 and the script carries on. Both bounds can fail on a mistake you could actually make, which is what makes the line worth writing. It also catches a parameter code mistyped as <code>61104</code>, where the median comes out above 300.</p>
+<p>Rule 2’s key test is the other one. It costs one line and it stops the script if the <code>61103</code> filter never ran. What it cannot see is a filter that ran on the wrong code, which is why the two checks are worth having together.</p>
+<p><strong>A check that cannot fail earns nothing.</strong> <code>max(grid_wind) &lt; 150</code> passes on knots and on km/h alike, because the fastest cell in this file is 38 km/h. <code>stopifnot(nrow(w) == 6702)</code> passes today, says nothing about whether what you did to the rows was right, and breaks the week EPA regenerates the file.</p>
+<p>Printing the number of rows after each step that can drop rows, and the number of monitors before and after the 60-of-90 rule, is worth doing and worth quoting in <code>CHANGES.md</code>. The check the rubric looks for is one that stops.</p>
+</section>
+<section id="the-note" class="level2">
+<h2 class="anchored" data-anchor-id="the-note">The note</h2>
+<p><code>CHANGES.md</code>, at the project root, half a page at most, written in your own words:</p>
+<pre><code># What changed from HW1
+
+Base: my own HW1 submission.
+
+## Files and folders
+- ...what you renamed, moved, split or added, and why...
+
+## code/1_get_clean_data.R
+- ...one bullet per change, with the reason...
+
+## code/2_plot_figure.R
+- ...
+
+## Layout
+- ...page size, the three rows and their heights, margins, what you had
+  to change so the panels still line up and the labels still fit...
+
+## What I fixed from my HW1
+- ...anything your feedback flagged, and what you did about it...
+
+## What I checked
+- ...one line per check: where it sits, and what it would have caught...
+
+## AI disclosure
+- Tools: which ones, by name
+- Used for: what you asked them to do
+- Checked: what you verified, and how</code></pre>
+<p>Prose, not a diff. “Moved the scripts into <code>code/</code> so the project matches the layout the assignment asks for” is a sentence; a list of changed line numbers is not.</p>
+<p>The grader reads the note first, then compares your HW2 code with your HW1 code. Every change in the code should be in the note, and nothing in the note should be missing from the code.</p>
+<p><strong>Write the note yourself.</strong> A chatbot will write a flawless one from a diff in ten seconds. The point of the note is that <em>you</em> read the change. Ask AI to explain a line you changed, by all means. The note describes what you did, in your words.</p>
+</section>
+<section id="cheat-sheet" class="level2">
+<h2 class="anchored" data-anchor-id="cheat-sheet">Cheat sheet</h2>
+<p>Everything you need was covered in sessions 2 to 6, with the checks from session 10, and the AI rule below covers the rest.</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th style="text-align: left;">task</th>
+<th style="text-align: left;">functions</th>
+<th style="text-align: left;">session</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">get the second file, into a folder you make</td>
+<td style="text-align: left;"><code>download.file()</code>, <code>file.exists()</code>, <code>dir.create()</code></td>
+<td style="text-align: left;"><a href="https://arielortizbobea.github.io/aem6850/fall-2026/sessions/03-r-essentials-ii.html">3</a>, <a href="https://arielortizbobea.github.io/aem6850/fall-2026/sessions/06-how-to-code.html">6</a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">read it, protecting three columns</td>
+<td style="text-align: left;"><code>read.csv()</code> with <code>colClasses</code></td>
+<td style="text-align: left;"><a href="https://arielortizbobea.github.io/aem6850/fall-2026/sessions/03-r-essentials-ii.html">3</a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">an ISO date</td>
+<td style="text-align: left;"><code>as.Date()</code> needs no <code>format</code></td>
+<td style="text-align: left;"><a href="https://arielortizbobea.github.io/aem6850/fall-2026/sessions/02-r-essentials.html">2</a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">build the key, check it</td>
+<td style="text-align: left;"><code>paste()</code>, <code>anyDuplicated()</code>, <code>stopifnot()</code></td>
+<td style="text-align: left;"><a href="https://arielortizbobea.github.io/aem6850/fall-2026/sessions/03-r-essentials-ii.html">3</a>, <a href="https://arielortizbobea.github.io/aem6850/fall-2026/sessions/06-how-to-code.html">6</a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">monitor × day grid, again</td>
+<td style="text-align: left;"><code>factor()</code> with <code>levels =</code>, <code>tapply()</code>, <code>apply()</code></td>
+<td style="text-align: left;"><a href="https://arielortizbobea.github.io/aem6850/fall-2026/sessions/03-r-essentials-ii.html">3</a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">one drawing, two panels</td>
+<td style="text-align: left;"><code>function()</code></td>
+<td style="text-align: left;"><a href="https://arielortizbobea.github.io/aem6850/fall-2026/sessions/06-how-to-code.html">6</a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">three panels, one file</td>
+<td style="text-align: left;"><code>layout()</code> with <code>heights =</code>, <code>par(cex = )</code></td>
+<td style="text-align: left;"><a href="https://arielortizbobea.github.io/aem6850/fall-2026/sessions/05-basic-plots-ii.html">5</a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">check what you built</td>
+<td style="text-align: left;"><code>stopifnot()</code>, <code>median()</code>, a count you print</td>
+<td style="text-align: left;"><a href="https://arielortizbobea.github.io/aem6850/fall-2026/sessions/10-verification.html">10</a></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="tips" class="level2">
+<h2 class="anchored" data-anchor-id="tips">Tips</h2>
+<p><strong>Three rows shrink your text.</strong> <code>layout()</code> with three or more rows quietly sets <code>par("cex")</code> to 0.66, so every label and every margin is a third smaller than in HW1 and the site names no longer fit. Put <code>par(cex = 1)</code> right after <code>layout()</code>.</p>
+<p><strong>The red line has further to go.</strong> Your HW1 geometry assumed one panel above the heat map. Now there are two. Derive the top of panel A from the three layout heights rather than from the single ratio 2.6.</p>
+<p><strong>What “resultant” means.</strong> EPA’s daily wind speed is a <em>vector</em> average over the 24 hours: a day when the wind blows one way in the morning and back in the afternoon averages close to zero. That is why an ordinary day reads 3 to 5 km/h and the Santa Ana reads 13. It is the right number for this question, because it measures how far the day’s air actually moved.</p>
+<p><strong>The site ID in three pieces.</strong> <code>paste0()</code> of the three columns gives HW1’s <code>Site ID</code>. You do not need it this week, but it is how HW3 will match a wind monitor to a PM2.5 monitor at the same site.</p>
+<p><strong>Restart and source before you submit.</strong> Session &gt; Restart R, then <code>source("code/run_everything.R")</code>. It must run top to bottom and write the figure. Test it the way the grader will: <strong>delete the <code>data/</code> and <code>data_clean/</code> folders</strong>, not just the files inside them. A fresh clone of your repo has neither, so your script has to create them before it downloads or saves anything.</p>
+</section>
+<section id="how-to-submit" class="level2">
+<h2 class="anchored" data-anchor-id="how-to-submit">How to submit</h2>
+<p>Your repository is <strong><code>hw2-&lt;your github username&gt;</code></strong>, inside the course organization. It is already there, and your HW1 submission is already in it. Find it at <a href="https://github.com/aem6850-cornell" class="uri">https://github.com/aem6850-cornell</a> or in the repositories list on your GitHub home page.</p>
+<p>This is the first assignment you submit with git. Three commands, from <a href="https://arielortizbobea.github.io/aem6850/fall-2026/sessions/07-git.html">session 7</a>:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> clone https://github.com/aem6850-cornell/hw2-<span class="op">&lt;</span>your username<span class="op">&gt;</span>.git</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="co"># ... work, as often as you like ...</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> add <span class="at">-A</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> commit <span class="at">-m</span> <span class="st">"what you changed"</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> push</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>Commit in the order you work.</strong> The grader reads <code>git log</code> first and grades the last commit pushed before the deadline. A reasonable sequence:</p>
+<ol type="1">
+<li>Repair your HW1 figure against the HW1 target. Nothing about wind yet; the project still draws one figure and still runs.</li>
+<li>Move the project into the layout above, if it is not already there, and source it from a restarted session.</li>
+<li>Add the wind file to <code>code/1_get_clean_data.R</code>: the URL, the three character columns, the speed rows, the conversion, the checks. The figure does not change yet.</li>
+<li>Turn panel A’s drawing into a function and call it once for panel A. The figure is identical to the previous commit’s.</li>
+<li>Add panel B by calling the same function on the wind grid, with the three-row layout and the longer red line.</li>
+</ol>
+<p>Then <code>CHANGES.md</code>, written last, from the history you already have. Messages like “Repair the percentile lines in panel A” and “Add wind to script 1, with the unit and key checks”. The number of commits is yours, and a step that took two tries is two commits. What is graded is that the repair, the data and the drawing are separable and in a sensible order, and that each message names what changed. If your HW1 figure already matched its target, skip step 1 and say so in the note. The whole assignment arriving as one commit costs you under the last dimension even when everything in it is right. If a push problem is what kept you to one commit, say so on the day and it is not counted against you. RStudio’s Git pane and VS Code do the same three steps with buttons; session 7 shows all three ways.</p>
+<p><strong>What has to be in that final commit:</strong></p>
+<ul>
+<li><code>code/1_get_clean_data.R</code></li>
+<li><code>code/2_plot_figure.R</code></li>
+<li><code>code/run_everything.R</code></li>
+<li><code>CHANGES.md</code></li>
+</ul>
+<p>Leave <code>data/</code> and <code>data_clean/</code> out; the <code>.gitignore</code> in your repo already does that for you. You do not need to commit the figures either. The grader clones your repo fresh, runs <code>code/run_everything.R</code>, which downloads both CSVs and rebuilds everything, and grades the figure your code draws.</p>
+<p><strong>Before you push for the last time:</strong> Session &gt; Restart R, then <code>source("code/run_everything.R")</code>. If it writes the figure with no errors, you are done.</p>
+<p><strong>Stuck on git?</strong> Office hours, or ask in the course channel. Do not let a push problem cost you the deadline: a repo that will not push is a problem to raise on the day, not the night before.</p>
+</section>
+<section id="ai-on-this-one" class="level2">
+<h2 class="anchored" data-anchor-id="ai-on-this-one">AI on this one</h2>
+<p>Recommended, from here on. The things it is good at this week, in the chat tier:</p>
+<ul>
+<li><strong>Explain the wind file.</strong> Paste the header line and the first three rows and ask what each column is. Then check the answer against EPA’s <a href="https://aqs.epa.gov/aqsweb/airdata/FileFormats.html">file format page</a>.</li>
+<li><strong>Turn panel A into a function.</strong> Paste your panel A code and ask for a function that draws it for any grid. Read every line it gives back against the code you pasted.</li>
+<li><strong>Debug the shrinking text.</strong> Describe what you see. Ask why. Then check the reason in <code>?layout</code>.</li>
+<li><strong>Explain an argument you have not used.</strong> Paste your <code>layout()</code> call and ask what <code>heights</code> does to the panels, or why the labels shrank. Then check the answer in <code>?layout</code> before you believe it.</li>
+<li><strong>Ask where it could go wrong quietly.</strong> Give it the wind file’s header and the steps your script takes, and ask which mistakes would still draw a figure. Then ask for one line that would catch each. Read them before you keep any: several will pass on this file whatever you did, and one of them will quietly drop rows to make the data agree. Keep the ones that can fail, and say in the disclosure which you asked for and which you wrote.</li>
+</ul>
+<p>Three rules, from the syllabus and session 8. <strong>Ask for the script, not the answer:</strong> a number a chatbot typed is not a result. <strong>Verify one claim per conversation</strong>, on principle, and say which in the note. <strong>Disclose.</strong> The disclosure block in your note lists the tools, what you used them for, and what you checked. Disclosed use is never penalised. Undisclosed use is misrepresentation under the syllabus and is treated as an integrity violation.</p>
+</section>
+<section id="rubric" class="level2">
+<h2 class="anchored" data-anchor-id="rubric">Rubric</h2>
+<p><strong>15 points.</strong> Five dimensions, three points each. The grader clones your repo into an empty folder, sources <code>code/run_everything.R</code> in a fresh R session, compares the figure with the target, reads the checks your script makes, and reads your note against your commits, the first of which is your HW1.</p>
+<section id="similarity-3-points" class="level3">
+<h3 class="anchored" data-anchor-id="similarity-3-points">Similarity (3 points)</h3>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><strong>3</strong></td>
+<td style="text-align: left;">The figure is virtually identical to the target. One has to really pay attention to see any difference.</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>2</strong></td>
+<td style="text-align: left;">One or two clear differences from the target: panel B on the wrong scale or missing a summary, the red line stopping short, labels missing, a panel letter missing. Wind speed left in knots lands here, where the line has the right shape and sits a little over half as high as it should.</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><strong>1</strong></td>
+<td style="text-align: left;">Three or more clear differences, or a panel missing, or the series does not line up with the calendar, so the wind peak falls on a day other than 7 January.</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>0</strong></td>
+<td style="text-align: left;">No figure, or a figure of something else.</td>
+</tr>
+</tbody>
+</table>
+<p>Similarity is judged on what the figure encodes, not on pixel-level matching. Font sizes, margins and tick placement are not differences. Panel C is judged against the HW1 target: if your heat map was wrong in HW1, repairing it is part of this assignment and you are not scored against your own version.</p>
+</section>
+<section id="reproducibility-3-points" class="level3">
+<h3 class="anchored" data-anchor-id="reproducibility-3-points">Reproducibility (3 points)</h3>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><strong>3</strong></td>
+<td style="text-align: left;">The code runs start to finish, without any edits, and writes the figure. Paths are relative to the project root. Nothing depends on objects left over from an earlier session.</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>2</strong></td>
+<td style="text-align: left;">The code requires one minor edit to run: a stray absolute path, a folder it expected to exist, a <code>library()</code> call for something base R already does.</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><strong>1</strong></td>
+<td style="text-align: left;">The code requires several edits to run, or runs with errors, or does not produce the figure.</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>0</strong></td>
+<td style="text-align: left;">The code does not run.</td>
+</tr>
+</tbody>
+</table>
+<p>Two things cost points here every year. <strong>Absolute paths:</strong> <code>read.csv("/Users/you/Desktop/hw2/data/...")</code> works on your laptop and nowhere else; open the <code>.Rproj</code> and use <code>"data/..."</code>. <strong>Session leftovers:</strong> a script that works because an object is still in your environment from twenty minutes ago is not a script that works. Restart R and source it before you push. Every time.</p>
+</section>
+<section id="coding-structure-3-points" class="level3">
+<h3 class="anchored" data-anchor-id="coding-structure-3-points">Coding structure (3 points)</h3>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><strong>3</strong></td>
+<td style="text-align: left;">The code (1) has clear and logical sections, (2) has a clearly identified parameter section that can be modified to produce slightly different versions of the output, including the new file, the parameter code and the unit conversion, (3) is well annotated, and (4) is concise but spacious: one drawing for panels A and B, not two.</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>2</strong></td>
+<td style="text-align: left;">The code has at most one of the following: (1) no clear structure, (2) parameters hard-coded within the core of the script, (3) missing key annotations, (4) too dense or too verbose.</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><strong>1</strong></td>
+<td style="text-align: left;">The code has more than one of those.</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>0</strong></td>
+<td style="text-align: left;">There is no code, or the code cannot perform the basic steps needed to generate the output.</td>
+</tr>
+</tbody>
+</table>
+<p>“A clearly identified parameter section” means the URLs, the file names, the dates, the parameter code, the knots conversion and the layout heights live together at the top of each script, named, and are used by name below.</p>
+</section>
+<section id="verification-3-points" class="level3">
+<h3 class="anchored" data-anchor-id="verification-3-points">Verification (3 points)</h3>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><strong>3</strong></td>
+<td style="text-align: left;">The script says what it expects of the data and stops when the data disagrees, at the places this week’s data can go wrong. At least one check could have failed on a mistake you could actually have made, and <code>CHANGES.md</code> says for each check what it would have caught.</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>2</strong></td>
+<td style="text-align: left;">Checking is thin: one place covered and the obvious one left open, or a bound so wide that the right answer and the wrong answer both pass, or the note lists the checks without saying what any of them would catch.</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><strong>1</strong></td>
+<td style="text-align: left;">The only check is the one rule 2 already asks for, or every check is one that cannot fail: a row count compared with a number taken from the same run, a test that the line above ran.</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>0</strong></td>
+<td style="text-align: left;">The script makes no check of its own data.</td>
+</tr>
+</tbody>
+</table>
+<p>“Checking as you go” above names the two places that matter this week and shows one of them written out. A check earns its point by being able to fail.</p>
+</section>
+<section id="the-note-and-the-history-3-points" class="level3">
+<h3 class="anchored" data-anchor-id="the-note-and-the-history-3-points">The note and the history (3 points)</h3>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><strong>3</strong></td>
+<td style="text-align: left;">The repo’s first commit is still the one the course made, and your HW2 scripts are that code edited: your object names, your section headers and your comments are still in them. The work arrives in separable commits in a sensible order, each message naming what that commit did. <code>CHANGES.md</code> gives every change with its reason, names the files that moved and the layout changes, and discloses the tools, the uses and the checks.</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>2</strong></td>
+<td style="text-align: left;">One of those falls short: the whole assignment arrives in a single commit, or the messages say only “update”, or the order contradicts the note, or a change in the code is missing from the note, or the file and layout changes are glossed over. A push problem you raised on the day is not counted here.</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><strong>1</strong></td>
+<td style="text-align: left;">Two or more fall short. Also here, whatever else is true: your HW2 scripts share nothing with the first commit’s, not an object name, not a section header, not a comment, so they did not grow out of your HW1. Files you moved from the repo root into <code>code/</code> count as moved, not replaced.</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>0</strong></td>
+<td style="text-align: left;">No note, or you pushed no commit of your own. Also here: the repo’s first commit is no longer the one the course made, because the repository was replaced or the history rewritten. If that first commit holds no R code, because you did not submit HW1 or your HW1 arrived as a zip, say so in the first line of <code>CHANGES.md</code>: you have nothing to build on, and this dimension is then scored on your commits and your note alone.</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="the-one-thing-that-scores-below-zero" class="level3">
+<h3 class="anchored" data-anchor-id="the-one-thing-that-scores-below-zero">The one thing that scores below zero</h3>
+<p>AI use is recommended and must be disclosed. Undisclosed AI use, and code taken from anyone else without saying whose, are misrepresentation under the syllabus and are treated as integrity violations rather than as grading matters.</p>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/arielortizbobea\.github\.io\/aem6850\/");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+            // target, if specified
+            link.setAttribute("target", "_blank");
+            if (link.getAttribute("rel") === null) {
+              link.setAttribute("rel", "noopener");
+            }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
