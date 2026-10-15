@@ -1,0 +1,106 @@
+14-apis: where the files in saved/ came from
+============================================
+
+Every .json file in saved/ is a reply exactly as the server sent it, saved
+before any parsing. Nothing was edited, filtered or reformatted. The two other
+files are the instructor's: model_prompt.txt is the prompt sent to the
+language model, and model_runs.csv summarises its three runs. Your own
+requests write to raw/, so they never replace these files.
+
+Open the folder with 14-apis.Rproj. The scripts:
+  wb_functions.R   defines fetch() and flat() for the World Bank requests
+  model_call.R     builds the language-model request from saved/; sends nothing
+  model_send.R     sends that request; needs your own ANTHROPIC_API_KEY
+
+
+World Bank: access to electricity (% of population), EG.ELC.ACCS.ZS
+-------------------------------------------------------------------
+Fetched 2026-10-14. No key needed. The series was last updated 2026-10-08.
+
+  saved/wb_2023_p1.json .. p3.json   2023, 100 rows a page (100, 100, 66; total 266)
+    https://api.worldbank.org/v2/country/all/indicator/EG.ELC.ACCS.ZS?date=2023&format=json&per_page=100&page=1
+    (page=2 and page=3 for the other two files)
+
+  saved/wb_2000_p1.json .. p6.json   2000, 50 rows a page (five of 50, one of 16; total 266)
+    https://api.worldbank.org/v2/country/all/indicator/EG.ELC.ACCS.ZS?date=2000&format=json&per_page=50&page=1
+    (page=2 to page=6 for the other five files)
+
+  saved/wb_bad_code.json   the indicator code misspelled (ZZ for ZS); status 200,
+                           with an error message in the body
+    https://api.worldbank.org/v2/country/all/indicator/EG.ELC.ACCS.ZZ?date=2023&format=json
+
+  saved/wb_countries.json  fetched 2026-10-15; the World Bank's list of
+                           economies and groups:
+                           296 entries in one page, 217 economies and 79
+                           groups (region "Aggregates"). Four names end in
+                           a space, two of them in the 2023 table
+                           ("Latin America & Caribbean ",
+                           "Sub-Saharan Africa "), so match names after
+                           trimws(). The language-model slides use it as
+                           the reference for the model's labels.
+    https://api.worldbank.org/v2/country?format=json&per_page=400
+
+Terms: World Bank data are licensed under Creative Commons Attribution 4.0
+(CC BY 4.0). Reuse them with credit to the source:
+  Source: World Bank, World Development Indicators, EG.ELC.ACCS.ZS.
+Licence: https://datacatalog.worldbank.org/public-licenses
+
+
+EIA: hourly electricity demand on New York's grid (NYISO, code NYIS), 2025
+-------------------------------------------------------------------------
+Fetched 2026-10-14. The request needs a key, sent as api_key=...; the key is
+left out of the URLs below, and the replies do not contain it.
+
+  saved/eia_nyis_0.json      rows 1 to 5,000 (offset=0)
+  saved/eia_nyis_5000.json   rows 5,001 to 8,761 (offset=5000)
+    https://api.eia.gov/v2/electricity/rto/region-data/data/?frequency=local-hourly&data[0]=value&facets[respondent][]=NYIS&facets[type][]=D&start=2025-01-01T00-05&end=2026-01-01T00-05&sort[0][column]=period&sort[0][direction]=asc&offset=0&length=5000
+    (offset=5000 for the second file)
+
+  The reply reports a total of 8,761 rows: the end bound is inclusive, so
+  the last row is labelled 2026-01-01T00-05. Times are New York time,
+  labelled by the hour they end, so that row is the hour from 23:00 to
+  midnight on 31 December 2025. Keep the 8,760 rows dated 2025: this keeps
+  the hour ending at midnight on 1 January 2025 and drops the hour ending
+  at midnight on 1 January 2026, a one-hour shift that moves no peak.
+  -05 and -04 give the offset from UTC. Values are in megawatt-hours.
+  Two hours of 15 January 2025 read 0; they look like missing reports.
+
+Terms: EIA data are US government work in the public domain. The EIA asks
+for a source line:
+  Source: U.S. Energy Information Administration (Oct 2026).
+Copyright and reuse: https://www.eia.gov/about/copyrights_reuse.php
+API documentation: https://www.eia.gov/opendata/
+
+
+Language model: each of the 266 World Bank names labelled economy or group
+--------------------------------------------------------------------------
+Produced by the instructor on 2026-10-15, with his own key, by sending the
+request that model_call.R builds (the model's id is on its first line) to
+  https://api.anthropic.com/v1/messages
+The prompt lists the 266 names of the 2023 table in alphabetical order
+(sorted with order(tolower(...), method = "radix"), the same on every
+computer), numbered 1 to 266, and asks for CSV with a header line id,label and one
+line per name, labelled economy or group (max_tokens = 4000).
+
+  saved/model_prompt.txt       the prompt sent, built from saved/wb_2023_p*.json
+  saved/model_reply_1.json .. 3.json
+                               three runs of the same request; in each, the
+                               text block is the CSV of 266 labels
+  saved/model_runs.csv         one row per run: status, seconds, stop reason,
+                               input and output tokens, rows read from the
+                               CSV, and the names whose label agrees with the
+                               World Bank's list (saved/wb_countries.json)
+  saved/model_temperature0.json
+                               the same request with temperature = 0 added;
+                               the model does not accept temperature, so the
+                               reply is status 400 with an error message
+
+All three runs: status 200, about 11 seconds, stop reason end_turn, 2,597
+input tokens and 1,488 to 1,492 output tokens, and the same 266 labels,
+each agreeing with the World Bank's list (217 economies, 49 groups).
+
+The ids in the replies follow the order in saved/model_prompt.txt.
+
+The replies are the model's output on the instructor's calls, shared for
+teaching. Rerunning model_send.R sends a new request, costs money, and
+writes raw/model_prompt.txt and raw/model_live.json.
