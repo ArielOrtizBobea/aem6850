@@ -1,0 +1,2377 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-html/tabby.min.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/light-border.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-7f8f88aac4f3542376d5c11b86a4c14d.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
+  <meta name="generator" content="quarto-1.9.37">
+
+  <title>AEM 6850 – AEM 6850 · 14 Channels I: APIs</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="../../site_libs/revealjs/dist/reset.css">
+  <link rel="stylesheet" href="../../site_libs/revealjs/dist/reveal.css">
+  <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+      vertical-align: middle;
+    }
+    /* CSS for syntax highlighting */
+    html { -webkit-text-size-adjust: 100%; }
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      { color: #003b4f; background-color: #f1f3f5; }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span { color: #003b4f; } /* Normal */
+    code span.al { color: #ad0000; } /* Alert */
+    code span.an { color: #5e5e5e; } /* Annotation */
+    code span.at { color: #657422; } /* Attribute */
+    code span.bn { color: #ad0000; } /* BaseN */
+    code span.bu { } /* BuiltIn */
+    code span.cf { color: #003b4f; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #20794d; } /* Char */
+    code span.cn { color: #8f5902; } /* Constant */
+    code span.co { color: #5e5e5e; } /* Comment */
+    code span.cv { color: #5e5e5e; font-style: italic; } /* CommentVar */
+    code span.do { color: #5e5e5e; font-style: italic; } /* Documentation */
+    code span.dt { color: #ad0000; } /* DataType */
+    code span.dv { color: #ad0000; } /* DecVal */
+    code span.er { color: #ad0000; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #ad0000; } /* Float */
+    code span.fu { color: #4758ab; } /* Function */
+    code span.im { color: #00769e; } /* Import */
+    code span.in { color: #5e5e5e; } /* Information */
+    code span.kw { color: #003b4f; font-weight: bold; } /* Keyword */
+    code span.op { color: #5e5e5e; } /* Operator */
+    code span.ot { color: #003b4f; } /* Other */
+    code span.pp { color: #ad0000; } /* Preprocessor */
+    code span.sc { color: #5e5e5e; } /* SpecialChar */
+    code span.ss { color: #20794d; } /* SpecialString */
+    code span.st { color: #20794d; } /* String */
+    code span.va { color: #111111; } /* Variable */
+    code span.vs { color: #20794d; } /* VerbatimString */
+    code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
+  </style>
+  <link rel="stylesheet" href="../../site_libs/revealjs/dist/theme/quarto-47d10a6128eb94a78b191ac03e4343ac.css">
+  <link href="../../site_libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
+  <link href="../../site_libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
+  <link href="../../site_libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
+  <link href="../../site_libs/revealjs/plugin/quarto-support/footer.css" rel="stylesheet">
+  <style type="text/css">
+    .reveal div.sourceCode {
+      margin: 0;
+      overflow: auto;
+    }
+    .reveal div.hanging-indent {
+      margin-left: 1em;
+      text-indent: -1em;
+    }
+    .reveal .slide:not(.center) {
+      height: 100%;
+    }
+    .reveal .slide.scrollable {
+      overflow-y: auto;
+    }
+    .reveal .footnotes {
+      height: 100%;
+      overflow-y: auto;
+    }
+    .reveal .slide .absolute {
+      position: absolute;
+      display: block;
+    }
+    .reveal .footnotes ol {
+      counter-reset: ol;
+      list-style-type: none; 
+      margin-left: 0;
+    }
+    .reveal .footnotes ol li:before {
+      counter-increment: ol;
+      content: counter(ol) ". "; 
+    }
+    .reveal .footnotes ol li > p:first-child {
+      display: inline-block;
+    }
+    .reveal .slide ul,
+    .reveal .slide ol {
+      margin-bottom: 0.5em;
+    }
+    .reveal .slide ul li,
+    .reveal .slide ol li {
+      margin-top: 0.4em;
+      margin-bottom: 0.2em;
+    }
+    .reveal .slide ul[role="tablist"] li {
+      margin-bottom: 0;
+    }
+    .reveal .slide ul li > *:first-child,
+    .reveal .slide ol li > *:first-child {
+      margin-block-start: 0;
+    }
+    .reveal .slide ul li > *:last-child,
+    .reveal .slide ol li > *:last-child {
+      margin-block-end: 0;
+    }
+    .reveal .slide .columns:nth-child(3) {
+      margin-block-start: 0.8em;
+    }
+    .reveal blockquote {
+      box-shadow: none;
+    }
+    .reveal .tippy-content>* {
+      margin-top: 0.2em;
+      margin-bottom: 0.7em;
+    }
+    .reveal .tippy-content>*:last-child {
+      margin-bottom: 0.2em;
+    }
+    .reveal .slide > img.stretch.quarto-figure-center,
+    .reveal .slide > img.r-stretch.quarto-figure-center {
+      display: block;
+      margin-left: auto;
+      margin-right: auto; 
+    }
+    .reveal .slide > img.stretch.quarto-figure-left,
+    .reveal .slide > img.r-stretch.quarto-figure-left  {
+      display: block;
+      margin-left: 0;
+      margin-right: auto; 
+    }
+    .reveal .slide > img.stretch.quarto-figure-right,
+    .reveal .slide > img.r-stretch.quarto-figure-right  {
+      display: block;
+      margin-left: auto;
+      margin-right: 0; 
+    }
+  </style>
+</head>
+<body class="quarto-light">
+  <div class="reveal">
+    <div class="slides">
+
+<section id="title-slide" class="center">
+  <p class="ttl-number">AEM 6850</p>
+  <p class="ttl-course">Empirical Methods for Applied Economists</p>
+  <p class="ttl-prof">Prof. Ariel Ortiz-Bobea</p>
+  <h1 class="title">14 · Channels I: APIs</h1>
+  <p class="subtitle">Thursday, October 15, 2026</p>
+  <img class="ttl-seal" src="../images/cornell_seal.svg" alt="Cornell University">
+</section>
+<section id="plan" class="slide level2">
+<h2>Plan for today</h2>
+<div style="font-size:0.92em">
+<ol type="1">
+<li><strong>APIs and why economists use them</strong><br>
+<span class="topics">Three ways to get data · who offers APIs · what a script gains · two studies</span></li>
+<li><strong>The parts of a request and its reply</strong><br>
+<span class="topics">The URL · JSON · status codes · pages · rate limits and terms of use</span></li>
+<li><strong>Requesting World Bank data from R</strong><br>
+<span class="topics"><code>httr2</code> · an error inside a reply marked OK · JSON to a data frame · every page · saving the raw reply</span></li>
+<li><strong>Hourly electricity demand from the EIA, with an API key</strong><br>
+<span class="topics">Keys in <code>~/.Renviron</code> · every hour of 2025 · a year in one figure · the heat-wave peak</span></li>
+<li><strong>Calling a language model’s API</strong><br>
+<span class="topics">Your own key · labelling 266 names · tokens and cost · when to call a model from R · keys and coding agents</span></li>
+</ol>
+</div>
+<div style="font-size:0.7em">
+<p>In the R Console, while Part 1 starts: <code>install.packages(c("httr2", "jsonlite"))</code>. Before Part 3: unzip <a href="data/14-apis.zip">14-apis.zip</a> and open <code>14-apis.Rproj</code>.</p>
+</div>
+<aside class="notes">
+<p>Ask everyone to run the install line now; it takes a minute and Part 1 needs no R. The zip link on this slide and on the Part 3 divider is the same file as on the session page.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section>
+<section id="part-what" class="title-slide slide level1 center">
+<h1>1 · APIs and why economists use them</h1>
+<ul>
+<li>Three ways to get data from someone else’s computer</li>
+<li>Who offers APIs, and which need a key or a payment</li>
+<li>What a script gains over a manual download</li>
+<li>Travel speeds in 180 Indian cities, from Google Maps</li>
+<li>Early Twitter users by county, from Twitter’s API</li>
+</ul>
+</section>
+<section id="three-ways" class="slide level2 smaller">
+<h2>Three ways to get data from someone else’s computer</h2>
+
+<img data-src="figures/14-apis/D01-three-ways.png" class="quarto-figure quarto-figure-center r-stretch" alt="Three lanes that reach the same World Bank series, access to electricity by country. Download a file: a person clicks Download, then CSV, on the series' web page, and a file lands in Downloads. Request it from an API: a program sends a web address and gets back a structured reply. Scrape a page: a program reads the page built for people and picks the numbers out of its layout. Under each lane: who does the work (you, your program, your program), what comes back (a file, a structured reply, the page's HTML) and when it fits (one download; repeated or many requests; no file and no API)."><div style="font-size:0.75em">
+<p><strong>API</strong> (application programming interface): a service that answers requests sent by a program, with a reply in a fixed structure. <strong>Server</strong>: the computer that holds the data and answers requests. <strong>HTML</strong>: the text a web page is written in. <strong>JSON</strong>: a plain-text format for data.</p>
+</div>
+<aside class="notes">
+<p>All three lanes reach the same numbers. The difference is who does the work and what comes back. The CSV link on the indicator page is itself an api.worldbank.org address (it ends in ?downloadformat=csv), so the download button is a request to the same API.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="who-offers" class="slide level2 smaller">
+<h2>Who offers APIs, and which need a key or a payment</h2>
+<table class="caption-top">
+<colgroup>
+<col style="width: 20%">
+<col style="width: 20%">
+<col style="width: 20%">
+<col style="width: 20%">
+<col style="width: 20%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Kind</th>
+<th style="text-align: left;">Source</th>
+<th style="text-align: left;">What you get</th>
+<th style="text-align: left;">Key</th>
+<th style="text-align: left;">Cost</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Public statistics</td>
+<td style="text-align: left;">World Bank</td>
+<td style="text-align: left;">indicators by country and year</td>
+<td style="text-align: left;">none</td>
+<td style="text-align: left;">free</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Public statistics</td>
+<td style="text-align: left;">EIA</td>
+<td style="text-align: left;">hourly grid data, energy prices</td>
+<td style="text-align: left;">free, after sign-up</td>
+<td style="text-align: left;">free</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Platform</td>
+<td style="text-align: left;">Google Maps Platform</td>
+<td style="text-align: left;">travel times, places</td>
+<td style="text-align: left;">key and a billing account</td>
+<td style="text-align: left;">per request</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Model provider</td>
+<td style="text-align: left;">a company that runs a language model</td>
+<td style="text-align: left;">written replies to prompts</td>
+<td style="text-align: left;">key and prepaid credits</td>
+<td style="text-align: left;">by the amount of text sent and written</td>
+</tr>
+</tbody>
+</table>
+<div style="font-size:0.85em">
+<p><strong>World Bank</strong>: an international development lender. It publishes indicators (data series, such as access to electricity) for 217 economies (countries and territories). <strong>EIA</strong>: the US government’s statistics agency for energy (the Energy Information Administration). <strong>Platform</strong>: a company whose website or app is where people search, post or trade. <strong>Language model</strong>: the program behind a chat assistant. <strong>Key</strong>: a private string that identifies you to the service and counts your requests.</p>
+</div>
+</section>
+<section id="script-gains" class="slide level2">
+<h2>What a script gains over a manual download</h2>
+<div class="columns">
+<div class="column" style="width:58%;">
+<ul>
+<li>The script records the request: its web address (URL) names the series, the places and the years.</li>
+<li>The script saves each reply as it arrived, so you can rebuild the table without asking again.</li>
+<li>When the source revises its numbers, you run the script again.</li>
+<li>Some data have no download, such as travel times or a model’s reply. A script can request them.</li>
+</ul>
+</div><div class="column" style="width:42%;">
+<p><img data-src="figures/14-apis/D13-script-flow.png" alt="A strip of three boxes joined by arrows: a script, the replies it saves to disk, and the table built from those replies." height="480"></p>
+</div></div>
+</section>
+<section id="akbar" class="slide level2 smaller">
+<h2>Travel speeds in 180 Indian cities, from Google Maps</h2>
+<div class="columns">
+<div class="column" style="width:64%;">
+<p><a href="https://doi.org/10.1257/aer.20181662">Akbar, Couture, Duranton &amp; Storeygard (AER, 2023)</a></p>
+<div class="dashes" style="font-size:0.9em">
+<ul>
+<li><strong>Question</strong>
+<ul>
+<li>How fast can people travel by car within Indian cities, and how much does traffic slow them?</li>
+</ul></li>
+<li><strong>What they did</strong>
+<ul>
+<li>They sent 57&nbsp;million requests to Google Maps’ API: 2.7&nbsp;million car trips in 180 cities, each at about 21 departure times.</li>
+<li>One trip in three ended at a business or landmark listed on Google Places; the rest joined random points.</li>
+<li>They compared these times with trips people actually took.</li>
+</ul></li>
+<li><strong>Finding</strong>
+<ul>
+<li>Average travel speed differs widely from one city to another.</li>
+<li>Most of that difference comes from how fast cars move on empty roads; congestion, the slowdown from traffic, explains less.</li>
+<li>Larger, denser cities are slower, only partly because of congestion.</li>
+</ul></li>
+</ul>
+</div>
+</div><div class="column" style="width:36%;">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="figures/14-apis/D02-akbar-trip.png" class="quarto-figure quarto-figure-center" style="width:100.0%" alt="One origin and destination pair in a city goes into Google Maps at several departure times (3:00, 9:00, 18:00 and more); for each one the reply gives the minutes and kilometres of the drive. 2.7 million trips times 21 departure times make 57 million requests."></p>
+</figure>
+</div>
+<div style="font-size:0.85em">
+<p><strong>Takeaway:</strong> an API can produce data no agency publishes, and the authors compared it with records of real trips before using it.</p>
+</div>
+</div></div>
+<aside class="notes">
+<p>From the AEA appendix: 57,175,086 requests for 2,733,330 trips, a median of 21 departure times each. Trip types: radial 2/9, circumferential 1/9, gravity 1/3, amenity 1/3 (the Google Places third).</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="fujiwara" class="slide level2 smaller">
+<h2>Early Twitter users by county, from Twitter’s API</h2>
+<div class="columns">
+<div class="column" style="width:64%;">
+<p><a href="https://doi.org/10.1093/jeea/jvad058">Fujiwara, Müller &amp; Schwarz (JEEA, 2024)</a></p>
+<div class="dashes" style="font-size:0.9em">
+<ul>
+<li><strong>Question</strong>
+<ul>
+<li>Did Twitter change how people in the US voted?</li>
+</ul></li>
+<li><strong>What they did</strong>
+<ul>
+<li>Twitter (now X) use grew quickly after South by Southwest (SXSW), a festival in Austin, Texas, in March 2007.</li>
+<li>They pulled the profiles of about 658,000 followers of the festival’s account through Twitter’s API.</li>
+<li>Join dates and typed locations placed early users in US counties.</li>
+<li>Counties with more sign-ups during the 2007 festival had more Twitter users years later.</li>
+<li>Those sign-ups are unrelated to how counties voted before Twitter, so the study uses them to compare votes across counties.</li>
+</ul></li>
+<li><strong>Finding</strong>
+<ul>
+<li>Twitter lowered the vote share of the Republican Party, one of the two main US parties, in the 2016 and 2020 presidential elections, with little effect on elections to Congress (the US legislature).</li>
+</ul></li>
+</ul>
+</div>
+</div><div class="column" style="width:36%;">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="figures/14-apis/D03-fujiwara.png" class="quarto-figure quarto-figure-center" style="width:100.0%" alt="The festival's Twitter account leads, through the API, to its followers' profiles with a join date and a typed location, and from there to early users by county, drawn as illustrative bars, one per county."></p>
+</figure>
+</div>
+<div style="font-size:0.85em">
+<p><strong>Takeaway:</strong> an API returns what the platform records (here, what users typed in their profiles), and the researcher decides what each field measures.</p>
+</div>
+</div></div>
+<aside class="notes">
+<p>The JEEA article’s data section gives 658,240 followers of <span class="citation" data-cites="SXSW">@SXSW</span>, collected through the API in January 2019; 44,625 of them joined between 2006 and 2008, and 25,830 of those could be placed in a county.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section></section>
+<section>
+<section id="part-parts" class="title-slide slide level1 center">
+<h1>2 · The parts of a request and its reply</h1>
+<ul>
+<li>A request and its reply</li>
+<li>Requesting India’s access to electricity in your browser</li>
+<li>The parts of the request URL</li>
+<li>Reading the reply in JSON format</li>
+<li>Status codes in every reply</li>
+<li>Long results arrive in pages</li>
+<li>Rate limits and terms of use</li>
+<li>Exercise 1</li>
+</ul>
+</section>
+<section id="request-reply" class="slide level2 smaller">
+<h2>A request and its reply</h2>
+
+<img data-src="figures/14-apis/D04-request-reply.png" class="quarto-figure quarto-figure-center r-stretch" alt="Your browser, or R, sends a request, GET https://api.worldbank.org/v2/country/IND/..., India's access to electricity in 2023, to the server at api.worldbank.org. The server sends back a reply made of three parts: a status code, headers, and a body in JSON."><div class="columns" style="font-size:0.9em">
+<div class="column" style="width:50%;">
+<ul>
+<li><strong>GET</strong>: the kind of request that asks for data, with everything written in the URL.</li>
+<li><strong>Reply</strong>, also called a response: what comes back.</li>
+<li><strong>Status code</strong>: a three-digit number that says if the request worked, such as 200.</li>
+</ul>
+</div><div class="column" style="width:50%;">
+<ul>
+<li><strong>Header</strong>: a labelled line sent with a request or reply, apart from the data, such as the body’s format (<code>content-type</code>) or how many requests you have left.</li>
+<li><strong>Body</strong>: the data itself.</li>
+</ul>
+</div></div>
+<aside class="notes">
+<p>The counter analogy, if it helps: the menu is the documentation, the order is the URL and its options, a membership card is the key, and the dish comes back with a receipt (the data and the status code).</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="browser" class="slide level2">
+<h2>Requesting India’s access to electricity in your browser</h2>
+<div style="font-size:0.7em">
+<p><strong>The request.</strong> Open this address in your browser to send a request to the World Bank’s server: <a href="https://api.worldbank.org/v2/country/IND/indicator/EG.ELC.ACCS.ZS?date=2023&amp;format=json">https://api.worldbank.org/v2/country/IND/indicator/EG.ELC.ACCS.ZS?date=2023&amp;format=json</a></p>
+</div>
+<div class="columns">
+<div class="column" style="width:55%;">
+<p><img data-src="figures/14-apis/S02-wb-json-browser.png" alt="The World Bank reply in Chrome with the Pretty-print box ticked: the page information (page 1, pages 1, per_page 50, total 1, sourceid 2, lastupdated 2026-10-08), then one record for India in 2023 with value 99.5." height="455"></p>
+</div><div class="column" style="width:45%;">
+<div style="font-size:0.72em">
+<p><strong>The reply.</strong> The text on the left is the body of the server’s reply, in JSON. Here the browser indents it (Pretty-print ticked); other browsers show one long line or a tree you can expand. The status code (200, it worked) arrives too but stays out of view.</p>
+<p>In JSON (JavaScript Object Notation), names and values come in pairs (<code>"value": 99.5</code>). Braces <code>{ }</code> hold one record; square brackets <code>[ ]</code> hold a list.</p>
+<p><strong>Hands up:</strong> what number do you see, and what does it measure?</p>
+</div>
+</div></div>
+<aside class="notes">
+<p>Answer: 99.5, the share of India’s population with access to electricity in 2023. Ticking Pretty-print (Chrome) indents the text, one value per line. Tested the day before: status 200, one row, no key needed. A first request can take up to a minute when the server has not cached it. Wait or reload.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="url-parts" class="slide level2 smaller">
+<h2>The parts of the request URL</h2>
+
+<img data-src="figures/14-apis/D05-url-parts.png" class="quarto-figure quarto-figure-center r-stretch" alt="The India request URL from the browser, on two lines. A bracket over everything before the question mark is labelled endpoint, split into the base address https://api.worldbank.org/v2, the World Bank's API version 2, and the path /country/IND/indicator/EG.ELC.ACCS.ZS, one country (India) and one series. The question mark starts the options and the ampersand joins them: date=2023 for the year and format=json for the reply's format."><div style="font-size:0.8em">
+<ul>
+<li><strong>Endpoint</strong>: the web address that answers one kind of request.</li>
+<li><strong>Query parameter</strong>: a named option after the <code>?</code> that narrows what comes back. <code>date=2000:2023</code> asks for a range of years.</li>
+<li>Without <code>format=json</code>, the World Bank replies in XML, another text format.</li>
+<li><strong>Indicator code</strong>: the World Bank’s name for one series. <code>EG.ELC.ACCS.ZS</code> is “Access to electricity (% of population)”.</li>
+<li>This API needs no key. The EIA takes its key as one more parameter (<code>api_key=...</code>), and model providers take it in a header.</li>
+</ul>
+</div>
+<p><span class="source">Documentation: <a href="https://datahelpdesk.worldbank.org/knowledgebase/articles/889392-about-the-indicators-api-documentation">the World Bank’s Indicators API</a> · <a href="https://www.eia.gov/opendata/documentation.php">the EIA’s API</a></span></p>
+</section>
+<section id="json" class="slide level2 smaller">
+<h2>Reading the reply in JSON format</h2>
+
+<img data-src="figures/14-apis/D06-json-to-row.png" class="quarto-figure quarto-figure-center r-stretch" alt="On the left, the reply to the India request: a list whose first part, the page information, holds page 1, pages 1, per_page 50, total 1, sourceid 2 and lastupdated 2026-10-08, and whose second part, the records, holds one record: the indicator, the country India nested inside country, countryiso3code IND, date 2023 and value 99.5. Arrows lead to a row of a data frame on the right: country India, iso3 IND, year 2023, access 99.5. A note over the row: iso3 is the three-letter code, access is the % of population."><ul>
+<li>The reply to the India request has two parts: page information first, then the records.</li>
+<li>The country’s name sits one level down, inside <code>"country"</code>.</li>
+<li>A CSV holds one flat table, so it cannot carry these two parts or values inside values.</li>
+</ul>
+</section>
+<section id="status" class="slide level2 smaller">
+<h2>Status codes in every reply</h2>
+<table class="caption-top">
+<colgroup>
+<col style="width: 16%">
+<col style="width: 33%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Code</th>
+<th style="text-align: left;">Meaning</th>
+<th style="text-align: left;">Example</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">200</td>
+<td style="text-align: left;">it worked</td>
+<td style="text-align: left;">the India request</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">400</td>
+<td style="text-align: left;">the server cannot read the request</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">401, 403</td>
+<td style="text-align: left;">the key is missing or refused</td>
+<td style="text-align: left;">the EIA with no key: 403, <code>"API_KEY_MISSING"</code></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">404</td>
+<td style="text-align: left;">no such address</td>
+<td style="text-align: left;">a misspelled path, <code>/v2/countryy/IND/...</code></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">429</td>
+<td style="text-align: left;">more requests than the service allows per minute, hour or day</td>
+<td style="text-align: left;">the EIA’s shared DEMO_KEY, used up: <code>"OVER_RATE_LIMIT"</code></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">500 and above</td>
+<td style="text-align: left;">the server failed; try again later</td>
+<td style="text-align: left;">a 5,000-row EIA page: 504 after 61 seconds</td>
+</tr>
+</tbody>
+</table>
+<p><code>httr2</code>, the R package used below, stops with an error at 400 and above. A 200 can still hold an error message in its body.</p>
+</section>
+<section id="pages" class="slide level2 smaller">
+<h2>Long results arrive in pages</h2>
+<p>Replace <code>IND</code> with <code>all</code> in <a href="https://api.worldbank.org/v2/country/all/indicator/EG.ELC.ACCS.ZS?date=2023&amp;format=json">the request</a> to get one row for each of 217 economies and 49 groups of economies, such as regions and income groups. The reply starts <code>"page": 1, "pages": 6, "per_page": 50, "total": 266</code>.</p>
+<ul>
+<li><strong>Pagination</strong>: a long result split into pages, which you request one after another with <code>page=1</code>, <code>page=2</code>, and so on.</li>
+<li><code>total</code> counts the rows on all pages. <code>pages</code> counts the requests at <code>per_page</code> rows each.</li>
+<li>You have every row when your count equals <code>total</code>.</li>
+</ul>
+
+<img data-src="figures/14-apis/D07-pages.png" class="quarto-figure quarto-figure-center r-stretch" style="width:90.0%" alt="The 266 rows drawn as two bars, cut two ways: with per_page=50, the default, into six requests, five of 50 and one of 16; with per_page=100 into three requests, 100, 100 and 66. The short last pages are tinted."></section>
+<section id="rate-limits" class="slide level2 code-125">
+<h2>Rate limits on requests</h2>
+<ul>
+<li><strong>Rate limit</strong>: the most requests a service accepts from you per minute, hour or day. Above it, the reply is 429.</li>
+<li>The World Bank code in this session waits one second between requests.</li>
+</ul>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>Two header lines of an EIA reply sent with DEMO_KEY, a key everyone shares</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1" data-filename="Two header lines of an EIA reply sent with DEMO_KEY, a key everyone shares"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb1-1"><a aria-hidden="true" tabindex="-1"></a>x-ratelimit-limit: 10</span>
+<span id="cb1-2"><a aria-hidden="true" tabindex="-1"></a>x-ratelimit-remaining: 2</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<ul>
+<li>In these two lines the limit is 10 requests, and 2 are left. The headers do not say over what period.</li>
+<li>The EIA counts them per internet address, and a classroom shares one, so the class reads the saved replies.</li>
+</ul>
+</section>
+<section id="terms" class="slide level2 smaller">
+<h2>Terms of use for the data an API returns</h2>
+<p><strong>Terms of use</strong>: the rules a source sets on what you may do with its data. Read them before you build a dataset on an API.</p>
+<table class="caption-top">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 37%">
+<col style="width: 37%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Source</th>
+<th style="text-align: left;">Terms</th>
+<th style="text-align: left;">What they mean for you</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">World Bank</td>
+<td style="text-align: left;">Creative Commons Attribution licence</td>
+<td style="text-align: left;">reuse it, with credit to the source</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">EIA</td>
+<td style="text-align: left;">US government work, in the public domain (no copyright)</td>
+<td style="text-align: left;">use it freely; the EIA asks for a source line</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Google Maps Platform</td>
+<td style="text-align: left;">its terms of service</td>
+<td style="text-align: left;">you may not store what it returns, apart from a few short-term exceptions</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Twitter (now X)</td>
+<td style="text-align: left;">its developer terms</td>
+<td style="text-align: left;">free research access ended</td>
+</tr>
+</tbody>
+</table>
+<p><span class="source">Sources: <a href="https://datacatalog.worldbank.org/public-licenses">World Bank data licences</a>; <a href="https://www.eia.gov/about/copyrights_reuse.php">EIA copyright and reuse</a>; <a href="https://cloud.google.com/maps-platform/terms">Google Maps Platform terms</a>; <a href="https://developer.x.com/en/developer-terms/agreement-and-policy">X developer terms</a>.</span></p>
+</section>
+<section id="exercise-1" class="slide level2">
+<h2>Exercise 1</h2>
+<p>Start from <a href="https://api.worldbank.org/v2/country/IND/indicator/EG.ELC.ACCS.ZS?date=2023&amp;format=json">the India request</a>. Country codes: <a href="https://api.worldbank.org/v2/country?format=json&amp;per_page=400">the World Bank’s country list</a> (search the page for your country’s name; its code is the <code>id</code> just before it).</p>
+<div class="panel-tabset">
+<ul id="tabset-1" class="panel-tabset-tabby"><li><a data-tabby-default="" href="#tabset-1-1">Exercise</a></li><li><a href="#tabset-1-2">Solution</a></li></ul>
+<div class="tab-content">
+<div id="tabset-1-1">
+<div class="cell" data-layout-align="center" data-exercise="true" data-script="Exercise 1 (2 minutes)">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a aria-hidden="true" tabindex="-1"></a><span class="co"># Exercise 1 (2 minutes). In your browser; no R needed.</span></span>
+<span id="cb2-2"><a aria-hidden="true" tabindex="-1"></a><span class="co"># Start from the request on the slide:</span></span>
+<span id="cb2-3"><a aria-hidden="true" tabindex="-1"></a><span class="co"># https://api.worldbank.org/v2/country/IND/indicator/EG.ELC.ACCS.ZS?date=2023&amp;format=json</span></span>
+<span id="cb2-4"><a aria-hidden="true" tabindex="-1"></a><span class="co">#</span></span>
+<span id="cb2-5"><a aria-hidden="true" tabindex="-1"></a><span class="co"># 1. Replace IND with another country's three-letter code:</span></span>
+<span id="cb2-6"><a aria-hidden="true" tabindex="-1"></a><span class="co">#    CHN China, BGD Bangladesh, KEN Kenya, NGA Nigeria,</span></span>
+<span id="cb2-7"><a aria-hidden="true" tabindex="-1"></a><span class="co">#    ETH Ethiopia, BRA Brazil, or your own country's.</span></span>
+<span id="cb2-8"><a aria-hidden="true" tabindex="-1"></a><span class="co"># 2. Change date=2023 to date=2000.</span></span>
+<span id="cb2-9"><a aria-hidden="true" tabindex="-1"></a><span class="co"># A first request can take up to a minute. Wait, or reload the page.</span></span>
+<span id="cb2-10"><a aria-hidden="true" tabindex="-1"></a><span class="co">#</span></span>
+<span id="cb2-11"><a aria-hidden="true" tabindex="-1"></a><span class="co"># Two answers to compare with the room: your country's access to</span></span>
+<span id="cb2-12"><a aria-hidden="true" tabindex="-1"></a><span class="co"># electricity (% of population) in 2023 and in 2000.</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+<div id="tabset-1-2">
+<div class="columns">
+<div class="column" style="width:45%;">
+<table class="caption-top">
+<thead>
+<tr class="header">
+<th style="text-align: left;"></th>
+<th style="text-align: right;">2000</th>
+<th style="text-align: right;">2023</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">India</td>
+<td style="text-align: right;">60.3</td>
+<td style="text-align: right;">99.5</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">China</td>
+<td style="text-align: right;">96.7</td>
+<td style="text-align: right;">100.0</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Bangladesh</td>
+<td style="text-align: right;">32.0</td>
+<td style="text-align: right;">99.5</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Kenya</td>
+<td style="text-align: right;">15.2</td>
+<td style="text-align: right;">76.2</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Nigeria</td>
+<td style="text-align: right;">43.2</td>
+<td style="text-align: right;">61.2</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Ethiopia</td>
+<td style="text-align: right;">12.7</td>
+<td style="text-align: right;">55.4</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Brazil</td>
+<td style="text-align: right;">94.4</td>
+<td style="text-align: right;">99.8</td>
+</tr>
+</tbody>
+</table>
+</div><div class="column" style="width:55%;">
+<p>Access to electricity (% of population), World Bank (<code>EG.ELC.ACCS.ZS</code>)</p>
+<p><strong>One request with <code>date=2000:2023</code> returns every year from 2000 to 2023 (24 rows).</strong></p>
+</div></div>
+</div>
+</div>
+</div>
+<aside class="notes">
+<p>A 30-second debrief by call-out: who has a country below 50 in 2000? Students pick different countries, so many requests are uncached; in testing, China 2000:2023 took 65 seconds. Tell the room to wait or reload. If the API is slow, show the solution table.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section></section>
+<section>
+<section id="part-r" class="title-slide slide level1 center">
+<h1>3 · Requesting World Bank data from R</h1>
+<ul>
+<li><code>httr2</code></li>
+<li>A status 200 that holds an error</li>
+<li>JSON to a data frame</li>
+<li><code>fetch()</code> and <code>flat()</code></li>
+<li>Requesting all pages</li>
+<li>Rebuilding the table from saved replies</li>
+<li>Exercise 2</li>
+</ul>
+<p><span style="font-size:0.75em">Download <a href="data/14-apis.zip">14-apis.zip</a> from the session page, unzip it, and open <code>14-apis.Rproj</code>, so that R starts in the 14-apis folder.</span></p>
+</section>
+<section id="httr2" class="slide level2 smaller code-110">
+<h2>Sending the request from R with httr2</h2>
+<div class="cell" data-layout-align="center" data-script="Sending the request from R with httr2">
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>R Console; needs internet and the httr2 package</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a aria-hidden="true" tabindex="-1"></a><span class="co"># install.packages(c("httr2", "jsonlite"))   # once; jsonlite does not come with httr2</span></span>
+<span id="cb3-2"><a aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(httr2)</span>
+<span id="cb3-3"><a aria-hidden="true" tabindex="-1"></a>req <span class="ot">&lt;-</span> <span class="fu">request</span>(<span class="st">"https://api.worldbank.org/v2/country/all/indicator/EG.ELC.ACCS.ZS"</span>)</span>
+<span id="cb3-4"><a aria-hidden="true" tabindex="-1"></a>req <span class="ot">&lt;-</span> <span class="fu">req_url_query</span>(req, <span class="at">date =</span> <span class="dv">2023</span>, <span class="at">format =</span> <span class="st">"json"</span>, <span class="at">per_page =</span> <span class="dv">100</span>, <span class="at">page =</span> <span class="dv">1</span>)</span>
+<span id="cb3-5"><a aria-hidden="true" tabindex="-1"></a>req</span>
+<span id="cb3-6"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; &lt;httr2_request&gt;</span></span>
+<span id="cb3-7"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; GET https://api.worldbank.org/v2/country/all/indicator/EG.ELC.ACCS.ZS?date=2023&amp;format=json&amp;per_page=100&amp;page=1</span></span>
+<span id="cb3-8"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Body: empty</span></span>
+<span id="cb3-9"><a aria-hidden="true" tabindex="-1"></a>resp <span class="ot">&lt;-</span> <span class="fu">req_perform</span>(req)</span>
+<span id="cb3-10"><a aria-hidden="true" tabindex="-1"></a><span class="fu">resp_status</span>(resp)</span>
+<span id="cb3-11"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 200</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+<ul>
+<li>The request: access to electricity (% of population) in 2023 for every country and group (<code>country/all</code>), page 1 at 100 rows a page.</li>
+<li><code>httr2</code>: an R package that writes and sends web requests.</li>
+<li><code>request()</code> takes the address. <code>req_url_query()</code> adds the parameters after the <code>?</code>.</li>
+<li>Printing <code>req</code> shows the exact URL. Nothing has been sent yet.</li>
+<li><code>req_perform()</code> sends it and waits for the reply. <code>resp_status()</code> reads the status code.</li>
+</ul>
+</section>
+<section id="status-200-error" class="slide level2 smaller code-120">
+<h2>A status 200 whose body holds an error</h2>
+<div class="cell" data-layout-align="center" data-script="A status 200 whose body holds an error">
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>R Console, in the 14-apis folder; needs internet and httr2</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a aria-hidden="true" tabindex="-1"></a>bad <span class="ot">&lt;-</span> <span class="fu">request</span>(<span class="st">"https://api.worldbank.org/v2/country/all/indicator/EG.ELC.ACCS.ZZ"</span>)</span>
+<span id="cb4-2"><a aria-hidden="true" tabindex="-1"></a>bad <span class="ot">&lt;-</span> <span class="fu">req_url_query</span>(bad, <span class="at">date =</span> <span class="dv">2023</span>, <span class="at">format =</span> <span class="st">"json"</span>)</span>
+<span id="cb4-3"><a aria-hidden="true" tabindex="-1"></a>resp_bad <span class="ot">&lt;-</span> <span class="fu">req_perform</span>(bad)</span>
+<span id="cb4-4"><a aria-hidden="true" tabindex="-1"></a><span class="fu">resp_status</span>(resp_bad)</span>
+<span id="cb4-5"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 200</span></span>
+<span id="cb4-6"><a aria-hidden="true" tabindex="-1"></a><span class="fu">writeLines</span>(<span class="fu">resp_body_string</span>(resp_bad))</span>
+<span id="cb4-7"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [{"message":[{"id":"120","key":"Invalid value","value":"The provided parameter value is not valid"}]}]</span></span>
+<span id="cb4-8"><a aria-hidden="true" tabindex="-1"></a><span class="co"># no network? writeLines(readLines("saved/wb_bad_code.json")) shows the same body</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+<ul>
+<li>The indicator code ends in ZZ instead of ZS.</li>
+<li><code>resp_body_string()</code> returns the reply’s body as text.</li>
+<li><code>"key":"Invalid value"</code> names the error. This <code>"key"</code> is a field of the JSON, unrelated to API keys.</li>
+<li>The misspelled path <code>countryy</code> returns status 404, and <code>req_perform()</code> stops R with <code style="white-space:nowrap">HTTP 404 Not Found</code>.</li>
+<li>This 200 passes <code>req_perform()</code> with no error. The parsing steps below fail on it later with <code style="white-space:nowrap">subscript out of bounds</code>, a message that does not name the typo.</li>
+<li>Read the body of every reply and count its rows.</li>
+</ul>
+<aside class="notes">
+<p>A misspelled country code (INDD) returns the same 200 and the same message. The reply ships in the project as saved/wb_bad_code.json.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="fromjson" class="slide level2 smaller code-110">
+<h2>Reading the JSON reply into R with fromJSON()</h2>
+<div class="cell" data-layout-align="center" data-script="Reading the JSON reply into R with fromJSON()">
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>R Console, in the 14-apis folder; needs jsonlite and resp from the httr2 request (or the saved file)</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(jsonlite)</span>
+<span id="cb5-2"><a aria-hidden="true" tabindex="-1"></a>first <span class="ot">&lt;-</span> <span class="fu">fromJSON</span>(<span class="fu">resp_body_string</span>(resp))</span>
+<span id="cb5-3"><a aria-hidden="true" tabindex="-1"></a><span class="co"># no network? first &lt;- fromJSON("saved/wb_2023_p1.json") gives the same</span></span>
+<span id="cb5-4"><a aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(first[[<span class="dv">1</span>]])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; List of 6
+#&gt;  $ page       : int 1
+#&gt;  $ pages      : int 3
+#&gt;  $ per_page   : int 100
+#&gt;  $ total      : int 266
+#&gt;  $ sourceid   : chr "2"
+#&gt;  $ lastupdated: chr "2026-10-08"</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> first[[<span class="dv">2</span>]]</span>
+<span id="cb7-2"><a aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(d)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; [1] 100   8</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(d)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; [1] "indicator"       "country"         "countryiso3code" "date"           
+#&gt; [5] "value"           "unit"            "obs_status"      "decimal"</code></pre>
+</div>
+</div>
+<ul>
+<li><code>fromJSON()</code> turns JSON text into R lists and data frames.</li>
+<li><code>first</code> is a <strong>list</strong>, R’s container for parts of different kinds: <code>first[[1]]</code> holds the page information (3&nbsp;pages, 266&nbsp;rows in all), <code>first[[2]]</code> this page’s 100&nbsp;records.</li>
+</ul>
+</section>
+<section id="flatten" class="slide level2 smaller code-125">
+<h2>Flattening the records into a data frame</h2>
+<div class="cell" data-layout-align="center" data-script="Flattening the records into a data frame">
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>R Console; needs d, the records of the first page</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>(d<span class="sc">$</span>country)             <span class="co"># a data frame inside the data frame</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; [1] "data.frame"</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a aria-hidden="true" tabindex="-1"></a>wb1 <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">country =</span> d<span class="sc">$</span>country<span class="sc">$</span>value, <span class="at">iso3 =</span> d<span class="sc">$</span>countryiso3code,</span>
+<span id="cb13-2"><a aria-hidden="true" tabindex="-1"></a>                  <span class="at">year =</span> d<span class="sc">$</span>date, <span class="at">access =</span> d<span class="sc">$</span>value)</span>
+<span id="cb13-3"><a aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(wb1, <span class="dv">3</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt;                       country iso3 year   access
+#&gt; 1 Africa Eastern and Southern  AFE 2023 50.66752
+#&gt; 2  Africa Western and Central  AFW 2023 57.06474
+#&gt; 3                  Arab World  ARB 2023 91.64543</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a aria-hidden="true" tabindex="-1"></a>wb1[wb1<span class="sc">$</span>iso3 <span class="sc">==</span> <span class="st">"IND"</span>, ]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; [1] country iso3    year    access 
+#&gt; &lt;0 rows&gt; (or 0-length row.names)</code></pre>
+</div>
+</div>
+<ul>
+<li><strong>Flatten</strong>: turn nested fields into plain columns, one value per cell.</li>
+<li><code>d$country</code> holds two columns, an id and the name. <code>$value</code> takes the name.</li>
+<li><code>access</code> is the share of the population with electricity, in percent.</li>
+<li>India is missing: this page holds 100 of the 266 rows, and India is on the second page.</li>
+</ul>
+</section>
+<section id="fetch-flat" class="slide level2 smaller code-125">
+<h2>fetch() to request and save one page, flat() to flatten it</h2>
+<div class="cell" data-layout-align="center" data-script="fetch() to request and save one page, flat() to flatten it">
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>wb_functions.R (part), in the 14-apis folder; needs httr2 and jsonlite</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a aria-hidden="true" tabindex="-1"></a><span class="fu">dir.create</span>(<span class="st">"raw"</span>, <span class="at">showWarnings =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb17-2"><a aria-hidden="true" tabindex="-1"></a>fetch <span class="ot">&lt;-</span> <span class="cf">function</span>(p, year, per) {</span>
+<span id="cb17-3"><a aria-hidden="true" tabindex="-1"></a>  req <span class="ot">&lt;-</span> <span class="fu">request</span>(<span class="st">"https://api.worldbank.org/v2/country/all/indicator/EG.ELC.ACCS.ZS"</span>)</span>
+<span id="cb17-4"><a aria-hidden="true" tabindex="-1"></a>  req <span class="ot">&lt;-</span> <span class="fu">req_url_query</span>(req, <span class="at">date =</span> year, <span class="at">format =</span> <span class="st">"json"</span>, <span class="at">per_page =</span> per, <span class="at">page =</span> p)</span>
+<span id="cb17-5"><a aria-hidden="true" tabindex="-1"></a>  txt <span class="ot">&lt;-</span> <span class="fu">resp_body_string</span>(<span class="fu">req_perform</span>(req))</span>
+<span id="cb17-6"><a aria-hidden="true" tabindex="-1"></a>  <span class="fu">writeLines</span>(txt, <span class="fu">paste0</span>(<span class="st">"raw/wb_"</span>, year, <span class="st">"_p"</span>, p, <span class="st">".json"</span>))  <span class="co"># the reply as sent</span></span>
+<span id="cb17-7"><a aria-hidden="true" tabindex="-1"></a>  <span class="fu">Sys.sleep</span>(<span class="dv">1</span>)                                                <span class="co"># one request a second</span></span>
+<span id="cb17-8"><a aria-hidden="true" tabindex="-1"></a>  <span class="fu">fromJSON</span>(txt)</span>
+<span id="cb17-9"><a aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb17-10"><a aria-hidden="true" tabindex="-1"></a>flat <span class="ot">&lt;-</span> <span class="cf">function</span>(reply) {</span>
+<span id="cb17-11"><a aria-hidden="true" tabindex="-1"></a>  d <span class="ot">&lt;-</span> reply[[<span class="dv">2</span>]]</span>
+<span id="cb17-12"><a aria-hidden="true" tabindex="-1"></a>  <span class="fu">data.frame</span>(<span class="at">country =</span> d<span class="sc">$</span>country<span class="sc">$</span>value, <span class="at">iso3 =</span> d<span class="sc">$</span>countryiso3code,</span>
+<span id="cb17-13"><a aria-hidden="true" tabindex="-1"></a>             <span class="at">year =</span> d<span class="sc">$</span>date, <span class="at">access =</span> d<span class="sc">$</span>value)</span>
+<span id="cb17-14"><a aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+<ul>
+<li>Run <code>source("wb_functions.R")</code> to define both functions. The file ships in the project.</li>
+<li><code>fetch(p, year, per)</code> requests page <code>p</code> of one year at <code>per</code> rows a page, writes the reply to <code>raw/</code> as sent, waits one second, and returns it parsed.</li>
+<li><strong>Raw reply</strong>: the reply exactly as the server sent it, saved before any parsing.</li>
+<li><code>flat()</code> turns one parsed reply into the four-column table.</li>
+</ul>
+<aside class="notes">
+<p>The file ships in the zip, so nobody types it from the projector: source(“wb_functions.R”).</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="every-page" class="slide level2 smaller code-125">
+<h2>Requesting all pages and comparing rows with the total</h2>
+<div class="cell" data-layout-align="center" data-script="Requesting all pages and comparing rows with the total">
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>R Console, in the 14-apis folder; needs internet, fetch() and flat(); writes three replies to raw/</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a aria-hidden="true" tabindex="-1"></a>first <span class="ot">&lt;-</span> <span class="fu">fetch</span>(<span class="dv">1</span>, <span class="dv">2023</span>, <span class="dv">100</span>)</span>
+<span id="cb18-2"><a aria-hidden="true" tabindex="-1"></a>replies <span class="ot">&lt;-</span> <span class="fu">lapply</span>(<span class="dv">1</span><span class="sc">:</span>first[[<span class="dv">1</span>]]<span class="sc">$</span>pages, fetch, <span class="at">year =</span> <span class="dv">2023</span>, <span class="at">per =</span> <span class="dv">100</span>)</span>
+<span id="cb18-3"><a aria-hidden="true" tabindex="-1"></a>wb <span class="ot">&lt;-</span> <span class="fu">do.call</span>(rbind, <span class="fu">lapply</span>(replies, flat))</span>
+<span id="cb18-4"><a aria-hidden="true" tabindex="-1"></a><span class="fu">c</span>(<span class="at">rows =</span> <span class="fu">nrow</span>(wb), <span class="at">total =</span> first[[<span class="dv">1</span>]]<span class="sc">$</span>total)</span>
+<span id="cb18-5"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  rows total</span></span>
+<span id="cb18-6"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   266   266</span></span>
+<span id="cb18-7"><a aria-hidden="true" tabindex="-1"></a>wb[wb<span class="sc">$</span>iso3 <span class="sc">==</span> <span class="st">"IND"</span>, ]</span>
+<span id="cb18-8"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;     country iso3 year access</span></span>
+<span id="cb18-9"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 139   India  IND 2023   99.5</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+<ul>
+<li>Page 1’s information gives the number of pages (3) and the total (266).</li>
+<li><code>lapply()</code> calls <code>fetch()</code> once per page, passing <code>year</code> and <code>per</code> on to it.</li>
+<li><code>do.call(rbind, ...)</code> stacks the three pages into one table.</li>
+<li>The rows received equal the total the API reports.</li>
+<li>Rows 1 to 49 are groups of economies (regions, income and lending groups, World). Rows 50 to 266 are the 217 economies.</li>
+</ul>
+<aside class="notes">
+<p>A mean over all 266 rows counts some countries several times, so drop the groups first. Page 1 is requested twice (first, then inside lapply()), four requests in all; 4.3 seconds in testing.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="rebuild" class="slide level2 smaller code-125">
+<h2>Rebuilding the table from the saved replies</h2>
+<div class="cell" data-layout-align="center" data-script="Rebuilding the table from the saved replies">
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>R Console, in the 14-apis folder; needs jsonlite and flat() from wb_functions.R; reads saved/ (yours: raw/)</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a aria-hidden="true" tabindex="-1"></a>replies <span class="ot">&lt;-</span> <span class="fu">lapply</span>(<span class="fu">paste0</span>(<span class="st">"saved/wb_2023_p"</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>, <span class="st">".json"</span>), fromJSON)</span>
+<span id="cb19-2"><a aria-hidden="true" tabindex="-1"></a>wb <span class="ot">&lt;-</span> <span class="fu">do.call</span>(rbind, <span class="fu">lapply</span>(replies, flat))</span>
+<span id="cb19-3"><a aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(wb)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; [1] 266</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a aria-hidden="true" tabindex="-1"></a>replies[[<span class="dv">1</span>]][[<span class="dv">1</span>]]<span class="sc">$</span>lastupdated</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; [1] "2026-10-08"</code></pre>
+</div>
+</div>
+<ul>
+<li><code>lastupdated</code> is the date the World Bank last revised the series. The saved files keep the version your results used.</li>
+<li>A request eight days before these reported 265 rows. Its reply was not saved, so nobody can say which row was added.</li>
+<li>A reply can take a minute to arrive. The saved files rebuild the table with no new request.</li>
+</ul>
+</section>
+<section id="exercise-2" class="slide level2 smaller">
+<h2>Exercise 2</h2>
+<div class="panel-tabset">
+<ul id="tabset-2" class="panel-tabset-tabby"><li><a data-tabby-default="" href="#tabset-2-1">Exercise</a></li><li><a href="#tabset-2-2">Solution</a></li></ul>
+<div class="tab-content">
+<div id="tabset-2-1">
+<div style="font-size:1.4em">
+<div class="cell" data-layout-align="center" data-exercise="true" data-script="Exercise 2 (5 minutes)">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a aria-hidden="true" tabindex="-1"></a><span class="co"># Exercise 2 (5 minutes). R Console, in the 14-apis folder.</span></span>
+<span id="cb23-2"><a aria-hidden="true" tabindex="-1"></a><span class="co"># First run source("wb_functions.R"), which defines fetch() and flat().</span></span>
+<span id="cb23-3"><a aria-hidden="true" tabindex="-1"></a><span class="co"># No network? Skip the requests and run</span></span>
+<span id="cb23-4"><a aria-hidden="true" tabindex="-1"></a><span class="co">#   replies0 &lt;- lapply(paste0("saved/wb_2000_p", 1:6, ".json"), fromJSON)</span></span>
+<span id="cb23-5"><a aria-hidden="true" tabindex="-1"></a><span class="co">#   first0 &lt;- replies0[[1]]</span></span>
+<span id="cb23-6"><a aria-hidden="true" tabindex="-1"></a><span class="co">#</span></span>
+<span id="cb23-7"><a aria-hidden="true" tabindex="-1"></a><span class="co"># 1. Request page 1 of the year 2000 with 50 rows a page:</span></span>
+<span id="cb23-8"><a aria-hidden="true" tabindex="-1"></a><span class="co">#    first0 &lt;- fetch(1, 2000, 50). How many pages? What total?</span></span>
+<span id="cb23-9"><a aria-hidden="true" tabindex="-1"></a><span class="co"># 2. Request every page into replies0 with lapply(), then stack them:</span></span>
+<span id="cb23-10"><a aria-hidden="true" tabindex="-1"></a><span class="co">#    wb0 &lt;- do.call(rbind, lapply(replies0, flat))</span></span>
+<span id="cb23-11"><a aria-hidden="true" tabindex="-1"></a><span class="co"># 3. Compare nrow(wb0) with the total.</span></span>
+<span id="cb23-12"><a aria-hidden="true" tabindex="-1"></a><span class="co"># 4. Find India's row (iso3 is "IND").</span></span>
+<span id="cb23-13"><a aria-hidden="true" tabindex="-1"></a><span class="co">#</span></span>
+<span id="cb23-14"><a aria-hidden="true" tabindex="-1"></a><span class="co"># Two answers to compare with the room: the rows against the</span></span>
+<span id="cb23-15"><a aria-hidden="true" tabindex="-1"></a><span class="co"># reported total, and India's access to electricity in 2000.</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+</div>
+<div id="tabset-2-2">
+<div class="cell" data-layout-align="center">
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>R Console, in the 14-apis folder; needs jsonlite, flat() and the six saved replies</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a aria-hidden="true" tabindex="-1"></a><span class="co"># With the network: first0 &lt;- fetch(1, 2000, 50), then</span></span>
+<span id="cb24-2"><a aria-hidden="true" tabindex="-1"></a><span class="co">#   replies0 &lt;- lapply(1:first0[[1]]$pages, fetch, year = 2000, per = 50)</span></span>
+<span id="cb24-3"><a aria-hidden="true" tabindex="-1"></a>replies0 <span class="ot">&lt;-</span> <span class="fu">lapply</span>(<span class="fu">paste0</span>(<span class="st">"saved/wb_2000_p"</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">6</span>, <span class="st">".json"</span>), fromJSON)</span>
+<span id="cb24-4"><a aria-hidden="true" tabindex="-1"></a>first0 <span class="ot">&lt;-</span> replies0[[<span class="dv">1</span>]]</span>
+<span id="cb24-5"><a aria-hidden="true" tabindex="-1"></a><span class="fu">c</span>(<span class="at">pages =</span> first0[[<span class="dv">1</span>]]<span class="sc">$</span>pages, <span class="at">total =</span> first0[[<span class="dv">1</span>]]<span class="sc">$</span>total)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; pages total 
+#&gt;     6   266</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a aria-hidden="true" tabindex="-1"></a>wb0 <span class="ot">&lt;-</span> <span class="fu">do.call</span>(rbind, <span class="fu">lapply</span>(replies0, flat))</span>
+<span id="cb26-2"><a aria-hidden="true" tabindex="-1"></a><span class="fu">c</span>(<span class="at">rows =</span> <span class="fu">nrow</span>(wb0), <span class="at">total =</span> first0[[<span class="dv">1</span>]]<span class="sc">$</span>total)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt;  rows total 
+#&gt;   266   266</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a aria-hidden="true" tabindex="-1"></a>wb0[wb0<span class="sc">$</span>iso3 <span class="sc">==</span> <span class="st">"IND"</span>, ]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt;     country iso3 year access
+#&gt; 139   India  IND 2000   60.3</code></pre>
+</div>
+</div>
+<p><strong>266 rows against a total of 266. India: 60.3% of the population in 2000, the same as the browser showed in Exercise 1.</strong></p>
+</div>
+</div>
+</div>
+<aside class="notes">
+<p>Each student sends 7 requests; in testing the full solution ran in 7.6 seconds, 7 of them Sys.sleep(). An uncached request took up to 65 seconds: anyone stuck switches to the saved/ line at the top. A live total may differ from 266 if the World Bank updates again; the rows should still equal the reply’s own total. Debrief extras: page 6 holds 16 rows; 7 values are missing (Not classified, American Samoa, Guinea-Bissau, North Korea, Kosovo, Liberia, South Sudan).</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section></section>
+<section>
+<section id="part-eia" class="title-slide slide level1 center">
+<h1>4 · Hourly electricity demand from the EIA, with an API key</h1>
+<ul>
+<li>New York’s grid in the EIA’s data</li>
+<li>Getting an EIA key and storing it in <code>~/.Renviron</code></li>
+<li>The EIA request in R</li>
+<li>Stacking two pages into the 8,760 hours of 2025</li>
+<li>A year of hourly demand in one figure</li>
+<li>The heat-wave peak</li>
+</ul>
+</section>
+<section id="eia-grid" class="slide level2 smaller">
+<h2>Hourly demand on New York’s grid, from the EIA</h2>
+<div class="columns">
+<div class="column" style="width:53%;">
+<p><img data-src="figures/14-apis/S04-eia-grid-monitor.png" style="width:100.0%" alt="One chart from the EIA's Hourly Electric Grid Monitor: NYIS demand, hour by hour, over the week before the capture, in Eastern Time, in megawatthours, between about 12,000 and 19,000."></p>
+</div><div class="column" style="width:47%;">
+<ul>
+<li>The EIA publishes the hourly demand of each grid operator in the 48 contiguous US states (all but Alaska and Hawaii).</li>
+<li>NYISO (New York Independent System Operator) runs New York State’s grid, Ithaca included. EIA code: <code>NYIS</code>.</li>
+<li>Left: a week of NYISO’s demand on the EIA’s Hourly Electric Grid Monitor, its page for people. Below: the API’s first row, in R.</li>
+</ul>
+</div></div>
+<div class="cell" data-layout-align="center" data-script="One row of the EIA reply">
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>R Console, in the 14-apis folder; needs jsonlite and saved/eia_nyis_0.json</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a aria-hidden="true" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> <span class="fu">fromJSON</span>(<span class="st">"saved/eia_nyis_0.json"</span>)</span>
+<span id="cb30-2"><a aria-hidden="true" tabindex="-1"></a>p1<span class="sc">$</span>response<span class="sc">$</span>data[<span class="dv">1</span>, <span class="fu">c</span>(<span class="st">"period"</span>, <span class="st">"respondent"</span>, <span class="st">"type"</span>,</span>
+<span id="cb30-3"><a aria-hidden="true" tabindex="-1"></a>                      <span class="st">"type-name"</span>, <span class="st">"value"</span>, <span class="st">"value-units"</span>)]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt;             period respondent type type-name value   value-units
+#&gt; 1 2025-01-01T00-05       NYIS    D    Demand 15424 megawatthours</code></pre>
+</div>
+</div>
+<p><span style="font-size:0.8em"><code>value</code>: demand in that hour, in megawatt-hours (MWh), the average megawatts (MW, a rate of electricity use) over the hour. <code>-05</code> marks New York winter time.</span></p>
+<aside class="notes">
+<p>The reply has 7 columns; respondent-name is left out here. The page for people is the EIA’s Hourly Electric Grid Monitor.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="eia-key" class="slide level2 smaller">
+<h2>Getting a free EIA key</h2>
+
+<img data-src="figures/14-apis/S03-eia-register.png" class="quarto-figure quarto-figure-center r-stretch" style="width:100.0%" alt="The top of the EIA's Register for an API key form, empty: fields for first name, last name, email and a category that describes you. The terms of service, the I agree box and the Register button sit further down the page."><ul>
+<li>At <a href="https://www.eia.gov/opendata/register.php">eia.gov/opendata/register.php</a>, give your name, your email and a category, and accept the terms of service.</li>
+<li>The key is free and arrives by email. In class, the replies in <code>saved/</code> stand in for your own requests.</li>
+<li><strong>API key</strong>: a private string that identifies you to the EIA and counts your requests. Treat it like a password.</li>
+</ul>
+</section>
+<section id="eia-renviron" class="slide level2 smaller code-125">
+<h2>Storing the EIA key in ~/.Renviron</h2>
+
+<img data-src="figures/14-apis/D08-renviron.png" class="quarto-figure quarto-figure-center r-stretch" alt="The file ~/.Renviron holds the line EIA_KEY= followed by a key. R reads the file when it starts, the script reads the key with Sys.getenv and the name EIA_KEY, and the request carries the key."><p><strong>Environment variable</strong>: a named value set outside your code, which R loads when it starts.</p>
+<div class="cell" data-layout-align="center">
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>R Console; once per computer</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a aria-hidden="true" tabindex="-1"></a><span class="fu">file.edit</span>(<span class="st">"~/.Renviron"</span>)         <span class="co"># opens the file, or creates it</span></span>
+<span id="cb32-2"><a aria-hidden="true" tabindex="-1"></a><span class="co"># add one line, keep an empty line at the end, save:</span></span>
+<span id="cb32-3"><a aria-hidden="true" tabindex="-1"></a><span class="co">#   EIA_KEY=paste-your-key-here</span></span>
+<span id="cb32-4"><a aria-hidden="true" tabindex="-1"></a><span class="co"># restart R (RStudio: Session &gt; Restart R), then:</span></span>
+<span id="cb32-5"><a aria-hidden="true" tabindex="-1"></a><span class="fu">nchar</span>(<span class="fu">Sys.getenv</span>(<span class="st">"EIA_KEY"</span>))     <span class="co"># above 0: the key loaded; 0: R did not find it</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+<ul>
+<li>The script holds only the name, so sharing or committing the script shares no secret.</li>
+<li><code>~</code> is your home folder (on Windows, R uses your Documents folder). A Mac hides names that start with a dot, and Windows editors may add .txt to them, so open the file from R with <code>file.edit()</code>.</li>
+</ul>
+<aside class="notes">
+<p>In class, students without a key start from saved/ on the stacking slide. Key holders may run the request.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="eia-request" class="slide level2 smaller code-110">
+<h2>Requesting every hour of 2025 from the EIA in R</h2>
+<div class="cell" data-layout-align="center" data-script="Requesting every hour of 2025 from the EIA in R">
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>R Console, in the 14-apis folder; needs internet, httr2, jsonlite and EIA_KEY in ~/.Renviron (no key: start from saved/)</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a aria-hidden="true" tabindex="-1"></a>base <span class="ot">&lt;-</span> <span class="fu">request</span>(<span class="st">"https://api.eia.gov/v2/electricity/rto/region-data/data/"</span>)</span>
+<span id="cb33-2"><a aria-hidden="true" tabindex="-1"></a>base <span class="ot">&lt;-</span> <span class="fu">req_url_query</span>(base,                   <span class="co"># backticks let R use names with brackets</span></span>
+<span id="cb33-3"><a aria-hidden="true" tabindex="-1"></a>  <span class="at">api_key =</span> <span class="fu">Sys.getenv</span>(<span class="st">"EIA_KEY"</span>),</span>
+<span id="cb33-4"><a aria-hidden="true" tabindex="-1"></a>  <span class="at">frequency =</span> <span class="st">"local-hourly"</span>,                 <span class="co"># hours in New York time</span></span>
+<span id="cb33-5"><a aria-hidden="true" tabindex="-1"></a>  <span class="st">`</span><span class="at">data[0]</span><span class="st">`</span> <span class="ot">=</span> <span class="st">"value"</span>,                        <span class="co"># the demand number</span></span>
+<span id="cb33-6"><a aria-hidden="true" tabindex="-1"></a>  <span class="st">`</span><span class="at">facets[respondent][]</span><span class="st">`</span> <span class="ot">=</span> <span class="st">"NYIS"</span>,            <span class="co"># New York's grid</span></span>
+<span id="cb33-7"><a aria-hidden="true" tabindex="-1"></a>  <span class="st">`</span><span class="at">facets[type][]</span><span class="st">`</span> <span class="ot">=</span> <span class="st">"D"</span>,                     <span class="co"># D = demand</span></span>
+<span id="cb33-8"><a aria-hidden="true" tabindex="-1"></a>  <span class="at">start =</span> <span class="st">"2025-01-01T00-05"</span>, <span class="at">end =</span> <span class="st">"2026-01-01T00-05"</span>,  <span class="co"># -05: 5 hours behind UTC (4 in summer)</span></span>
+<span id="cb33-9"><a aria-hidden="true" tabindex="-1"></a>  <span class="st">`</span><span class="at">sort[0][column]</span><span class="st">`</span> <span class="ot">=</span> <span class="st">"period"</span>,               <span class="co"># sort by hour, so that the</span></span>
+<span id="cb33-10"><a aria-hidden="true" tabindex="-1"></a>  <span class="st">`</span><span class="at">sort[0][direction]</span><span class="st">`</span> <span class="ot">=</span> <span class="st">"asc"</span>)               <span class="co"># pages follow in order</span></span>
+<span id="cb33-11"><a aria-hidden="true" tabindex="-1"></a>eia_page <span class="ot">&lt;-</span> <span class="cf">function</span>(offset) {</span>
+<span id="cb33-12"><a aria-hidden="true" tabindex="-1"></a>  req <span class="ot">&lt;-</span> <span class="fu">req_url_query</span>(base, <span class="at">offset =</span> offset, <span class="at">length =</span> <span class="dv">5000</span>)  <span class="co"># skip, then up to 5,000</span></span>
+<span id="cb33-13"><a aria-hidden="true" tabindex="-1"></a>  txt <span class="ot">&lt;-</span> <span class="fu">resp_body_string</span>(<span class="fu">req_perform</span>(req))</span>
+<span id="cb33-14"><a aria-hidden="true" tabindex="-1"></a>  <span class="fu">writeLines</span>(txt, <span class="fu">paste0</span>(<span class="st">"raw/eia_nyis_"</span>, offset, <span class="st">".json"</span>))</span>
+<span id="cb33-15"><a aria-hidden="true" tabindex="-1"></a>  <span class="fu">Sys.sleep</span>(<span class="dv">1</span>)</span>
+<span id="cb33-16"><a aria-hidden="true" tabindex="-1"></a>  <span class="fu">fromJSON</span>(txt)</span>
+<span id="cb33-17"><a aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>R Console, with your own EIA key; writes raw/eia_nyis_0.json and raw/eia_nyis_5000.json</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a aria-hidden="true" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> <span class="fu">eia_page</span>(<span class="dv">0</span>)            <span class="co"># a page of 5,000 rows can take a minute</span></span>
+<span id="cb34-2"><a aria-hidden="true" tabindex="-1"></a>p2 <span class="ot">&lt;-</span> <span class="fu">eia_page</span>(<span class="dv">5000</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+<ul>
+<li><code>eia_page()</code> is <code>fetch()</code> for the EIA: <code>offset</code> skips rows, and <code>length</code> caps a page at 5,000.</li>
+<li><code>local-hourly</code> returns New York’s clock hours. The plain <code>"hourly"</code> series uses UTC, the world reference clock, as many APIs do.</li>
+</ul>
+</section>
+<section id="eia-stack" class="slide level2 smaller">
+<h2>Stacking the two EIA pages into the 8,760 hours of 2025</h2>
+<div style="font-size:1.15em">
+<div class="cell" data-layout-align="center" data-script="Stacking the two EIA pages into the 8,760 hours of 2025">
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>R Console, in the 14-apis folder; needs jsonlite and the two saved EIA replies (or yours, in raw/)</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a aria-hidden="true" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> <span class="fu">fromJSON</span>(<span class="st">"saved/eia_nyis_0.json"</span>)</span>
+<span id="cb35-2"><a aria-hidden="true" tabindex="-1"></a>p2 <span class="ot">&lt;-</span> <span class="fu">fromJSON</span>(<span class="st">"saved/eia_nyis_5000.json"</span>)</span>
+<span id="cb35-3"><a aria-hidden="true" tabindex="-1"></a>p1<span class="sc">$</span>warnings<span class="sc">$</span>warning</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; [1] "incomplete return"</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a aria-hidden="true" tabindex="-1"></a>eia <span class="ot">&lt;-</span> <span class="fu">rbind</span>(p1<span class="sc">$</span>response<span class="sc">$</span>data, p2<span class="sc">$</span>response<span class="sc">$</span>data)</span>
+<span id="cb37-2"><a aria-hidden="true" tabindex="-1"></a>eia<span class="sc">$</span>demand <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(eia<span class="sc">$</span>value)  <span class="co"># text to numbers</span></span>
+<span id="cb37-3"><a aria-hidden="true" tabindex="-1"></a><span class="fu">c</span>(<span class="at">rows =</span> <span class="fu">nrow</span>(eia), <span class="at">total =</span> <span class="fu">as.numeric</span>(p1<span class="sc">$</span>response<span class="sc">$</span>total),</span>
+<span id="cb37-4"><a aria-hidden="true" tabindex="-1"></a>  <span class="at">hours =</span> <span class="dv">365</span> <span class="sc">*</span> <span class="dv">24</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt;  rows total hours 
+#&gt;  8761  8761  8760</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a aria-hidden="true" tabindex="-1"></a><span class="fu">tail</span>(eia<span class="sc">$</span>period, <span class="dv">1</span>)                  <span class="co"># the last row: the end bound</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; [1] "2026-01-01T00-05"</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a aria-hidden="true" tabindex="-1"></a>eia <span class="ot">&lt;-</span> eia[<span class="fu">substr</span>(eia<span class="sc">$</span>period, <span class="dv">1</span>, <span class="dv">4</span>) <span class="sc">==</span> <span class="st">"2025"</span>, ]           <span class="co"># keep the rows of 2025</span></span>
+<span id="cb41-2"><a aria-hidden="true" tabindex="-1"></a><span class="fu">c</span>(<span class="at">rows =</span> <span class="fu">nrow</span>(eia), <span class="at">repeated =</span> <span class="fu">anyDuplicated</span>(eia<span class="sc">$</span>period))  <span class="co"># repeated 0: no hour appears twice</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt;     rows repeated 
+#&gt;     8760        0</code></pre>
+</div>
+</div>
+</div>
+<ul>
+<li>The end bound is included: 8,761 rows against 8,760 hours. Keep the rows dated 2025.</li>
+</ul>
+<aside class="notes">
+<p>The full warning: “The API can only return 5000 rows in JSON format. Please consider constraining your request with facet, start, or end, or using offset to paginate results.” The saved replies list every parameter they received except the key. The extra row is labelled 2026-01-01T00-05: by the hour it ends, 23:00 to midnight on 31 December.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="eia-year" class="slide level2">
+<h2>Drawing a year of hourly demand with plot()</h2>
+<div class="cell" data-layout-align="center" data-script="Drawing a year of hourly demand with plot()">
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>R Console; needs eia from the stacking step</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a aria-hidden="true" tabindex="-1"></a>eia<span class="sc">$</span>date <span class="ot">&lt;-</span> <span class="fu">as.Date</span>(<span class="fu">substr</span>(eia<span class="sc">$</span>period, <span class="dv">1</span>, <span class="dv">10</span>))       <span class="co"># "2025-06-24T19-04" -&gt; 2025-06-24</span></span>
+<span id="cb43-2"><a aria-hidden="true" tabindex="-1"></a>eia<span class="sc">$</span>hour <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(<span class="fu">substr</span>(eia<span class="sc">$</span>period, <span class="dv">12</span>, <span class="dv">13</span>))   <span class="co"># -&gt; 19</span></span>
+<span id="cb43-3"><a aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mar =</span> <span class="fu">c</span>(<span class="dv">4</span>, <span class="dv">6</span>, <span class="dv">3</span>, <span class="dv">1</span>))                             <span class="co"># room for the y-axis numbers</span></span>
+<span id="cb43-4"><a aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(eia<span class="sc">$</span>date <span class="sc">+</span> eia<span class="sc">$</span>hour <span class="sc">/</span> <span class="dv">24</span>, eia<span class="sc">$</span>demand, <span class="at">type =</span> <span class="st">"l"</span>, <span class="at">lwd =</span> <span class="fl">0.5</span>, <span class="at">yaxt =</span> <span class="st">"n"</span>,</span>
+<span id="cb43-5"><a aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">"2025, New York time"</span>, <span class="at">ylab =</span> <span class="st">""</span>,</span>
+<span id="cb43-6"><a aria-hidden="true" tabindex="-1"></a>     <span class="at">main =</span> <span class="st">"Hourly electricity demand, New York's grid (NYISO), 2025. Data: EIA"</span>)</span>
+<span id="cb43-7"><a aria-hidden="true" tabindex="-1"></a>at <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">30000</span>, <span class="dv">5000</span>)</span>
+<span id="cb43-8"><a aria-hidden="true" tabindex="-1"></a><span class="fu">axis</span>(<span class="dv">2</span>, <span class="at">at =</span> at, <span class="at">labels =</span> <span class="fu">format</span>(at, <span class="at">big.mark =</span> <span class="st">","</span>), <span class="at">las =</span> <span class="dv">1</span>)   <span class="co"># commas in the numbers</span></span>
+<span id="cb43-9"><a aria-hidden="true" tabindex="-1"></a><span class="fu">title</span>(<span class="at">ylab =</span> <span class="st">"Demand (megawatt-hours)"</span>, <span class="at">line =</span> <span class="fl">4.5</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+<ul>
+<li><code>date + hour / 24</code> places each hour at its point within its day, so the line runs hour by hour through the year.</li>
+</ul>
+<!-- The figure goes on its own slide by hand: output-location: slide skips
+     a chunk that carries a filename. -->
+</section>
+<section id="eia-year-output" class="slide level2">
+<h2>A year of hourly demand on New York’s grid</h2>
+
+<img data-src="14-apis_files/figure-revealjs/eia-year-1.png" alt="Hourly electricity demand on New York's grid through 2025. Winter evenings reach about 23,500 megawatt-hours, spring and autumn sit between about 11,000 and 21,000, and summer peaks in late June and late July reach almost 32,000. A thin line drops to zero in mid-January." class="r-stretch"></section>
+<section id="eia-zero" class="slide level2 smaller code-125">
+<h2>What the figure shows, and two hours recorded as zero</h2>
+<ul>
+<li>Winter evenings reach 23,521 MWh (22 January). The year’s low is 11,061 MWh (20 April, mid-afternoon).</li>
+<li>Summer peaks come in late June and late July.</li>
+<li><strong>The drop to zero.</strong> Two hours of 15 January read 0; the hours before and after read 21,505 and 21,943&nbsp;MWh. They look like missing reports stored as 0, so set them to <code>NA</code> before any mean, total or minimum, and add <code>na.rm = TRUE</code> to those calls.</li>
+</ul>
+<div class="cell" data-layout-align="center" data-script="Two hours recorded as zero">
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>R Console; needs eia</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a aria-hidden="true" tabindex="-1"></a>eia[eia<span class="sc">$</span>demand <span class="sc">==</span> <span class="dv">0</span>, <span class="fu">c</span>(<span class="st">"period"</span>, <span class="st">"demand"</span>)]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt;               period demand
+#&gt; 355 2025-01-15T18-05      0
+#&gt; 356 2025-01-15T19-05      0</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a aria-hidden="true" tabindex="-1"></a>eia<span class="sc">$</span>demand[eia<span class="sc">$</span>demand <span class="sc">==</span> <span class="dv">0</span>] <span class="ot">&lt;-</span> <span class="cn">NA</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="eia-peak" class="slide level2 smaller code-125">
+<h2>The peak hour of the June 2025 heat wave</h2>
+<div class="cell" data-layout-align="center" data-script="The peak hour of the June 2025 heat wave">
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>R Console; needs eia</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a aria-hidden="true" tabindex="-1"></a>eia[<span class="fu">which.max</span>(eia<span class="sc">$</span>demand), <span class="fu">c</span>(<span class="st">"period"</span>, <span class="st">"demand"</span>)]   <span class="co"># the row with the largest demand</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt;                period demand
+#&gt; 4195 2025-06-24T19-04  31857</code></pre>
+</div>
+</div>
+<p>A three-day heat wave hit New York from 23 to 25 June 2025. <a href="https://www.nyiso.com/-/june-heatwave-tests-electric-grid-in-new-york">NYISO</a> reported 31,857 MW on 24 June, the highest on New York’s grid since 2016. The EIA labels each hour by its end, so its row 19 is the hour from 18:00 to 19:00 (6 to 7 pm). NYSRC, the council that sets the reliability rules for New York’s grid, labels the same hour by its start, 18:00.</p>
+
+<img data-src="figures/14-apis/D12-hour-ending.png" class="quarto-figure quarto-figure-center r-stretch" alt="A timeline of 24 June 2025 with a bar from 18:00 to 19:00. Above it: EIA row 19, the hour ending at 19:00. Below it: NYSRC, hour beginning 18:00, 31,857 MW."><p><span class="source">Source: NYSRC (New York State Reliability Council), <a href="https://www.nysrc.org/wp-content/uploads/2025/09/C.8-R1-June-2025-Ops-Report.pdf">June 2025 operations report</a>.</span></p>
+<aside class="notes">
+<p>The EIA-930 instructions ask operators to report “by hour ending time”, so the EIA’s row 19 covers 18:00 to 19:00. NYISO says rooftop and other small solar moved the peak about three hours later; without it, demand would have peaked near 33,410 MW at 3 pm. Daily peaks from 22 to 26 June: 26,174, 30,007, 31,857, 30,646, 24,839 (Practice 8 computes them).</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section></section>
+<section>
+<section id="part-model" class="title-slide slide level1 center">
+<h1>5 · Calling a language model’s API</h1>
+<ul>
+<li>The three requests compared</li>
+<li>Getting your own key</li>
+<li>Labelling 266 names as economies or groups</li>
+<li>The prompt and the request</li>
+<li>Reading the reply</li>
+<li>The labels against the World Bank’s own list</li>
+<li>Tokens, cost and three runs</li>
+<li>When to call a model from R</li>
+<li>Keys and coding agents</li>
+</ul>
+</section>
+<section id="compare-requests" class="slide level2 smaller">
+<h2>The World Bank, EIA and model requests compared</h2>
+<table class="caption-top">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;"></th>
+<th style="text-align: left;">World Bank</th>
+<th style="text-align: left;">EIA</th>
+<th style="text-align: left;">Language model</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Method</td>
+<td style="text-align: left;">GET</td>
+<td style="text-align: left;">GET</td>
+<td style="text-align: left;">POST</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Key</td>
+<td style="text-align: left;">none</td>
+<td style="text-align: left;"><code>api_key</code> in the URL</td>
+<td style="text-align: left;"><code>x-api-key</code> header</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">You send</td>
+<td style="text-align: left;">query parameters</td>
+<td style="text-align: left;">query parameters</td>
+<td style="text-align: left;">a JSON body: the model, a length cap, the prompt</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">You get</td>
+<td style="text-align: left;">JSON rows, pages, total</td>
+<td style="text-align: left;">JSON rows, total, warnings</td>
+<td style="text-align: left;">JSON: the text, why the model stopped, token counts</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Cost</td>
+<td style="text-align: left;">free</td>
+<td style="text-align: left;">free</td>
+<td style="text-align: left;">per token</td>
+</tr>
+</tbody>
+</table>
+<div style="font-size:0.85em">
+<ul>
+<li><strong>Prompt</strong>: the instructions and material sent in one request.</li>
+<li><strong>POST</strong>: a request that carries data in its body.</li>
+<li><strong>Token</strong>: a unit of text, often part of a word, that a model reads and writes; the provider charges per token.</li>
+</ul>
+</div>
+<p>The prompt leaves your computer, so send only data whose terms allow it.</p>
+</section>
+<section id="model-key" class="slide level2 smaller">
+<h2>Getting your own API key from the provider’s console</h2>
+
+<img data-src="figures/14-apis/D14-console-steps.png" class="quarto-figure quarto-figure-center r-stretch" alt="Five numbered boxes. In the browser, on the provider's developer console: 1, sign in or create an account at platform.claude.com; 2, billing, add credits and set a spend limit; 3, API keys, Create key; 4, copy the key, which is shown only once and starts with sk-ant-. On your computer: 5, ~/.Renviron, paste the key in, then restart R."><div style="font-size:0.85em">
+<ul>
+<li><strong>Developer console</strong>: the provider’s website for API accounts, billing and keys (here, <a href="https://platform.claude.com">platform.claude.com</a>).</li>
+<li>API calls are paid per token from prepaid credits. A chat subscription does not cover them.</li>
+<li>The console shows the key only once, so paste it into <code>~/.Renviron</code> straight away.</li>
+</ul>
+</div>
+<p>Today nobody needs a key. The calls run on the instructor’s computer, and their replies are in <code>saved/</code>.</p>
+<aside class="notes">
+<p>Steps follow the provider’s “Get your API key” page. If a menu name differs on the day, that page has the current one.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="model-renviron" class="slide level2 smaller code-125">
+<h2>Storing the model key in ~/.Renviron</h2>
+<div class="cell" data-layout-align="center">
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>R Console, on your own computer; once per computer</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a aria-hidden="true" tabindex="-1"></a><span class="fu">file.edit</span>(<span class="st">"~/.Renviron"</span>)   <span class="co"># the same file as EIA_KEY</span></span>
+<span id="cb49-2"><a aria-hidden="true" tabindex="-1"></a><span class="co"># add a second line, ANTHROPIC_API_KEY=paste-your-key-here; save, restart R, then:</span></span>
+<span id="cb49-3"><a aria-hidden="true" tabindex="-1"></a><span class="fu">nchar</span>(<span class="fu">Sys.getenv</span>(<span class="st">"ANTHROPIC_API_KEY"</span>))  <span class="co"># above 0: loaded; 0: not found</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+<ul>
+<li>Never put a key in a script, a commit, a screenshot or a chat.</li>
+<li>If one leaks, delete it in the provider’s developer console and create another.</li>
+<li><code>nchar()</code> shows that the key loaded without printing it on a shared screen.</li>
+</ul>
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="figures/14-apis/D15-renviron-editor.png" class="quarto-figure quarto-figure-center" style="width:75.0%" alt="The file ~/.Renviron drawn as a plain panel with numbered lines: 1, EIA_KEY=xxxxxxxx, your EIA key; 2, ANTHROPIC_API_KEY=sk-ant-xxxxxxxx, the line you add; 3, an empty last line."></p>
+</figure>
+</div>
+</section>
+<section id="model-task" class="slide level2 smaller code-125">
+<h2>Labelling the 266 names as economies or groups</h2>
+<div class="columns">
+<div class="column" style="width:45%;">
+<div class="cell" data-layout-align="center" data-script="Labelling the 266 names as economies or groups">
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>R Console, in the 14-apis folder</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a aria-hidden="true" tabindex="-1"></a><span class="co"># needs wb: source("model_call.R")</span></span>
+<span id="cb50-2"><a aria-hidden="true" tabindex="-1"></a><span class="co"># builds it and sends nothing</span></span>
+<span id="cb50-3"><a aria-hidden="true" tabindex="-1"></a>s <span class="ot">&lt;-</span> <span class="fu">sort</span>(wb<span class="sc">$</span>country, <span class="at">method =</span> <span class="st">"radix"</span>)</span>
+<span id="cb50-4"><a aria-hidden="true" tabindex="-1"></a><span class="fu">writeLines</span>(s[<span class="dv">180</span><span class="sc">:</span><span class="dv">190</span>])   <span class="co"># 11 of the 266</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; North America
+#&gt; North Macedonia
+#&gt; Northern Mariana Islands
+#&gt; Norway
+#&gt; Not classified
+#&gt; OECD members
+#&gt; Oman
+#&gt; Other small states
+#&gt; Pacific island small states
+#&gt; Pakistan
+#&gt; Palau</code></pre>
+</div>
+</div>
+</div><div class="column" style="width:55%;">
+<div class="dashes">
+<ul>
+<li><strong>The task</strong>: label each of the 266 names in the World Bank’s 2023 table of access to electricity
+<ul>
+<li><code>economy</code>: a country or a territory</li>
+<li><code>group</code>: a region, an income group, a lending group, or the world</li>
+</ul></li>
+<li><strong>Why this task</strong>
+<ul>
+<li>Each label needs knowledge of what the name refers to: South Africa is an economy, Sub-Saharan Africa a group.</li>
+<li>The World Bank publishes the correct label for every name, so R can count how many of the model’s labels agree.</li>
+</ul></li>
+</ul>
+</div>
+</div></div>
+<p><span style="font-size:0.75em"><strong>Lending group</strong>: the economies that borrow under one World Bank programme, such as IDA, which lends to the poorest countries.</span></p>
+<aside class="notes">
+<p>Call-out before the bullets: which of these 11 are groups? Five: North America, Not classified, OECD members, Other small states, Pacific island small states. Northern Mariana Islands is a US territory, an economy in the World Bank’s list. Channel Islands, also in the table, is one economy in the list.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="model-prompt" class="slide level2 smaller code-110">
+<h2>Building the prompt from the 266 names</h2>
+<div class="cell" data-layout-align="center" data-script="Building the prompt from the 266 names">
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>model_call.R (part), in the 14-apis folder; needs jsonlite, flat() and saved/; writes raw/model_prompt.txt</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a aria-hidden="true" tabindex="-1"></a>replies <span class="ot">&lt;-</span> <span class="fu">lapply</span>(<span class="fu">paste0</span>(<span class="st">"saved/wb_2023_p"</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>, <span class="st">".json"</span>), fromJSON)</span>
+<span id="cb52-2"><a aria-hidden="true" tabindex="-1"></a>wb <span class="ot">&lt;-</span> <span class="fu">do.call</span>(rbind, <span class="fu">lapply</span>(replies, flat))</span>
+<span id="cb52-3"><a aria-hidden="true" tabindex="-1"></a><span class="co"># sort by name, the same way on every computer</span></span>
+<span id="cb52-4"><a aria-hidden="true" tabindex="-1"></a>wb <span class="ot">&lt;-</span> wb[<span class="fu">order</span>(<span class="fu">tolower</span>(wb<span class="sc">$</span>country), <span class="at">method =</span> <span class="st">"radix"</span>), ]</span>
+<span id="cb52-5"><a aria-hidden="true" tabindex="-1"></a>wb<span class="sc">$</span>id <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(wb)</span>
+<span id="cb52-6"><a aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb52-7"><a aria-hidden="true" tabindex="-1"></a>prompt <span class="ot">&lt;-</span> <span class="fu">paste0</span>(</span>
+<span id="cb52-8"><a aria-hidden="true" tabindex="-1"></a>  <span class="st">"Below are "</span>, <span class="fu">nrow</span>(wb), <span class="st">" names from a World Bank table. Some are single "</span>,</span>
+<span id="cb52-9"><a aria-hidden="true" tabindex="-1"></a>  <span class="st">"economies (a country or a territory). Others are groups of economies "</span>,</span>
+<span id="cb52-10"><a aria-hidden="true" tabindex="-1"></a>  <span class="st">"(a region, an income group, a lending group, or the world). Label each "</span>,</span>
+<span id="cb52-11"><a aria-hidden="true" tabindex="-1"></a>  <span class="st">"name. Reply with CSV only: a header line id,label, then one line per "</span>,</span>
+<span id="cb52-12"><a aria-hidden="true" tabindex="-1"></a>  <span class="st">"name with its number and either economy or group.</span><span class="sc">\n\n</span><span class="st">"</span>,</span>
+<span id="cb52-13"><a aria-hidden="true" tabindex="-1"></a>  <span class="fu">paste0</span>(wb<span class="sc">$</span>id, <span class="st">". "</span>, wb<span class="sc">$</span>country, <span class="at">collapse =</span> <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>))</span>
+<span id="cb52-14"><a aria-hidden="true" tabindex="-1"></a><span class="fu">writeLines</span>(prompt, <span class="st">"raw/model_prompt.txt"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+<ul>
+<li>The World Bank lists its 49 groups first, so a model could label by position. Sorting by name mixes the groups in with the economies.</li>
+<li><code>method = "radix"</code> sorts by character code and ignores the computer’s language settings, so every computer gets the same order. <code>tolower()</code> stops capitals from sorting first.</li>
+<li>Each name gets a number; the CSV reply repeats it, so R can match each label to its name.</li>
+<li><code>collapse = "\n"</code> joins the names with <code>"\n"</code>, a new line, so each name sits on its own line.</li>
+</ul>
+<aside class="notes">
+<p>In the World Bank’s own order, rows 1 to 49 are the groups, and a model could label by position. On the instructor’s computer the default sort gives the same order; on some others it moves 13 names, which is why the line names its method.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="model-request" class="slide level2 smaller code-125">
+<h2>Putting the key in a header and the prompt in the body</h2>
+<div class="cell" data-layout-align="center" data-script="Putting the key in a header and the prompt in the body">
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>model_call.R (part), plus req to print it; source("model_call.R") sets prompt and MODEL; sends nothing</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a aria-hidden="true" tabindex="-1"></a>req <span class="ot">&lt;-</span> <span class="fu">request</span>(<span class="st">"https://api.anthropic.com/v1/messages"</span>)</span>
+<span id="cb53-2"><a aria-hidden="true" tabindex="-1"></a>req <span class="ot">&lt;-</span> <span class="fu">req_headers</span>(req, <span class="st">"x-api-key"</span> <span class="ot">=</span> <span class="fu">Sys.getenv</span>(<span class="st">"ANTHROPIC_API_KEY"</span>),</span>
+<span id="cb53-3"><a aria-hidden="true" tabindex="-1"></a>                   <span class="st">"anthropic-version"</span> <span class="ot">=</span> <span class="st">"2023-06-01"</span>, <span class="at">.redact =</span> <span class="st">"x-api-key"</span>)</span>
+<span id="cb53-4"><a aria-hidden="true" tabindex="-1"></a>req <span class="ot">&lt;-</span> <span class="fu">req_body_json</span>(req, <span class="fu">list</span>(<span class="at">model =</span> MODEL, <span class="at">max_tokens =</span> <span class="dv">4000</span>,</span>
+<span id="cb53-5"><a aria-hidden="true" tabindex="-1"></a>  <span class="at">messages =</span> <span class="fu">list</span>(<span class="fu">list</span>(<span class="at">role =</span> <span class="st">"user"</span>, <span class="at">content =</span> prompt))))</span>
+<span id="cb53-6"><a aria-hidden="true" tabindex="-1"></a>req</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; &lt;httr2_request&gt;
+#&gt; POST https://api.anthropic.com/v1/messages
+#&gt; Headers:
+#&gt; * x-api-key        : &lt;REDACTED&gt;
+#&gt; * anthropic-version: "2023-06-01"
+#&gt; Body: JSON data</code></pre>
+</div>
+</div>
+<div class="columns" style="font-size:0.85em">
+<div class="column" style="width:50%;">
+<div class="dashes">
+<ul>
+<li><strong>Headers</strong>
+<ul>
+<li><code>x-api-key</code>: the key; <code>.redact</code> keeps R from printing it</li>
+<li><code>anthropic-version</code>: the version of the request format</li>
+</ul></li>
+</ul>
+</div>
+</div><div class="column" style="width:50%;">
+<div class="dashes">
+<ul>
+<li><strong>Body</strong>, in JSON
+<ul>
+<li><code>model</code>: <code>MODEL</code>, the id on line 1 of <code>model_call.R</code></li>
+<li><code>max_tokens</code>: a cap on the reply’s length and cost; the saved replies used about 1,500</li>
+<li><code>messages</code>: the prompt, as one message from the user</li>
+</ul></li>
+</ul>
+</div>
+</div></div>
+<p><span style="font-size:0.85em"><code>req_body_json()</code> makes the request a POST. Nothing is sent until <code>req_perform()</code>.</span></p>
+</section>
+<section id="model-send" class="slide level2">
+<h2>Sending the model request from R (live)</h2>
+<div class="cell" data-layout-align="center">
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>model_send.R (part), instructor's computer; needs internet, req and a key</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a aria-hidden="true" tabindex="-1"></a>resp <span class="ot">&lt;-</span> <span class="fu">req_perform</span>(req)              <span class="co"># about 11 seconds</span></span>
+<span id="cb55-2"><a aria-hidden="true" tabindex="-1"></a><span class="fu">writeLines</span>(<span class="fu">resp_body_string</span>(resp), <span class="st">"raw/model_live.json"</span>)</span>
+<span id="cb55-3"><a aria-hidden="true" tabindex="-1"></a>reply <span class="ot">&lt;-</span> <span class="fu">fromJSON</span>(<span class="st">"raw/model_live.json"</span>)</span>
+<span id="cb55-4"><a aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(reply<span class="sc">$</span>stop_reason)              <span class="co"># "end_turn": the model finished</span></span>
+<span id="cb55-5"><a aria-hidden="true" tabindex="-1"></a>labels <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="at">text =</span> reply<span class="sc">$</span>content<span class="sc">$</span>text[reply<span class="sc">$</span>content<span class="sc">$</span>type <span class="sc">==</span> <span class="st">"text"</span>])</span>
+<span id="cb55-6"><a aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">table</span>(labels<span class="sc">$</span>label))            <span class="co"># each saved run: economy 217, group 49</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+<ul>
+<li>Each call costs money. The reply is saved to <code>raw/model_live.json</code>.</li>
+<li>The three calls sent before class took 11.0 to 11.2 seconds each (<code>saved/model_runs.csv</code>).</li>
+<li>If it fails, the next slide shows a reply saved before class.</li>
+</ul>
+<aside class="notes">
+<p>Run nchar(Sys.getenv(“ANTHROPIC_API_KEY”)) before class, off screen. Never open ~/.Renviron or print Sys.getenv() on the projector. In RStudio, in the 14-apis project: source(“model_send.R”), which sources model_call.R first. Expect “end_turn”, then economy 217 and group 49. If the counts differ, say so: replies can differ between runs. The comparison continues on the saved reply. A 400, 402, 429 or 529 all go straight to the next slide.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="model-reply" class="slide level2 smaller code-110">
+<h2>Reading the text and the stop reason in the model’s reply</h2>
+<p>Reply to the labelling prompt, run on the instructor’s computer before class (<code>saved/model_reply_1.json</code>).</p>
+<div class="columns">
+<div class="column" style="width:44%;">
+<p><span style="font-size:0.75em">The file, shortened to the fields used here, with the CSV text cut after two labels.</span></p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output cell-output-stdout">
+<pre><code>{
+  "content": [
+    {
+      "type": "thinking",
+      "thinking": ""
+    },
+    {
+      "type": "text",
+      "text": "id,label\n1,economy\n2,group\n..."
+    }
+  ],
+  "stop_reason": "end_turn",
+  "usage": {
+    "input_tokens": 2597,
+    "output_tokens": 1488,
+    "output_tokens_details": {
+      "thinking_tokens": 202
+    }
+  }
+}</code></pre>
+</div>
+</div>
+</div><div class="column" style="width:56%;">
+<div class="cell" data-layout-align="center" data-script="Reading the text and the stop reason in the model's reply">
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>R Console, in the 14-apis folder; needs jsonlite; no key</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb57"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a aria-hidden="true" tabindex="-1"></a>reply <span class="ot">&lt;-</span> <span class="fu">fromJSON</span>(<span class="st">"saved/model_reply_1.json"</span>)</span>
+<span id="cb57-2"><a aria-hidden="true" tabindex="-1"></a>reply<span class="sc">$</span>content<span class="sc">$</span>type</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; [1] "thinking" "text"</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb59"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a aria-hidden="true" tabindex="-1"></a>reply<span class="sc">$</span>stop_reason</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; [1] "end_turn"</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb61"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb61-1"><a aria-hidden="true" tabindex="-1"></a>txt <span class="ot">&lt;-</span> reply<span class="sc">$</span>content<span class="sc">$</span>text[reply<span class="sc">$</span>content<span class="sc">$</span>type <span class="sc">==</span> <span class="st">"text"</span>]</span>
+<span id="cb61-2"><a aria-hidden="true" tabindex="-1"></a>labels <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="at">text =</span> txt)   <span class="co"># CSV from a string</span></span>
+<span id="cb61-3"><a aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(labels)                      <span class="co"># 266 rows, one per name</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; 'data.frame':    266 obs. of  2 variables:
+#&gt;  $ id   : int  1 2 3 4 5 6 7 8 9 10 ...
+#&gt;  $ label: chr  "economy" "group" "group" "economy" ...</code></pre>
+</div>
+</div>
+<div style="font-size:0.75em">
+<ul>
+<li>The content can begin with a <strong>thinking block</strong>: the reasoning the model writes before its answer. Its text is left out of the reply by default.</li>
+<li><strong>Stop reason</strong>: why the reply ended. <code>"end_turn"</code>: the model finished. <code>"max_tokens"</code>: your cap cut it off mid-list. Read it before the text.</li>
+</ul>
+</div>
+</div></div>
+</section>
+<section id="wb-countries" class="slide level2 smaller code-110">
+<h2>The World Bank’s own list of economies and groups</h2>
+<div class="cell" data-layout-align="center" data-script="The World Bank's own list of economies and groups">
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>R Console, in the 14-apis folder; needs internet and httr2; no key; writes raw/wb_countries.json</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb63"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb63-1"><a aria-hidden="true" tabindex="-1"></a>req_cl <span class="ot">&lt;-</span> <span class="fu">request</span>(<span class="st">"https://api.worldbank.org/v2/country"</span>)</span>
+<span id="cb63-2"><a aria-hidden="true" tabindex="-1"></a>req_cl <span class="ot">&lt;-</span> <span class="fu">req_url_query</span>(req_cl, <span class="at">format =</span> <span class="st">"json"</span>, <span class="at">per_page =</span> <span class="dv">400</span>)   <span class="co"># every entry, one page</span></span>
+<span id="cb63-3"><a aria-hidden="true" tabindex="-1"></a><span class="fu">writeLines</span>(<span class="fu">resp_body_string</span>(<span class="fu">req_perform</span>(req_cl)), <span class="st">"raw/wb_countries.json"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+<p>The copy saved before class ships in <code>saved/</code>:</p>
+<div class="cell" data-layout-align="center" data-script="Reading the World Bank's list">
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>R Console, in the 14-apis folder; needs jsonlite and saved/wb_countries.json (or yours, in raw/)</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb64"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb64-1"><a aria-hidden="true" tabindex="-1"></a>cl <span class="ot">&lt;-</span> <span class="fu">fromJSON</span>(<span class="st">"saved/wb_countries.json"</span>)[[<span class="dv">2</span>]]</span>
+<span id="cb64-2"><a aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(cl)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; [1] 296</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb66"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb66-1"><a aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(cl<span class="sc">$</span>region<span class="sc">$</span>value <span class="sc">==</span> <span class="st">"Aggregates"</span>)   <span class="co"># TRUE: a group of economies</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; 
+#&gt; FALSE  TRUE 
+#&gt;   217    79</code></pre>
+</div>
+</div>
+<ul>
+<li>Each entry has a name and a region. The World Bank gives every group the region <code>"Aggregates"</code>.</li>
+<li>The list has 296 entries: the same 217 economies as the table, and 79 groups.</li>
+<li>The table uses 49 of the 79 groups.</li>
+<li><strong>Reference list</strong>: labels you already trust, used to measure the model’s.</li>
+</ul>
+</section>
+<section id="model-vs-list" class="slide level2 smaller">
+<h2>The model’s labels compared with the World Bank’s list</h2>
+<div class="cell" data-layout-align="center" data-script="The model's labels compared with the World Bank's list">
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>R Console; needs wb from model_call.R, labels from the reply, and cl</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb68"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb68-1"><a aria-hidden="true" tabindex="-1"></a>miss <span class="ot">&lt;-</span> <span class="fu">is.na</span>(<span class="fu">match</span>(wb<span class="sc">$</span>country, cl<span class="sc">$</span>name))   <span class="co"># TRUE: no exact match in the list</span></span>
+<span id="cb68-2"><a aria-hidden="true" tabindex="-1"></a>wb<span class="sc">$</span>country[miss]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; [1] "Latin America &amp; Caribbean" "Sub-Saharan Africa"</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb70"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb70-1"><a aria-hidden="true" tabindex="-1"></a>pos <span class="ot">&lt;-</span> <span class="fu">match</span>(<span class="fu">trimws</span>(wb<span class="sc">$</span>country), <span class="fu">trimws</span>(cl<span class="sc">$</span>name))   <span class="co"># each name's row in the list</span></span>
+<span id="cb70-2"><a aria-hidden="true" tabindex="-1"></a>wb<span class="sc">$</span>reference <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(cl<span class="sc">$</span>region<span class="sc">$</span>value[pos] <span class="sc">==</span> <span class="st">"Aggregates"</span>, <span class="st">"group"</span>, <span class="st">"economy"</span>)</span>
+<span id="cb70-3"><a aria-hidden="true" tabindex="-1"></a>wb<span class="sc">$</span>model <span class="ot">&lt;-</span> labels<span class="sc">$</span>label[<span class="fu">match</span>(wb<span class="sc">$</span>id, labels<span class="sc">$</span>id)]   <span class="co"># each label on its name, by number</span></span>
+<span id="cb70-4"><a aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(<span class="at">model =</span> wb<span class="sc">$</span>model, <span class="at">list =</span> wb<span class="sc">$</span>reference)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt;          list
+#&gt; model     economy group
+#&gt;   economy     217     0
+#&gt;   group         0    49</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb72"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb72-1"><a aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(wb<span class="sc">$</span>model <span class="sc">==</span> wb<span class="sc">$</span>reference)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; [1] 266</code></pre>
+</div>
+</div>
+<ul>
+<li>The list writes those two names with a space at the end (<code>"Sub-Saharan Africa "</code>). <code>trimws()</code> removes spaces at the start and end of a text, so every name finds its row.</li>
+<li>The model agrees with the World Bank on all 266 names.</li>
+<li>The model has likely seen this list: these names and groups are on many public pages.</li>
+<li>On your own texts, measure agreement on a hand-labelled sample before trusting the rest.</li>
+</ul>
+<aside class="notes">
+<p>Matching by the three-letter code fails for five groups whose code is empty in the table: the four income groups and Not classified. Hence the match by name.</p>
+<p>Why 266 of 266 is a weak test, if asked. The task is easy: a word search (income, IDA, states, Asia, Africa, Arab…) written knowing the answers gets about 260 of 266, and its misses are economies named like regions (South Africa, Saudi Arabia, American Samoa). The prompt copies the World Bank’s own categories, so the score measures the prompt and the model together. Zero errors in 266 still fits an error rate near 1% overall and near 6% on the 49 groups (three divided by the count).</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="model-three-runs" class="slide level2 smaller code-110">
+<h2>Tokens, cost and three runs of the same request</h2>
+<div class="cell" data-layout-align="center" data-script="Comparing three runs of the same request">
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>R Console, in the 14-apis folder; needs jsonlite, the three saved replies and wb with its reference column</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb74"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb74-1"><a aria-hidden="true" tabindex="-1"></a>runs <span class="ot">&lt;-</span> <span class="fu">lapply</span>(<span class="fu">paste0</span>(<span class="st">"saved/model_reply_"</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>, <span class="st">".json"</span>), fromJSON)  <span class="co"># three runs of the labelling request</span></span>
+<span id="cb74-2"><a aria-hidden="true" tabindex="-1"></a>run_row <span class="ot">&lt;-</span> <span class="cf">function</span>(r) {</span>
+<span id="cb74-3"><a aria-hidden="true" tabindex="-1"></a>  lab <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="at">text =</span> r<span class="sc">$</span>content<span class="sc">$</span>text[r<span class="sc">$</span>content<span class="sc">$</span>type <span class="sc">==</span> <span class="st">"text"</span>])</span>
+<span id="cb74-4"><a aria-hidden="true" tabindex="-1"></a>  <span class="fu">data.frame</span>(<span class="at">input =</span> r<span class="sc">$</span>usage<span class="sc">$</span>input_tokens, <span class="at">output =</span> r<span class="sc">$</span>usage<span class="sc">$</span>output_tokens,</span>
+<span id="cb74-5"><a aria-hidden="true" tabindex="-1"></a>             <span class="at">reasoning =</span> r<span class="sc">$</span>usage<span class="sc">$</span>output_tokens_details<span class="sc">$</span>thinking_tokens,</span>
+<span id="cb74-6"><a aria-hidden="true" tabindex="-1"></a>             <span class="at">agree =</span> <span class="fu">sum</span>(lab<span class="sc">$</span>label[<span class="fu">match</span>(wb<span class="sc">$</span>id, lab<span class="sc">$</span>id)] <span class="sc">==</span> wb<span class="sc">$</span>reference))</span>
+<span id="cb74-7"><a aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb74-8"><a aria-hidden="true" tabindex="-1"></a><span class="fu">do.call</span>(rbind, <span class="fu">lapply</span>(runs, run_row))   <span class="co"># tokens; agree: names whose label matches the list</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt;   input output reasoning agree
+#&gt; 1  2597   1488       202   266
+#&gt; 2  2597   1489       203   266
+#&gt; 3  2597   1492       206   266</code></pre>
+</div>
+</div>
+<ul>
+<li><strong>Cost</strong> in dollars = (input tokens × input price + output tokens × output price) / 1,000,000, with prices per million tokens on the provider’s <a href="https://platform.claude.com/docs/en/about-claude/pricing">pricing page</a>. Each name adds about 10 tokens in and 6 out.</li>
+<li>All three runs gave the same 266 labels, each matching the list. Nothing guarantees the same labels on the next run, so each reply is saved.</li>
+<li><strong>Temperature</strong>, a setting for how much replies vary: the same request sent with <code>temperature = 0</code> got status 400, because this model no longer accepts it.</li>
+</ul>
+<aside class="notes">
+<p>On harder items, runs disagree, and the items where they disagree are the ones to read by hand.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="model-or-r" class="slide level2 smaller">
+<h2>When to call a model from R, and when to have it write R</h2>
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="figures/14-apis/D16-model-or-r.png" class="quarto-figure quarto-figure-center" style="width:90.0%" alt="Two lanes. Call a model from R, when each item needs reading: your R script sends one instruction and the list of items to the model through its API, the model labels each item, and the labels come back as data, saved and compared with a reference. Have a model write R, when a rule gives the answer: a chat assistant or a coding agent writes R code, which you read and keep, and R runs it to give the exact answer, such as a maximum, a regression or a figure."></p>
+</figure>
+</div>
+<div class="columns" style="font-size:0.8em">
+<div class="column" style="width:50%;">
+<div class="dashes">
+<ul>
+<li><strong>Call a model from R</strong>, through its API, in your script
+<ul>
+<li>examples: job titles to occupation codes, open survey answers to categories</li>
+<li>the same request reruns on thousands of items</li>
+<li>today: the 266 names, scored by the World Bank’s list</li>
+</ul></li>
+</ul>
+</div>
+</div><div class="column" style="width:50%;">
+<div class="dashes">
+<ul>
+<li><strong>Have a model write R</strong>, in a chat assistant or a <strong>coding agent</strong> (a program that writes and runs code on your computer)
+<ul>
+<li>R computes the answer exactly and for free</li>
+<li>a task of this kind today: the peak hour, one line of R (<code>which.max()</code>) on 8,760 hours</li>
+</ul></li>
+</ul>
+</div>
+</div></div>
+<p><strong>Rule of thumb:</strong> if a formula, a rule or a list gives the answer, compute it in R. If each item needs reading, send the items to the model and measure its labels on a hand-labelled sample.</p>
+<aside class="notes">
+<p>The 266 names fit the first route, and the World Bank’s list also gives their answer: in your own work you would join that list in R. The session uses them because that known answer measures the model. Job titles, open survey answers, firm descriptions and news headlines have no such list. The peak hour fits the second route: a model asked for it reads 8,760 numbers and makes a claim, while one line of R gives the answer.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="agent-keys" class="slide level2 smaller">
+<h2>Keeping API keys out of the repo and away from the agent</h2>
+<div class="columns">
+<div class="column" style="width:53%;">
+<div style="font-size:0.85em">
+<p>When a coding agent writes and runs your R code:</p>
+<ul>
+<li><strong>The key stays in <code>~/.Renviron</code></strong>, outside the project. The code reads <code>Sys.getenv("EIA_KEY")</code>; the agent never needs the key itself.</li>
+<li><strong>Never paste a key into the chat.</strong> What the agent reads, files and printed output included, goes to the model’s provider with the conversation.</li>
+<li><strong>Keep <code>ANTHROPIC_API_KEY</code> out of your shell’s startup file.</strong> An agent started from that shell can use it and bill your API credits instead of your subscription.</li>
+<li><strong>Before each commit</strong>, read what you are about to commit (<code>git diff --cached</code>).</li>
+<li><strong>If a key leaks</strong>, delete it in the provider’s console and create a new one. Removing it from the repo does not undo the leak.</li>
+</ul>
+</div>
+</div><div class="column" style="width:47%;">
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>CLAUDE.md: the agent's instructions, in the project</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb76" data-filename="CLAUDE.md: the agent's instructions, in the project"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb76-1"><a aria-hidden="true" tabindex="-1"></a>API keys are in ~/.Renviron.</span>
+<span id="cb76-2"><a aria-hidden="true" tabindex="-1"></a>Read them with Sys.getenv("NAME").</span>
+<span id="cb76-3"><a aria-hidden="true" tabindex="-1"></a>Never print a key, write it to a</span>
+<span id="cb76-4"><a aria-hidden="true" tabindex="-1"></a>file or put it in printed output.</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>.claude/settings.json: the agent may not open the file</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb77" data-filename=".claude/settings.json: the agent may not open the file"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb77-1"><a aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb77-2"><a aria-hidden="true" tabindex="-1"></a>  "permissions": {</span>
+<span id="cb77-3"><a aria-hidden="true" tabindex="-1"></a>    "deny": ["Read(~/.Renviron)"]</span>
+<span id="cb77-4"><a aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb77-5"><a aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p><span style="font-size:0.8em">The instructions are a request. The setting is enforced on the agent’s own reads, <code>cat</code> included, but not on the code it runs: R still reads the file when it starts, which is how your script gets the key.</span></p>
+</div></div>
+</section>
+<section id="practice" class="slide level2">
+<h2>Practice</h2>
+<p>Ten exercises on the session page, with solutions behind a click, all in the 14-apis project. Tasks&nbsp;6 and&nbsp;7 need your own EIA key. Only the last step of task 10 needs your own model key.</p>
+<ul>
+<li><strong>1–3</strong> World Bank requests: agricultural land in 2020; China and India, 2000–2023; 2023 at 20&nbsp;rows a page</li>
+<li><strong>4–5</strong> Errors and packages: misspelled codes that still return status 200; the same table from <code>WDI</code>, an R package for World Bank data</li>
+<li><strong>6–8</strong> The EIA: one day of New York demand; every hour of 2025 for Texas or California; the ten days with New York’s highest peak demand</li>
+<li><strong>9–10</strong> Model replies: tokens per name and cost of the saved replies; 20&nbsp;names labelled by hand, compared with the model’s labels</li>
+</ul>
+
+
+</section></section>
+    </div>
+  <div class="quarto-auto-generated-content" style="display: none;">
+<div class="footer footer-default">
+<p>AEM 6850 · Session 14</p>
+</div>
+</div></div>
+
+  <script>window.backupDefine = window.define; window.define = undefined;</script>
+  <script src="../../site_libs/revealjs/dist/reveal.js"></script>
+  <!-- reveal.js plugins -->
+  <script src="../../site_libs/revealjs/plugin/quarto-line-highlight/line-highlight.js"></script>
+  <script src="../../site_libs/revealjs/plugin/pdf-export/pdfexport.js"></script>
+  <script src="../../site_libs/revealjs/plugin/reveal-menu/menu.js"></script>
+  <script src="../../site_libs/revealjs/plugin/reveal-menu/quarto-menu.js"></script>
+  <script src="../../site_libs/revealjs/plugin/quarto-support/support.js"></script>
+  
+
+  <script src="../../site_libs/revealjs/plugin/notes/notes.js"></script>
+  <script src="../../site_libs/revealjs/plugin/search/search.js"></script>
+  <script src="../../site_libs/revealjs/plugin/zoom/zoom.js"></script>
+  <script src="../../site_libs/revealjs/plugin/math/math.js"></script>
+  <script>window.define = window.backupDefine; window.backupDefine = undefined;</script>
+
+  <script>
+
+      // Full list of configuration options available at:
+      // https://revealjs.com/config/
+      Reveal.initialize({
+'controlsAuto': false,
+'previewLinksAuto': false,
+'pdfSeparateFragments': false,
+'autoAnimateEasing': "ease",
+'autoAnimateDuration': 1,
+'autoAnimateUnmatched': true,
+'jumpToSlide': true,
+'menu': {"side":"left","useTextContentForMissingTitles":true,"markers":false,"loadIcons":false,"custom":[{"title":"Tools","icon":"<i class=\"fas fa-gear\"></i>","content":"<ul class=\"slide-menu-items\">\n<li class=\"slide-tool-item active\" data-item=\"0\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.fullscreen(event)\"><kbd>f</kbd> Fullscreen</a></li>\n<li class=\"slide-tool-item\" data-item=\"1\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.speakerMode(event)\"><kbd>s</kbd> Speaker View</a></li>\n<li class=\"slide-tool-item\" data-item=\"2\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.overview(event)\"><kbd>o</kbd> Slide Overview</a></li>\n<li class=\"slide-tool-item\" data-item=\"3\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.togglePdfExport(event)\"><kbd>e</kbd> PDF Export Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"4\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.toggleScrollView(event)\"><kbd>r</kbd> Scroll View Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"5\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.keyboardHelp(event)\"><kbd>?</kbd> Keyboard Help</a></li>\n</ul>"}],"openButton":true},
+'smaller': false,
+ 
+        // Display controls in the bottom right corner
+        controls: true,
+
+        // Help the user learn the controls by providing hints, for example by
+        // bouncing the down arrow when they first encounter a vertical slide
+        controlsTutorial: false,
+
+        // Determines where controls appear, "edges" or "bottom-right"
+        controlsLayout: 'edges',
+
+        // Visibility rule for backwards navigation arrows; "faded", "hidden"
+        // or "visible"
+        controlsBackArrows: 'faded',
+
+        // Display a presentation progress bar
+        progress: true,
+
+        // Display the page number of the current slide
+        slideNumber: 'c/t',
+
+        // 'all', 'print', or 'speaker'
+        showSlideNumber: 'all',
+
+        // Add the current slide number to the URL hash so that reloading the
+        // page/copying the URL will return you to the same slide
+        hash: true,
+
+        // Start with 1 for the hash rather than 0
+        hashOneBasedIndex: false,
+
+        // Flags if we should monitor the hash and change slides accordingly
+        respondToHashChanges: true,
+
+        // Push each slide change to the browser history
+        history: false,
+
+        // Enable keyboard shortcuts for navigation
+        keyboard: true,
+
+        // Enable the slide overview mode
+        overview: true,
+
+        // Disables the default reveal.js slide layout (scaling and centering)
+        // so that you can use custom CSS layout
+        disableLayout: false,
+
+        // Vertical centering of slides
+        center: false,
+
+        // Enables touch navigation on devices with touch input
+        touch: true,
+
+        // Loop the presentation
+        loop: false,
+
+        // Change the presentation direction to be RTL
+        rtl: false,
+
+        // see https://revealjs.com/vertical-slides/#navigation-mode
+        navigationMode: 'linear',
+
+        // Randomizes the order of slides each time the presentation loads
+        shuffle: false,
+
+        // Turns fragments on and off globally
+        fragments: true,
+
+        // Flags whether to include the current fragment in the URL,
+        // so that reloading brings you to the same fragment position
+        fragmentInURL: false,
+
+        // Flags if the presentation is running in an embedded mode,
+        // i.e. contained within a limited portion of the screen
+        embedded: false,
+
+        // Flags if we should show a help overlay when the questionmark
+        // key is pressed
+        help: true,
+
+        // Flags if it should be possible to pause the presentation (blackout)
+        pause: true,
+
+        // Flags if speaker notes should be visible to all viewers
+        showNotes: false,
+
+        // Global override for autoplaying embedded media (null/true/false)
+        autoPlayMedia: null,
+
+        // Global override for preloading lazy-loaded iframes (null/true/false)
+        preloadIframes: null,
+
+        // Number of milliseconds between automatically proceeding to the
+        // next slide, disabled when set to 0, this value can be overwritten
+        // by using a data-autoslide attribute on your slides
+        autoSlide: 0,
+
+        // Stop auto-sliding after user input
+        autoSlideStoppable: true,
+
+        // Use this method for navigation when auto-sliding
+        autoSlideMethod: null,
+
+        // Specify the average time in seconds that you think you will spend
+        // presenting each slide. This is used to show a pacing timer in the
+        // speaker view
+        defaultTiming: null,
+
+        // Enable slide navigation via mouse wheel
+        mouseWheel: false,
+
+        // The display mode that will be used to show slides
+        display: 'block',
+
+        // Hide cursor if inactive
+        hideInactiveCursor: true,
+
+        // Time before the cursor is hidden (in ms)
+        hideCursorTime: 5000,
+
+        // Opens links in an iframe preview overlay
+        previewLinks: false,
+
+        // Transition style (none/fade/slide/convex/concave/zoom)
+        transition: 'none',
+
+        // Transition speed (default/fast/slow)
+        transitionSpeed: 'default',
+
+        // Transition style for full page slide backgrounds
+        // (none/fade/slide/convex/concave/zoom)
+        backgroundTransition: 'none',
+
+        // Number of slides away from the current that are visible
+        viewDistance: 3,
+
+        // Number of slides away from the current that are visible on mobile
+        // devices. It is advisable to set this to a lower number than
+        // viewDistance in order to save resources.
+        mobileViewDistance: 2,
+
+        // The "normal" size of the presentation, aspect ratio will be preserved
+        // when the presentation is scaled to fit different resolutions. Can be
+        // specified using percentage units.
+        width: 1050,
+
+        height: 700,
+
+        // Factor of the display size that should remain empty around the content
+        margin: 0.1,
+
+        math: {
+          mathjax: 'https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js',
+          config: 'TeX-AMS_HTML-full',
+          tex2jax: {
+            inlineMath: [['\\(','\\)']],
+            displayMath: [['\\[','\\]']],
+            balanceBraces: true,
+            processEscapes: false,
+            processRefs: true,
+            processEnvironments: true,
+            preview: 'TeX',
+            skipTags: ['script','noscript','style','textarea','pre','code'],
+            ignoreClass: 'tex2jax_ignore',
+            processClass: 'tex2jax_process'
+          },
+        },
+
+        // reveal.js plugins
+        plugins: [QuartoLineHighlight, PdfExport, RevealMenu, QuartoSupport,
+
+          RevealMath,
+          RevealNotes,
+          RevealSearch,
+          RevealZoom
+        ]
+      });
+    </script>
+    <script>
+      // Keep slide-by-slide navigation in narrow windows, such as a side pane.
+      // Reveal switches to a scrolling page when the window is 435 px wide or
+      // less; a width of 0 turns that off.
+      (function () {
+        function keepSlides() {
+          Reveal.configure({ scrollActivationWidth: 0 });
+          Reveal.layout();
+        }
+        window.addEventListener("load", function () {
+          if (!window.Reveal) return;
+          if (Reveal.isReady()) keepSlides(); else Reveal.on("ready", keepSlides);
+        });
+      })();
+    </script>
+    
+    <script>
+      // htmlwidgets need to know to resize themselves when slides are shown/hidden.
+      // Fire the "slideenter" event (handled by htmlwidgets.js) when the current
+      // slide changes (different for each slide format).
+      (function () {
+        // dispatch for htmlwidgets
+        function fireSlideEnter() {
+          const event = window.document.createEvent("Event");
+          event.initEvent("slideenter", true, true);
+          window.document.dispatchEvent(event);
+        }
+
+        function fireSlideChanged(previousSlide, currentSlide) {
+          fireSlideEnter();
+
+          // dispatch for shiny
+          if (window.jQuery) {
+            if (previousSlide) {
+              window.jQuery(previousSlide).trigger("hidden");
+            }
+            if (currentSlide) {
+              window.jQuery(currentSlide).trigger("shown");
+            }
+          }
+        }
+
+        // hookup for slidy
+        if (window.w3c_slidy) {
+          window.w3c_slidy.add_observer(function (slide_num) {
+            // slide_num starts at position 1
+            fireSlideChanged(null, w3c_slidy.slides[slide_num - 1]);
+          });
+        }
+
+      })();
+    </script>
+
+    <script id="quarto-html-after-body" type="application/javascript">
+      window.document.addEventListener("DOMContentLoaded", function (event) {
+        const tabsets =  window.document.querySelectorAll(".panel-tabset-tabby")
+        tabsets.forEach(function(tabset) {
+          const tabby = new Tabby('#' + tabset.id);
+        });
+        const isCodeAnnotation = (el) => {
+          for (const clz of el.classList) {
+            if (clz.startsWith('code-annotation-')) {                     
+              return true;
+            }
+          }
+          return false;
+        }
+        const onCopySuccess = function(e) {
+          // button target
+          const button = e.trigger;
+          // don't keep focus
+          button.blur();
+          // flash "checked"
+          button.classList.add('code-copy-button-checked');
+          var currentTitle = button.getAttribute("title");
+          button.setAttribute("title", "Copied!");
+          let tooltip;
+          if (window.bootstrap) {
+            button.setAttribute("data-bs-toggle", "tooltip");
+            button.setAttribute("data-bs-placement", "left");
+            button.setAttribute("data-bs-title", "Copied!");
+            tooltip = new bootstrap.Tooltip(button, 
+              { trigger: "manual", 
+                customClass: "code-copy-button-tooltip",
+                offset: [0, -8]});
+            tooltip.show();    
+          }
+          setTimeout(function() {
+            if (tooltip) {
+              tooltip.hide();
+              button.removeAttribute("data-bs-title");
+              button.removeAttribute("data-bs-toggle");
+              button.removeAttribute("data-bs-placement");
+            }
+            button.setAttribute("title", currentTitle);
+            button.classList.remove('code-copy-button-checked');
+          }, 1000);
+          // clear code selection
+          e.clearSelection();
+        }
+        const getTextToCopy = function(trigger) {
+          const outerScaffold = trigger.parentElement.cloneNode(true);
+          const codeEl = outerScaffold.querySelector('code');
+          for (const childEl of codeEl.children) {
+            if (isCodeAnnotation(childEl)) {
+              childEl.remove();
+            }
+          }
+          return codeEl.innerText;
+        }
+        const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+          text: getTextToCopy
+        });
+        clipboard.on('success', onCopySuccess);
+        if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+          const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+            text: getTextToCopy,
+            container: window.document.getElementById('quarto-embedded-source-code-modal')
+          });
+          clipboardModal.on('success', onCopySuccess);
+        }
+          var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+          var mailtoRegex = new RegExp(/^mailto:/);
+            var filterRegex = new RegExp("https:\/\/arielortizbobea\.github\.io\/aem6850\/");
+          var isInternal = (href) => {
+              return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+          }
+          // Inspect non-navigation links and adorn them if external
+         var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+          for (var i=0; i<links.length; i++) {
+            const link = links[i];
+            if (!isInternal(link.href)) {
+              // undo the damage that might have been done by quarto-nav.js in the case of
+              // links that we want to consider external
+              if (link.dataset.originalHref !== undefined) {
+                link.href = link.dataset.originalHref;
+              }
+                // target, if specified
+                link.setAttribute("target", "_blank");
+                if (link.getAttribute("rel") === null) {
+                  link.setAttribute("rel", "noopener");
+                }
+            }
+          }
+        function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+          const config = {
+            allowHTML: true,
+            maxWidth: 500,
+            delay: 100,
+            arrow: false,
+            appendTo: function(el) {
+                return el.closest('section.slide') || el.parentElement;
+            },
+            interactive: true,
+            interactiveBorder: 10,
+            theme: 'light-border',
+            placement: 'bottom-start',
+          };
+          if (contentFn) {
+            config.content = contentFn;
+          }
+          if (onTriggerFn) {
+            config.onTrigger = onTriggerFn;
+          }
+          if (onUntriggerFn) {
+            config.onUntrigger = onUntriggerFn;
+          }
+            config['offset'] = [0,0];
+            config['maxWidth'] = 700;
+          window.tippy(el, config); 
+        }
+        const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+        for (var i=0; i<noterefs.length; i++) {
+          const ref = noterefs[i];
+          tippyHover(ref, function() {
+            // use id or data attribute instead here
+            let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+            try { href = new URL(href).hash; } catch {}
+            const id = href.replace(/^#\/?/, "");
+            const note = window.document.getElementById(id);
+            if (note) {
+              return note.innerHTML;
+            } else {
+              return "";
+            }
+          });
+        }
+        const findCites = (el) => {
+          const parentEl = el.parentElement;
+          if (parentEl) {
+            const cites = parentEl.dataset.cites;
+            if (cites) {
+              return {
+                el,
+                cites: cites.split(' ')
+              };
+            } else {
+              return findCites(el.parentElement)
+            }
+          } else {
+            return undefined;
+          }
+        };
+        var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+        for (var i=0; i<bibliorefs.length; i++) {
+          const ref = bibliorefs[i];
+          const citeInfo = findCites(ref);
+          if (citeInfo) {
+            tippyHover(citeInfo.el, function() {
+              var popup = window.document.createElement('div');
+              citeInfo.cites.forEach(function(cite) {
+                var citeDiv = window.document.createElement('div');
+                citeDiv.classList.add('hanging-indent');
+                citeDiv.classList.add('csl-entry');
+                var biblioDiv = window.document.getElementById('ref-' + cite);
+                if (biblioDiv) {
+                  citeDiv.innerHTML = biblioDiv.innerHTML;
+                }
+                popup.appendChild(citeDiv);
+              });
+              return popup.innerHTML;
+            });
+          }
+        }
+      });
+      </script>
+    
+
+</body></html>

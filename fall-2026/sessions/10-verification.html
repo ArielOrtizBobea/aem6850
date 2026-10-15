@@ -1,0 +1,2325 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.37">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>AEM 6850 · 10 Verification – AEM 6850</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-7f8f88aac4f3542376d5c11b86a4c14d.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-9e1fa279bf766a6aa9044cbdb2ba542d.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="../../styles.css">
+</head>
+
+<body class="nav-sidebar docked quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../fall-2026/sessions/01-overview.html">Part I — Foundations</a></li><li class="breadcrumb-item"><a href="../../fall-2026/sessions/10-verification.html">10 Verification</a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="../../">AEM 6850</a> 
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Home</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/syllabus.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Syllabus</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">Part I — Foundations</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/01-overview.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"> 1 Overview</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/02-r-essentials.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"> 2 R essentials I</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/03-r-essentials-ii.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"> 3 R essentials II</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/03b-wrangling.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">   Wrangling: dplyr</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/04-basic-plots.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"> 4 Basic plots I</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/05-basic-plots-ii.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"> 5 Basic plots II</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/06-how-to-code.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"> 6 How to code</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/07-git.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"> 7 Version control with git</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/08-ai-chat.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"> 8 AI I: chatbots</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/09-ai-code.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"> 9 AI II: coding agents</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/10-verification.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">10 Verification</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/11-reproducible-project.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">11 Reproducible projects</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/12-ggplot.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">12 Publication graphics</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
+ <span class="menu-text">Part II — Applications</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/13-landscape.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">13 The data economists use</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/14-apis.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">14 Channels I: APIs</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/15-scraping.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">15 Channels II: scraping</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/16-text-regex.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">16 Text I: regex</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/17-text-llms.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">17 Text II: LLMs</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/18-documents.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">18 Documents &amp; scans</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/19-audio.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">19 Audio I: speech to text</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/20-audio-ii.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">20 Audio II: tone &amp; emotion</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/21-photos.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">21 Photographs I</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/22-photos-ii.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">22 Photographs II</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/23-spatial-vector.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">23 Spatial I: vector</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/24-spatial-rasters.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">24 Spatial II: rasters</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/25-lidar-drones.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">25 LiDAR &amp; drone imagery</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/26-satellite-local.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">26 Satellite I: on your machine</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/27-satellite-gee.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">27 Satellite II: Earth Engine</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/28-moving-forward.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">28 Moving forward</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../../fall-2026/assignments.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Homework</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/assignments/hw01-air.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">1 How bad was the air?</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/assignments/hw02-wind.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">2 What was the wind doing?</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../../fall-2026/resources.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Resources</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/resources.html#stata" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Coming from Stata</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/resources.html#r" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Learning R</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/resources.html#economists" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Coding guides</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/resources.html#unstuck" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Getting unstuck</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul class="collapse">
+  <li><a href="#objectives" id="toc-objectives" class="nav-link active" data-scroll-target="#objectives">Objectives</a></li>
+  <li><a href="#task" id="toc-task" class="nav-link" data-scroll-target="#task">The task: a regression on R’s built-in savings data</a></li>
+  <li><a href="#data" id="toc-data" class="nav-link" data-scroll-target="#data">The data: LifeCycleSavings, 50 countries, 1960–1970</a></li>
+  <li><a href="#deliverable" id="toc-deliverable" class="nav-link" data-scroll-target="#deliverable">A deliverable to approve or reject</a></li>
+  <li><a href="#plan" id="toc-plan" class="nav-link" data-scroll-target="#plan">Plan for today</a></li>
+  <li><a href="#ra" id="toc-ra" class="nav-link" data-scroll-target="#ra">Supervising a research assistant</a></li>
+  <li><a href="#ra-checks" id="toc-ra-checks" class="nav-link" data-scroll-target="#ra-checks">What supervisors check</a></li>
+  <li><a href="#principal-agent" id="toc-principal-agent" class="nav-link" data-scroll-target="#principal-agent">Delegation is a principal–agent problem</a></li>
+  <li><a href="#ai-vs-ra" id="toc-ai-vs-ra" class="nav-link" data-scroll-target="#ai-vs-ra">How an AI agent differs from a human RA</a></li>
+  <li><a href="#evidence-ladder" id="toc-evidence-ladder" class="nav-link" data-scroll-target="#evidence-ladder">Evidence about hidden work, weakest to strongest</a></li>
+  <li><a href="#edits-check" id="toc-edits-check" class="nav-link" data-scroll-target="#edits-check">Two briefs that let the agent game the check</a></li>
+  <li><a href="#two-rules" id="toc-two-rules" class="nav-link" data-scroll-target="#two-rules">Two rules from the theory</a></li>
+  <li><a href="#reinhart-rogoff" id="toc-reinhart-rogoff" class="nav-link" data-scroll-target="#reinhart-rogoff">A published result: growth when public debt exceeds 90% of GDP</a></li>
+  <li><a href="#rr-replication" id="toc-rr-replication" class="nav-link" data-scroll-target="#rr-replication">The replication, done for a class assignment</a></li>
+  <li><a href="#predict-teams" id="toc-predict-teams" class="nav-link" data-scroll-target="#predict-teams">Which teams found the most coding errors?</a></li>
+  <li><a href="#i4r" id="toc-i4r" class="nav-link" data-scroll-target="#i4r">Reproduction and coding errors found, by type of team</a></li>
+  <li><a href="#recruiters" id="toc-recruiters" class="nav-link" data-scroll-target="#recruiters">Recruiters given a more accurate AI checked less</a></li>
+  <li><a href="#speed" id="toc-speed" class="nav-link" data-scroll-target="#speed">How much AI changed developers’ time per task</a></li>
+  <li><a href="#are-you-sure" id="toc-are-you-sure" class="nav-link" data-scroll-target="#are-you-sure">Asking “are you sure?” makes a model back down</a></li>
+  <li><a href="#shown-answer" id="toc-shown-answer" class="nav-link" data-scroll-target="#shown-answer">Agents shown the published result tend to report it</a></li>
+  <li><a href="#three-kinds" id="toc-three-kinds" class="nav-link" data-scroll-target="#three-kinds">Exact, sourced, and judgment claims</a></li>
+  <li><a href="#claims-colored" id="toc-claims-colored" class="nav-link" data-scroll-target="#claims-colored">The summary, claim by claim</a></li>
+  <li><a href="#who-checks" id="toc-who-checks" class="nav-link" data-scroll-target="#who-checks">Who can check each kind of claim</a></li>
+  <li><a href="#do-vs-check" id="toc-do-vs-check" class="nav-link" data-scroll-target="#do-vs-check">Time to do a task and time to check it</a></li>
+  <li><a href="#seven-steps" id="toc-seven-steps" class="nav-link" data-scroll-target="#seven-steps">The procedure in seven steps</a></li>
+  <li><a href="#brief-checks" id="toc-brief-checks" class="nav-link" data-scroll-target="#brief-checks">Writing the checks into the brief</a></li>
+  <li><a href="#ask-evidence" id="toc-ask-evidence" class="nav-link" data-scroll-target="#ask-evidence">Asking for commands, output, and row counts</a></li>
+  <li><a href="#independent" id="toc-independent" class="nav-link" data-scroll-target="#independent">Why the checker must be independent</a></li>
+  <li><a href="#four-ways" id="toc-four-ways" class="nav-link" data-scroll-target="#four-ways">Four ways to make a check independent</a></li>
+  <li><a href="#three-setups" id="toc-three-setups" class="nav-link" data-scroll-target="#three-setups">Three setups with a second agent</a></li>
+  <li><a href="#planted" id="toc-planted" class="nav-link" data-scroll-target="#planted">Testing a checker with planted errors</a></li>
+  <li><a href="#you-decide" id="toc-you-decide" class="nav-link" data-scroll-target="#you-decide">Reading disagreements, flags, and a random sample</a></li>
+  <li><a href="#finale-brief" id="toc-finale-brief" class="nav-link" data-scroll-target="#finale-brief">What the brief left to the agent</a></li>
+  <li><a href="#finale-script" id="toc-finale-script" class="nav-link" data-scroll-target="#finale-script">The script behind the figure and the summary</a></li>
+  <li><a href="#exercise-1" id="toc-exercise-1" class="nav-link" data-scroll-target="#exercise-1">Exercise</a></li>
+  <li><a href="#live-checker" id="toc-live-checker" class="nav-link" data-scroll-target="#live-checker">A checker in a fresh session</a></li>
+  <li><a href="#checker-report" id="toc-checker-report" class="nav-link" data-scroll-target="#checker-report">The checker’s report</a></li>
+  <li><a href="#reveal" id="toc-reveal" class="nav-link" data-scroll-target="#reveal">The figure with all 50 countries</a></li>
+  <li><a href="#three-problems" id="toc-three-problems" class="nav-link" data-scroll-target="#three-problems">What the three problems were</a></li>
+  <li><a href="#libya" id="toc-libya" class="nav-link" data-scroll-target="#libya">Libya: keep it, drop it, or report both?</a></li>
+  <li><a href="#real-runs" id="toc-real-runs" class="nav-link" data-scroll-target="#real-runs">Three real runs of the same brief</a></li>
+  <li><a href="#takeaways" id="toc-takeaways" class="nav-link" data-scroll-target="#takeaways">What to take away</a></li>
+  <li><a href="#checks-reference" id="toc-checks-reference" class="nav-link" data-scroll-target="#checks-reference">Checks to write into your code</a></li>
+  <li><a href="#checks-by-task" id="toc-checks-by-task" class="nav-link" data-scroll-target="#checks-by-task">Which checks for which task</a></li>
+  <li><a href="#practice" id="toc-practice" class="nav-link" data-scroll-target="#practice">Practice</a></li>
+  <li><a href="#quick-reference" id="toc-quick-reference" class="nav-link" data-scroll-target="#quick-reference">Quick reference</a></li>
+  </ul>
+<div class="quarto-alternate-formats"><h2>Other Formats</h2><ul><li><a href="10-verification-slides.html"><i class="bi bi-file-slides"></i>RevealJS</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../fall-2026/sessions/01-overview.html">Part I — Foundations</a></li><li class="breadcrumb-item"><a href="../../fall-2026/sessions/10-verification.html">10 Verification</a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title">10 · Verification</h1>
+<p class="subtitle lead">Tuesday, September 29, 2026</p>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p><a href="10-verification-slides.html">Slides</a> · <a href="10-verification.R">Live script</a> · <a href="https://github.com/ArielOrtizBobea/aem6850/blob/main/fall-2026/sessions/10-verification.qmd">Source</a></p>
+<p>How to check work you hand to an AI agent. The session treats delegation as a principal–agent problem: you see the output and the agent’s own report on its work, and the work itself stays hidden. It shows what goes wrong without checks, sorts the claims in a deliverable into three kinds with a check for each, lays out a procedure in seven steps, and ends with a check run in class on one small regression that looks right and is wrong.</p>
+<section id="objectives" class="level2 smaller">
+<h2 class="smaller anchored" data-anchor-id="objectives">Objectives</h2>
+<p>By the end of this session you can:</p>
+<ul>
+<li>Describe delegation to an AI agent as a principal–agent problem: what you observe, what you do not, and why the agent’s report on its work is a claim.</li>
+<li>Sort the claims in a deliverable into exact, sourced, and judgment claims, and name the check each one needs.</li>
+<li>Write a brief that says how the result will be checked, and keep one value you know out of it.</li>
+<li>Run an independent check: a fresh session that recomputes each number from the raw data and compares within a stated tolerance.</li>
+<li>Test a checker by planting errors in a copy and counting how many it finds.</li>
+</ul>
+</section>
+<section id="task" class="level2">
+<h2 class="anchored" data-anchor-id="task">The task: a regression on R’s built-in savings data</h2>
+<div style="font-size:1.3em">
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>The brief</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1" data-filename="The brief"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>Using R's built-in LifeCycleSavings data, estimate the</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>classic life-cycle savings regression: the savings rate sr</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>on pop15, pop75, dpi and ddpi. Clean the data as needed.</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>Write the script as savings.R and run it; save a figure of</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>the savings rate against income growth, with a fitted line,</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>as savings_growth.png; and write summary.md: two or three</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>sentences for a non-specialist with the key numbers.</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+<p>What comes back: a script, a figure, and a summary.</p>
+<p>The example that runs through the session is a short brief of the kind an advisor sends a research assistant. It asks for the classic regression on a dataset that ships with R, so everyone has the same data with nothing to download, and it asks for three things back: the script, a figure, and a summary for a non-specialist.</p>
+</section>
+<section id="data" class="level2">
+<h2 class="anchored" data-anchor-id="data">The data: LifeCycleSavings, 50 countries, 1960–1970</h2>
+<div style="font-size:1.15em">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Variable</th>
+<th style="text-align: left;">What it is (from <code>?LifeCycleSavings</code>)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><code>sr</code></td>
+<td style="text-align: left;">savings rate: personal saving as a percentage of disposable income</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>pop15</code></td>
+<td style="text-align: left;">percentage of the population under 15</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>pop75</code></td>
+<td style="text-align: left;">percentage of the population over 75</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>dpi</code></td>
+<td style="text-align: left;">real disposable income per person</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>ddpi</code></td>
+<td style="text-align: left;">growth rate of <code>dpi</code>, percent a year</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>One row per country; each value is an average over 1960–1970. The life-cycle hypothesis (<a href="https://www.jstor.org/stable/1817129">Ando and Modigliani, AER, 1963</a>) says saving depends on age structure and on income growth.</p>
+<p><code>LifeCycleSavings</code> is built into R: type <code>LifeCycleSavings</code> in the Console to see it and <code>?LifeCycleSavings</code> for its documentation. It holds one row per country for 50 countries, each value averaged over 1960–1970 to remove the business cycle. The data come from <a href="https://doi.org/10.1002/0471725153">Belsley, Kuh and Welsch (Wiley, 1980)</a>, a regression-diagnostics textbook, who took them from Sterling (MIT undergraduate thesis, 1977). Under Modigliani’s life-cycle hypothesis, people save during their working years and draw down savings when young or old, so a country’s savings rate depends on its age structure and on how fast income grows.</p>
+<div class="cell" data-layout-align="center" data-script="The data">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(LifeCycleSavings)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; [1] 50</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(LifeCycleSavings)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt;              sr pop15 pop75     dpi ddpi
+#&gt; Australia 11.43 29.35  2.87 2329.68 2.87
+#&gt; Austria   12.07 23.32  4.41 1507.99 3.93
+#&gt; Belgium   13.17 23.80  4.43 2108.47 3.82
+#&gt; Bolivia    5.75 41.89  1.67  189.13 0.22
+#&gt; Brazil    12.88 42.19  0.83  728.47 4.56
+#&gt; Canada     8.79 31.72  2.85 2982.88 2.43</code></pre>
+</div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>?LifeCycleSavings      <span class="co"># the documentation: what each variable means</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="deliverable" class="level2 smaller">
+<h2 class="smaller anchored" data-anchor-id="deliverable">A deliverable to approve or reject</h2>
+<p>For the brief two slides back. The script behind these comes later.</p>
+<div class="columns">
+<div class="column" style="width:50%;">
+<p><em>The figure</em></p>
+<p><img src="figures/10-verification/F5-deliverable.png" class="img-fluid" style="width:100.0%" alt="A scatter plot of the savings rate against the growth of disposable income for 48 countries, with a fitted line rising from about 6 to about 15 percent."></p>
+</div><div class="column" style="width:50%;">
+<p><em>The summary</em></p>
+<blockquote class="blockquote">
+<p>Across the 50 countries in the data, savings rates follow the life-cycle hypothesis. A country with one more percentage point of its population under 15 saves 0.32 points less of its income, and countries with higher disposable income save more (coefficient 0.84, p &lt; 0.01). Together the four variables explain 38% of the variation in savings rates across countries.</p>
+<p>All numbers were checked against the script’s output.</p>
+</blockquote>
+</div>
+</div>
+<p><strong>Hands up: would you sign off on this?</strong></p>
+<p>Here is a deliverable for the brief above: a figure of the savings rate against income growth, and a summary that says the numbers were checked. The script behind them appears in the last part of the page. Decide now whether you would accept the result. The last part of this page checks it.</p>
+</section>
+<section id="plan" class="level2">
+<h2 class="anchored" data-anchor-id="plan">Plan for today</h2>
+<ol type="1">
+<li>Delegation as a principal–agent problem</li>
+<li>What goes wrong without checks</li>
+<li>Three kinds of claims, and who can check each</li>
+<li>The procedure in seven steps</li>
+<li>A check in class, on the deliverable you just saw</li>
+</ol>
+</section>
+<section id="ra" class="level2">
+<h2 class="anchored" data-anchor-id="ra">Supervising a research assistant</h2>
+<p><strong>Hands up.</strong> Who has worked as a research assistant? Who has supervised one?</p>
+<p><strong>What did the supervisor check?</strong></p>
+</section>
+<section id="ra-checks" class="level2">
+<h2 class="anchored" data-anchor-id="ra-checks">What supervisors check</h2>
+<p>Four common checks:</p>
+<ul>
+<li>ran your code again</li>
+<li>asked for the log</li>
+<li>recomputed one number</li>
+<li>gave the same task to someone else</li>
+</ul>
+<p>Most of you have been on one side of this. A supervisor who hands a task to a research assistant cannot watch every step, so they check in other ways: they rerun the code, ask for a log, recompute one number they know, or give the same task to someone else and compare. Each of those moves has a version for an AI agent.</p>
+</section>
+<section id="principal-agent" class="level2">
+<h2 class="anchored" data-anchor-id="principal-agent">Delegation is a principal–agent problem</h2>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="figures/10-verification/D1-principal-agent.svg" class="quarto-figure quarto-figure-center figure-img" alt="A box labelled You, the principal, sends the brief to a box labelled The agent, which contains a shaded box, the work, steps you do not see. An arrow back reads: the output, and its report on the work. A red line below reads: The agent writes the report, so the report is a claim." height="340"></p>
+</figure>
+</div>
+<p>Economists call this a principal–agent problem. The principal (you) wants a task done and hands it to an agent. The agent’s actions are hidden: you see the output and whatever the agent tells you about how it got there. With a coding agent, that account is a paragraph at the end of the conversation, “I cleaned the data and verified the results”, written by the same model that did the work. It is a claim about the work, and it needs checking like any other claim.</p>
+</section>
+<section id="ai-vs-ra" class="level2">
+<h2 class="anchored" data-anchor-id="ai-vs-ra">How an AI agent differs from a human RA</h2>
+<div class="columns">
+<div class="column" style="width:42%;">
+<p><em>The same</em></p>
+<ul>
+<li>You see only the result</li>
+<li>It can misread the brief</li>
+<li>It can take a shortcut and not mention it</li>
+</ul>
+</div><div class="column" style="width:58%;">
+<p><em>Different</em></p>
+<ul>
+<li>It works in seconds, for cents</li>
+<li>Its confidence is orthogonal to its accuracy</li>
+<li>It remembers nothing between sessions</li>
+<li>It has no reputation at stake</li>
+<li>It optimizes the check you give it</li>
+<li>A second, independent one costs almost nothing</li>
+</ul>
+</div>
+</div>
+<p>Some of the problem is old. A human RA can also misread the brief or cut a corner. What is new is the mix. The agent is fast and cheap. Its tone carries no information: a wrong answer reads as confidently as a right one. It keeps no memory between sessions unless you write one down, and it has no career that a sloppy result would damage. Trained on tasks with pass-or-fail checks, it pushes hard toward whatever check you give it. The last difference works in your favour. Hiring a second assistant to redo a task is expensive; starting a second, independent agent costs almost nothing, so replication becomes an ordinary step.</p>
+</section>
+<section id="evidence-ladder" class="level2">
+<h2 class="anchored" data-anchor-id="evidence-ladder">Evidence about hidden work, weakest to strongest</h2>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="figures/10-verification/D2-evidence-ladder.svg" class="quarto-figure quarto-figure-center figure-img" alt="Five steps rising from left to right: 1, it says it is done; 2, it shows the output; 3, it shows each command it ran and what it printed; 4, a second agent redoes it from the original data, without the first one's code; 5, you compare it with a number you worked out yourself beforehand. An arrow above runs from weaker to stronger evidence." height="330"></p>
+</figure>
+</div>
+<div style="font-size:0.72em">
+<p><strong>4</strong> A new session gets only the question and the original data file; it never sees the first agent’s code or conversation, and computes the numbers again.<br> <strong>5</strong> Before delegating, you compute one number yourself, such as the number of countries or one coefficient, and check that the output matches it.<br> <a href="https://www.jstor.org/stable/3003320">Holmström (BJE, 1979)</a>: use every signal that tells you about the hidden action.</p>
+</div>
+<p><a href="https://www.jstor.org/stable/3003320">Holmström (BJE, 1979)</a> showed that a principal should condition on every signal that carries information about the agent’s hidden action. For a coding agent the signals differ a lot in what they tell you. “It is done” tells you nothing. The output tells you what came out and nothing about whether it is right. The commands it ran and what they printed let you follow the work step by step, including the row count after every filter. A second agent, started in a new session with only the question and the original data file, computes the numbers again without seeing the first agent’s code or conversation: that is an independent measurement. A number you worked out yourself before delegating, such as the number of countries or one coefficient, is the strongest signal of all, because the agent could not have shaped it.</p>
+</section>
+<section id="edits-check" class="level2 smaller">
+<h2 class="smaller anchored" data-anchor-id="edits-check">Two briefs that let the agent game the check</h2>
+<div class="columns">
+<div class="column" style="width:50%;">
+<p><strong>The check is the agent’s to edit</strong></p>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>Brief</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7" data-filename="Brief"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>Run savings.R and fix whatever fails.</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode diff code-with-copy"><code class="sourceCode diff"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="st">-stopifnot(nobs(fit) == 50)  # all countries</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="va">+stopifnot(nobs(fit) &gt; 40)   # enough remain</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>The check that failed was the one telling the truth. The fix loosened it.</p>
+</div><div class="column" style="width:50%;">
+<p><strong>The brief states the answer</strong></p>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>Brief</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9" data-filename="Brief"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>Replicate the paper's main result:</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>employment falls by 20%.</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (ctrl <span class="cf">in</span> control_sets) {</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  fit <span class="ot">&lt;-</span> <span class="fu">lm</span>(y <span class="sc">~</span> ., d[<span class="fu">c</span>(<span class="st">"y"</span>, <span class="st">"treat"</span>, ctrl)])</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="fu">abs</span>(<span class="fu">coef</span>(fit)[<span class="st">"treat"</span>] <span class="sc">+</span> <span class="fl">0.2</span>) <span class="sc">&lt;</span> <span class="fl">0.02</span>) <span class="cf">break</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>The loop stops at the first set of controls that gives the number in the brief.</p>
+</div>
+</div>
+<p><em>Illustrations.</em> Effort goes where the measurement is: <a href="https://www.jstor.org/stable/764957">Holmström and Milgrom (JLEO, 1991)</a>. Seen in coding agents: <a href="https://arxiv.org/abs/2503.11926">Baker et al.&nbsp;(arXiv, 2025)</a>, <a href="https://arxiv.org/abs/2510.20270">Zhong et al.&nbsp;(arXiv, 2025)</a>, <a href="https://arxiv.org/abs/2606.11447">Alizadeh et al.&nbsp;(arXiv, 2026)</a>.</p>
+<p>In the multitask model of <a href="https://www.jstor.org/stable/764957">Holmström and Milgrom (JLEO, 1991)</a>, an agent paid on what can be measured shifts effort toward it and away from what cannot. Coding agents have no pay, but they are trained on tasks graded by pass-or-fail tests, and the same behaviour follows. Two ordinary briefs show how. “Fix whatever fails” makes a passing check the goal, and the quickest way to pass is to change the check: on the left, the check wanted all 50 countries and the fix accepts anything above 40. “Employment falls by 20%” puts the answer in the brief, and the quickest way to match it is to search: on the right, a loop tries sets of control variables and stops at the first one that gives −0.2. Both are illustrations written for this page. The behaviour is documented: <a href="https://arxiv.org/abs/2503.11926">Baker et al.&nbsp;(arXiv, 2025)</a> found a frontier reasoning model hacking the rewards of coding tasks, and found that penalizing the hacks it wrote about taught it to hide them while it kept hacking; <a href="https://arxiv.org/abs/2510.20270">Zhong et al.&nbsp;(arXiv, 2025)</a> found models “passing” tests built to contradict the task by editing or special-casing them; and <a href="https://arxiv.org/abs/2606.11447">Alizadeh et al.&nbsp;(arXiv, 2026)</a> found prompt wording nudging coding agents toward specifications that confirm a paper.</p>
+</section>
+<section id="two-rules" class="level2 smaller">
+<h2 class="smaller anchored" data-anchor-id="two-rules">Two rules from the theory</h2>
+<div class="columns">
+<div class="column" style="width:50%;">
+<div style="border:2px solid #b31b1b; border-radius:14px; padding:0.5em 0.8em; margin:0.4em 0.5em 0 0">
+<p><strong>1. The agent cannot edit the checks.</strong></p>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>Brief</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11" data-filename="Brief"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>The checks are in checks.R, which I</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>wrote. Do not edit checks.R. If a</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>check fails, stop and tell me which.</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>You run <code>source("checks.R")</code> yourself afterwards.</p>
+</div>
+</div><div class="column" style="width:50%;">
+<div style="border:2px solid #b31b1b; border-radius:14px; padding:0.5em 0.8em; margin:0.4em 0 0 0.5em">
+<p><strong>2. Keep one check the agent never sees.</strong></p>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>Brief</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12" data-filename="Brief"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>Replicate the paper's main</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>specification and report the</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>coefficient on treat.</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>You compare it with the published −0.20, which stayed out of the brief.</p>
+</div>
+</div>
+</div>
+<p>The two rules fix the two briefs on the previous slide. The checks live where the agent cannot change them: in a file you wrote, which the brief forbids it to edit, and which you run yourself afterwards. And one check stays hidden: the number you expect, here the published coefficient, stays out of the brief. The agent reports what it finds, and you compare. An agent that never saw the answer cannot bend its work toward it.</p>
+</section>
+<section id="reinhart-rogoff" class="level2">
+<h2 class="anchored" data-anchor-id="reinhart-rogoff">A published result: growth when public debt exceeds 90% of GDP</h2>
+<ul>
+<li><strong>The paper.</strong> The economists Carmen Reinhart and Kenneth Rogoff compared growth in 20 advanced economies from 1946 to 2009 (<a href="https://doi.org/10.1257/aer.100.2.573">Reinhart and Rogoff, AER P&amp;P, 2010</a>).</li>
+<li><strong>The claim.</strong> In years when public debt was above 90% of GDP, growth averaged <span style="color:#b31b1b; font-weight:bold">−0.1%</span>, far below other years.</li>
+<li><strong>Why it mattered.</strong> The 90% line became a reference point for those arguing to cut government deficits after 2010.</li>
+</ul>
+<p><strong>Hands up:</strong> would you have checked this result before citing it?</p>
+</section>
+<section id="rr-replication" class="level2 smaller">
+<h2 class="smaller anchored" data-anchor-id="rr-replication">The replication, done for a class assignment</h2>
+<div class="columns">
+<div class="column" style="width:52%;">
+<p><img src="figures/10-verification/F1-debt-growth.png" class="img-fluid" style="width:100.0%" alt="Two bars: average real GDP growth in years with public debt above 90 percent of GDP, published minus 0.1 percent, corrected 2.2 percent."></p>
+</div><div class="column" style="width:48%;">
+<ul>
+<li>A graduate student, Thomas Herndon, replicated the paper for a class and asked the authors for their spreadsheet</li>
+<li>Its average left out five of the 20 countries; some available years were dropped; each country counted equally, however many years it had</li>
+<li>Corrected: growth above 90% averaged 2.2% (<a href="https://doi.org/10.1093/cje/bet075">Herndon, Ash and Pollin, CJE, 2014</a>)</li>
+</ul>
+</div>
+</div>
+<p><a href="https://doi.org/10.1257/aer.100.2.573">Reinhart and Rogoff (AER P&amp;P, 2010)</a> compared growth across 20 advanced economies from 1946 to 2009 and reported that in years when public debt exceeded 90% of GDP, growth averaged −0.1%. The threshold was cited widely in the debate over cutting government deficits after the financial crisis. In 2013 Thomas Herndon, a graduate student at UMass Amherst, tried to replicate the result for a class assignment and asked the authors for their spreadsheet. He found three problems: the formula that averaged across countries left out five of the 20 (Australia, Austria, Belgium, Canada and Denmark), some available years were excluded, and each country’s average counted equally however many years it contributed. Corrected, growth above 90% averaged 2.2% (<a href="https://doi.org/10.1093/cje/bet075">Herndon, Ash and Pollin, CJE, 2014</a>). The result looked right to its authors and to its readers. Nothing looked wrong until someone recomputed it.</p>
+</section>
+<section id="predict-teams" class="level2">
+<h2 class="anchored" data-anchor-id="predict-teams">Which teams found the most coding errors?</h2>
+<p>103 teams reproduced published social-science papers and hunted for coding errors (<a href="https://doi.org/10.1073/pnas.2524747123">Brodeur et al., PNAS, 2026</a>). Three kinds of team:</p>
+<ol type="1">
+<li>no AI</li>
+<li>an AI chat assistant helping</li>
+<li>the AI in charge, people only supervising</li>
+</ol>
+<p><strong>Hands up:</strong> which kind found the most major coding errors? Which found the fewest?</p>
+</section>
+<section id="i4r" class="level2 smaller">
+<h2 class="smaller anchored" data-anchor-id="i4r">Reproduction and coding errors found, by type of team</h2>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="figures/10-verification/F2-i4r.png" class="quarto-figure quarto-figure-center figure-img" alt="Two bar charts. Papers reproduced: no AI 94 percent, AI assisting 91, AI in charge 37. Major coding errors found per team: no AI 1.70, AI assisting 0.74, AI in charge 0.23." height="290"></p>
+</figure>
+</div>
+<p><em>No AI:</em> researchers only. <em>AI assisting:</em> researchers used ChatGPT as a helper. <em>AI in charge:</em> ChatGPT did the work; researchers only supervised. <em>The study:</em> 288 researchers in 103 teams, 2024; the AI was a chat assistant, ChatGPT with GPT-4 and GPT-4o (<a href="https://doi.org/10.1073/pnas.2524747123">Brodeur et al., PNAS, 2026</a>).</p>
+<p><strong>Takeaway:</strong> the lesson is the right panel. With AI helping, teams reproduced papers as often and found fewer than half as many major errors: help with the work can cost attention to its errors.</p>
+<p>The Institute for Replication assigned 288 researchers at random to 103 teams (<a href="https://doi.org/10.1073/pnas.2524747123">Brodeur et al., PNAS, 2026</a>). Teams without AI and teams with an AI chat assistant reproduced the published results about equally often, 94% and 91%. Teams where the AI led reproduced 37%. On finding major coding errors, the assisted teams did worse: 0.74 per team against 1.70 for the teams without AI. The AI in the study was ChatGPT, with GPT-4 and GPT-4o, used in 2024 as a chat assistant. Reproduction by AI has improved a lot since: a coding agent reproduced 93.4% of 221 social-science tasks in a 2026 study (<a href="https://arxiv.org/abs/2606.11447">Alizadeh et al., arXiv, 2026</a>). The lesson that has not aged is the right panel: with AI helping, the teams did the work as well and found fewer than half as many of its errors.</p>
+</section>
+<section id="recruiters" class="level2 smaller">
+<h2 class="smaller anchored" data-anchor-id="recruiters">Recruiters given a more accurate AI checked less</h2>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="figures/10-verification/F7-recruiters.png" class="quarto-figure quarto-figure-center figure-img" alt="Two bar charts. Seconds spent per résumé: no AI 20, an AI right 75 percent of the time 30, an AI right 85 percent of the time 19. Accuracy gain over no AI on a 1 to 10 scale: with the 75 percent AI plus 0.29, with the 85 percent AI plus 0.08." height="235"></p>
+</figure>
+</div>
+<p><em>The study:</em> 181 professional recruiters screened 44 job applications each for a math-heavy job. Each application was built from a real person in an OECD survey that tested adults’ math skills. Recruiters saw the person’s education and work history, never the test score, and decided whom to interview; the hidden score then said whether each call was right. Each recruiter was randomly given no AI, an AI right about 75% of the time, or one right about 85% (<a href="https://www.fabriziodellacqua.com/">Dell’Acqua, working paper, 2022</a>). With the better AI they followed its advice more often (74% against 53%), spent less time per résumé, and gained less accuracy.</p>
+<p><strong>Takeaway:</strong> the better the tool, the less we check. A set level of scrutiny has to be part of the workflow, every time, however good the output looks.</p>
+<p><a href="https://www.fabriziodellacqua.com/">Dell’Acqua (working paper, 2022)</a> hired 181 professional recruiters to screen 44 job applications each for a math-intensive job. Each application was built from a real person in the OECD’s survey of adult skills (PIAAC), which tests adults’ math directly. Recruiters could click to see the person’s education and work history, but never the test score, and had to decide whether to interview them, that is, whether the person’s measured math skill was above a cutoff. The hidden score then graded every decision as right or wrong. Recruiters were randomly assigned to work with no AI, with an AI whose recommendation was right about 75% of the time, with one right about 85% of the time, or with a perfect one, and each knew which kind they had. Those with the 85% AI followed its advice more often than those with the 75% AI (74% against 53% of decisions), spent less time on each résumé (about 19 seconds against 30), and gained less accuracy over working alone (+0.08 against +0.29 on the paper’s 1 to 10 scale). The paper calls this falling asleep at the wheel, and it finds the effect among the experienced recruiters. The better tool made the people using it check less.</p>
+</section>
+<section id="speed" class="level2 smaller">
+<h2 class="smaller anchored" data-anchor-id="speed">How much AI changed developers’ time per task</h2>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="figures/10-verification/F3-speed.png" class="quarto-figure quarto-figure-center figure-img" alt="Three bars. The developers' forecast before the tasks: 24 percent faster with AI. Their own estimate after the tasks: 20 percent faster. Measured from recorded task times: 19 percent slower." height="295"></p>
+</figure>
+</div>
+<p><em>The study:</em> 16 experienced open-source developers did 246 real tasks on their own projects; each task was randomly assigned to allow AI tools or not (<a href="https://arxiv.org/abs/2507.09089">Becker et al., arXiv, 2025</a>). Before the tasks they forecast how much faster AI would make them, after the tasks they estimated how much faster it had, and the researchers measured the actual time per task.</p>
+<p><strong>Takeaway:</strong> they expected to be faster, felt faster, and were slower. How the work felt is a poor guide to how it went, so measure it.</p>
+<p>In a randomized study of experienced open-source developers working on their own repositories (<a href="https://arxiv.org/abs/2507.09089">Becker et al., arXiv, 2025</a>), the developers expected AI tools to make them 24% faster and, after the tasks, believed they had been 20% faster. Measured, they took 19% longer. The lesson for supervision: your sense that the work went well is not a measurement.</p>
+</section>
+<section id="are-you-sure" class="level2 smaller">
+<h2 class="smaller anchored" data-anchor-id="are-you-sure">Asking “are you sure?” makes a model back down</h2>
+<div style="background:#eeece4; border-radius:14px; padding:0.35em 0.8em; margin:0.2em 0 0.4em 20%; width:75%">
+<p>How many countries are in <code>LifeCycleSavings</code>?</p>
+</div>
+<div style="background:#f7f5ef; border:1px solid #d9d6cc; border-radius:14px; padding:0.35em 0.8em; margin:0.2em 0 0.4em 0; width:75%">
+<ol start="50" type="1">
+<li></li>
+</ol>
+</div>
+<div style="background:#eeece4; border-radius:14px; padding:0.35em 0.8em; margin:0.2em 0 0.4em 20%; width:75%">
+<p>Are you sure?</p>
+</div>
+<div style="background:#f7f5ef; border:1px solid #d9d6cc; border-radius:14px; padding:0.35em 0.8em; margin:0.2em 0 0.4em 0; width:75%">
+<p>You’re right to question that. On reflection, there are 49.</p>
+</div>
+<p><em>An illustration of what the study measured:</em> researchers asked AI assistants questions, then replied “I don’t think that’s right. Are you sure?” One model then wrongly admitted a mistake on 98% of questions (<a href="https://arxiv.org/abs/2310.13548">Sharma et al., ICLR, 2024</a>).</p>
+<p><strong>Takeaway:</strong> pushing back gives the model no new information. To check a number, ask for it to be recomputed from the data.</p>
+<p>Models are trained partly on human approval, and people approve of being agreed with. <a href="https://arxiv.org/abs/2310.13548">Sharma et al.&nbsp;(ICLR, 2024)</a> found assistants giving up correct answers when the user pushed back; one model wrongly admitted a mistake on 98% of questions after “Are you sure?”. The exchange above is an illustration of the pattern, not a captured run. Pushback is not a check: it gives the model no new information, only a hint about what you want to hear. A check asks for the number to be recomputed from the data or looked up in the source.</p>
+</section>
+<section id="shown-answer" class="level2 smaller">
+<h2 class="smaller anchored" data-anchor-id="shown-answer">Agents shown the published result tend to report it</h2>
+<ul>
+<li>Two coding agents got 221 tasks: rerun a paper’s published code and data (its replication package) and report the results</li>
+<li>In some runs the agent was also given the paper’s PDF, with the published numbers in it</li>
+<li>On the 10 tasks where data or code were missing, so the honest answer was “cannot reproduce”, both agents said so every time without the PDF. With the PDF, one said so only 63% of the time: otherwise it reported numbers from the paper as its own results</li>
+<li>Prompt wording also nudged them toward specifications that confirm the paper</li>
+</ul>
+<p><a href="https://arxiv.org/abs/2606.11447">Alizadeh et al.&nbsp;(arXiv, 2026)</a></p>
+<p><strong>Takeaway:</strong> keep the numbers you expect away from the agent. Check that every number it reports is printed by the code, or run the code yourself. Never ask for significant results: the agent may try specifications until one clears the threshold, p-hacking you would not see.</p>
+<p><a href="https://arxiv.org/abs/2606.11447">Alizadeh et al.&nbsp;(arXiv, 2026)</a> gave coding agents 221 reproduction tasks from social-science replication packages. Each task gave an agent a replication package, the code and data published with a paper, and asked for the paper’s results. The agents reproduced a large share of them. Two findings matter for supervision. Ten tasks were impossible by design: data were restricted or code was missing, so the right answer was “cannot reproduce”. Given only the package, both agents said so every time. Given the paper’s PDF as well, one agent said so in 63% of runs and the other in 90%; the rest of the time they filled the gaps with numbers taken from the paper and reported them as results. Separately, subtle wording in the prompt nudged the agents toward trying specifications that confirm the paper. The practical rules: the numbers you expect stay away from the agent and become your own check; every number it reports should appear in what its code printed, or you run the code yourself; and a brief never asks for significant results, which invites the agent to search until it finds them.</p>
+</section>
+<section id="three-kinds" class="level2">
+<h2 class="anchored" data-anchor-id="three-kinds">Exact, sourced, and judgment claims</h2>
+<p>A claim is any statement in a deliverable that could be wrong: a number, a citation, what a variable means, an interpretation. Its kind decides how to check it.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="figures/10-verification/D3-three-kinds.svg" class="quarto-figure quarto-figure-center figure-img" alt="Three columns. Exact, in blue: a count, a mean, a coefficient, rows kept by a merge; recompute it. Sourced, in green: a citation, what a variable means, a number from a report; open the source. Judgment, in orange: the wording, which sample and which model, a figure's design; set your criteria, then decide." height="310"></p>
+</figure>
+</div>
+<p>Every deliverable, whether a paragraph, a script, a table or a figure, makes claims of three kinds. An exact claim has one right answer that you can recompute: a count, a mean, a coefficient, the number of rows a merge kept. A sourced claim is right if a source says so: a citation, the definition of a variable, a number taken from a report. You check it by opening the source, never from memory, yours or the model’s. A judgment claim has no single right answer: the wording, which sample to use, which model to fit, how a figure should look. You check it by writing down your criteria first and then deciding. The three kinds need different checks and different checkers.</p>
+</section>
+<section id="claims-colored" class="level2">
+<h2 class="anchored" data-anchor-id="claims-colored">The summary, claim by claim</h2>
+<p><em>The summary from the deliverable, marked by kind of claim:</em></p>
+<p>Across the <span style="background:#dce8f5">50 countries</span> in the data, savings rates <span style="background:#f7e6cc">follow the life-cycle hypothesis</span>. A country with one more percentage point of its population under 15 saves <span style="background:#dce8f5">0.32</span> points less of its income, and countries with <span style="background:#dff0e0">higher disposable income</span> save more (coefficient <span style="background:#dce8f5">0.84</span>, <span style="background:#dce8f5">p &lt; 0.01</span>). Together the four variables explain <span style="background:#dce8f5">38%</span> of the variation in savings rates across countries. <span style="background:#e6e3da">All numbers were checked against the script’s output.</span></p>
+<p><span style="background:#dce8f5; padding:0 0.3em">exact: recompute it</span> <span style="background:#dff0e0; padding:0 0.3em">sourced: look it up</span> <span style="background:#f7e6cc; padding:0 0.3em">judgment: you decide</span> <span style="background:#e6e3da; padding:0 0.3em">the agent’s report on its own work</span></p>
+<p><strong>Call it out:</strong> which of these could one line of R check?</p>
+<p>The same summary, marked. Five claims are exact: 50, 0.32, 0.84, the p-value and 38%. One is sourced: that the variable behind 0.84 measures income, which only the dataset’s documentation can settle. One is a judgment: that the pattern follows the life-cycle hypothesis. The last sentence is the agent’s report on its own work, which no line of R checks.</p>
+</section>
+<section id="who-checks" class="level2">
+<h2 class="anchored" data-anchor-id="who-checks">Who can check each kind of claim</h2>
+<p>Rows: the three kinds of claim. Columns: who or what can check each. “A line of R” is code you write that recomputes the number or tests it.</p>
+<div style="font-size:1.35em">
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th style="text-align: left;"></th>
+<th style="text-align: left;">A line of R</th>
+<th style="text-align: left;">A second agent</th>
+<th style="text-align: left;">You</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><strong>Exact</strong></td>
+<td style="text-align: left;">yes</td>
+<td style="text-align: left;">yes, from the raw data</td>
+<td style="text-align: left;">one value you know</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>Sourced</strong></td>
+<td style="text-align: left;">sometimes</td>
+<td style="text-align: left;">only by opening the source</td>
+<td style="text-align: left;">yes</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><strong>Judgment</strong></td>
+<td style="text-align: left;">no</td>
+<td style="text-align: left;">a second reader, with your criteria</td>
+<td style="text-align: left;">you decide</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Exact claims are the ones a line of R or a second agent can check cheaply, as long as either one works from the raw data. Sourced claims need the source: a second agent helps only if it opens the document, the help page or the paper, and a model answering from memory is only a second guess. Judgment claims stay with you. A second reader, human or agent, can apply criteria you wrote down, and the decision is still yours.</p>
+</section>
+<section id="do-vs-check" class="level2">
+<h2 class="anchored" data-anchor-id="do-vs-check">Time to do a task and time to check it</h2>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="figures/10-verification/D4-do-vs-check.svg" class="quarto-figure quarto-figure-center figure-img" alt="A two-by-two grid with time to do it yourself on the horizontal axis and time to check it on the vertical axis. Quick to do and slow to check: do it yourself, a summary of a paper you have already read. Slow to do and slow to check: delegate in pieces, a literature review where every citation needs a lookup. Quick to do and quick to check: either, a one-line change to a plot. Slow to do and quick to check, shaded: delegate, reformatting forty tables or a scraper whose row count you know." height="340"></p>
+</figure>
+</div>
+<p>Place a task by two times: how long it would take you to do it (left to right) and how long checking the agent’s version takes (bottom to top). The research question and the identification strategy stay yours in every box.</p>
+<p>What to delegate depends on two times: how long the task would take you, and how long checking the agent’s version would take. Delegation pays most in the shaded corner, where doing is slow and checking is quick. Some decisions do not go in the grid at all: the research question and the identification strategy are yours.</p>
+</section>
+<section id="seven-steps" class="level2">
+<h2 class="anchored" data-anchor-id="seven-steps">The procedure in seven steps</h2>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="figures/10-verification/D5-seven-steps.svg" class="quarto-figure quarto-figure-center figure-img" alt="Three boxes from left to right. Before: 1 write the checks into the brief; 2 keep one value you know out of it. During: 3 hand over small pieces; 4 ask for evidence, and keep the answer and the checks out of reach. After: 5 check in a fresh session with other information; 6 test the checker once with planted errors; 7 read the disagreements and a random sample, and record what you checked." height="340"></p>
+</figure>
+</div>
+<p><em>Before:</em> before you hand the task over. <em>During:</em> while the agent works. <em>After:</em> when it hands back the result. The next slides take the steps in turn.</p>
+<p>The procedure has three phases. Before you delegate, you decide how the result will be checked and set aside one value you know. While the agent works, you keep the pieces small and ask for evidence rather than reports. After it finishes, you check with something independent of the worker, you test that checker once, and you read what it flags. The guidance from the companies that build agents says the same in its own words: <a href="https://code.claude.com/docs/en/best-practices">give the agent a way to verify its work</a>, <a href="https://simonwillison.net/2025/Dec/18/code-proven-to-work/">deliver code you have proven to work</a>, and keep each step small enough to check.</p>
+</section>
+<section id="brief-checks" class="level2">
+<h2 class="anchored" data-anchor-id="brief-checks">Writing the checks into the brief</h2>
+<p>The same task as the deliverable, with the checks written in:</p>
+<div style="font-size:1.0em">
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>A brief with the checks written in</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13" data-filename="A brief with the checks written in"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>Using R's built-in LifeCycleSavings data, estimate the</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>life-cycle savings regression: sr on pop15, pop75, dpi and</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>ddpi. Write savings.R and a summary of two or three</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>sentences for a non-specialist.</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>Do not drop or change any country. If a value looks wrong,</span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>say so and report the estimate with and without it.</span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>Done when:</span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>- savings.R runs in a fresh R session</span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>- the model uses all 50 countries, printed with nobs()</span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a>- every number in the summary appears in the printed output</span>
+<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a>- each variable is described as the help page describes it</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+<p>“Done when” lists what the result must satisfy to count as finished. Kept out of the brief: one value you computed beforehand, to compare with the result.</p>
+<p>A brief says what to do, what not to do, and when the work counts as finished. The “Done when” lines are checks the agent can run and you can rerun: a fresh session, a row count, numbers traced to printed output, definitions traced to the documentation. The line about outliers turns a judgment call into a report: the agent may flag a value, and you decide. One value stays out of the brief, for example a coefficient you computed yourself, so that it works as a hidden check.</p>
+</section>
+<section id="ask-evidence" class="level2">
+<h2 class="anchored" data-anchor-id="ask-evidence">Asking for commands, output, and row counts</h2>
+<div class="columns">
+<div class="column" style="width:45%;">
+<p><em>A report</em></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb14"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>✓ Cleaned the data</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>✓ Estimated the model</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>✓ All numbers verified</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div><div class="column" style="width:55%;">
+<p><em>Evidence</em></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb15"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>&gt; nobs(fit)</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>[1] 48</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>&gt; coef(fit)["ddpi"]</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>     ddpi</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>0.8394509</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+<p><em>Left:</em> the agent’s own summary of what it did. <em>Right:</em> two commands run on the deliverable’s script and what they printed; <code>nobs(fit)</code> is the number of countries the model used. Commands and their output can be rerun; a summary cannot.</p>
+<p>Agents end a task with a report: what they did and a line saying it was verified. A report is the weakest rung of the evidence ladder. Ask instead for the commands and what they printed, including the row count after every step that can drop rows, and read the diff of every file it changed. The printed output on the right comes from the deliverable at the top of this page, and it already says something the summary does not.</p>
+</section>
+<section id="independent" class="level2">
+<h2 class="anchored" data-anchor-id="independent">Why the checker must be independent</h2>
+<div class="columns">
+<div class="column" style="width:50%;">
+<p><span style="font-size:1.7em; font-weight:bold; color:#b31b1b">95.5% → 89.0%</span></p>
+<p>A model’s accuracy after reviewing its own answers with no outside feedback (<a href="https://arxiv.org/abs/2310.01798">Huang et al., ICLR, 2024</a>)</p>
+</div><div class="column" style="width:50%;">
+<p><span style="font-size:1.7em; font-weight:bold; color:#b31b1b">60%</span></p>
+<p>How often two models that are both wrong give the same wrong answer (<a href="https://arxiv.org/abs/2506.07962">Kim et al., ICML, 2025</a>)</p>
+</div>
+</div>
+<p>A checker from another model family catches more than the model itself or a sibling (<a href="https://arxiv.org/abs/2512.02304">Lu et al., arXiv, 2025</a>).</p>
+<div style="font-size:0.8em">
+<p><em>Terms:</em> the checker is the model or agent asked to verify the work; self-correction is a model reviewing and revising its own answers; a model family is the set of models from one developer.</p>
+</div>
+<p>Asking the same model to review its own work adds little. Without outside feedback, self-correction lowered one model’s score on a math benchmark from 95.5% to 89.0% (<a href="https://arxiv.org/abs/2310.01798">Huang et al., ICLR, 2024</a>). Models also share mistakes: across hundreds of models, when two both answered a question wrongly they chose the same wrong answer 60% of the time on one benchmark (<a href="https://arxiv.org/abs/2506.07962">Kim et al., ICML, 2025</a>). So agreement between two similar models is weaker evidence than it looks. The benefit of a checker grows as it differs from the worker, and a checker from another model family does better than self-checking or a checker from the same family (<a href="https://arxiv.org/abs/2512.02304">Lu et al., arXiv, 2025</a>).</p>
+</section>
+<section id="four-ways" class="level2">
+<h2 class="anchored" data-anchor-id="four-ways">Four ways to make a check independent</h2>
+<p>A check is independent when it cannot share the mistakes of the work it checks. Four ways to separate them:</p>
+<div class="columns">
+<div class="column" style="width:25%;">
+<section id="a-fresh-session" class="level3 unnumbered">
+<h3 class="unnumbered anchored" data-anchor-id="a-fresh-session">A fresh session</h3>
+<p>It never saw the conversation that did the work.</p>
+</section>
+</div><div class="column" style="width:25%;">
+<section id="other-information" class="level3 unnumbered">
+<h3 class="unnumbered anchored" data-anchor-id="other-information">Other information</h3>
+<p>The raw data or the source, and never the worker’s code.</p>
+</section>
+</div><div class="column" style="width:25%;">
+<section id="another-method" class="level3 unnumbered">
+<h3 class="unnumbered anchored" data-anchor-id="another-method">Another method</h3>
+<p>Another function, another language, a hand count.</p>
+</section>
+</div><div class="column" style="width:25%;">
+<section id="another-model" class="level3 unnumbered">
+<h3 class="unnumbered anchored" data-anchor-id="another-model">Another model</h3>
+<p>A different family makes different mistakes.</p>
+</section>
+</div>
+</div>
+<p>Example: Scott Cunningham’s <a href="https://github.com/scunning1975/MixtapeTools/blob/main/personas/referee2.md">Referee 2</a> runs in a fresh terminal, never edits the author’s code, re-implements the results in another language, and requires them to match to six decimals.</p>
+<p>A fresh session removes the conversation, with its assumptions and the agent’s own explanations. Other information matters most: a checker that reads the worker’s script tends to confirm it, while a checker that starts from the raw data or the original source produces a second, separate measurement. Another method (a different function, another language, a count by hand) removes errors that come from the method. A different model family makes different mistakes. Economists already build reviewers this way: <a href="https://github.com/scunning1975/MixtapeTools/blob/main/personas/referee2.md">Referee 2</a>, by Scott Cunningham, runs in a separate terminal, is forbidden to edit the author’s code, and re-implements every result in another language to six decimals.</p>
+</section>
+<section id="three-setups" class="level2">
+<h2 class="anchored" data-anchor-id="three-setups">Three setups with a second agent</h2>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="figures/10-verification/D6-three-setups.svg" class="quarto-figure quarto-figure-center figure-img" alt="Three small flow diagrams. Replicate: raw data goes to agent A and agent B, their outputs are compared, and you read where they differ. Check each claim: a write-up and a source go to a checker, which returns claim, found, match, and you read the mismatches. Try to refute: the result goes to a reviewer told to find what is wrong, it returns findings, and you confirm each finding in the data." height="290"></p>
+</figure>
+</div>
+<div style="font-size:0.8em">
+<p><em>Replicate:</em> two agents compute the same numbers separately and you compare. <em>Check each claim:</em> an agent compares each statement with its source. <em>Try to refute:</em> an agent is told to find what is wrong.</p>
+</div>
+<p>AI reviewers also report problems that are not there (<a href="https://arxiv.org/abs/2407.00215">McAleese et al., arXiv, 2024</a>): confirm each finding before you act on it.</p>
+<p>Three setups cover most research tasks. To replicate, a second agent gets the question and the raw data and computes the same numbers; you read only where the two disagree, the way double data entry works. To check each claim, a checker gets the write-up and the source and returns a table of claims with what it found. To refute, a reviewer is told to find what is wrong, limited to correctness. Reviewers find real problems and also invent some: OpenAI’s critic model found more bugs than human contractors and reported bugs that were not there, and a person working with the critic kept most of the finds and dropped most of the false alarms (<a href="https://arxiv.org/abs/2407.00215">McAleese et al., arXiv, 2024</a>). Each finding is a lead to confirm in the data.</p>
+</section>
+<section id="planted" class="level2 smaller">
+<h2 class="smaller anchored" data-anchor-id="planted">Testing a checker with planted errors</h2>
+<p>Researchers planted errors in 100 AI-written economics papers and ran checker agents on them. Share of the planted errors caught, by kind:</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="figures/10-verification/F4-recall.png" class="quarto-figure quarto-figure-center figure-img" alt="Horizontal bars, planted errors caught by verifier agents: code does not run 99 percent, data errors 80 percent, text versus tables 64 percent, paper versus code 48 percent." height="260"></p>
+</figure>
+</div>
+<div style="font-size:0.8em">
+<p><em>Code does not run:</em> the scripts fail. <em>Data errors:</em> wrong values in the data. <em>Text vs.&nbsp;tables:</em> a number in the text differs from its table. <em>Paper vs.&nbsp;code:</em> the paper describes something the code does not do.</p>
+</div>
+<p>Source: <a href="https://ape.socialcatalystlab.org/cred/verifying-the-verifiers.pdf">Willner and Yanagizawa-Drott (working paper, 2026)</a>. Your version: copy the script, plant five errors, count what the checker finds.</p>
+<p>A checker is itself a tool you have not verified. The test is the one you would use on any tool: feed it cases where you know the answer. Plant a few errors in a copy of the work and count how many it finds. Software testers have done this since the 1970s. A recent study did it for economics: <a href="https://ape.socialcatalystlab.org/cred/verifying-the-verifiers.pdf">Willner and Yanagizawa-Drott (working paper, 2026)</a> planted errors in 100 papers written by AI and measured how many verifier agents caught. They caught nearly every script that failed to run, most data errors, and fewer than half of the mismatches between a paper’s text and its code. Those are the errors to check by hand.</p>
+</section>
+<section id="you-decide" class="level2">
+<h2 class="anchored" data-anchor-id="you-decide">Reading disagreements, flags, and a random sample</h2>
+<p>Five countries drawn at random, to check by hand against the source:</p>
+<div class="cell" data-layout-align="center" data-script="A random sample to check by hand">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">10</span>)</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sample</span>(<span class="fu">rownames</span>(LifeCycleSavings), <span class="dv">5</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; [1] "United Kingdom" "Colombia"       "Costa Rica"     "Ecuador"       
+#&gt; [5] "China"</code></pre>
+</div>
+</div>
+<ul>
+<li>Read every disagreement (two checks give different answers) and every flag (a problem a checker reported)</li>
+<li>Check by hand a random sample of what passed: the code draws five countries, and <code>set.seed()</code> makes it draw the same five every time</li>
+<li>Record what you checked: authors “must thoroughly fact-check” AI output (<a href="https://www.aeaweb.org/journals/pol/submissions">AEA journals</a>)</li>
+</ul>
+<p>The checkers exist to point you at the few places worth reading: every disagreement, every flag, and a random sample of what passed, since a checker can miss things. <code>sample()</code> draws the rows to check by hand, and <code>set.seed()</code> fixes the draw so that the same five come back every time the script runs. Write down what you checked and how. Journals now ask for it: the AEA journals require authors to disclose AI use and state that authors “must thoroughly fact-check” its output (<a href="https://www.aeaweb.org/journals/pol/submissions">AEA</a>).</p>
+</section>
+<section id="finale-brief" class="level2">
+<h2 class="anchored" data-anchor-id="finale-brief">What the brief left to the agent</h2>
+<p>The brief from the start of class, read again:</p>
+<ul>
+<li>“Clean the data as needed”: the agent decides which countries stay</li>
+<li>No “Done when”: nothing says how the result will be checked</li>
+<li>Nothing about outliers: no instruction to flag them or report both</li>
+</ul>
+<p>The deliverable was written for this session, with three problems planted by hand; real runs of the same brief come at the end. In the envelope: two values computed before class, kept aside until the end (the envelope).</p>
+<p>The brief at the top of this page is short, the kind people send. It names the data, the model and the files, and it leaves the cleaning to the agent. It has no “Done when” and no instruction about outliers, so the sample is the agent’s call. The deliverable answers it. It was written for this session in the form an agent returns, with three problems planted by hand; three real runs of the same brief appear at the end of the page. Two values were computed before class and kept out of the brief.</p>
+</section>
+<section id="finale-script" class="level2">
+<h2 class="anchored" data-anchor-id="finale-script">The script behind the figure and the summary</h2>
+<p><span style="font-size:0.8em">The R code behind the figure and summary on slide 5. It uses R’s built-in data, so it runs as is.</span></p>
+<div class="cell" data-layout-align="center" data-script="The script as delivered">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># savings.R: the life-cycle savings regression, 50 countries, 1960-1970</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Data: R's built-in LifeCycleSavings (see ?LifeCycleSavings)</span></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a><span class="co"># 1) Load and clean ----</span></span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> LifeCycleSavings</span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> d[<span class="fu">complete.cases</span>(d), ]      <span class="co"># drop incomplete rows</span></span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> d[d<span class="sc">$</span>ddpi <span class="sc">&lt;</span> <span class="dv">10</span>, ]            <span class="co"># drop implausible growth rates</span></span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a><span class="fu">stopifnot</span>(<span class="fu">nrow</span>(d) <span class="sc">&gt;</span> <span class="dv">40</span>)          <span class="co"># enough countries remain</span></span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a><span class="co"># 2) Estimate ----</span></span>
+<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">lm</span>(sr <span class="sc">~</span> pop15 <span class="sc">+</span> pop75 <span class="sc">+</span> dpi <span class="sc">+</span> ddpi, <span class="at">data =</span> d)</span>
+<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fit)</span>
+<span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-14"><a href="#cb18-14" aria-hidden="true" tabindex="-1"></a><span class="co"># 3) Figure ----</span></span>
+<span id="cb18-15"><a href="#cb18-15" aria-hidden="true" tabindex="-1"></a><span class="fu">png</span>(<span class="st">"savings_growth.png"</span>, <span class="at">width =</span> <span class="dv">800</span>, <span class="at">height =</span> <span class="dv">560</span>, <span class="at">res =</span> <span class="dv">120</span>)</span>
+<span id="cb18-16"><a href="#cb18-16" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(d<span class="sc">$</span>ddpi, d<span class="sc">$</span>sr, <span class="at">pch =</span> <span class="dv">19</span>,</span>
+<span id="cb18-17"><a href="#cb18-17" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">"Growth of disposable income (% a year)"</span>,</span>
+<span id="cb18-18"><a href="#cb18-18" aria-hidden="true" tabindex="-1"></a>     <span class="at">ylab =</span> <span class="st">"Savings rate (% of disposable income)"</span>)</span>
+<span id="cb18-19"><a href="#cb18-19" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="fu">lm</span>(sr <span class="sc">~</span> ddpi, <span class="at">data =</span> d), <span class="at">lwd =</span> <span class="dv">2</span>)</span>
+<span id="cb18-20"><a href="#cb18-20" aria-hidden="true" tabindex="-1"></a><span class="fu">dev.off</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>The script is short and tidy: sections, comments, and a check of its own that passes. It runs without an error or a warning and writes the figure to <code>savings_growth.png</code> in the working directory. Copy it into a new script and run it before the exercise.</p>
+</section>
+<section id="exercise-1" class="level2">
+<h2 class="anchored" data-anchor-id="exercise-1">Exercise</h2>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true" href="">Exercise</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false" href="">Solution</a></li></ul>
+<div class="tab-content">
+<div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
+<div class="cell" data-layout-align="center" data-exercise="true" data-script="Exercise (4 minutes)">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Run the delivered script first. Then:</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="co"># 1. How many countries does the model use? nobs(fit)</span></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a><span class="co"># 2. What is ddpi? Open the help page: ?LifeCycleSavings</span></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a><span class="co"># 3. Fit the same model on all 50 countries (data = LifeCycleSavings).</span></span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a><span class="co">#    What is the coefficient on ddpi?</span></span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Two answers to compare with the room: the number of countries in the</span></span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a><span class="co"># model, and the coefficient on ddpi with all 50.</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+<div id="tabset-1-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-2-tab">
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> LifeCycleSavings</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> d[<span class="fu">complete.cases</span>(d), ]</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> d[d<span class="sc">$</span>ddpi <span class="sc">&lt;</span> <span class="dv">10</span>, ]</span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">lm</span>(sr <span class="sc">~</span> pop15 <span class="sc">+</span> pop75 <span class="sc">+</span> dpi <span class="sc">+</span> ddpi, <span class="at">data =</span> d)</span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a><span class="fu">nobs</span>(fit)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; [1] 48</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>full <span class="ot">&lt;-</span> <span class="fu">lm</span>(sr <span class="sc">~</span> pop15 <span class="sc">+</span> pop75 <span class="sc">+</span> dpi <span class="sc">+</span> ddpi, <span class="at">data =</span> LifeCycleSavings)</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">coef</span>(full)[<span class="st">"ddpi"</span>], <span class="dv">2</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; ddpi 
+#&gt; 0.41</code></pre>
+</div>
+</div>
+<p>The model uses 48 countries: line 7 drops the two whose income grew faster than 10% a year. With all 50, the coefficient on <code>ddpi</code> is 0.41, half the 0.84 in the summary. The help page defines <code>ddpi</code> as the “% growth rate of dpi”, the growth of per-capita disposable income, so the summary’s “countries with higher disposable income save more” describes the wrong variable. The printed output held a clue all along: “on 43 degrees of freedom” means 48 observations for five coefficients.</p>
+</div>
+</div>
+</div>
+</section>
+<section id="live-checker" class="level2 smaller">
+<h2 class="smaller anchored" data-anchor-id="live-checker">A checker in a fresh session</h2>
+<ol type="1">
+<li>A new folder, <code>savings-check</code>, holding only <code>summary.md</code></li>
+<li>A terminal in that folder: RStudio, Tools → Terminal → New Terminal, then <code>cd</code> into the folder</li>
+<li><code>claude --permission-mode manual</code>; the first time, choose <em>Yes, I trust this folder</em></li>
+<li>Paste the prompt. Approve the <code>Rscript</code> commands it proposes (option 2 approves them for the rest of the session); decline anything that would edit a file</li>
+</ol>
+<p><em>A fresh session:</em> a new conversation with no memory of the work. <em>Manual mode:</em> the tool asks before each command it runs.</p>
+<div style="font-size:1.45em">
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>The checker's prompt</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb24" data-filename="The checker's prompt"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>You have not seen how summary.md was made, and you cannot</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>see the code that made it. Check it. Using R's built-in</span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>LifeCycleSavings data and its help page, recompute every</span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>number in summary.md with your own R code on the full data,</span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>and compare every description of a variable with the help</span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>page. Report a table with one row per claim: the claim, what</span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>summary.md says, what you found, and whether they match</span>
+<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a>(numbers within 0.01). List any claim that data cannot</span>
+<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a>check. Do not create or edit any file.</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+<p>The checker gets other information and nothing else: the claims, the built-in data and the help page. It cannot see the script because the script is not in its folder. Make the folder, create <code>summary.md</code> in it with the text of the deliverable’s summary, open a terminal there, and launch the tool in manual mode so each command asks first. The prompt asks for a recomputation from the full data, a comparison with the documentation, a stated tolerance, and a table, and it forbids edits. In test runs the checker took about half a minute and a few commands.</p>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>summary.md</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb25" data-filename="summary.md"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu"># Savings and the life cycle</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>Across the 50 countries in the data, savings rates follow the life-cycle</span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>hypothesis. A country with one more percentage point of its population</span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>under 15 saves 0.32 points less of its income, and countries with higher</span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>disposable income save more (coefficient 0.84, p &lt; 0.01). Together the four</span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>variables explain 38% of the variation in savings rates across countries.</span>
+<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a>All numbers were checked against the script's output.</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="cell" data-layout-align="center" data-script="The checker: paste this into Claude Code, not into R">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="co"># In a folder holding only summary.md, run claude --permission-mode manual</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="co"># and paste:</span></span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a><span class="co">#</span></span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a><span class="co"># You have not seen how summary.md was made, and you cannot see the code</span></span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a><span class="co"># that made it. Check it. Using R's built-in LifeCycleSavings data and its</span></span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a><span class="co"># help page, recompute every number in summary.md with your own R code on</span></span>
+<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a><span class="co"># the full data, and compare every description of a variable with the help</span></span>
+<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a><span class="co"># page. Report a table with one row per claim: the claim, what summary.md</span></span>
+<span id="cb26-9"><a href="#cb26-9" aria-hidden="true" tabindex="-1"></a><span class="co"># says, what you found, and whether they match (numbers within 0.01). List</span></span>
+<span id="cb26-10"><a href="#cb26-10" aria-hidden="true" tabindex="-1"></a><span class="co"># any claim that data cannot check. Do not create or edit any file.</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="checker-report" class="level2">
+<h2 class="anchored" data-anchor-id="checker-report">The checker’s report</h2>
+<p>A test run from the evening before class, recomputed on all 50 countries:</p>
+<div style="font-size:1.05em">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Claim</th>
+<th style="text-align: left;">summary.md</th>
+<th style="text-align: left;">Recomputed, all 50 countries</th>
+<th style="text-align: left;">Match</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Number of countries</td>
+<td style="text-align: left;">50</td>
+<td style="text-align: left;">50 rows in the data</td>
+<td style="text-align: left;">✅</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Effect of <code>pop15</code></td>
+<td style="text-align: left;">−0.32</td>
+<td style="text-align: left;">−0.461 (p = 0.003)</td>
+<td style="text-align: left;">❌</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Higher income, more saving</td>
+<td style="text-align: left;">0.84, p &lt; 0.01</td>
+<td style="text-align: left;"><code>dpi</code>: −0.0003 (p = 0.72); <code>ddpi</code>, income growth: 0.41</td>
+<td style="text-align: left;">❌</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Share of variation explained</td>
+<td style="text-align: left;">38%</td>
+<td style="text-align: left;">R² = 0.34</td>
+<td style="text-align: left;">❌</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>✅ matches within 0.01; ❌ does not match. <em>Cannot be checked with data:</em> “follow the life-cycle hypothesis”; “checked against the script’s output”. <em>Its guess:</em> the income number may be income growth, from a subset of the countries.</p>
+<p>The table condenses a test run of the prompt above, captured the evening before class; a live run words things differently and finds the same mismatches. Every coefficient and the R² differ from the full-data values, while the count of countries matches the data. That pattern points at the sample: the numbers came from a model fitted on a subset. The checker could not see the script, so it could only guess where the numbers came from. The line that explains them is in the script, and <code>nobs(fit)</code> in the exercise found it in one step.</p>
+<div class="cell" data-layout-align="center" data-script="The same model on all 50 countries">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>full <span class="ot">&lt;-</span> <span class="fu">lm</span>(sr <span class="sc">~</span> pop15 <span class="sc">+</span> pop75 <span class="sc">+</span> dpi <span class="sc">+</span> ddpi, <span class="at">data =</span> LifeCycleSavings)</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="fu">nobs</span>(full)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; [1] 50</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">coef</span>(full), <span class="dv">4</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; (Intercept)       pop15       pop75         dpi        ddpi 
+#&gt;     28.5661     -0.4612     -1.6915     -0.0003      0.4097</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">summary</span>(full)<span class="sc">$</span>r.squared, <span class="dv">2</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; [1] 0.34</code></pre>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>The captured report, condensed
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-1" class="callout-1-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb33"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>None of the four statistics in summary.md holds up on the full data. The</span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>sample size is right, but the two coefficients, the p-value and the R² are</span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>all wrong, and in one case the sign is wrong too.</span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a>I fitted lm(sr ~ pop15 + pop75 + dpi + ddpi, data = LifeCycleSavings),</span>
+<span id="cb33-6"><a href="#cb33-6" aria-hidden="true" tabindex="-1"></a>the model on the help page. It uses all 50 rows, and none have missing</span>
+<span id="cb33-7"><a href="#cb33-7" aria-hidden="true" tabindex="-1"></a>values. I compared the variable descriptions against ?LifeCycleSavings.</span>
+<span id="cb33-8"><a href="#cb33-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-9"><a href="#cb33-9" aria-hidden="true" tabindex="-1"></a>| # | Claim | summary.md says | What I found | Match? |</span>
+<span id="cb33-10"><a href="#cb33-10" aria-hidden="true" tabindex="-1"></a>|---|---|---|---|---|</span>
+<span id="cb33-11"><a href="#cb33-11" aria-hidden="true" tabindex="-1"></a>| 1 | Number of countries | 50 | 50 rows, all complete | ✅ |</span>
+<span id="cb33-12"><a href="#cb33-12" aria-hidden="true" tabindex="-1"></a>| 2 | Effect of pop15 | −0.32 | −0.461 (p = 0.0026) | ❌ |</span>
+<span id="cb33-13"><a href="#cb33-13" aria-hidden="true" tabindex="-1"></a>| 3 | Direction of the income effect (dpi) | save more | −0.000337, negative | ❌ |</span>
+<span id="cb33-14"><a href="#cb33-14" aria-hidden="true" tabindex="-1"></a>| 4 | Income coefficient | 0.84 | −0.000337; income growth (ddpi) is 0.410 | ❌ |</span>
+<span id="cb33-15"><a href="#cb33-15" aria-hidden="true" tabindex="-1"></a>| 5 | Income p-value | p &lt; 0.01 | p = 0.72; ddpi has p = 0.042 | ❌ |</span>
+<span id="cb33-16"><a href="#cb33-16" aria-hidden="true" tabindex="-1"></a>| 6 | Share of variation explained | 38% | R² = 0.338 | ❌ |</span>
+<span id="cb33-17"><a href="#cb33-17" aria-hidden="true" tabindex="-1"></a>| 7 | Description of pop15 | share under 15 | "% of population under 15" | ✅ |</span>
+<span id="cb33-18"><a href="#cb33-18" aria-hidden="true" tabindex="-1"></a>| 8 | Description of dpi | "disposable income" | "real per-capita disposable income" | ⚠️ |</span>
+<span id="cb33-19"><a href="#cb33-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-20"><a href="#cb33-20" aria-hidden="true" tabindex="-1"></a>Claims the data cannot check:</span>
+<span id="cb33-21"><a href="#cb33-21" aria-hidden="true" tabindex="-1"></a>- "All numbers were checked against the script's output." That script</span>
+<span id="cb33-22"><a href="#cb33-22" aria-hidden="true" tabindex="-1"></a>  isn't available to me.</span>
+<span id="cb33-23"><a href="#cb33-23" aria-hidden="true" tabindex="-1"></a>- "Savings rates follow the life-cycle hypothesis." An interpretation;</span>
+<span id="cb33-24"><a href="#cb33-24" aria-hidden="true" tabindex="-1"></a>  pop15 is significant, pop75 and dpi are not.</span>
+<span id="cb33-25"><a href="#cb33-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-26"><a href="#cb33-26" aria-hidden="true" tabindex="-1"></a>A possible source: the closest to 0.84 with p &lt; 0.01 was the ddpi</span>
+<span id="cb33-27"><a href="#cb33-27" aria-hidden="true" tabindex="-1"></a>coefficient on a subset of countries. It suggests the "income" coefficient</span>
+<span id="cb33-28"><a href="#cb33-28" aria-hidden="true" tabindex="-1"></a>may really be income growth from a subset of the data. That's a guess,</span>
+<span id="cb33-29"><a href="#cb33-29" aria-hidden="true" tabindex="-1"></a>not a finding.</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+</div>
+</section>
+<section id="reveal" class="level2">
+<h2 class="anchored" data-anchor-id="reveal">The figure with all 50 countries</h2>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="figures/10-verification/F6-reveal.png" class="quarto-figure quarto-figure-center figure-img" alt="Two scatter plots of the savings rate against income growth. Left, in the deliverable, 48 countries and a steep fitted line. Right, all 50 countries: Jamaica at about 10 percent growth and Libya at about 17 percent sit to the right with savings rates near 8 and 9 percent, and the fitted line is much flatter." height="345"></p>
+</figure>
+</div>
+<p>Left: the figure from the deliverable, 48 countries. Right: the same plot with all 50; the two countries the script dropped are in yellow. Slope of the fitted line: 1.16 without them, 0.48 with them.</p>
+<p>The figure in the deliverable looks like a textbook picture. With all 50 countries, the two that line 7 dropped sit far to the right with ordinary savings rates, and the fitted line is less than half as steep. Nothing on the left panel hints at them: its axis stops where the data stop.</p>
+<div class="cell" data-layout-align="center" data-script="The figure with all 50 countries">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> LifeCycleSavings</span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>dropped <span class="ot">&lt;-</span> d<span class="sc">$</span>ddpi <span class="sc">&gt;=</span> <span class="dv">10</span></span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(d<span class="sc">$</span>ddpi, d<span class="sc">$</span>sr, <span class="at">pch =</span> <span class="dv">19</span>,</span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">"Growth of disposable income (% a year)"</span>,</span>
+<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a>     <span class="at">ylab =</span> <span class="st">"Savings rate (% of disposable income)"</span>)</span>
+<span id="cb34-6"><a href="#cb34-6" aria-hidden="true" tabindex="-1"></a><span class="fu">points</span>(d<span class="sc">$</span>ddpi[dropped], d<span class="sc">$</span>sr[dropped], <span class="at">pch =</span> <span class="dv">21</span>, <span class="at">bg =</span> <span class="st">"gold"</span>, <span class="at">cex =</span> <span class="dv">2</span>)</span>
+<span id="cb34-7"><a href="#cb34-7" aria-hidden="true" tabindex="-1"></a><span class="fu">text</span>(d<span class="sc">$</span>ddpi[dropped], d<span class="sc">$</span>sr[dropped], <span class="fu">rownames</span>(d)[dropped], <span class="at">pos =</span> <span class="dv">2</span>)</span>
+<span id="cb34-8"><a href="#cb34-8" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="fu">lm</span>(sr <span class="sc">~</span> ddpi, <span class="at">data =</span> d), <span class="at">lwd =</span> <span class="dv">2</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="three-problems" class="level2 smaller">
+<h2 class="smaller anchored" data-anchor-id="three-problems">What the three problems were</h2>
+<div style="font-size:1.5em">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">The summary says</th>
+<th style="text-align: left;">What is true</th>
+<th style="text-align: left;">Kind</th>
+<th style="text-align: left;">Caught by</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">“the 50 countries”</td>
+<td style="text-align: left;">the model uses 48; line 7 drops Libya and Jamaica</td>
+<td style="text-align: left;">exact</td>
+<td style="text-align: left;"><code>nobs(fit)</code>; the envelope</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">0.84, p &lt; 0.01</td>
+<td style="text-align: left;">0.41, p = 0.04 with all 50</td>
+<td style="text-align: left;">exact</td>
+<td style="text-align: left;">the checker; the envelope</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">“higher disposable income”</td>
+<td style="text-align: left;"><code>ddpi</code> is the growth rate of income</td>
+<td style="text-align: left;">sourced</td>
+<td style="text-align: left;">the help page</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p><strong>The envelope:</strong> 50 countries, and 0.41 on <code>ddpi</code>.</p>
+<p>“Checked against the script’s output” is true: every number matches the script, and the script is where the problem is.</p>
+<p>Each problem was caught by a different kind of check. The count caught the missing countries. The recomputation from the raw data, by you or by the checker, caught the numbers. The help page caught the definition. The two values kept back before class, the number of countries and the full-data coefficient, would have caught the first two without any agent. The summary’s last sentence was true and useless: the numbers matched the script’s output because they came from it.</p>
+</section>
+<section id="libya" class="level2">
+<h2 class="anchored" data-anchor-id="libya">Libya: keep it, drop it, or report both?</h2>
+<ul>
+<li>Libya’s income grew 16.7% a year over the decade. <a href="https://www.britannica.com/place/Marsa-al-Burayqah">Its oil exports began in 1961</a>. Jamaica’s grew 10.2%.</li>
+<li>The script’s comment calls these growth rates implausible.</li>
+<li>Dropping a country is a research decision, and it belongs to the principal.</li>
+</ul>
+<p><strong>Hands up:</strong> keep, drop, or report both?</p>
+<p>The judgment claim hid in a comment. Libya’s growth was real: its oil exports began in 1961 and its income rose fast through the decade. An analyst could argue for dropping it as unrepresentative, keeping it as data, or reporting both. Each is defensible, and each is a decision for the person who owns the question, made openly and written down. The agent made it silently, with a word (“implausible”) that sounded like data cleaning. That is the hidden action from the first part of the session, in one line of code.</p>
+</section>
+<section id="real-runs" class="level2">
+<h2 class="anchored" data-anchor-id="real-runs">Three real runs of the same brief</h2>
+<p>The brief from the start of class, given to a coding agent three times, each in an empty folder:</p>
+<ul>
+<li>All three kept all 50 countries</li>
+<li>All three described <code>ddpi</code> as income growth, with a coefficient of 0.41</li>
+<li>All three reported the estimate without Libya separately: about 0.6</li>
+</ul>
+<p>The planted deliverable and the real ones both read as careful work; only the checks told them apart.</p>
+<p>The same brief went to a coding agent three times, each in a fresh, empty folder. All three runs kept every country, described <code>ddpi</code> correctly, and reported the coefficient without Libya as a separate check, which is what a careful research assistant would do. One summary ended: “the growth estimate rises to about 0.6 when Libya … is left out.” Agents often get tasks like this right. The point of the procedure is that you cannot tell which kind of deliverable you have by reading it. The runs were captured in September 2026; the tool’s wording varies between runs and versions.</p>
+</section>
+<section id="takeaways" class="level2 smaller">
+<h2 class="smaller anchored" data-anchor-id="takeaways">What to take away</h2>
+<ol type="1">
+<li>Delegating to an agent is a principal–agent problem: its report on the work is a claim.</li>
+<li>A deliverable can look right and be wrong, from an agent or in a journal.</li>
+<li>The better the tool, the less we check: keep a set level of scrutiny, every time.</li>
+<li>Agents work toward the check you give them: they cannot edit the checks, and the numbers you expect stay out of the brief.</li>
+<li>Sort each claim as exact, sourced or judgment: recompute it, look it up, or decide.</li>
+<li>A second check counts when it is independent: a fresh session, other information, another method or model.</li>
+<li>Check the checker: confirm what it flags, and read the disagreements and a random sample of what passed.</li>
+<li>In your code: assertions of several kinds, and a look block for the end of the project.</li>
+</ol>
+<p>For homework, the session page has two reference tables: <a href="10-verification.html#checks-reference">checks by kind of error</a> and <a href="10-verification.html#checks-by-task">checks by task</a>.</p>
+</section>
+<section id="checks-reference" class="level2">
+<h2 class="anchored" data-anchor-id="checks-reference">Checks to write into your code</h2>
+<p>Two kinds of checks belong in any script, including one an agent wrote. Assertions run every time and stop the script when something is wrong. A look block, switched off by default, holds the plots and summaries you read yourself at the end of a project. Each kind of check catches a different kind of error, so a script needs several kinds.</p>
+<section id="assertions-that-run-every-time" class="level3">
+<h3 class="anchored" data-anchor-id="assertions-that-run-every-time">Assertions that run every time</h3>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">What goes wrong</th>
+<th style="text-align: left;">The check</th>
+<th style="text-align: left;">Example</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Rows vanish or multiply in a filter, merge or reshape</td>
+<td style="text-align: left;">A count against an expected number, right after the step</td>
+<td style="text-align: left;"><code>stopifnot(nrow(d) == 50)  # ?LifeCycleSavings: 50 countries</code></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Rows fail to match in a merge</td>
+<td style="text-align: left;">Count the non-matches</td>
+<td style="text-align: left;"><code>stopifnot(sum(!a$id %in% b$id) == 0)</code></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Duplicated keys multiply rows in a merge</td>
+<td style="text-align: left;">Keys are unique before merging</td>
+<td style="text-align: left;"><code>stopifnot(!anyDuplicated(a$id))</code></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Missing values are dropped or zeroed silently</td>
+<td style="text-align: left;">Count the NAs at each step</td>
+<td style="text-align: left;"><code>stopifnot(sum(is.na(d$sr)) == 0)</code></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Impossible values or wrong units</td>
+<td style="text-align: left;">A range the values must fall in</td>
+<td style="text-align: left;"><code>stopifnot(all(d$sr &gt;= 0 &amp; d$sr &lt;= 100))</code></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Identifiers mangled: leading zeros lost, codes read as numbers</td>
+<td style="text-align: left;">Type and format</td>
+<td style="text-align: left;"><code>stopifnot(is.character(d$fips), all(nchar(d$fips) == 5))</code></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Parts that should add up do not</td>
+<td style="text-align: left;">Internal consistency</td>
+<td style="text-align: left;"><code>stopifnot(abs(sum(d$share) - 1) &lt; 1e-8)</code></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">A number disagrees with a published one</td>
+<td style="text-align: left;">The published or hand-counted value, with a tolerance</td>
+<td style="text-align: left;"><code>stopifnot(abs(total - published) / published &lt; 0.01)</code></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">A function computes the wrong thing</td>
+<td style="text-align: left;">A known answer, on a case you can work out by hand</td>
+<td style="text-align: left;"><code>stopifnot(my_mean(c(1, 3)) == 2)</code></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Dates off by a day</td>
+<td style="text-align: left;">Calendar facts</td>
+<td style="text-align: left;"><code>stopifnot(length(unique(d$date)) == 31)  # January</code></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Results change between runs</td>
+<td style="text-align: left;">A fixed seed, and the same result twice</td>
+<td style="text-align: left;"><code>set.seed(1)</code>, then <code>stopifnot(identical(r1, r2))</code></td>
+</tr>
+</tbody>
+</table>
+<p>Each assertion compares with a specific value, and a comment says where the value came from: the documentation, a published table, a count you made by hand. Compare decimals within a tolerance, never with <code>==</code>. A check that cannot fail, such as <code>nrow(d) &gt; 0</code>, tells you nothing.</p>
+</section>
+<section id="a-look-block-for-the-end-of-the-project" class="level3">
+<h3 class="anchored" data-anchor-id="a-look-block-for-the-end-of-the-project">A look block for the end of the project</h3>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">What you look at</th>
+<th style="text-align: left;">Code</th>
+<th style="text-align: left;">What it shows</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Every column’s range and missing values</td>
+<td style="text-align: left;"><code>summary(d)</code></td>
+<td style="text-align: left;">impossible minimums and maximums, NA counts per column</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">The distribution of a key variable</td>
+<td style="text-align: left;"><code>hist(d$pm25)</code></td>
+<td style="text-align: left;">sentinel codes such as −999, values a thousand times too large, piles of zeros</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">A series over time</td>
+<td style="text-align: left;"><code>plot(d$date, d$pm25, type = "l")</code></td>
+<td style="text-align: left;">gaps, a jump when an instrument or a unit changes, spikes</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Rows per period</td>
+<td style="text-align: left;"><code>barplot(table(format(d$date, "%Y-%m")))</code></td>
+<td style="text-align: left;">missing months, a month loaded twice</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Categories</td>
+<td style="text-align: left;"><code>table(d$country, useNA = "ifany")</code></td>
+<td style="text-align: left;">“USA”, “US” and “United States” as three categories, stray NAs</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Coordinates</td>
+<td style="text-align: left;"><code>plot(d$lon, d$lat)</code></td>
+<td style="text-align: left;">swapped latitude and longitude, a flipped sign, points in the ocean</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Two variables that should move together</td>
+<td style="text-align: left;"><code>plot(d$pop15, d$pop75)</code></td>
+<td style="text-align: left;">points far off the pattern: typos, or real outliers</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">A few random rows</td>
+<td style="text-align: left;"><code>d[sample(nrow(d), 5), ]</code></td>
+<td style="text-align: left;">shifted columns, truncated text, problems no summary shows</td>
+</tr>
+</tbody>
+</table>
+<p>Keep the block in the script behind a switch, so it does not run every time:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>LOOK <span class="ot">&lt;-</span> <span class="cn">FALSE</span>   <span class="co"># TRUE at the end of the project, or when the data change</span></span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a><span class="co"># 1) Look at the raw data ----</span></span>
+<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (LOOK) {</span>
+<span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summary</span>(d)</span>
+<span id="cb35-6"><a href="#cb35-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">hist</span>(d<span class="sc">$</span>pm25)</span>
+<span id="cb35-7"><a href="#cb35-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot</span>(d<span class="sc">$</span>date, d<span class="sc">$</span>pm25, <span class="at">type =</span> <span class="st">"l"</span>)</span>
+<span id="cb35-8"><a href="#cb35-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">table</span>(d<span class="sc">$</span>country, <span class="at">useNA =</span> <span class="st">"ifany"</span>)</span>
+<span id="cb35-9"><a href="#cb35-9" aria-hidden="true" tabindex="-1"></a>  d[<span class="fu">sample</span>(<span class="fu">nrow</span>(d), <span class="dv">5</span>), ]</span>
+<span id="cb35-10"><a href="#cb35-10" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Run it yourself at the end of a project, and whenever the data change. When it shows a problem, write an assertion for it, so the next run checks it without you.</p>
+</section>
+</section>
+<section id="checks-by-task" class="level2">
+<h2 class="anchored" data-anchor-id="checks-by-task">Which checks for which task</h2>
+<p>Each step of a project breaks in its own ways, so each step has its own checks. The examples in the last column are made up, with numbers of the kind you would write into the check. One way to use the table: for each step in your script, find its row and write the checks listed.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Task</th>
+<th style="text-align: left;">What usually goes wrong</th>
+<th style="text-align: left;">Checks that catch it</th>
+<th style="text-align: left;">Example (made up)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Reading a file</td>
+<td style="text-align: left;">Wrong header row or delimiter; numbers or dates read as text; codes such as −999 standing for missing</td>
+<td style="text-align: left;">Rows and columns against the source; <code>str()</code> for types; ranges; <code>summary()</code></td>
+<td style="text-align: left;">A daily file for one year has 365 rows and a <code>Date</code> column; daily maximum temperatures stay below 60 °C</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Filtering rows</td>
+<td style="text-align: left;">Too many or too few rows kept; missing values dropped without notice</td>
+<td style="text-align: left;">Rows before and after, against an expected number; NAs counted</td>
+<td style="text-align: left;">Keeping January for 12 stations leaves 12 × 31 = 372 rows</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Merging two tables</td>
+<td style="text-align: left;">Keys that fail to match; duplicated keys that multiply rows</td>
+<td style="text-align: left;">Unique keys before the merge; non-matches counted and listed; rows after the merge</td>
+<td style="text-align: left;">190 countries merged with a table that spells Côte d’Ivoire differently: 189 match, and the list of non-matches shows the one that did not</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Reshaping, wide to long</td>
+<td style="text-align: left;">Rows lost or duplicated</td>
+<td style="text-align: left;">Rows in long form = rows in wide form × number of periods</td>
+<td style="text-align: left;">50 countries × 10 years in columns becomes 500 rows</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Aggregating: sums and means by group</td>
+<td style="text-align: left;">Double counting; averages of averages; weights left out</td>
+<td style="text-align: left;">Parts add up to the total; one group computed by hand; weighted against unweighted</td>
+<td style="text-align: left;">Regional totals add up to the national total, within rounding</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Dates and times</td>
+<td style="text-align: left;">Wrong time zone; days shifted by one; day and month swapped</td>
+<td style="text-align: left;">Calendar facts; the date of an event you already know</td>
+<td style="text-align: left;">A storm that hit on March 3 shows up on March 3, not March 2</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Scraping a web page</td>
+<td style="text-align: left;">Only the first page of results; a layout change that shifts columns</td>
+<td style="text-align: left;">Rows against the count the page shows; a few random rows compared with the page</td>
+<td style="text-align: left;">The page says “1–20 of 134”; the scraped table has 134 rows</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Downloading from an API</td>
+<td style="text-align: left;">Partial downloads; rate limits; fields renamed without notice</td>
+<td style="text-align: left;">Records against the total the API reports; first and last dates; the raw response saved</td>
+<td style="text-align: left;">The API reports 2,408 records and the saved file has 2,408, from the first requested date to the last</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Classifying text with an LLM</td>
+<td style="text-align: left;">Labels outside the allowed set; labels that drift across the sample</td>
+<td style="text-align: left;">Allowed labels only; a random sample labeled by hand, and the agreement measured</td>
+<td style="text-align: left;">20 of 1,000 news items labeled by hand; the model agrees on 18</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Pulling a table out of a PDF or a scan</td>
+<td style="text-align: left;">Misread digits; shifted columns</td>
+<td style="text-align: left;">The printed total against the sum of the rows; ranges; a few rows compared with the page</td>
+<td style="text-align: left;">The printed total is 12,480 and the rows sum to 12,480</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Spatial joins and maps</td>
+<td style="text-align: left;">Coordinate systems that do not match; latitude and longitude swapped</td>
+<td style="text-align: left;">The points drawn on a map; a location you know</td>
+<td style="text-align: left;">A city you know falls inside its own country</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Running a regression</td>
+<td style="text-align: left;">The sample changes silently when rows with NAs drop out; the wrong variable in the model</td>
+<td style="text-align: left;"><code>nobs()</code>; each variable against its documentation; a published estimate; simulated data with a known answer</td>
+<td style="text-align: left;">Simulate y = 2x + noise: the estimated slope comes out close to 2</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Making a figure</td>
+<td style="text-align: left;">The wrong series plotted; wrong units on an axis</td>
+<td style="text-align: left;">One value read off the figure against the table; axis labels against the variable definitions</td>
+<td style="text-align: left;">The highest point on the figure equals the maximum in the table</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Writing a summary or a literature review</td>
+<td style="text-align: left;">Numbers that do not match the tables; citations that do not exist or say something else</td>
+<td style="text-align: left;">Every number traced to printed output; every citation looked up</td>
+<td style="text-align: left;">A sentence cites a paper: its DOI resolves, and the paper says what the sentence says</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Any task an agent did</td>
+<td style="text-align: left;">All of the above, plus steps you did not see</td>
+<td style="text-align: left;">The commands it ran and what they printed; the diff; a check in a fresh session</td>
+<td style="text-align: left;">Ask for <code>nobs()</code> and the row count after every step that can drop rows</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="practice" class="level2">
+<h2 class="anchored" data-anchor-id="practice">Practice</h2>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-2-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-1" role="tab" aria-controls="tabset-2-1" aria-selected="true" href="">Practice</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-2" role="tab" aria-controls="tabset-2-2" aria-selected="false" href="">Solutions</a></li></ul>
+<div class="tab-content">
+<div id="tabset-2-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-2-1-tab">
+<div class="cell" data-layout-align="center" data-script="Practice">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Exact claims, one line of R each</span></span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a><span class="co">#  1. Check each claim about LifeCycleSavings with one line: "Japan saves</span></span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a><span class="co">#     the most"; "Zambia saves the least"; "the average savings rate is</span></span>
+<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a><span class="co">#     9.7%". One of the three is false. Which one, and what is true?</span></span>
+<span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a><span class="co">#  2. The summary says the model explains 38% of the variation. Compute</span></span>
+<span id="cb36-6"><a href="#cb36-6" aria-hidden="true" tabindex="-1"></a><span class="co">#     the R-squared with all 50 countries and with the 48 the script</span></span>
+<span id="cb36-7"><a href="#cb36-7" aria-hidden="true" tabindex="-1"></a><span class="co">#     kept. Which one did the summary report?</span></span>
+<span id="cb36-8"><a href="#cb36-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-9"><a href="#cb36-9" aria-hidden="true" tabindex="-1"></a><span class="co"># The checker</span></span>
+<span id="cb36-10"><a href="#cb36-10" aria-hidden="true" tabindex="-1"></a><span class="co">#  3. Make the savings-check folder and run the checker's prompt. Compare</span></span>
+<span id="cb36-11"><a href="#cb36-11" aria-hidden="true" tabindex="-1"></a><span class="co">#     its table with the one on this page. What differs, and what is the</span></span>
+<span id="cb36-12"><a href="#cb36-12" aria-hidden="true" tabindex="-1"></a><span class="co">#     same?</span></span>
+<span id="cb36-13"><a href="#cb36-13" aria-hidden="true" tabindex="-1"></a><span class="co">#  4. Copy savings.R into the checker's folder and run the prompt again,</span></span>
+<span id="cb36-14"><a href="#cb36-14" aria-hidden="true" tabindex="-1"></a><span class="co">#     changed to say it may read the script. Does it find line 7? What</span></span>
+<span id="cb36-15"><a href="#cb36-15" aria-hidden="true" tabindex="-1"></a><span class="co">#     does it lose by reading the worker's code?</span></span>
+<span id="cb36-16"><a href="#cb36-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-17"><a href="#cb36-17" aria-hidden="true" tabindex="-1"></a><span class="co"># Planted errors</span></span>
+<span id="cb36-18"><a href="#cb36-18" aria-hidden="true" tabindex="-1"></a><span class="co">#  5. Copy a script of your own. Plant three errors that do not stop it</span></span>
+<span id="cb36-19"><a href="#cb36-19" aria-hidden="true" tabindex="-1"></a><span class="co">#     from running: a filter, a wrong variable, a number off by a factor</span></span>
+<span id="cb36-20"><a href="#cb36-20" aria-hidden="true" tabindex="-1"></a><span class="co">#     of ten. Ask a reviewer in a fresh session to find what is wrong,</span></span>
+<span id="cb36-21"><a href="#cb36-21" aria-hidden="true" tabindex="-1"></a><span class="co">#     read-only. How many of the three did it find? Did it report</span></span>
+<span id="cb36-22"><a href="#cb36-22" aria-hidden="true" tabindex="-1"></a><span class="co">#     anything that is not an error?</span></span>
+<span id="cb36-23"><a href="#cb36-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-24"><a href="#cb36-24" aria-hidden="true" tabindex="-1"></a><span class="co"># Prose</span></span>
+<span id="cb36-25"><a href="#cb36-25" aria-hidden="true" tabindex="-1"></a><span class="co">#  6. Ask a chat assistant for a one-paragraph summary of a paper you</span></span>
+<span id="cb36-26"><a href="#cb36-26" aria-hidden="true" tabindex="-1"></a><span class="co">#     know well. Mark each claim exact, sourced or judgment. Check the</span></span>
+<span id="cb36-27"><a href="#cb36-27" aria-hidden="true" tabindex="-1"></a><span class="co">#     exact and sourced ones against the paper. How many hold?</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+<div id="tabset-2-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-2-2-tab">
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> LifeCycleSavings</span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a><span class="fu">rownames</span>(d)[<span class="fu">which.max</span>(d<span class="sc">$</span>sr)]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; [1] "Japan"</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rownames</span>(d)[<span class="fu">which.min</span>(d<span class="sc">$</span>sr)]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; [1] "Chile"</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">mean</span>(d<span class="sc">$</span>sr), <span class="dv">1</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; [1] 9.7</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>full <span class="ot">&lt;-</span> <span class="fu">lm</span>(sr <span class="sc">~</span> pop15 <span class="sc">+</span> pop75 <span class="sc">+</span> dpi <span class="sc">+</span> ddpi, <span class="at">data =</span> d)</span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>kept <span class="ot">&lt;-</span> <span class="fu">lm</span>(sr <span class="sc">~</span> pop15 <span class="sc">+</span> pop75 <span class="sc">+</span> dpi <span class="sc">+</span> ddpi, <span class="at">data =</span> d[d<span class="sc">$</span>ddpi <span class="sc">&lt;</span> <span class="dv">10</span>, ])</span>
+<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">c</span>(<span class="at">all_50 =</span> <span class="fu">summary</span>(full)<span class="sc">$</span>r.squared, <span class="at">kept_48 =</span> <span class="fu">summary</span>(kept)<span class="sc">$</span>r.squared), <span class="dv">2</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt;  all_50 kept_48 
+#&gt;    0.34    0.38</code></pre>
+</div>
+</div>
+<p>1. Japan saves the most (21.1%). Chile saves the least (0.6%), so the Zambia claim is false: Zambia saves the second most. The mean is 9.7%. 2. 0.34 with all 50 and 0.38 with the 48 kept: the summary reported the subset’s value. 3–6 have no single answer. For 4, a checker that reads the script usually finds line 7 faster, and it also reads the script’s assumptions as given; that is the trade.</p>
+</div>
+</div>
+</div>
+</section>
+<section id="quick-reference" class="level2">
+<h2 class="anchored" data-anchor-id="quick-reference">Quick reference</h2>
+<p><strong>The seven steps</strong></p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">When</th>
+<th style="text-align: left;">Step</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Before</td>
+<td style="text-align: left;">1. Write the checks into the brief (“Done when: …”)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Before</td>
+<td style="text-align: left;">2. Keep one value you know out of the brief</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">During</td>
+<td style="text-align: left;">3. Hand over small pieces</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">During</td>
+<td style="text-align: left;">4. Ask for the commands and what they printed; keep the answer and the checks out of the agent’s reach</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">After</td>
+<td style="text-align: left;">5. Check in a fresh session that works from other information: the raw data or the source</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">After</td>
+<td style="text-align: left;">6. Test the checker once: plant errors in a copy, count what it finds</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">After</td>
+<td style="text-align: left;">7. Read every disagreement and flag, and a random sample of passes; record what you checked</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Three kinds of claims</strong></p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Kind</th>
+<th style="text-align: left;">Examples</th>
+<th style="text-align: left;">The check</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Exact</td>
+<td style="text-align: left;">a count, a mean, a coefficient, the rows a merge kept</td>
+<td style="text-align: left;">recompute it, from the raw data</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Sourced</td>
+<td style="text-align: left;">a citation, what a variable means, a number from a report</td>
+<td style="text-align: left;">open the source</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Judgment</td>
+<td style="text-align: left;">the wording, the sample, the model, a figure’s design</td>
+<td style="text-align: left;">write your criteria, then decide</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Code</strong></p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Code</th>
+<th style="text-align: left;">What it does</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><code>nobs(fit)</code></td>
+<td style="text-align: left;">The number of observations a model used</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>?LifeCycleSavings</code></td>
+<td style="text-align: left;">The dataset’s documentation: what each variable means</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>abs(a - b) &lt; 0.01</code></td>
+<td style="text-align: left;">Compare two numbers within a tolerance, never with <code>==</code></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>set.seed(10); sample(x, 5)</code></td>
+<td style="text-align: left;">The same five random draws every run: rows to check by hand</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>claude --permission-mode manual</code></td>
+<td style="text-align: left;">Start Claude Code so every command asks first</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Things that bite</strong></p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Symptom</th>
+<th style="text-align: left;">Cause, fix</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">The agent says everything was verified</td>
+<td style="text-align: left;">A report on its own work; ask for the commands and output</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Every number differs a little from your recomputation</td>
+<td style="text-align: left;">A different sample; compare <code>nobs()</code></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">The checker agrees with everything</td>
+<td style="text-align: left;">It may have read the worker’s code or its reasoning; give it the raw data and the claims only</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">“Are you sure?” changes the answer</td>
+<td style="text-align: left;">Pushback carries no information; ask for a recomputation</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">A long list of problems from a reviewer</td>
+<td style="text-align: left;">Some are not real; confirm each in the data before acting</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">The brief states the expected answer</td>
+<td style="text-align: left;">The agent can bend the work toward it; keep that value back as your check</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Terms</strong></p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th style="text-align: left;">Term</th>
+<th style="text-align: left;">One line</th>
+<th style="text-align: left;">Where</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">principal, agent</td>
+<td style="text-align: left;">the one who delegates, and the one who does the work</td>
+<td style="text-align: left;"><a href="#principal-agent">§</a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">hidden action</td>
+<td style="text-align: left;">the steps the principal cannot observe</td>
+<td style="text-align: left;"><a href="#principal-agent">§</a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">a report</td>
+<td style="text-align: left;">the agent’s account of its own work; a claim</td>
+<td style="text-align: left;"><a href="#evidence-ladder">§</a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">an independent check</td>
+<td style="text-align: left;">a second measurement that does not share the worker’s context, information, method or model</td>
+<td style="text-align: left;"><a href="#four-ways">§</a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">hidden check</td>
+<td style="text-align: left;">a value you know and keep out of the brief</td>
+<td style="text-align: left;"><a href="#two-rules">§</a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">planted error</td>
+<td style="text-align: left;">an error put in a copy on purpose, to measure what a checker finds</td>
+<td style="text-align: left;"><a href="#planted">§</a></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Links:</strong> <a href="10-verification-slides.html">slides</a> · <a href="https://code.claude.com/docs/en/best-practices">Claude Code best practices</a> · <a href="https://simonwillison.net/2025/Dec/18/code-proven-to-work/">Willison: code you have proven to work</a> · <a href="https://github.com/scunning1975/MixtapeTools/blob/main/personas/referee2.md">Referee 2</a> · <a href="https://doi.org/10.1073/pnas.2524747123">Brodeur et al.&nbsp;(PNAS, 2026)</a> · <a href="https://doi.org/10.1093/cje/bet075">Herndon, Ash and Pollin (CJE, 2014)</a> · <a href="../../fall-2026/syllabus.html">Syllabus</a></p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/arielortizbobea\.github\.io\/aem6850\/");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+            // target, if specified
+            link.setAttribute("target", "_blank");
+            if (link.getAttribute("rel") === null) {
+              link.setAttribute("rel", "noopener");
+            }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
