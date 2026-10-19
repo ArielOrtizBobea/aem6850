@@ -115,8 +115,8 @@ barcode <- function(x0, y0, x1, y1) {
 open_d("D01-three-routes.png", 12, 4.3)
 cx <- c(2, 6, 10); top <- 4.0
 heads <- c("Download a file", "Request a feed or API", "Scrape a page built for people")
-subs  <- c("the interest-rate release offers its series as CSV",
-           "json/ne-press.json: every press release as one JSON file",
+subs  <- c("the H.15 page offers its series as a CSV file",
+           "ne-press.json: every press release in one JSON file",
            "one statement page, read by a program")
 thumbs <- c("S12-h15-page.png", "S13-feed-raw.png", "S02-statement-20220615.png")
 backs  <- c("a file on your disk", "a structured reply", "the page's HTML, to pick apart")
@@ -125,8 +125,7 @@ for (i in 1:3) {
   tx(cx[i], top - 0.36, subs[i], cex = 0.95, col = grey)
   pic(file.path(out, thumbs[i]), cx[i] - 1.7, 1.25, cx[i] + 1.7, 3.3)
   arr(cx[i], 1.2, cx[i], 0.78, col = acc)
-  tx(cx[i], 0.55, backs[i], cex = 1.1)
-  tx(cx[i], 0.22, c("you click", "your program asks", "your program reads")[i], cex = 0.95, col = grey)
+  tx(cx[i], 0.45, backs[i], cex = 1.3)
 }
 segments(c(4, 8), 0.1, c(4, 8), 4.2, col = rule, lwd = 1.5, lty = 3)
 close_d()
@@ -200,7 +199,7 @@ tx(2.65, 0.35, "replies recorded: who was answered, and how", cex = 0.95, col = 
 close_d()
 
 # ---- D05: the January 2024 row, HTML beside its rendering (slide: full width) ----
-open_d("D05-html-row.png", 12, 4.6)
+open_d("D05-html-row.png", 12, 4.35)
 html_lines <- c('<div class="row fomc-meeting">',
                 '  <div class="fomc-meeting__month"><strong>January</strong></div>',
                 '  <div class="fomc-meeting__date">30-31</div>',
@@ -211,28 +210,25 @@ html_lines <- c('<div class="row fomc-meeting">',
                 '    <a href="/newsevents/pressreleases/monetary20240131a1.htm">Implementation Note</a>',
                 '  </div>',
                 '</div>')
-tx(0.25, 4.4, "The HTML, trimmed (layout classes cut)", cex = 1.1, font = 2, adj = c(0, 1))
-tx(7.45, 4.4, "The same row as the browser draws it", cex = 1.1, font = 2, adj = c(0, 1))
-rect(0.2, 0.55, 7.0, 4.05, col = "#FAFAFA", border = rule, lwd = 1.5)
-y0 <- 3.8; step <- 0.33
+tx(0.25, 4.2, "The HTML, trimmed to the month, the dates and the Statement links", cex = 1.1, font = 2, adj = c(0, 1))
+tx(7.8, 4.2, "The same row as the browser draws it", cex = 1.1, font = 2, adj = c(0, 1))
+rect(0.2, 0.3, 7.35, 3.85, col = "#FAFAFA", border = rule, lwd = 1.5)
+y0 <- 3.6; step <- 0.33
 for (i in seq_along(html_lines))
-  text(0.35, y0 - (i - 1) * step, html_lines[i], adj = c(0, 0.5), cex = 0.98, family = mono, col = ink)
+  text(0.35, y0 - (i - 1) * step, html_lines[i], adj = c(0, 0.5), cex = 0.88, family = mono, col = ink)
 # the rendered row
-bb <- pic(file.path(out, "S06-row-2024-01-rendered.png"), 7.4, 2.35, 11.85, 3.95)
+bb <- pic(file.path(out, "S06-row-2024-01-rendered.png"), 7.75, 2.15, 11.9, 3.75)
 # arrows from four HTML lines to the rendering: month, dates, HTML link, Implementation Note
 # positions in the raster (fractions of its width and height, from the capture)
 px <- function(fx, fy) c(bb[1] + fx * (bb[3] - bb[1]), bb[2] + fy * (bb[4] - bb[2]))
 targets <- list(month = px(0.08, 0.72), dates = px(0.22, 0.72), html = px(0.37, 0.6), note = px(0.33, 0.33))
 from_y  <- c(y0 - 1 * step, y0 - 2 * step, y0 - 6 * step, y0 - 7 * step)
-labs <- c("class fomc-meeting__month", "class fomc-meeting__date", "the href of the HTML link", "the implementation note's href")
 for (k in 1:4) {
   t <- targets[[k]]
-  arr(7.05, from_y[k], t[1] - 0.05, t[2], col = acc, lwd = 1.6, head = 0.11, wid = 0.05)
+  arr(7.4, from_y[k], t[1] - 0.05, t[2], col = acc, lwd = 1.6, head = 0.11, wid = 0.05)
 }
-tx(0.25, 0.3, "element: one labelled piece   ·   tag: the label in < >   ·   class and id: names the site gives   ·   attribute: a named value, such as href",
-   cex = 0.9, col = grey, adj = c(0, 0.5))
-tx(7.45, 1.25, "A row holds seven links. The class names are what", cex = 0.95, col = grey, adj = c(0, 1))
-tx(7.45, 0.97, "the selectors on the next slides pick out.", cex = 0.95, col = grey, adj = c(0, 1))
+tx(7.8, 1.15, "The full row holds seven links; the next slides", cex = 1.0, col = grey, adj = c(0, 1))
+tx(7.8, 0.85, "pick them out by these class names.", cex = 1.0, col = grey, adj = c(0, 1))
 close_d()
 
 # ---- D06: a CAPTCHA and a login wall (slide: r-stretch) ----
@@ -240,65 +236,61 @@ open_d("D06-captcha-login.png", 12, 5.6)
 segments(6, 0.3, 6, 5.4, col = rule, lwd = 1.5, lty = 3)
 # left: CAPTCHA
 tx(0.3, 5.35, "A CAPTCHA", cex = 1.45, font = 2, adj = c(0, 1))
-tx(0.3, 4.95, "a test that a person is at the keyboard: distorted letters, picking pictures, a slider", cex = 0.95, col = grey, adj = c(0, 1))
+tx(0.3, 4.95, "a test that a person is at the keyboard", cex = 1.1, col = grey, adj = c(0, 1))
 rbox(0.5, 3.3, 3.2, 4.55, col = "white", border = ink)
 rect(0.7, 3.5, 1.1, 3.9, col = "white", border = ink, lwd = 1.8)
 tx(1.3, 3.7, "I'm not a robot", cex = 1.05, adj = c(0, 0.5))
 text(1.85, 4.25, "7 k Q 2 m", cex = 1.6, family = mono, col = grey, srt = 6)
-tx(3.45, 4.25, "The site's refusal", cex = 1.1, font = 2, adj = c(0, 1))
-tx(3.45, 3.95, "to programs.", cex = 1.1, font = 2, adj = c(0, 1))
+tx(3.45, 4.25, "The site is refusing", cex = 1.15, font = 2, adj = c(0, 1))
+tx(3.45, 3.92, "programs.", cex = 1.15, font = 2, adj = c(0, 1))
 lines_tx(0.5, 2.9, c("Stop, and slow down.",
                       "Put your name and address in the user agent.",
                       "Ask the site for access or for its feed:",
-                      "agencies and publishers often grant one."), step = 0.32, cex = 1.0)
+                      "agencies and publishers often grant one."), step = 0.37, cex = 1.25)
 rbox(0.5, 0.55, 5.6, 1.3, col = tint, border = acc)
 tx(3.05, 0.92, "Do not have a program solve it.", cex = 1.15, font = 2, col = acc)
 # right: login wall
 tx(6.4, 5.35, "A login wall", cex = 1.45, font = 2, adj = c(0, 1))
-tx(6.4, 4.95, "the page shows only after you sign in", cex = 0.95, col = grey, adj = c(0, 1))
+tx(6.4, 4.95, "the page shows only after you sign in", cex = 1.1, col = grey, adj = c(0, 1))
 rbox(6.6, 3.1, 9.3, 4.55, col = "white", border = ink)
 rect(6.8, 4.05, 9.1, 4.35, col = fill, border = rule); tx(6.9, 4.2, "user name", cex = 0.9, col = grey, adj = c(0, 0.5))
 rect(6.8, 3.6, 9.1, 3.9, col = fill, border = rule); tx(6.9, 3.75, "password", cex = 0.9, col = grey, adj = c(0, 0.5))
 rbox(6.8, 3.2, 8.0, 3.48, col = blue, border = blue); tx(7.4, 3.34, "Sign in", cex = 0.9, col = "white")
-tx(9.55, 4.25, "A terms question.", cex = 1.1, font = 2, adj = c(0, 1))
-lines_tx(9.55, 3.9, c("The terms you", "accepted say what", "a program may copy."), step = 0.3, cex = 1.0)
-lines_tx(6.4, 2.9, c("Where the terms allow it: your own credentials, in your own session,",
-                      "at the rate a person would read. The pages count against your account.",
-                      "Pages behind your login are also where an AI browser agent fits."), step = 0.32, cex = 1.0)
+tx(9.55, 4.25, "The site's terms decide", cex = 1.15, font = 2, adj = c(0, 1))
+lines_tx(9.55, 3.9, c("what a program", "may copy."), step = 0.34, cex = 1.15)
+lines_tx(6.4, 2.9, c("Where the terms allow it: your own login,",
+                      "in your own session, at the rate a person reads.",
+                      "The site records those requests under your name."), step = 0.37, cex = 1.25)
 rbox(6.4, 0.55, 11.7, 1.3, col = tint, border = acc)
 tx(9.05, 0.92, "Read the terms before the first request.", cex = 1.15, font = 2, col = acc)
 close_d()
 
 
 # ---- D07: a browser agent's run, drawn from its transcript (slide: 58% column) ----
-open_d("D07-browser-agent.png", 7.2, 6.2)
-rbox(0.2, 0.2, 7.0, 6.0, r = 0.1, col = "white", border = rule, lwd = 1.5)
-rect(0.2, 5.55, 7.0, 6.0, col = fill, border = rule, lwd = 1.5)
-tx(0.4, 5.78, "Browser agent, in the browser pane", cex = 1.0, font = 2, adj = c(0, 0.5))
-tx(6.8, 5.78, "October 2026", cex = 0.85, col = grey, adj = c(1, 0.5))
+open_d("D07-browser-agent.png", 6.4, 4.4)
+rbox(0.15, 0.15, 6.25, 4.25, r = 0.1, col = "white", border = rule, lwd = 1.5)
+rect(0.15, 3.85, 6.25, 4.25, col = fill, border = rule, lwd = 1.5)
+tx(0.35, 4.05, "A browser agent, in the browser pane", cex = 1.0, font = 2, adj = c(0, 0.5))
 # the question
-rbox(2.0, 4.55, 6.8, 5.4, r = 0.1, col = tint, border = NA)
-lines_tx(2.15, 5.25, c("On the Fed's meeting calendar page, how many rows",
-                       "does the 2025 panel list, and which row is not a",
-                       "meeting?"), step = 0.26, cex = 0.95)
+rbox(0.35, 3.0, 6.05, 3.72, r = 0.1, col = tint, border = NA)
+lines_tx(0.5, 3.55, c("On the Fed's meeting calendar page, how many rows does",
+                      "the 2025 panel list, and which row is not a meeting?"), step = 0.3, cex = 1.0)
 # the steps
 steps <- c("opened  federalreserve.gov/monetarypolicy/fomccalendars.htm",
-           "searched the page for  \"notation vote\"  (1 match: \"22 (notation vote)\")",
-           "scrolled the 2025 panel into view and read its rows")
+           "searched the page for \"notation vote\" (1 match)",
+           "scrolled to the 2025 panel and read its rows")
 for (i in seq_along(steps)) {
-  yy <- 4.25 - (i - 1) * 0.3
-  symbols(0.55, yy, circles = 0.055, inches = FALSE, add = TRUE, fg = acc, bg = acc)
-  text(0.75, yy, steps[i], adj = c(0, 0.5), cex = 0.85, family = mono, col = grey)
+  yy <- 2.72 - (i - 1) * 0.3
+  symbols(0.5, yy, circles = 0.05, inches = FALSE, add = TRUE, fg = acc, bg = acc)
+  text(0.7, yy, steps[i], adj = c(0, 0.5), cex = 0.9, family = mono, col = ink)
 }
-# the page, as it loaded
-bb <- pic(file.path(out, "S01-calendar-2025-top.png"), 0.4, 1.45, 4.3, 3.35)
-tx(0.4, 1.3, "the 2025 panel, as the pane showed it", cex = 0.8, col = grey, adj = c(0, 1))
 # the answer
-rbox(4.5, 1.45, 6.8, 3.35, r = 0.1, col = "white", border = ink)
-lines_tx(4.65, 3.18, c("Nine rows.", "", "The row that is not a", "meeting is \"August 22", "(notation vote)\": it links", "only a Statement on", "Longer-Run Goals."), step = 0.24, cex = 0.9)
-tx(4.5, 1.3, "the answer", cex = 0.8, col = grey, adj = c(0, 1))
-tx(0.4, 0.75, "The same question, put to the page with code (Exercise 1): nine rows, row 6.", cex = 0.9, adj = c(0, 0.5))
-tx(0.4, 0.45, "The agent kept no copy of the page and would read it afresh, and answer afresh, on every run.", cex = 0.85, col = grey, adj = c(0, 0.5))
+rbox(0.35, 0.85, 6.05, 1.92, r = 0.1, col = "white", border = ink)
+lines_tx(0.5, 1.72, c("Its answer: nine rows.",
+                      "The row that is not a meeting is \"August 22 (notation vote)\":",
+                      "it links only a Statement on Longer-Run Goals."), step = 0.3, cex = 1.05)
+tx(0.35, 0.58, "The same question, put to the page with code (Exercise 1): nine rows, row 6.", cex = 0.9, adj = c(0, 0.5))
+tx(0.35, 0.33, "The agent kept no copy of the page. Each run reads it afresh and answers afresh.", cex = 0.85, col = grey, adj = c(0, 0.5))
 close_d()
 
 cat("drawn:", paste(list.files(out, pattern = "^D0"), collapse = ", "), "\n")

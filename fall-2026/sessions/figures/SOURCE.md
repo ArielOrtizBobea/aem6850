@@ -63,3 +63,10 @@ captions on the session pages carry the citations.
 - `S08-agent-closing.png` — the coding agent's closing message, rendered
   from `data/15-scraping/agent_run/transcript.txt` in a terminal style
   (no tool interface is shown).
+- Tighter crops added 2026-10-19 in the language pass, cut from the
+  captures above: `S01-calendar-2025-jan-mar.png` (the 2025 panel's first
+  two rows), `S01-disclaimer-public-domain.png` (the Copyright/trademark
+  heading and its first paragraph), `S02-statement-20220615-top.png`,
+  `S04-inspector-row.png` (the calendar row in the Elements panel),
+  `S08-agent-closing-crop.png` (the first and last paragraphs of the
+  agent's closing message).

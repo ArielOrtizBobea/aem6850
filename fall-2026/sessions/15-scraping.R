@@ -8,13 +8,19 @@
 # (Mac) or Ctrl-Enter (Windows).
 # = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 
+# Statements file ----
+ours <- read.csv("fomc_statements.csv")                  # ours: the statements file
+dim(ours)
+ours[c(1, nrow(ours)), c("date", "words", "scheduled")]  # the first and the last row
+
+
 # Read html ----
 # install.packages(c("rvest", "httr2", "jsonlite"))   # once
 library(rvest)
 cal    <- read_html("cache/fomccalendars.htm")       # the calendar as saved
 panels <- html_elements(cal, ".panel-default")       # one panel per year
 length(panels)
-titles <- html_text2(html_element(panels, "h4"))     # the first h4 inside each panel
+titles <- html_text2(html_element(panels, "h4"))     # the first h4 (a heading) inside each panel
 titles
 
 
@@ -33,17 +39,20 @@ data.frame(text = substr(html_text2(links), 1, 24),  # substr(): the first 24 ch
 
 
 # Three counts ----
+# both selectors start with .fomc-meeting: 6 more a.htm links sit outside the rows
 a1 <- html_elements(cal, ".fomc-meeting a[href*='pressreleases/monetary']")  # address contains this
 a2 <- html_elements(cal, ".fomc-meeting a[href$='a.htm']")                   # address ends in a.htm
-c(contains = length(a1), ends_a = length(a2), text_HTML = sum(html_text2(a1) == "HTML"))
+c(contains = length(a1), ends_a = length(a2),
+  text_HTML = sum(html_text2(a1) == "HTML"))     # sum() counts the TRUEs
 
 
 # Html table ----
 wiki   <- read_html("cache/wiki_fed_chairs.htm")
-chairs <- as.data.frame(html_table(html_element(wiki, "table.wikitable")))  # the first table of that class
+tbl    <- html_element(wiki, "table.wikitable")      # the first table of that class
+chairs <- as.data.frame(html_table(tbl))             # as.data.frame(): a plain data frame print
 dim(chairs)
 unlist(chairs[1, 4:5])          # the header spans two rows; its second row arrives as data
-chairs <- chairs[-1, ]                                         # drop it
+chairs <- chairs[-1, ]                               # drop it
 names(chairs) <- c("no", "portrait", "name", "start", "end", "duration", "appointer", "experience", "education")
 tail(chairs[, c("no", "name", "start", "end")], 3)
 
@@ -70,9 +79,8 @@ tail(chairs[, c("no", "name", "start", "end")], 3)
 
 
 # Fetch page ----
+# the same function ships as fetch_page.R: source("fetch_page.R")
 library(httr2)
-dir.create("mine", showWarnings = FALSE)                  # your own fetches go here; cache/ stays as shipped
-if (!file.exists("mine/fetch_log.csv")) writeLines("url,file,time,status", "mine/fetch_log.csv")
 fetch_page <- function(url, file, ua) {
   if (file.exists(file)) return("already saved")          # never fetch a page twice
   req  <- request(url)
@@ -88,17 +96,23 @@ fetch_page <- function(url, file, ua) {
 }
 
 
+# Fetch page files ----
+dir.create("mine", showWarnings = FALSE)                  # your own fetches go here; cache/ stays as shipped
+if (!file.exists("mine/fetch_log.csv")) writeLines("url,file,time,status", "mine/fetch_log.csv")
+
+
 # Year loop ----
-ua  <- "AEM 6850 student; <your netid>@cornell.edu"
+ua  <- "AEM 6850 student; <your netid>@cornell.edu"       # any name with your address works
 out <- data.frame()
 for (y in 2006:2020) {
   url  <- sprintf("https://www.federalreserve.gov/monetarypolicy/fomchistorical%d.htm", y)
   file <- sprintf("cache/fomchistorical%d.htm", y)
-  ok   <- fetch_page(url, file, ua)                        # "already saved", fifteen times
+  fetch_page(url, file, ua)                               # returns "already saved": the file is in cache/
   page <- read_html(file)
   h5   <- html_text2(html_elements(page, ".panel-default h5"))   # one heading per meeting or call
+  a    <- html_elements(page, "a")                        # every link; here every Statement link sits inside a panel
   out  <- rbind(out, data.frame(year = y, listed = length(h5),
-                                statements = sum(html_text2(html_elements(page, "a")) == "Statement")))
+                                statements = sum(html_text2(a) == "Statement")))
 }
 
 
@@ -107,11 +121,19 @@ colSums(out[, c("listed", "statements")])
 print(out[out$listed != out$statements, ], row.names = FALSE)   # the eight years that differ
 
 
+# Address forms ----
+p08  <- read_html("cache/fomchistorical2008.htm")
+a08  <- html_elements(p08, "a")
+href <- html_attr(a08[html_text2(a08) == "Statement"], "href")   # the 11 Statement links of 2008
+unique(dirname(href))        # the folder part of the address: an older form
+basename(href)               # the file part: two end in b
+
+
 # = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 # Exercise 2 (5 minutes) ----
 # Exercise 2 (5 minutes). R Console, in the 15-scraping folder; needs
-# fetch_page() from the slide (or source("fetch_page.R")). One live request.
-# Copy the two long lines from fetch_page.R or from the session page.
+# fetch_page(): run source("fetch_page.R") if it is not defined yet. One
+# live request. Step 2's two lines are long: copy them from fetch_page.R.
 #
 # 1. Put your own address in the user agent:
 #    ua <- "AEM 6850 student; <your netid>@cornell.edu"
@@ -131,49 +153,55 @@ print(out[out$listed != out$statements, ], row.names = FALSE)   # the eight year
 
 # Feed ----
 library(jsonlite)
-feed <- fromJSON("cache/ne-press.json")     # warns about a byte-order mark (three invisible bytes some files begin with); harmless
+feed <- fromJSON("cache/ne-press.json")     # warns about a byte-order mark (three invisible bytes); harmless
 dim(feed)
 fs <- feed[grepl("FOMC statement", feed$t), ]   # titles that contain the phrase; t is the title column
 nrow(fs)
-table(fs$t)[c("Federal Reserve issues FOMC statement", "FOMC statement")]
+table(fs$t)[c("Federal Reserve issues FOMC statement", "FOMC statement")]   # the two common titles
 
 
 # Agent vs site ----
 agent <- read.csv("agent_run/fomc_statements.csv")
 ours  <- read.csv("fomc_statements.csv")
-c(agent = nrow(agent), reference = nrow(ours))
+c(agent = nrow(agent), ours = nrow(ours))
 yr <- data.frame(year = 2006:2026)
 yr$agent <- as.vector(table(substr(agent$date, 1, 4)))   # rows per year; substr(): characters 1 to 4
 yr$ours  <- as.vector(table(substr(ours$date,  1, 4)))
-yr[yr$agent != yr$ours, ]
+print(yr[yr$agent != yr$ours, ], row.names = FALSE)      # the years that differ
 
 
 # Seeded draw ----
 set.seed(6850)
 pick <- sample(nrow(agent), 3)
 agent[pick, c("date", "words", "scheduled")]
-agent$text[pick] == ours$text[match(agent$date[pick], ours$date)]   # match(): the row of ours with the same date
-agent[nrow(agent), c("date", "words")]            # the latest statement, so the scrape ran to the end
+# match(): the row of ours with the same date
+agent$text[pick] == ours$text[match(agent$date[pick], ours$date)]
+# the last row, so the scrape ran to the end
+agent[nrow(agent), c("date", "words")]
 
 
 # Agent log ----
-log <- readLines("agent_run/fetch_log.txt")
-c(lines = length(log), fetched = sum(startsWith(log, "fetched")))
-sub("fetched https://www.federalreserve.gov", "", grep("429", log, value = TRUE))   # the lines that contain 429
+fetch_log <- readLines("agent_run/fetch_log.txt")
+c(lines = length(fetch_log), fetched = sum(startsWith(fetch_log, "fetched")))
+sub("fetched https://www.federalreserve.gov", "", grep("429", fetch_log, value = TRUE))   # the lines that contain 429
 
 
-# Wayback ----
+# Wayback cdx ----
 cdx <- fromJSON("cache/wayback_calendar_cdx.json")      # a header row, then one capture per year
-cdx[c(2, 9, 20), 1]                                      # three of the 19 timestamps
+cdx[c(2, 9, 20), 1]                                      # the first, a middle and the last capture; YYYYMMDDhhmmss
+
+
+# Wayback snap ----
 snap <- read_html("cache/fomccalendars_20150102.htm")   # the page as captured on 2 January 2015
 length(html_elements(snap, ".panel-default"))            # today's selector finds nothing
 html_text2(html_elements(snap, "th#year"))               # th#year: a th element whose id is year
-sum(html_text2(html_elements(snap, "a")) == "Statement")
+sum(html_text2(html_elements(snap, "a")) == "Statement")   # links named Statement on the 2015 page
 
 
 # Wiki history ----
 # https://en.wikipedia.org/w/api.php?action=query&prop=revisions&titles=Jerome_Powell
 #   &rvlimit=500&rvprop=ids|timestamp|size|comment&format=json&formatversion=2
+# rvlimit: revisions per reply (at most 500); rvprop: the fields wanted
 j <- fromJSON("cache/wiki_powell_revisions_1.json")          # the first reply
 j$continue$rvcontinue                                        # where the next request starts
 one <- function(i) {
@@ -183,9 +211,6 @@ one <- function(i) {
 }
 revs <- do.call(rbind, lapply(1:4, one))                     # the four replies, stacked
 nrow(revs)
-first <- revs[1:3, c("timestamp", "size", "comment")]
-first$comment <- substr(first$comment, 1, 45)
-first
 
 
 # Edits per year ----
