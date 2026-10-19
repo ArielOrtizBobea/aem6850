@@ -1,0 +1,245 @@
+# = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+# AEM 6850 -- Empirical Methods for Applied Economists
+# Prof. Ariel Ortiz-Bobea
+# Session 15 -- Channels II: scraping
+# Tuesday, October 20, 2026
+#
+# Run it one line at a time: put the cursor on a line and press Cmd-Return
+# (Mac) or Ctrl-Enter (Windows).
+# = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+
+# Read html ----
+# install.packages(c("rvest", "httr2", "jsonlite"))   # once
+library(rvest)
+cal    <- read_html("cache/fomccalendars.htm")       # the calendar as saved
+panels <- html_elements(cal, ".panel-default")       # one panel per year
+length(panels)
+titles <- html_text2(html_element(panels, "h4"))     # the first h4 inside each panel
+titles
+
+
+# Rows 2024 ----
+p2024 <- panels[titles == "2024 FOMC Meetings"]
+rows  <- html_elements(p2024, ".fomc-meeting")
+length(rows)
+data.frame(month = html_text2(html_element(rows, ".fomc-meeting__month")),
+           dates = html_text2(html_element(rows, ".fomc-meeting__date")))
+
+
+# Html attr ----
+links <- html_elements(rows[1], "a")                 # the links in the January row
+data.frame(text = substr(html_text2(links), 1, 24),  # substr(): the first 24 characters
+           file = basename(html_attr(links, "href")))  # basename(): the file name at the end of the address
+
+
+# Three counts ----
+a1 <- html_elements(cal, ".fomc-meeting a[href*='pressreleases/monetary']")  # address contains this
+a2 <- html_elements(cal, ".fomc-meeting a[href$='a.htm']")                   # address ends in a.htm
+c(contains = length(a1), ends_a = length(a2), text_HTML = sum(html_text2(a1) == "HTML"))
+
+
+# Html table ----
+wiki   <- read_html("cache/wiki_fed_chairs.htm")
+chairs <- as.data.frame(html_table(html_element(wiki, "table.wikitable")))  # the first table of that class
+dim(chairs)
+unlist(chairs[1, 4:5])          # the header spans two rows; its second row arrives as data
+chairs <- chairs[-1, ]                                         # drop it
+names(chairs) <- c("no", "portrait", "name", "start", "end", "duration", "appointer", "experience", "education")
+tail(chairs[, c("no", "name", "start", "end")], 3)
+
+
+# = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+# Exercise 1 (5 minutes) ----
+# Exercise 1 (5 minutes). R Console, in the 15-scraping folder; needs rvest.
+# No network. If you do not have cal, panels and titles yet, run these three:
+#   cal    <- read_html("cache/fomccalendars.htm")
+#   panels <- html_elements(cal, ".panel-default")
+#   titles <- html_text2(html_element(panels, "h4"))
+#
+# 1. Keep the panel titled "2025 FOMC Meetings".
+# 2. Select its .fomc-meeting rows and count them with length().
+# 3. Print each row's month (.fomc-meeting__month) and dates
+#    (.fomc-meeting__date) in one data frame.
+# 4. Find the row that is not a scheduled meeting.
+#
+# Two answers to compare with the room: the number of rows, and
+# which row is not a meeting.
+# = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+
+
+
+
+# Fetch page ----
+library(httr2)
+dir.create("mine", showWarnings = FALSE)                  # your own fetches go here; cache/ stays as shipped
+if (!file.exists("mine/fetch_log.csv")) writeLines("url,file,time,status", "mine/fetch_log.csv")
+fetch_page <- function(url, file, ua) {
+  if (file.exists(file)) return("already saved")          # never fetch a page twice
+  req  <- request(url)
+  req  <- req_user_agent(req, ua)                         # who you are and how to reach you
+  req  <- req_retry(req, max_tries = 4)                   # a 429 or 503: wait (Retry-After if given), try again
+  req  <- req_error(req, is_error = function(resp) FALSE) # a 403 or 404 comes back as a reply, not an R error
+  resp <- req_perform(req)
+  if (resp_status(resp) == 200) writeBin(resp_body_raw(resp), file)   # the bytes exactly as sent
+  write(paste(url, file, format(Sys.time()), resp_status(resp), sep = ","),
+        "mine/fetch_log.csv", append = TRUE)              # one log row per request, failures included
+  Sys.sleep(1)                                            # one request a second
+  resp_status(resp)
+}
+
+
+# Year loop ----
+ua  <- "AEM 6850 student; <your netid>@cornell.edu"
+out <- data.frame()
+for (y in 2006:2020) {
+  url  <- sprintf("https://www.federalreserve.gov/monetarypolicy/fomchistorical%d.htm", y)
+  file <- sprintf("cache/fomchistorical%d.htm", y)
+  ok   <- fetch_page(url, file, ua)                        # "already saved", fifteen times
+  page <- read_html(file)
+  h5   <- html_text2(html_elements(page, ".panel-default h5"))   # one heading per meeting or call
+  out  <- rbind(out, data.frame(year = y, listed = length(h5),
+                                statements = sum(html_text2(html_elements(page, "a")) == "Statement")))
+}
+
+
+# Year counts ----
+colSums(out[, c("listed", "statements")])
+print(out[out$listed != out$statements, ], row.names = FALSE)   # the eight years that differ
+
+
+# = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+# Exercise 2 (5 minutes) ----
+# Exercise 2 (5 minutes). R Console, in the 15-scraping folder; needs
+# fetch_page() from the slide (or source("fetch_page.R")). One live request.
+# Copy the two long lines from fetch_page.R or from the session page.
+#
+# 1. Put your own address in the user agent:
+#    ua <- "AEM 6850 student; <your netid>@cornell.edu"
+# 2. Fetch the 15 June 2022 statement into mine/:
+#    fetch_page("https://www.federalreserve.gov/newsevents/pressreleases/monetary20220615a.htm",
+#               "mine/monetary20220615a.htm", ua)
+#    No network? file.copy("cache/monetary20220615a.htm", "mine/"), then the same line.
+# 3. Read the saved file with read_html() and select "#article p".
+# 4. Count the paragraphs with length(); print them with html_text2().
+#
+# Two answers to compare with the room: the number of paragraphs, and
+# which paragraph names the member who voted against the decision.
+# = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+
+
+
+
+# Feed ----
+library(jsonlite)
+feed <- fromJSON("cache/ne-press.json")     # warns about a byte-order mark (three invisible bytes some files begin with); harmless
+dim(feed)
+fs <- feed[grepl("FOMC statement", feed$t), ]   # titles that contain the phrase; t is the title column
+nrow(fs)
+table(fs$t)[c("Federal Reserve issues FOMC statement", "FOMC statement")]
+
+
+# Agent vs site ----
+agent <- read.csv("agent_run/fomc_statements.csv")
+ours  <- read.csv("fomc_statements.csv")
+c(agent = nrow(agent), reference = nrow(ours))
+yr <- data.frame(year = 2006:2026)
+yr$agent <- as.vector(table(substr(agent$date, 1, 4)))   # rows per year; substr(): characters 1 to 4
+yr$ours  <- as.vector(table(substr(ours$date,  1, 4)))
+yr[yr$agent != yr$ours, ]
+
+
+# Seeded draw ----
+set.seed(6850)
+pick <- sample(nrow(agent), 3)
+agent[pick, c("date", "words", "scheduled")]
+agent$text[pick] == ours$text[match(agent$date[pick], ours$date)]   # match(): the row of ours with the same date
+agent[nrow(agent), c("date", "words")]            # the latest statement, so the scrape ran to the end
+
+
+# Agent log ----
+log <- readLines("agent_run/fetch_log.txt")
+c(lines = length(log), fetched = sum(startsWith(log, "fetched")))
+sub("fetched https://www.federalreserve.gov", "", grep("429", log, value = TRUE))   # the lines that contain 429
+
+
+# Wayback ----
+cdx <- fromJSON("cache/wayback_calendar_cdx.json")      # a header row, then one capture per year
+cdx[c(2, 9, 20), 1]                                      # three of the 19 timestamps
+snap <- read_html("cache/fomccalendars_20150102.htm")   # the page as captured on 2 January 2015
+length(html_elements(snap, ".panel-default"))            # today's selector finds nothing
+html_text2(html_elements(snap, "th#year"))               # th#year: a th element whose id is year
+sum(html_text2(html_elements(snap, "a")) == "Statement")
+
+
+# Wiki history ----
+# https://en.wikipedia.org/w/api.php?action=query&prop=revisions&titles=Jerome_Powell
+#   &rvlimit=500&rvprop=ids|timestamp|size|comment&format=json&formatversion=2
+j <- fromJSON("cache/wiki_powell_revisions_1.json")          # the first reply
+j$continue$rvcontinue                                        # where the next request starts
+one <- function(i) {
+  j  <- fromJSON(sprintf("cache/wiki_powell_revisions_%d.json", i))
+  pg <- j$query$pages
+  pg$revisions[[1]]                                          # the revisions of the one page
+}
+revs <- do.call(rbind, lapply(1:4, one))                     # the four replies, stacked
+nrow(revs)
+first <- revs[1:3, c("timestamp", "size", "comment")]
+first$comment <- substr(first$comment, 1, 45)
+first
+
+
+# Edits per year ----
+# R Console; needs revs
+year <- substr(revs$timestamp, 1, 4)
+barplot(table(year), las = 2,            # las = 2: year labels upright
+        ylab = "Edits", main = "Edits per year to the Wikipedia article 'Jerome Powell'")
+
+
+# = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+# Practice ----
+# Practice. Run in the 15-scraping folder with rvest, httr2 and jsonlite
+# loaded, after the saved calendar is read (cal, panels, titles) and
+# fetch_page() is defined. Your fetches go to mine/. Tasks 1-5 and 10 need
+# no network. Task 6 sends two requests to bls.gov: after class, not in the room.
+
+# Selectors on the saved calendar (cache/fomccalendars.htm)
+#  1. Count the links named "Press Conference" inside .fomc-meeting rows,
+#     per panel. Which years have one for every meeting?
+#  2. The minutes' release dates sit in text like "(Released February 21,
+#     2024)" inside .fomc-meeting__minutes. Pull them out with regmatches()
+#     and regexpr(). How many rows have one?
+#  3. Count the dates ending in an asterisk (the meetings that also publish
+#     the members' projections). How many per year?
+# The year pages (cache/fomchistorical2008.htm, 2020.htm)
+#  4. Read the h5 headings and sort them into meetings, conference calls,
+#     unscheduled meetings, notation votes and a cancelled meeting.
+#  5. For each call or notation vote, count the links named "Statement"
+#     inside its panel. Which issued a statement?
+# Identifying yourself (after class, one request per line)
+#  6. Run the two BLS requests from the user-agent slide with req_error()
+#     so the reply comes back. Record both status codes and the first 200
+#     characters of each body with resp_body_string().
+# Whether you may scrape (no code needed)
+#  7. For one site you would use in your own research: find its terms of
+#     use and its robots.txt. Write three lines: what the terms say about
+#     automated access, which paths robots.txt disallows, and whether a
+#     feed, API or sitemap exists. Follow one Sitemap: line: is it a
+#     sitemap or an index of sitemaps, and is the page you need in it?
+# Past versions
+#  8. Query the CDX index for a page you use, with collapse=timestamp:4 and
+#     filter=statuscode:200. How many captures per year? Fetch the oldest
+#     with the id_ flag through fetch_page() into mine/ and read one element
+#     with the selector that works on today's page. Does it?
+#  9. Request the revision history of a Wikipedia page you choose, with
+#     your contact user agent and rvprop=ids|timestamp|size|comment, paging
+#     with rvcontinue until it is absent. Plot edits per year. Do not
+#     request the user field.
+# The statements file (fomc_statements.csv)
+# 10. plot(as.Date(d$date), d$words). Compute the median words per year
+#     with tapply(). Which year's statements were longest, which shortest?
+#     Open the longest (which.max) and the shortest (which.min) in the
+#     browser and say what each announced.
+# = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+
+
+# The end

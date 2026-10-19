@@ -1,0 +1,128 @@
+15-scraping: where the files in this folder came from
+=====================================================
+
+Everything in cache/ is a page or a reply exactly as the server sent it,
+saved as bytes before any parsing, on 2026-10-18 (US Eastern), with the
+user agent "AEM 6850 course prep (Cornell University); ariel.ob@gmail.com",
+one request per second, and every page requested once. The fetch log
+cache/fetch_log.csv has one row per request: url, final_url (after
+redirects), file, time, status, bytes. 268 requests, every one status 200.
+
+Open the folder with 15-scraping.Rproj. The scripts:
+  reference_scrape.R   built cache/ (the Fed pages, the feed, two Wayback
+                       Machine listings and one snapshot, one Wikipedia
+                       revision history, one Wikipedia table page)
+  build_statements.R   built fomc_statements.csv from cache/
+Your own fetches in class write to mine/, so they never replace these files.
+
+
+Federal Reserve Board, federalreserve.gov (public domain)
+---------------------------------------------------------
+"Unless otherwise indicated, information on Board's website is in the
+public domain and may be copied and distributed without permission. Please
+cite to the Board as the source of the information."
+  https://www.federalreserve.gov/disclaimer.htm
+The site has no robots.txt and no sitemap.xml (both 404 on 2026-10-18).
+
+  cache/fomccalendars.htm            Meeting calendar, 2021-2027
+    https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm
+  cache/fomchistorical2006.htm .. 2020.htm   One page per year, 2006-2020
+    https://www.federalreserve.gov/monetarypolicy/fomchistoricalYYYY.htm
+  cache/ne-press.json                The press-release feed, 4,648 releases
+    https://www.federalreserve.gov/json/ne-press.json
+  cache/monetary*.htm                243 press-release pages: every address
+    matching /newsevents/pressreleases/monetaryYYYYMMDD[a-z][0-9]?.htm that
+    the calendar or a year page links (239), plus every release the feed
+    titles as an FOMC statement (4 more). Addresses in the older form
+    /newsevents/press/monetary/YYYYMMDDa.htm redirect to the current one;
+    the file is named after the date and letter in the address.
+  cache/links.csv                    Every link on the calendar and the year
+    pages (source page, link text, href, absolute href, is_monetary)
+
+fomc_statements.csv
+-------------------
+One row per FOMC policy statement, 31 January 2006 to 16 September 2026:
+171 rows. Columns: date (YYYY-MM-DD), url (the address after redirects),
+words, text, scheduled.
+
+A page counts as a policy statement when its own title contains "FOMC
+statement" and the release is the committee's decision on its policy
+stance. Of the 179 pages the feed titles that way, 8 are left out:
+  2007-08-10  providing liquidity (not a policy decision)
+  2008-03-11  joint central-bank liquidity measures
+  2010-05-09, 2010-05-10, 2010-12-21  dollar swap lines
+  2012-01-25  statement of longer-run goals and policy strategy
+  2013-03-13  change of release times
+  2014-09-17  policy normalization principles and plans
+Also left out, since their titles do not contain "FOMC statement": the 46
+implementation notes, the January longer-run-goals statements, the August
+2025 notation vote, and the balance-sheet releases. prep/excluded.csv
+lists all 72 excluded pages with their titles.
+
+scheduled is TRUE after a scheduled meeting and FALSE after an unscheduled
+call or a notation vote, read from the heading of each entry on the year
+pages ("Conference Call", "(unscheduled)", "(notation vote)"); statements
+linked from the 2021-2027 calendar are all scheduled. Six are FALSE:
+2007-08-17, 2008-01-22, 2008-10-08, 2020-03-03, 2020-03-15, 2020-03-23.
+
+text holds the paragraphs of #article p on the page, joined by a blank
+line, with these dropped: the date line, "For release at ...", "For
+immediate release", "For media inquiries ...", "Implementation Note issued
+...", "Last Update ...", "Release Date ...", any paragraph that is only a
+link or a heading (no sentence in it), and a trailing lead-in that ends in
+a colon once its links are gone. A lead-in that ends in a colon inside the
+statement stays (the 2026 statements open with "approved the following
+statement for release by a 12 - 0 vote:"). date is the page's own date line.
+One page (24 June 2009) opens its voting paragraph with an empty <P></P>,
+which the builder repairs before parsing; the cached file is untouched. Non-breaking spaces become
+spaces; curly quotes stay as they are. The voting paragraph, with any
+dissent, is kept. words counts whitespace-separated tokens of text.
+
+
+Internet Archive, Wayback Machine (CDX API)
+-------------------------------------------
+  cache/wayback_calendar_cdx.json    Captures of the calendar page, status
+    200, collapsed to one per year (19 captures, 2008-2026)
+    https://web.archive.org/cdx/search/cdx?url=federalreserve.gov/monetarypolicy/fomccalendars.htm&output=json&fl=timestamp,original,statuscode&filter=statuscode:200&collapse=timestamp:4
+  cache/fomccalendars_20150102.htm   The calendar page as captured on
+    2 January 2015, unmodified ("id_" flag)
+    https://web.archive.org/web/20150102155451id_/https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm
+  cache/wayback_statements_cdx.json  Every distinct address the archive
+    holds under newsevents/pressreleases/monetary* (4,670 rows, one per
+    urlkey, all statuses; 1,778 are text/html with status 200)
+    https://web.archive.org/cdx/search/cdx?url=federalreserve.gov/newsevents/pressreleases/monetary*&output=json&fl=timestamp,original,mimetype,statuscode&collapse=urlkey
+  Documentation: https://github.com/internetarchive/wayback/tree/master/wayback-cdx-server
+
+
+Wikipedia (text CC BY-SA 4.0; cite the page)
+--------------------------------------------
+  cache/wiki_powell_revisions_1.json .. _4.json   The revision history of
+    the article "Jerome Powell", 500 revisions per reply, 1,613 in all,
+    fields ids, timestamp, size, comment. The editor field was not
+    requested: it names people, and the lecture does not need it.
+    https://en.wikipedia.org/w/api.php?action=query&prop=revisions&titles=Jerome_Powell&rvlimit=500&rvprop=ids|timestamp|size|comment&format=json&formatversion=2
+    (then rvcontinue from each reply)
+  cache/wiki_fed_chairs.htm          The article "Chair of the Federal
+    Reserve", for its table of chairs
+    https://en.wikipedia.org/wiki/Chair_of_the_Federal_Reserve
+  Wikipedia asks for a contact user agent: https://foundation.wikimedia.org/wiki/Policy:Wikimedia_Foundation_User-Agent_Policy
+
+
+Measured for the slides, nothing shipped
+----------------------------------------
+  bls.gov/cpi/ answered 403 to httr2's default user agent and 200 to
+    "AEM 6850 class exercise; ariel.ob@gmail.com" (2026-10-18, 18:18 EDT,
+    prep/bls_user_agent_test.csv). Policy: https://www.bls.gov/bls/pss.htm
+  zillow.com/robots.txt (2026-10-18): terms-of-use line, Crawl-delay: 1,
+    Disallow: /homes/ with Allow: exceptions, several Sitemap: lines.
+  bls.gov/sitemap.xml (2026-10-18): a sitemap index.
+
+
+agent_run/ (the instructor's demo, captured)
+--------------------------------------------
+A coding agent (Claude Code) was given agent_run/brief.txt in an empty
+folder on 2026-10-18 and left to work. The folder holds what it was asked,
+what it wrote, what it produced and what it said; agent_run/run_summary.txt
+has the timing, the page count and how its file differs from
+fomc_statements.csv. Its own page cache is not shipped (the same pages are
+in cache/).

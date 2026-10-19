@@ -1,0 +1,34 @@
+The coding-agent run shipped here (run 1 of 2, 2026-10-18)
+----------------------------------------------------------
+Claude Code, started in an empty folder holding only brief.txt, with its
+file and shell tools allowed up front so it asked nothing mid-run.
+
+  wall time        8 min 13 s (493 s)       turns 38
+  pages fetched    191, each once (16 calendar and year pages, 175 statements)
+  server replies   200 on every logged fetch. The agent's closing note said the
+                   server answered 429 four times and it retried; its own log
+                   (fetch_log.txt) records no 429, and its fetch.R would have
+                   written a "429 on ..." line for one. The claim is not borne
+                   out by its log.
+  it wrote         fetch.R (the polite downloader) and collect_statements.R
+                   (179 lines together), then fomc_statements.csv
+  its rule         a statement is the link labelled "Statement" for a meeting
+                   or call on the calendar and the year pages
+  result           175 rows, 2006-01-31 to 2026-09-16; scheduled FALSE on 10
+
+Against fomc_statements.csv at the root of this folder (171 rows, a page
+counts when its own title says "FOMC statement" and it is a policy decision):
+the agent's file has four extra rows (2007-08-10, 2008-03-11, 2010-05-09,
+2019-10-11: liquidity and swap-line releases and one notation vote that the
+year pages list as a call's "Statement") and misses none. On the 171 shared
+rows the word counts differ on 18, by 1.4 words on average.
+
+A second run the same evening (448 s, 32 turns, 193 pages in its cache) chose
+the same rule and produced the same 175 dates; its word counts differ from the
+frozen file on 34 shared rows.
+
+Files: brief.txt (what it was asked), fetch.R and collect_statements.R (what
+it wrote), fomc_statements.csv (what it produced), fetch_log.txt (its log of the
+final run: 172 lines; the 16 list pages and three statements were fetched in
+earlier steps and served from its cache), transcript.txt (what it said and ran,
+in order; local folder paths shortened to ".").

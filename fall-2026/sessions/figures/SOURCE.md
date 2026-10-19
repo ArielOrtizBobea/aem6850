@@ -28,3 +28,38 @@ captions on the session pages carry the citations.
   © The R Foundation, used unmodified under CC-BY-SA 4.0
   (https://creativecommons.org/licenses/by-sa/4.0/). The session-2 page
   carries the credit line and the licence link, as CC-BY-SA requires.
+
+## 15-scraping/
+
+- `D01-three-routes.png` … `D07-browser-agent.png` — drawn by
+  `sessions/_figures-15.R` (base R) on 2026-10-18. D01 embeds three page
+  thumbnails (S12, S13, S02 below); D05 embeds the rendered January 2024
+  calendar row (S06-row) beside the row's real HTML from `data/15-scraping/cache/`;
+  D07 embeds S01-calendar-2025-top and draws a run of the Claude desktop
+  app's browser pane (its steps and its answer, as they happened).
+- `S01-calendar.png`, `S01-calendar-2025-top.png`, `S02-statement-20220615*.png`,
+  `S03-pressreleases-list.png`, `S06-row-2024-01-rendered.png`,
+  `S06-statement-20081029.png`, `S01-disclaimer-copyright.png`,
+  `S12-h15-page.png`, `S13-feed-raw.png` — federalreserve.gov pages captured
+  with headless Chrome on 2026-10-18 (public domain; the Board's disclaimer
+  asks for a citation, given on the session page).
+- `S02-transcript-reporter.png` — three lines of the 31 January 2024
+  press-conference transcript PDF (federalreserve.gov, public domain),
+  rasterised with pdftoppm on 2026-10-18.
+- `S04-zillow-robots.png` — zillow.com/robots.txt as a browser shows it,
+  2026-10-18 (a plain-text file; quoted for comment).
+- `S05-bls-sitemap.png` — bls.gov/sitemap.xml as a browser shows it,
+  2026-10-18 (US government work).
+- `S04-inspector.png`, `S05-network.png` — Chrome DevTools' Elements and
+  Network panels on the Fed's calendar and press-release pages, captured
+  2026-10-18 through headless Chrome's own DevTools frontend; S05 joins two
+  parts of one panel with a dashed cut line.
+- `S07-wiki-chairs-table-top.png` — the top of the table in the Wikipedia
+  article "Chair of the Federal Reserve", 2026-10-18 (text CC BY-SA 4.0;
+  portraits are Wikimedia Commons images in their own licences).
+- `S08-wayback-calendar-2015.png` — web.archive.org showing its 2 January
+  2015 capture of the Fed's calendar page with the archive's toolbar,
+  captured 2026-10-18.
+- `S08-agent-closing.png` — the coding agent's closing message, rendered
+  from `data/15-scraping/agent_run/transcript.txt` in a terminal style
+  (no tool interface is shown).
