@@ -8,7 +8,7 @@
 # and a fetch log (url, final_url, file, time, status, bytes).
 suppressPackageStartupMessages({ library(httr2); library(rvest); library(jsonlite) })
 
-UA   <- "AEM 6850 course prep (Cornell University); ariel.ob@gmail.com"
+UA   <- "AEM 6850 course prep (Cornell University); <your address>"
 BASE <- "https://www.federalreserve.gov"
 LOG  <- "cache/fetch_log.csv"
 dir.create("cache", showWarnings = FALSE)
@@ -91,7 +91,7 @@ bls <- function(ua) {
   data.frame(user_agent = if (is.null(ua)) "httr2 default" else ua,
              status = resp_status(resp), time = format(Sys.time(), "%Y-%m-%dT%H:%M:%S%z"))
 }
-write.csv(rbind(bls(NULL), bls("AEM 6850 class exercise; ariel.ob@gmail.com")),
+write.csv(rbind(bls(NULL), bls("AEM 6850 class exercise; <your address>")),
           "prep/bls_user_agent_test.csv", row.names = FALSE)
 
 # Summary ----

@@ -5,7 +5,7 @@
 
 library(httr2)
 
-UA <- "AEM 6850 class demo; ariel.ob@gmail.com"
+UA <- "AEM 6850 class demo; <address>"
 CACHE_DIR <- "cache"
 dir.create(CACHE_DIR, showWarnings = FALSE)
 

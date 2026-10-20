@@ -69,13 +69,22 @@ tail(chairs[, c("no", "name", "start", "end")], 3)
 # 2. Select its .fomc-meeting rows and count them with length().
 # 3. Print each row's month (.fomc-meeting__month) and dates
 #    (.fomc-meeting__date) in one data frame.
-# 4. Find the row that is not a scheduled meeting.
+# 4. Find the row that is not a meeting.
 #
 # Two answers to compare with the room: the number of rows, and
 # which row is not a meeting.
 # = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 
 
+
+
+# Feed ----
+library(jsonlite)
+feed <- fromJSON("cache/ne-press.json")     # warns about a byte-order mark (three invisible bytes); harmless
+dim(feed)
+fs <- feed[grepl("FOMC statement", feed$t), ]   # titles that contain the phrase; t is the title column
+nrow(fs)
+table(fs$t)[c("Federal Reserve issues FOMC statement", "FOMC statement")]   # the two common titles
 
 
 # Fetch page ----
@@ -99,6 +108,28 @@ fetch_page <- function(url, file, ua) {
 # Fetch page files ----
 dir.create("mine", showWarnings = FALSE)                  # your own fetches go here; cache/ stays as shipped
 if (!file.exists("mine/fetch_log.csv")) writeLines("url,file,time,status", "mine/fetch_log.csv")
+
+
+# = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+# Exercise 2 (5 minutes) ----
+# Exercise 2 (5 minutes). R Console, in the 15-scraping folder; needs
+# fetch_page(): run source("fetch_page.R") if it is not defined yet. One
+# live request. Step 2's two lines are long: copy them from fetch_page.R.
+#
+# 1. Put your own address in the user agent:
+#    ua <- "AEM 6850 student; <your netid>@cornell.edu"
+# 2. Fetch the 15 June 2022 statement into mine/:
+#    fetch_page("https://www.federalreserve.gov/newsevents/pressreleases/monetary20220615a.htm",
+#               "mine/monetary20220615a.htm", ua)
+#    No network? file.copy("cache/monetary20220615a.htm", "mine/"), then the same line.
+# 3. Read the saved file with read_html() and select "#article p".
+# 4. Count the paragraphs with length(); print them with html_text2().
+#
+# Two answers to compare with the room: the number of paragraphs, and
+# which paragraph names the member who voted against the decision.
+# = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+
+
 
 
 # Year loop ----
@@ -129,37 +160,6 @@ unique(dirname(href))        # the folder part of the address: an older form
 basename(href)               # the file part: two end in b
 
 
-# = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
-# Exercise 2 (5 minutes) ----
-# Exercise 2 (5 minutes). R Console, in the 15-scraping folder; needs
-# fetch_page(): run source("fetch_page.R") if it is not defined yet. One
-# live request. Step 2's two lines are long: copy them from fetch_page.R.
-#
-# 1. Put your own address in the user agent:
-#    ua <- "AEM 6850 student; <your netid>@cornell.edu"
-# 2. Fetch the 15 June 2022 statement into mine/:
-#    fetch_page("https://www.federalreserve.gov/newsevents/pressreleases/monetary20220615a.htm",
-#               "mine/monetary20220615a.htm", ua)
-#    No network? file.copy("cache/monetary20220615a.htm", "mine/"), then the same line.
-# 3. Read the saved file with read_html() and select "#article p".
-# 4. Count the paragraphs with length(); print them with html_text2().
-#
-# Two answers to compare with the room: the number of paragraphs, and
-# which paragraph names the member who voted against the decision.
-# = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
-
-
-
-
-# Feed ----
-library(jsonlite)
-feed <- fromJSON("cache/ne-press.json")     # warns about a byte-order mark (three invisible bytes); harmless
-dim(feed)
-fs <- feed[grepl("FOMC statement", feed$t), ]   # titles that contain the phrase; t is the title column
-nrow(fs)
-table(fs$t)[c("Federal Reserve issues FOMC statement", "FOMC statement")]   # the two common titles
-
-
 # Agent vs site ----
 agent <- read.csv("agent_run/fomc_statements.csv")
 ours  <- read.csv("fomc_statements.csv")
@@ -186,9 +186,13 @@ c(lines = length(fetch_log), fetched = sum(startsWith(fetch_log, "fetched")))
 sub("fetched https://www.federalreserve.gov", "", grep("429", fetch_log, value = TRUE))   # the lines that contain 429
 
 
-# Wayback cdx ----
-cdx <- fromJSON("cache/wayback_calendar_cdx.json")      # a header row, then one capture per year
-cdx[c(2, 9, 20), 1]                                      # the first, a middle and the last capture; YYYYMMDDhhmmss
+# Demo compare ----
+r  <- read.csv("wineglass/r/wineglass.csv", na.strings = c("", "NA"))       # blank sex reads as NA
+py <- read.csv("wineglass/python/wineglass.csv", na.strings = c("", "NA"))
+cols <- c("year", "place", "sex", "age_group", "net_time")
+c(r = nrow(r), python = nrow(py))
+identical(r[cols], py[cols])                                              # same rows, same values
+rbind(rows = table(r$year), last_place = tapply(r$place, r$year, max))   # one column per year
 
 
 # Wayback snap ----
@@ -196,6 +200,11 @@ snap <- read_html("cache/fomccalendars_20150102.htm")   # the page as captured o
 length(html_elements(snap, ".panel-default"))            # today's selector finds nothing
 html_text2(html_elements(snap, "th#year"))               # th#year: a th element whose id is year
 sum(html_text2(html_elements(snap, "a")) == "Statement")   # links named Statement on the 2015 page
+
+
+# Wayback cdx ----
+cdx <- fromJSON("cache/wayback_calendar_cdx.json")      # a header row, then one capture per year
+cdx[c(2, 9, 20), 1]                                      # the first, a middle and the last capture; YYYYMMDDhhmmss
 
 
 # Wiki history ----
@@ -213,11 +222,15 @@ revs <- do.call(rbind, lapply(1:4, one))                     # the four replies,
 nrow(revs)
 
 
-# Edits per year ----
-# R Console; needs revs
+# Edits per year slide ----
 year <- substr(revs$timestamp, 1, 4)
-barplot(table(year), las = 2,            # las = 2: year labels upright
-        ylab = "Edits", main = "Edits per year to the Wikipedia article 'Jerome Powell'")
+barplot(table(year), las = 2, ylab = "Edits",
+        main = "Edits per year, Wikipedia article 'Jerome Powell'")
+
+
+year <- substr(revs$timestamp, 1, 4)
+barplot(table(year), las = 2, ylab = "Edits",
+        main = "Edits per year, Wikipedia article 'Jerome Powell'")
 
 
 # = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =

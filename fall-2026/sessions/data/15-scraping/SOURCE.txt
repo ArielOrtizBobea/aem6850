@@ -3,7 +3,7 @@
 
 Everything in cache/ is a page or a reply exactly as the server sent it,
 saved as bytes before any parsing, on 2026-10-18 (US Eastern), with the
-user agent "AEM 6850 course prep (Cornell University); ariel.ob@gmail.com",
+user agent "AEM 6850 course prep (Cornell University); <the instructor's address>",
 one request per second, and every page requested once. The fetch log
 cache/fetch_log.csv has one row per request: url, final_url (after
 redirects), file, time, status, bytes. 268 requests, every one status 200.
@@ -24,6 +24,10 @@ cite to the Board as the source of the information."
   https://www.federalreserve.gov/disclaimer.htm
 The site has no robots.txt and no sitemap.xml (both 404 on 2026-10-18).
 
+  cache/pressreleases.htm            The press-release list page (dynamic:
+                                     its HTML holds no release titles),
+                                     saved 2026-10-19
+    https://www.federalreserve.gov/newsevents/pressreleases.htm
   cache/fomccalendars.htm            Meeting calendar, 2021-2027
     https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm
   cache/fomchistorical2006.htm .. 2020.htm   One page per year, 2006-2020
@@ -111,7 +115,7 @@ Wikipedia (text CC BY-SA 4.0; cite the page)
 Measured for the slides, nothing shipped
 ----------------------------------------
   bls.gov/cpi/ answered 403 to httr2's default user agent and 200 to
-    "AEM 6850 class exercise; ariel.ob@gmail.com" (2026-10-18, 18:18 EDT,
+    "AEM 6850 class exercise; <the instructor's address>" (2026-10-18, 18:18 EDT,
     prep/bls_user_agent_test.csv). Policy: https://www.bls.gov/bls/pss.htm
   zillow.com/robots.txt (2026-10-18): terms-of-use line, Crawl-delay: 1,
     Disallow: /homes/ with Allow: exceptions, several Sitemap: lines.
@@ -126,3 +130,30 @@ what it wrote, what it produced and what it said; agent_run/run_summary.txt
 has the timing, the page count and how its file differs from
 fomc_statements.csv. Its own page cache is not shipped (the same pages are
 in cache/).
+
+
+wineglass/ (the live demonstration, prep run of 2026-10-19)
+-----------------------------------------------------------
+Two coding agents (Claude Code) were each given wineglass/brief.txt in an
+empty folder, one ending "Use R." and one "Use Python.", started together
+on 2026-10-19 with file and shell tools allowed up front. Source pages:
+Leone Timing & Results Services, https://www.leonetiming.com/YEAR/Roads/Wineglass/
+and the marathon net-time page linked from each (2018, 2019, 2021-2025;
+2020 answers 404). The site has no robots.txt (404) and links no terms of
+use. Each agent sent 15 requests at one per second, plus one repeat by the
+R agent after a text-encoding error, which its report states.
+
+  r/        wineglass.R and fetch.R (what the R agent wrote), wineglass.csv,
+            wineglass.png, wineglass_years.png   (2 min 22 s, 18 turns)
+  python/   wineglass.py, explore_results.py and fetch.py, the same three
+            outputs                              (2 min 15 s, 16 turns)
+
+The two files are identical in year, place, sex, age group and net time:
+11,466 finishers, and each year's row count equals the last place on its
+page. The results pages are not shipped because they carry runners' names,
+ages and towns; the files keep place, sex, age group and net time only.
+The scripts' user agent reads "<your address>": rerunning them sends 15
+requests to a small company's server, so run them once, not in class.
+Paper: Allen, Dechow, Pope & Wu, "Reference-Dependent Preferences:
+Evidence from Marathon Runners", Management Science 63(6), 2017,
+https://doi.org/10.1287/mnsc.2015.2417

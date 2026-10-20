@@ -90,6 +90,7 @@ cat("\nparagraph counts:\n"); print(table(d$paragraphs))
 cat("words: "); print(summary(d$words))
 
 write.csv(d[, c("date", "url", "words", "text", "scheduled")], "fomc_statements.csv", row.names = FALSE)
+dir.create("prep", showWarnings = FALSE)
 write.csv(ex, "prep/excluded.csv", row.names = FALSE)
 write.csv(yr, "prep/per_year.csv", row.names = FALSE)
 write.csv(d[, c("date", "url", "title", "paragraphs", "words", "scheduled")], "prep/statements_index.csv", row.names = FALSE)

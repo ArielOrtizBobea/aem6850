@@ -70,3 +70,9 @@ captions on the session pages carry the citations.
   `S04-inspector-row.png` (the calendar row in the Elements panel),
   `S08-agent-closing-crop.png` (the first and last paragraphs of the
   agent's closing message).
+- `S09-wineglass-r.png`, `S10-wineglass-python.png` — the histograms the two
+  coding agents drew in the prep run of 2026-10-19 (one told "Use R.", one
+  "Use Python."), copied unchanged from their folders; the same files ship
+  in `data/15-scraping/wineglass/r/` and `python/`. Data: Wineglass
+  Marathon net times, 2018, 2019 and 2021–2025, from Leone Timing's
+  results pages (leonetiming.com).
