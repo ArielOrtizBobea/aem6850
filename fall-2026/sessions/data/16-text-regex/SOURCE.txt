@@ -1,0 +1,77 @@
+16-text-regex: where the files in this folder came from
+=======================================================
+
+Open the folder with 16-text-regex.Rproj, so R starts here and the file
+names in the slides work as written. Nothing in this folder needs a network.
+
+
+fomc_statements.csv
+-------------------
+Every policy statement of the Federal Open Market Committee from
+31 January 2006 to 16 September 2026: 171 rows, 165 after scheduled
+meetings and 6 after unscheduled ones. Columns: date, url, words, text,
+scheduled. Paragraphs inside text are separated by a blank line ("\n\n").
+The text is as the Fed's pages show it, including the characters the pages
+use that are not on a keyboard (the non-breaking hyphen, code point 8209,
+curly apostrophes, en and em dashes).
+
+Collected from federalreserve.gov in October 2026, the same file the
+scraping session builds. Board of Governors of the Federal Reserve System:
+"Unless otherwise indicated, information on Board's website is in the
+public domain and may be copied and distributed without permission. Please
+cite to the Board as the source of the information."
+  https://www.federalreserve.gov/disclaimer.htm
+
+
+fred_target_range.csv
+---------------------
+The federal funds target for every day from 1 January 2006 to
+30 September 2026: 7,578 rows; columns date, lower, upper (percent).
+To 15 December 2008 the Fed set one target, copied into both columns;
+from 16 December 2008 it sets a range.
+
+FRED, Federal Reserve Bank of St. Louis, downloaded 20 October 2026:
+  DFEDTAR   Federal Funds Target Rate (DISCONTINUED), to 2008-12-15
+    https://fred.stlouisfed.org/series/DFEDTAR
+  DFEDTARL  Federal Funds Target Range - Lower Limit, from 2008-12-16
+    https://fred.stlouisfed.org/series/DFEDTARL
+  DFEDTARU  Federal Funds Target Range - Upper Limit, from 2008-12-16
+    https://fred.stlouisfed.org/series/DFEDTARU
+Each was read from https://fred.stlouisfed.org/graph/fredgraph.csv?id=<id>.
+
+
+lm_words.csv
+------------
+The positive and negative word lists of the Loughran-McDonald Master
+Dictionary, in lower case: 2,692 rows, 347 positive and 2,345 negative;
+columns word, list.
+
+  Loughran, Tim, and Bill McDonald. 2011. "When Is a Liability Not a
+  Liability? Textual Analysis, Dictionaries, and 10-Ks." Journal of
+  Finance 66 (1): 35-65. https://doi.org/10.1111/j.1540-6261.2010.01625.x
+
+Source file: Loughran-McDonald_MasterDictionary_1993-2025.csv, the
+authors' update of March 2026, from
+  https://sraf.nd.edu/loughranmcdonald-master-dictionary/
+Terms, from that page: "The dictionary/sentiment lists are free for use in
+academic research. For commercial licenses, please contact us at
+loughranmcdonald@gmail.com." This file is shipped for academic teaching
+use under those terms.
+
+In the master file each word's Positive and Negative columns hold the year
+the word was added to the list, and a negative year marks a word removed.
+This file keeps the words whose year is above 0, so it leaves out the 17
+removed words. The master dictionary has five more lists (uncertainty,
+litigious, strong modal, weak modal, constraining) not used here.
+
+
+chat_prompt.txt, chat_reply.md, chat_reply.R
+--------------------------------------------
+chat_prompt.txt is a prompt written as a student would write it.
+chat_reply.md is the full reply. chat_reply.R is the reply's first code
+block, unchanged, under a two-line comment.
+
+The reply came from Claude (model claude-sonnet-5-5) through Anthropic's
+API on 20 October 2026, with no system prompt. A first request with a
+lower length limit stopped before the reply finished; this is the second
+request. The same prompt in a chat window can return different code.

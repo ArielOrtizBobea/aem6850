@@ -76,3 +76,31 @@ captions on the session pages carry the citations.
   in `data/15-scraping/wineglass/r/` and `python/`. Data: Wineglass
   Marathon net times, 2018, 2019 and 2021–2025, from Leone Timing's
   results pages (leonetiming.com).
+
+## 16-text-regex/
+
+- `D02-epu-keyword-index.png` … `D08-two-hyphens.png` — drawn by
+  `sessions/_figures-16.R` (base R) on 2026-10-20. D02's line is the real
+  US monthly news-based Economic Policy Uncertainty index, 1985 to
+  September 2026, from `data/16-text-regex/prep/US_Policy_Uncertainty_Data.xlsx`
+  (policyuncertainty.com, downloaded 2026-10-20; free to use with
+  attribution to Baker, Bloom and Davis, *QJE* 2016, and the website); its
+  word lists are the paper's. D03 and D04 restate facts from Shapiro and
+  Wilson (*REStud* 2022) and Djourelova (*AER* 2023); no data are plotted.
+  D05 quotes counts from `data/16-text-regex/` (171 statements, 73,839
+  words, examples from the Loughran-McDonald lists in `lm_words.csv`).
+  D06 and D07 quote the pattern in `data/16-text-regex/chat_reply.R` as the
+  R code writes it.
+- `S01-statement-20230322.png`, `S01-statement-20230322-top.png` — the
+  22 March 2023 FOMC statement (federalreserve.gov, public domain), captured
+  2026-10-20 with headless Chrome from the cached page
+  `data/15-scraping/cache/monetary20230322a.htm`, offline. The site's
+  stylesheets do not load offline, so an injected style sets Arial text and
+  a Georgia title in the site's colours (#333, #163855) at 450 px text
+  width, hides everything outside the article, and puts a light yellow
+  background behind the phrase "the Committee decided to raise the target
+  range for the federal funds rate to 4-3/4 to 5 percent"; the words are
+  unchanged (the page's hyphen in 4-3/4 is the plain hyphen, 45). The date
+  line and title are joined to the statement's third paragraph with a
+  dashed cut line (paragraphs 1 and 2 are cut); the full file shows the
+  whole paragraph, `-top` its first five lines with a second cut line.
