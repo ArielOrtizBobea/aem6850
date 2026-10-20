@@ -58,7 +58,9 @@ verifying what a scrape returns; a live demonstration in which two coding
 agents, one in R and one in Python, collect seven years of a marathon's
 finish times from the same brief; and laying out a scrape so someone else
 can re-run it. The Federal Reserve's policy statements since 2006 carry
-the code and both exercises.
+the code and both exercises. You will usually scrape with an AI coding
+agent: each piece below says what to ask it for and how to verify what it
+did.
 
 **The project.** Install the packages once, in the R Console:
 `install.packages(c("rvest", "httr2", "jsonlite"))`. Download
@@ -125,7 +127,7 @@ By the end of this session you can:
 1. **When to scrape**\
    [Where to look first · Zillow · three papers]{.topics}
 2. **The ways to collect a site**\
-   [The inspector · CSS selectors and `rvest` · dynamic pages · six routes]{.topics}
+   [What to ask an agent · CSS selectors · dynamic pages · six routes]{.topics}
 3. **What to take into account**\
    [Terms · robots.txt · personal data · user agent · `fetch_page()`]{.topics}
 4. **AI tools, in R or Python**\
@@ -248,6 +250,12 @@ Look in this order. A scraper is the last step.
 
 :::
 
+::: {.agent}
+
+**With an agent.** Before you brief a scrape, ask an assistant where else the data might be: a replication package, an archive, a download, an API. Then confirm each lead on the site yourself.
+
+:::
+
 ::: {.content-hidden when-format="revealjs"}
 
 ICPSR (the Inter-university Consortium for Political and Social Research)
@@ -298,9 +306,31 @@ university's counsel before any collection.
 
 :::
 
+## Three papers built on scraped data {#papers .smaller}
+
+::: {style="font-size:0.8em"}
+
+| Paper | What a program collected | What they found |
+|:--------------|:---------------------------|:---------------------------|
+| [Cavallo (AER, 2017)](https://doi.org/10.1257/aer.20160542) | online prices at 56 retailers in 10 countries, matched to the shelf prices workers scanned in the stores | the two prices were identical about 72 percent of the time |
+| [Kuhn & Shen (QJE, 2013)](https://doi.org/10.1093/qje/qjs046) | 1,051,706 ads from a Chinese job board, saved by a crawler | ads asking for one sex were common, and much rarer in jobs that need more skill |
+| [Christensen & Timmins (QJE, 2023)](https://doi.org/10.1093/qje/qjad029) | rental listings in five US metro areas; then inquiries from names that signal race | discrimination cost African American renters the equivalent of 4.4 percent of annual income |
+
+In each, what the authors needed existed only on pages built for people.
+
+:::
+
+::: {.content-hidden when-format="revealjs"}
+
+The three studies in more detail:
+
+:::
+
+::: {.content-hidden when-format="revealjs"}
+
 ## Online prices scraped from 56 retailers, compared with their in-store prices {#cavallo .smaller}
 
-Three papers built on scraped data: [Cavallo (AER, 2017)](https://doi.org/10.1257/aer.20160542).
+[Cavallo (AER, 2017)](https://doi.org/10.1257/aer.20160542)
 
 ::::: {.columns}
 
@@ -331,6 +361,10 @@ Three papers built on scraped data: [Cavallo (AER, 2017)](https://doi.org/10.125
 :::
 
 :::::
+
+:::
+
+::: {.content-hidden when-format="revealjs"}
 
 ## A million Chinese job ads from a crawler, coded for whether they ask for a man or a woman {#kuhn-shen .smaller}
 
@@ -365,6 +399,10 @@ Three papers built on scraped data: [Cavallo (AER, 2017)](https://doi.org/10.125
 :::
 
 :::::
+
+:::
+
+::: {.content-hidden when-format="revealjs"}
 
 ## Discrimination in rental housing, measured with inquiries to scraped listings {#christensen .smaller}
 
@@ -401,19 +439,44 @@ Three papers built on scraped data: [Cavallo (AER, 2017)](https://doi.org/10.125
 
 :::::
 
+:::
+
 # 2 · The ways to collect a site {#part-ways}
 
 ::: {.content-visible when-format="revealjs"}
 
+- What you ask an AI agent for, and what you verify
 - The Fed's meeting calendar
 - HTML, the browser inspector, CSS selectors
 - `read_html()`, `html_elements()`, `html_text2()`, `html_attr()`
 - Exercise 1
-- Static and dynamic pages, and the file a page loads
+- Dynamic pages, and the file they load
 - Six routes to every page on a site
 
 Before this part: unzip [15-scraping.zip](data/15-scraping.zip) and open
 `15-scraping.Rproj`.
+
+:::
+
+## What you ask an AI agent for, and what you verify {#with-agents .smaller}
+
+::: {style="font-size:0.8em"}
+
+You will usually scrape with an AI coding agent: it writes the fetch, the
+selectors and the loop. Parts 2 and 3 show each piece so that you can ask
+for it and verify it. No function needs memorizing.
+
+| Ask for, in the brief | Verify, in what comes back |
+|:--------------------------|:--------------------------|
+| The unit, and the rule that decides what counts | its count against a second list: the site's own, a feed, a stated total |
+| The start pages and the route to every page | each selector, run on a saved page, against what the browser shows |
+| A user agent with your address, one request a second, each page saved once, a log | each rule in its code; its report against its log |
+| What to do at a 403, a CAPTCHA or a login page | the status codes in its log |
+| The fields to keep, and no personal data | its printed output and its file |
+| The numbers to print when it is done | those numbers against the browser, the site's totals, a paper |
+
+Each slide that follows ends with what its piece means when an agent does
+the work.
 
 :::
 
@@ -432,6 +495,12 @@ Before this part: unzip [15-scraping.zip](data/15-scraping.zip) and open
   conference and the minutes (the written record of the meeting).
 - Each year from 2006 to 2020 has its own page. Each statement has its
   own page.
+
+:::
+
+::: {.agent}
+
+**With an agent.** Name these start pages in the brief: the calendar for 2021 on, and the year-page address for 2006 to 2020. Together they list every meeting.
 
 :::
 
@@ -478,37 +547,35 @@ ours[c(1, nrow(ours)), c("date", "words", "scheduled")]  # the first and the las
 
 :::
 
-## Elements, tags, classes, ids and attributes in HTML {#html .smaller}
+## Reading a page's HTML with the browser inspector {#html .smaller}
 
-![](figures/15-scraping/D05-html-row.png){width="90%" fig-align="center" fig-alt="Left, the HTML of the January 2024 calendar row, trimmed to ten lines: a div with class row fomc-meeting, inside it a div with class fomc-meeting__month holding January in bold, a div with class fomc-meeting__date holding 30-31, and a div with the Statement links: PDF, HTML and Implementation Note, each an a tag with an href. Right, the same row as the browser draws it. Four arrows join the month, the dates, the HTML link and the Implementation Note link to their lines of HTML."}
+![](figures/15-scraping/D05-html-row.png){width="84%" fig-align="center" fig-alt="Left, the HTML of the January 2024 calendar row, trimmed to ten lines: a div with class row fomc-meeting, inside it a div with class fomc-meeting__month holding January in bold, a div with class fomc-meeting__date holding 30-31, and a div with the Statement links: PDF, HTML and Implementation Note, each an a tag with an href. Right, the same row as the browser draws it. Four arrows join the month, the dates, the HTML link and the Implementation Note link to their lines of HTML."}
 
-::: {style="font-size:0.78em"}
+::: {style="font-size:0.76em"}
 
-- **Element**: one labelled piece of the page (a heading, a link, a box).
-- **Tag**: the label in angle brackets (`div`, `a`, `strong`).
-- **Class**: a name the site gives to elements of one kind
-  (`fomc-meeting`); many elements share it.
-- **Id**: a name given to one element only. On the Fed's pages `article`
-  is the main text box, on the calendar and on each statement.
-- **Attribute**: a named value inside a tag; a link's address is its
+- **Element**: one labelled piece of the page. Its **tag** is the label
+  in angle brackets (`div`, `a`); a **class** names elements of one kind
+  (`fomc-meeting`); an **id** names one element only (`article`); an
+  **attribute** is a named value in a tag, such as a link's address,
   `href`.
+- **Inspect** (right-click a meeting date on the live page) shows the
+  HTML behind what you point at. **View Source** shows the file the
+  server sent, which is what R reads.
 
 :::
 
-## Finding an element with the browser inspector {#inspector .smaller}
+::: {.agent}
 
-![](figures/15-scraping/S04-inspector-row.png){width="88%" fig-align="center" fig-alt="The browser inspector with the HTML of a calendar row expanded: a div with class row fomc-meeting, and inside it the month, the dates and the Statement links, with the HTML link to monetary20240131a.htm highlighted."}
+**With an agent.** Inspect the element yourself before you accept an agent's selector, and use these words to tell it which element you mean. A chat assistant given the element's HTML can suggest a selector built on its class.
 
-::: {style="font-size:0.8em"}
+:::
 
-**Browser inspector**: the window that shows the HTML behind whatever you
-point at. Right-click a meeting date on the live page, choose
-**Inspect**, and read the class names on the highlighted line and on the
-lines inside it.
+::: {.content-hidden when-format="revealjs"}
 
-**View Source** (right-click, View Page Source) shows the file the server
-sent; that is what R reads. Safari needs "Show features for web
-developers" turned on in its Advanced settings first.
+![The browser inspector on a calendar row: the row's class, and inside it the month, the dates and the Statement links.](figures/15-scraping/S04-inspector-row.png){fig-alt="The browser inspector with the HTML of a calendar row expanded: a div with class row fomc-meeting, and inside it the month, the dates and the Statement links, with the HTML link to monetary20240131a.htm highlighted."}
+
+Safari needs "Show features for web developers" turned on in its
+Advanced settings before Inspect appears.
 
 :::
 
@@ -544,6 +611,12 @@ statement's own paragraphs (Exercise 2).
 
 :::
 
+::: {.agent}
+
+**With an agent.** Ask it to print each selector it uses and how many elements it matched. Run the same selector on the saved page and compare the count with what the browser shows.
+
+:::
+
 ## Reading the saved calendar with `read_html()` {#read-html .smaller}
 
 ```{r}
@@ -560,11 +633,15 @@ titles
 
 ::: {style="font-size:0.78em"}
 
-- `read_html()` reads a file or an address into R.
-- `html_elements()` returns every match.
-- `html_element()` returns the first match inside each element.
-- `html_text2()` returns the text as the browser shows it.
-- The order is the page's: 2026 first, 2027 last.
+The code reads the saved calendar, keeps one panel per year and prints each
+panel's heading, in the page's order (2026 first). `html_elements()` keeps
+every match; `html_element()` keeps the first match inside each element.
+
+:::
+
+::: {.agent}
+
+**With an agent.** Ask it to save each page before parsing it. You can then run its selectors on the same file it read.
 
 :::
 
@@ -588,6 +665,14 @@ marks a meeting that also publishes the members' economic projections
 Projections").
 
 :::
+
+::: {.agent}
+
+**With an agent.** Ask it to print a few parsed rows. Read them against the page in the browser before you trust the rest.
+
+:::
+
+::: {.content-hidden when-format="revealjs"}
 
 ## The links in one row, with `html_attr()` {#html-attr .smaller}
 
@@ -613,6 +698,8 @@ data.frame(text = substr(html_text2(links), 1, 24),  # substr(): the first 24 ch
 
 :::
 
+:::
+
 ## Counting the calendar's statement links three ways {#three-counts .smaller}
 
 ```{r}
@@ -635,8 +722,16 @@ c(contains = length(a1), ends_a = length(a2),
   plans).
 - `ends_a`, 47: one more than the statements. Exercise 1 finds the row
   that holds it.
-- `text_HTML`, 46: the links named HTML are the statements. Keep this
-  count.
+- `text_HTML`, 46: the links named HTML are the statements.
+- `html_attr(x, "href")` returns a link's address. Each row links its
+  statement, its implementation note and more, so a rule must pick the
+  statements out.
+
+:::
+
+::: {.agent}
+
+**With an agent.** It chooses one of these rules without telling you, and they give 47 and 46. Ask it to state its rule in its report, and compare its count per year with the meetings on the calendar.
 
 :::
 
@@ -749,48 +844,43 @@ call-out: who got nine?
 
 :::
 
-## A static page and a dynamic one {#dynamic .smaller}
+## Dynamic pages, and the file they load {#dynamic .smaller}
 
-::: {style="font-size:0.85em"}
+::::: {.columns}
+
+::: {.column width="55%"}
+
+![](figures/15-scraping/S05-network.png){fig-alt="The inspector's Network tab open on the Federal Reserve's press-release list page, with the search box set to ne-press: one request for json/ne-press.json, the file the page's scripts load to fill the list."}
+
+[The Network tab on the Fed's press-release list page: the page's script
+requests json/ne-press.json.]{.source}
+
+:::
+
+::: {.column width="45%"}
+
+::: {.dashes style="font-size:0.7em"}
 
 - **Static page**: the HTML the server sends is the page you see.
-- **Dynamic page**: the server sends an empty layout plus scripts. In a
-  browser the scripts fetch the content after the page loads.
-  `read_html()` runs no scripts, so it gets the empty layout.
-- **Example**: the Fed's press-release list page. Its saved HTML is 85 KB
-  and contains "FOMC statement" zero times; the browser shows hundreds of
-  release titles.
-- **The test**: View Source, then search for a title you can see on the
-  page. If the source does not contain it, the page is dynamic. In R:
-  `sum(grepl("FOMC statement", readLines("cache/pressreleases.htm")))`
-  returns 0.
+- **Dynamic page**: the server sends a layout and scripts, and the scripts
+  fetch the content after the page loads. `read_html()` runs no scripts,
+  so it gets the empty layout.
+- **The test**: View Source and search for a title you can see. The
+  Fed's press-release list: 85 KB of HTML, "FOMC statement" zero times.
+- **Three ways in**
+  - request the file the page loads, found in the Network tab
+  - Copy as cURL on that request; `curl_translate()` turns it into R
+  - a headless browser (one with no window): `read_html_live()`
 
 :::
 
-::: {.content-hidden when-format="revealjs"}
-
-![The same page as the browser draws it: a list of releases that the HTML the server sends does not contain.](figures/15-scraping/S03-pressreleases-list.png){fig-alt="The Federal Reserve's press-release list page in a browser: a date filter, type checkboxes, and the first releases listed by date."}
-
 :::
 
-## Three ways to read a dynamic page {#dynamic-remedies .smaller}
+:::::
 
-![](figures/15-scraping/S05-network.png){width="78%" fig-align="center" fig-alt="The inspector's Network tab open on the Federal Reserve's press-release list page, with the search box set to ne-press: one request for json/ne-press.json, the file the page's scripts load to fill the list."}
+::: {.agent}
 
-[The inspector's Network tab on the Fed's press-release list page, with
-the search box set to ne-press: the page's script requests
-json/ne-press.json.]{.source}
-
-::: {style="font-size:0.78em"}
-
-1. Request the file the page loads. Find it in the inspector's Network
-   tab; here `json/ne-press.json`, read on the next slide.
-2. Right-click that request and choose Copy as cURL (a command-line
-   program for web requests). `curl_translate()` from httr2 turns the
-   copied text into the same request in R.
-3. A **headless browser**, a browser run by a program with no window:
-   `read_html_live()` in rvest, with the chromote package and Chrome.
-   Use it when no clean file shows.
+**With an agent.** An agent that reads a dynamic page with `read_html()` gets the empty layout and may conclude there is no data. Give it the address of the file the page loads, from your Network tab.
 
 :::
 
@@ -799,8 +889,15 @@ json/ne-press.json.]{.source}
 ::: {.notes}
 The feed's address is assembled by the page's script, so it is not in the
 HTML or in the main script file; the Network tab (filtered to Fetch/XHR)
-is where it shows.
+is where it shows. In R: sum(grepl("FOMC statement",
+readLines("cache/pressreleases.htm"))) returns 0.
 :::
+
+:::
+
+::: {.content-hidden when-format="revealjs"}
+
+![The same page as the browser draws it: a list of releases that the HTML the server sends does not contain.](figures/15-scraping/S03-pressreleases-list.png){fig-alt="The Federal Reserve's press-release list page in a browser: a date filter, type checkboxes, and the first releases listed by date."}
 
 :::
 
@@ -816,6 +913,16 @@ is slower than reading a saved file, and the site's terms apply to it as
 to any program.
 
 :::
+
+::: {.content-hidden when-format="revealjs"}
+
+On the saved copy, `sum(grepl("FOMC statement", readLines("cache/pressreleases.htm")))`
+returns 0. Copy as cURL copies the request as a command for curl, a
+command-line program for web requests.
+
+:::
+
+::: {.content-hidden when-format="revealjs"}
 
 ## Reading the feed the page loads with `fromJSON()` {#feed .smaller}
 
@@ -847,12 +954,20 @@ table(fs$t)[c("Federal Reserve issues FOMC statement", "FOMC statement")]   # th
 
 :::
 
+::: {.agent}
+
+**With an agent.** When a feed lists every page, name it in the brief and ask the agent to compare its list with the feed's: here 179 titles against the statements file's 171.
+
+:::
+
 ::: {.content-hidden when-format="revealjs"}
 
 The feed has seven columns: `d` the date, `t` the title (HTML-escaped:
 `&` written as `&amp;`), `pt` the type, `l` the link, and three more. The
 ten longer titles name the dollar swap lines, the longer-run goals and a
 change of release times.
+
+:::
 
 :::
 
@@ -866,11 +981,16 @@ change of release times.
 | An index page with links | the calendar: 57 rows, 100 release links | a list page exists | one page |
 | The sitemap | `bls.gov/sitemap.xml`, a sitemap index | robots.txt names one | one request per sitemap file |
 | Pagination | one year page per year; `?page=2` elsewhere | the address carries the page number | one request per page |
-| A crawler that follows every link | the job board in [Kuhn & Shen (QJE, 2013)](https://doi.org/10.1093/qje/qjs046) | no list exists | the heaviest; robots.txt governs it |
-| Bought data | about 100 million postings a vendor crawled, in [Hershbein & Kahn (AER, 2018)](https://doi.org/10.1257/aer.20161570) | the licence fits your use | none |
+| A crawler that follows every link | the job board in [Kuhn & Shen (QJE, 2013)](https://doi.org/10.1093/qje/qjs046) | no list exists | the heaviest |
+| Bought data | a vendor's crawl of job postings, in [Hershbein & Kahn (AER, 2018)](https://doi.org/10.1257/aer.20161570) | the licence fits your use | none |
 
-**Sitemap**: an XML file listing a site's pages for search engines; a
-sitemap index lists other sitemaps.
+
+
+:::
+
+::: {.agent}
+
+**With an agent.** Name the route and the total you expect in the brief. Ask for a crawler only when no list exists: it puts the most load on the server.
 
 :::
 
@@ -907,43 +1027,31 @@ agreement, for 2007 and 2010 to 2015.
 - CAPTCHAs and login walls
 - `fetch_page()`: pause, retry, save once, log
 - Exercise 2
-- The fifteen year pages in a loop
 
 :::
 
-## Terms of use set a site's rules for visitors {#terms .smaller}
+## Terms of use and copyright {#terms .smaller}
 
-::: {style="font-size:0.9em"}
+![](figures/15-scraping/S01-disclaimer-public-domain.png){width="78%" fig-align="center" fig-alt="The Copyright/trademark section of the Federal Reserve Board's disclaimer page: unless otherwise indicated, information on the Board's website is in the public domain and may be copied and distributed without permission; please cite the Board as the source. Material identified as non-Board, such as photos and graphics, keeps its owner's permission."}
 
-**Terms of use**: the legal rules a site sets for visitors. Using the site
-means accepting them. They may forbid automated copying. Look for footer
-links named Terms, Legal, Website Policies or Disclaimer.
+::: {.dashes style="font-size:0.76em"}
 
-- **Zillow**, a US website that lists homes for sale and rent, forbids
-  "automated queries (including screen and database scraping, spiders,
-  robots, crawlers ...)".
-- **The Fed** keeps its terms on its
-  [Disclaimer page](https://www.federalreserve.gov/disclaimer.htm). Its
-  copyright section is on the next slide.
+- **Terms of use**: the rules a site sets for visitors; using the site
+  means accepting them. Look for footer links named Terms, Legal or
+  Disclaimer. Zillow's forbid "automated queries (including screen and
+  database scraping ...)".
+- **Copyright**: the owner's right to control copies. The Board puts its
+  own material in the **public domain** (above): anyone may copy it;
+  cite the Board.
+- **Facts** (prices, dates, vote counts) are outside US copyright
+  (Feist v. Rural, 1991). The wording of a text is covered, unless it is
+  public domain or **licensed** for copying.
 
 :::
 
-## Copyright and facts {#copyright .smaller}
+::: {.agent}
 
-![](figures/15-scraping/S01-disclaimer-public-domain.png){fig-align="center" fig-alt="The Copyright/trademark section of the Federal Reserve Board's disclaimer page: unless otherwise indicated, information on the Board's website is in the public domain and may be copied and distributed without permission; please cite the Board as the source. Material identified as non-Board, such as photos and graphics, keeps its owner's permission."}
-
-::: {style="font-size:0.8em"}
-
-- **Copyright**: the owner's right to control copies of a text, image or
-  recording.
-- **Public domain**: nobody holds the copyright, so anyone may copy it.
-  The Federal Reserve Board (the Board), which runs federalreserve.gov,
-  puts its own material there (above). Cite the Board.
-- **Facts**: in the US, copyright does not cover them. A telephone
-  directory's names and numbers may be copied by anyone (US Supreme
-  Court, Feist v. Rural, 1991). Prices, dates and vote counts are facts.
-- The wording of a text is covered, unless it is public domain or
-  **licensed** (released under terms that allow copying).
+**With an agent.** Read the terms yourself before you write the brief, and tell the agent what to keep: the facts, or the full text when it is public domain or licensed. Its requests carry the user agent you give it, so they go out under your name.
 
 :::
 
@@ -1020,6 +1128,12 @@ Sitemap: https://www.zillow.com/xml/indexes/us/static.xml.gz   # 15 Sitemap line
 
 :::
 
+::: {.agent}
+
+**With an agent.** Put the paths to skip and any delay in the brief. Some robots.txt files name AI companies' crawlers; your agent's requests carry the user agent from your brief.
+
+:::
+
 ::: {.content-visible when-format="revealjs"}
 
 ::: {.notes}
@@ -1065,6 +1179,12 @@ the reporter's name and outlet.]{.source}
 
 :::
 
+::: {.agent}
+
+**With an agent.** Name the fields to keep and forbid printing the rest, then read its report: both marathon agents in Part 6 printed a runner's name while studying the page.
+
+:::
+
 ::: {.content-visible when-format="revealjs"}
 
 ::: {.notes}
@@ -1082,7 +1202,7 @@ cookie identifiers.
 - **User agent**: the name a program sends with every request. Put who
   you are and how to reach you in it. A robots.txt `User-agent` line
   matches this name.
-- Status codes: 200 means OK, 403 means forbidden.
+
 - Three requests to bls.gov (the US Bureau of Labor Statistics) with
   httr2, the R package that sends requests; one request per row.
 
@@ -1117,6 +1237,12 @@ resp_status(req_perform(req))
 #> [1] 200
 ```
 
+::: {.agent}
+
+**With an agent.** Put this user agent, with your address, in the brief, and find it in the agent's code.
+
+:::
+
 ::: {.content-visible when-format="revealjs"}
 
 ::: {.notes}
@@ -1143,13 +1269,19 @@ user agent without an email. Measured 18 October 2026.
 | 429 | too many requests | wait, then retry with a longer pause each time | none, at one request a second |
 | 500 and above | the server failed | retry later | none |
 
-A 200 can still be the wrong page: a consent page, a login page or an
-error page. Before saving, test for a phrase the real page must contain,
-such as "FOMC statement" in its title.
+:::
+
+::: {.agent}
+
+**With an agent.** Ask it to log every status code, to stop and report at a 403, a CAPTCHA or a login page, and to test each 200 for a phrase the real page contains: a 200 can be a consent or an error page.
 
 :::
 
-::: {style="font-size:0.72em"}
+::: {.content-hidden when-format="revealjs"}
+
+A 200 can still be the wrong page: a consent page, a login page or an
+error page. Before saving, test for a phrase the real page must contain,
+such as "FOMC statement" in its title.
 
 - **Rate limit**: the most requests a site accepts from one IP address
   (the number that identifies a computer on the network) per minute or
@@ -1157,10 +1289,6 @@ such as "FOMC statement" in its title.
   line saying how long to wait.
 - **Backoff**: waiting longer after each failure. `req_retry()` reads
   `Retry-After` and backs off.
-
-:::
-
-::: {.content-hidden when-format="revealjs"}
 
 `Retry-After` sits in the reply's header, the metadata that comes with
 every reply.
@@ -1182,10 +1310,9 @@ you know which pages you still owe. The redirects were the old
 
 ![](figures/15-scraping/D06-captcha-login.png){.r-stretch fig-align="center" fig-alt="Two columns. Left, a CAPTCHA: a test that a person is at the keyboard, such as distorted letters or picking pictures. It is the site's refusal to programs: stop, slow down, put your name and address in the user agent, then ask the site for access or for its feed. Do not have a program solve it. Right, a login wall: the page shows only after you sign in. It is a terms question: the terms you accepted say what a program may copy. Where they allow it, use your own credentials in your own session, at the rate a person would read. Pages behind your login are also where an AI browser agent fits."}
 
-::: {style="font-size:0.66em"}
+::: {.agent}
 
-Address spoofing and proxy rotation hide who is asking. Sites ban the
-scrapers that use them, and this course does not teach them.
+**With an agent.** Tell it to stop at a CAPTCHA or a login wall and report. If it offers a way around either, such as spoofing its address or rotating proxies, decline: sites ban scrapers that hide who is asking.
 
 :::
 
@@ -1206,7 +1333,7 @@ pages through fake accounts.
 
 :::
 
-## `fetch_page()` sends one polite request and saves the reply {#fetch-page .smaller}
+## `fetch_page()`: one polite request, saved once and logged {#fetch-page .smaller}
 
 ```{r}
 #| label: fetch-page
@@ -1227,6 +1354,23 @@ fetch_page <- function(url, file, ua) {
   resp_status(resp)
 }
 ```
+
+::: {style="font-size:0.74em"}
+
+`source("fetch_page.R")` defines it and creates `mine/` with its log,
+`mine/fetch_log.csv`. The **cache** is the folder of saved pages that a
+rerun reads instead of asking the server again; `writeBin()` keeps the
+**raw bytes** as sent.
+
+:::
+
+::: {.agent}
+
+**With an agent.** Its fetch function should hold the same five pieces: the user agent, the retry, the file saved once, the log row, the pause. Find each in its code, and ask for the cache and the log as files. The R marathon agent fetched one page twice after an encoding error and said so; the Fed agent reported four 429 replies its own log does not contain (Part 5).
+
+:::
+
+::: {.content-hidden when-format="revealjs"}
 
 ## `fetch_page()` writes to `mine/` and to a fetch log {#fetch-page-files .smaller}
 
@@ -1249,6 +1393,14 @@ if (!file.exists("mine/fetch_log.csv")) writeLines("url,file,time,status", "mine
 - **The pause**: every laptop in the room sends from Cornell's network,
   which a site may count as one visitor. `Sys.sleep(1)` keeps each
   request slow.
+
+:::
+
+::: {.agent}
+
+**With an agent.** Ask for the cache and the log as files in the folder. The Fed agent reported four 429 replies that its own log does not contain (Part 5).
+
+:::
 
 :::
 
@@ -1346,6 +1498,8 @@ immediate release" and ends with the Board's discount-rate action.
 
 :::
 
+::: {.content-hidden when-format="revealjs"}
+
 ## Reading the fifteen year pages, 2006 to 2020, in a loop {#year-loop .smaller}
 
 ::: {style="font-size:0.78em"}
@@ -1378,8 +1532,17 @@ for (y in 2006:2020) {
   turn. Here the year is in the address, and `sprintf("%d")` fills it in.
 - Each page lists its meetings and calls as panels with an `h5` heading,
   such as "January 30-31 Meeting - 2007" or "August 10 Conference Call -
-  2007". The statement is the link named Statement. Output on the next
-  slide.
+    2007". The statement is the link named Statement.
+
+:::
+
+::: {.agent}
+
+**With an agent.** Give it the address pattern and the range, and ask for the rows found on each page; a page that failed shows as a gap. A rule written on one page can miss on another: three statement addresses on these pages end in b (session page).
+
+:::
+
+::: {.content-hidden when-format="revealjs"}
 
 :::
 
@@ -1432,6 +1595,10 @@ two unscheduled meetings and four notation votes; ten statements.
 
 :::
 
+:::
+
+::: {.content-hidden when-format="revealjs"}
+
 ## Two pitfalls in the statement addresses on the year pages {#address-forms .smaller}
 
 ```{r}
@@ -1455,6 +1622,8 @@ basename(href)               # the file part: two end in b
   2007, 22 January 2008, 16 December 2008. A rule that keeps only
   addresses ending in `a.htm`, which worked on the calendar, drops these
   three.
+
+:::
 
 :::
 
@@ -1688,7 +1857,7 @@ Compare its answer with Exercise 1: nine rows, 22 August.
 ::: {.content-visible when-format="revealjs"}
 
 - What the coding agent's run on the Fed's site did
-- Its file against the statements file and the feed
+- Three lists of one site: its file, the feed, the statements file
 - Three statements drawn with a seed
 - Its report against its own log
 
@@ -1734,13 +1903,12 @@ dates. If the live run is shown, its own numbers replace these.
 
 :::
 
-## The agent's file compared with the statements file {#agent-vs-site .smaller}
+## Three lists of one site disagree on what a statement is {#agent-vs-site .smaller}
 
 ::: {style="font-size:0.78em"}
 
-Did the agent get the same statements as the statements file?
-**The statements file** (`ours` in the code): `fomc_statements.csv`, 171
-rows, built from the pages in `cache/` by the rule in `SOURCE.txt`.
+Did the agent get the same statements as the statements file
+(`ours`, 171 rows, built from `cache/` by the rule in `SOURCE.txt`)?
 
 :::
 
@@ -1756,15 +1924,22 @@ yr$ours  <- as.vector(table(substr(ours$date,  1, 4)))
 print(yr[yr$agent != yr$ours, ], row.names = FALSE)      # the years that differ
 ```
 
-::: {style="font-size:0.78em"}
+::: {.dashes style="font-size:0.76em"}
 
-- The four extra rows are the four dates the table flags: 10 August 2007,
-  11 March 2008, 9 May 2010, 11 October 2019.
-- Each is a press release the site links as a Statement. It announces a
-  lending programme or the mechanics of a decision, not the committee's
-  decision on the policy rate.
+- **The agent's rule**, every link the site labels Statement: 175. The
+  four extra dates (above) announce lending programmes or the mechanics
+  of a decision, not the committee's decision on the policy rate.
+- **The feed**: 179 titles contain "FOMC statement"; five are in neither
+  file.
+- **The statements file's rule**: the title says "FOMC statement" and the
+  release announces the rate decision: 171.
+
+Write the rule down before you scrape, and reconcile every difference by
+hand.
 
 :::
+
+::: {.content-hidden when-format="revealjs"}
 
 ## Three lists of one site disagree on what a statement is {#three-lists .smaller}
 
@@ -1798,6 +1973,8 @@ feed_url <- paste0("https://www.federalreserve.gov", fs$l)
 substr(fs$t[!(feed_url %in% agent$url)], 1, 75)      # in the feed, not in the agent's file
 agent$date[!(agent$url %in% feed_url)]               # in the agent's file, not in the feed's set
 ```
+
+:::
 
 :::
 
@@ -2061,13 +2238,18 @@ wineglass/            the demonstration: the brief, each agent's scripts, file a
 
 :::
 
+::: {.agent}
+
+**With an agent.** Ask for two scripts: one that fetches into `cache/`, and one that builds the file from `cache/` with no network.
+
+:::
+
 ## The Fed's calendar in 2015, from the Wayback Machine {#wayback .smaller}
 
 ::: {style="font-size:0.78em"}
 
-**Wayback Machine**: the Internet Archive's store of saved copies of web
-pages since 1996; one saved copy is a **snapshot**. Its index lists 19
-yearly snapshots of the calendar, 2008 to 2026.
+**Wayback Machine**: the Internet Archive's copies of web pages since
+1996, each one a **snapshot**; 19 yearly ones of the calendar.
 
 :::
 
@@ -2086,10 +2268,9 @@ sum(html_text2(html_elements(snap, "a")) == "Statement")   # links named Stateme
 
 ::: {style="font-size:0.78em"}
 
-In January 2015 the page was a table. `.panel-default` matches nothing;
-`th#year` holds the year headings. The link text "Statement" still
-works: 50 links. A redesign changes the selectors, so a scrape over old
-snapshots needs one version per layout.
+In January 2015 the page was built from tables: `.panel-default` matches
+nothing, `th#year` holds the years, and the 50 links named Statement
+still work. A redesign changes the selectors.
 
 :::
 
@@ -2097,11 +2278,17 @@ snapshots needs one version per layout.
 
 ::: {.column width="45%"}
 
-![](figures/15-scraping/S08-wayback-calendar-2015.png){height="180px" fig-align="center" fig-alt="The Wayback Machine's toolbar above the Federal Reserve's calendar page as it looked in January 2015, in an older site design with a 2014 FOMC Meetings table."}
+![](figures/15-scraping/S08-wayback-calendar-2015.png){height="150px" fig-align="center" fig-alt="The Wayback Machine's toolbar above the Federal Reserve's calendar page as it looked in January 2015, in an older site design with a 2014 FOMC Meetings table."}
 
 :::
 
 :::::
+
+::: {.agent}
+
+**With an agent.** Ask it to record each snapshot's timestamp and the layout it found: today's selector finds nothing on the 2015 page.
+
+:::
 
 ::: {.content-hidden when-format="revealjs"}
 
@@ -2223,6 +2410,12 @@ barplot(table(year), las = 2, ylab = "Edits",
 :::
 
 :::::
+
+::: {.agent}
+
+**With an agent.** Name the fields to request, without the editor's name, and the total to match: the information page's 1,613.
+
+:::
 
 ::: {.content-visible when-format="revealjs"}
 
