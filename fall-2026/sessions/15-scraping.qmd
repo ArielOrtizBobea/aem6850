@@ -156,9 +156,9 @@ speaker notes of the brief slide).
 ::: {.content-visible when-format="revealjs"}
 
 - Three ways to get data from a website
-- The Fed's policy statements, this session's data
+- The Fed's policy statements, the example in today's code
 - Where to look before writing a scraper
-- Zillow's listings, a show of hands
+- Where researchers get Zillow's housing data
 - Three papers built on scraped data
 
 During Part 1, in the R Console:
@@ -199,7 +199,7 @@ page.
 
 :::
 
-## The Fed's policy statements, this session's data {#fed-statements .smaller}
+## Today's code and exercises collect the Fed's policy statements {#fed-statements .smaller}
 
 ::::: {.columns}
 
@@ -217,10 +217,14 @@ page.
 
 The Federal Reserve is the US central bank. Its Federal Open Market
 Committee (FOMC) sets the policy interest rate at eight scheduled meetings
-a year. It publishes a written statement after each meeting. The
-statements' text exists only on these pages.
+a year and publishes a written statement after each one.
 
-This session collects every statement since 2006 into one file.
+**The question**: what has the committee said after each meeting since
+2006?
+
+The text of the statements exists only on these pages. The code in Parts
+2 and 3 and both exercises work toward one file with every statement since
+2006, `fomc_statements.csv`.
 
 :::
 
@@ -253,35 +257,33 @@ selected interest rates.
 
 :::
 
-## Would you scrape Zillow's listings for a research project? {#hands}
+## Where researchers get Zillow's housing data {#hands .smaller}
 
-::: {style="font-size:0.9em"}
+::: {.dashes style="font-size:0.85em"}
 
-Zillow lists homes for sale and for rent across the US.
+Zillow lists homes for sale and for rent across the US. Its listing pages
+are a case for not writing a scraper.
 
-**Hands.** Who would, and how?
-
-:::
-
-::: {.fragment style="font-size:0.78em"}
-
-**Not with a scraper.**
-
-- Its terms forbid "automated queries (including screen and database
-  scraping, spiders, robots, crawlers ...)". Its robots.txt disallows
-  `/homes/`. One polite request from R met a press-and-hold human check.
-- The listing pages carry personal data: agents' names and phone numbers,
+- **The pages are closed to programs.** The terms forbid "automated
+  queries (including screen and database scraping, spiders, robots,
+  crawlers ...)". The robots.txt disallows `/homes/`. One polite request
+  from R met a press-and-hold human check.
+- **The listings carry personal data**: agents' names and phone numbers,
   photos of people's homes.
-- The list on the last slide finds other routes: Zillow Research's CSV
-  files (home values, rents, inventory), Zillow's transaction records
-  (ZTRAX) through ICPSR, or listings licensed from an MLS or a data vendor.
+- **The data come by the routes on the last slide.**
+  - A download: Zillow Research's CSV files of home values, rents and
+    inventory.
+  - A dataset someone built: Zillow's transaction records (ZTRAX),
+    through ICPSR.
+  - A licence: listings from an MLS (the shared database real-estate
+    agents list homes in) or from a data vendor.
 
 :::
 
 ::: {.content-visible when-format="revealjs"}
 
 ::: {.notes}
-One or two call-outs on why, then click for the answer. The request was
+The request was
 to a page robots.txt allows (the research data page) and came back
 "Access to this page has been denied" (October 2026). Part 3 explains
 terms, robots.txt and the human check.
@@ -1021,7 +1023,7 @@ Sitemap: https://www.zillow.com/xml/indexes/us/static.xml.gz   # 15 Sitemap line
 ::: {.content-visible when-format="revealjs"}
 
 ::: {.notes}
-The file forbids the listing pages a researcher would want; Part 1's hands question drew on it. Eleven crawlers are named in later blocks:
+The file forbids the listing pages a researcher would want; Part 1's Zillow slide drew on it. Eleven crawlers are named in later blocks:
 Amazonbot, for one, is disallowed everywhere except guides and blog
 pages. The three social-media crawlers at lines 261 to 265 form their
 own group with two Allow lines; the four at lines 304 to 309 are fully
