@@ -106,7 +106,7 @@ By the end of this session you can:
 1. **Text as data in economics**\
    [Three studies · the terms]{.topics}
 2. **Regex basics in `stringr`**\
-   [Finding a word · character classes · quantifiers · anchors · whole words · testing a pattern · capture groups · Exercise 1]{.topics}
+   [The Fed statements · finding a word · character classes · quantifiers · anchors · whole words · testing a pattern · capture groups · Exercise 1]{.topics}
 3. **Extracting the target range with a chatbot's pattern**\
    [Reading the pattern piece by piece · running it on 171 statements · comparing with the Fed's daily target · a hyphen that looks like another · fixing the code · base R names]{.topics}
 4. **Counting words and scoring tone**\
@@ -123,29 +123,40 @@ Before Part 2: unzip [16-text-regex.zip](data/16-text-regex.zip) and open
 
 :::
 
-## The Fed's policy statement of 22 March 2023 {#statement .smaller}
+## Turning a statement's text into variables {#text-to-variables .smaller}
 
 ::::: {.columns}
 
-::: {.column width="48%"}
+::: {.column width="52%"}
 
-![](figures/16-text-regex/S01-statement-20230322-top.png){fig-align="center" fig-alt="The third paragraph of the Federal Reserve's statement of 22 March 2023, as the Fed's page shows it, with the sentence 'the Committee decided to raise the target range for the federal funds rate to 4-3/4 to 5 percent' highlighted."}
+::: {style="font-size:0.88em; border-left: 4px solid #B31B1B; padding: 0.3em 0.9em; background: #F7F7F7;"}
+
+The Federal Open Market Committee decided today to establish a target
+range for the federal funds rate of [0&nbsp;to&nbsp;1/4&nbsp;percent]{style="background:#FFF3B0"}.
+
+Since the Committee's last meeting, labor market conditions have
+[deteriorated]{style="color:#B31B1B;font-weight:600"}, and the available
+data indicate that consumer spending, business investment, and industrial
+production have [declined]{style="color:#B31B1B;font-weight:600"}.
+Financial markets remain quite [strained]{style="color:#B31B1B;font-weight:600"}
+and credit conditions tight. Overall, the outlook for economic activity
+has [weakened]{style="color:#B31B1B;font-weight:600"} further.
 
 :::
 
-::: {.column width="52%"}
+:::
 
-::: {.dashes style="font-size:0.82em"}
+::: {.column width="48%"}
 
-- The Federal Reserve ("the Fed") is the US central bank.
-- Its **Federal Open Market Committee (FOMC)** sets the policy interest
-  rate. It meets eight times a year and publishes a statement after each
-  meeting. A few statements follow unscheduled meetings.
-- The **federal funds rate** is the rate banks charge each other for
-  overnight loans. The Fed steers it.
-- The **target range** is the band the FOMC announces for that rate.
-  "4-3/4 to 5 percent" means 4.75 to 5. Before 16 December 2008 the FOMC
-  announced a single number.
+::: {.dashes style="font-size:0.9em"}
+
+- **A pattern** finds [0&nbsp;to&nbsp;1/4&nbsp;percent]{style="background:#FFF3B0"}
+  → `lower` = 0 and `upper` = 0.25.
+- **A count of listed words**: the whole statement has
+  [8 negative]{style="color:#B31B1B;font-weight:600"} and 2 positive words
+  in 403 → **net tone** =&nbsp;100&nbsp;×&nbsp;(2&nbsp;−&nbsp;8)&nbsp;/&nbsp;403&nbsp;=&nbsp;−1.49.
+- Run on all 171 statements from 2006 to 2026, each method gives a column
+  you can plot and compare with other data.
 
 :::
 
@@ -153,50 +164,9 @@ Before Part 2: unzip [16-text-regex.zip](data/16-text-regex.zip) and open
 
 :::::
 
-[The file holds every statement from 31 Jan 2006 to 16 Sep 2026, collected
-from federalreserve.gov: 171 statements, 165 of them after scheduled
-meetings. The Fed's pages are in the public domain.]{.source}
-
-::: {.content-visible when-format="revealjs"}
-
-::: {.notes}
-This is the file the scraping session built. The meeting came 12 days
-after Silicon Valley Bank failed, which is why paragraph 2 opens "The U.S.
-banking system is sound and resilient."
-:::
-
-:::
-
-## Building the target range and net tone from each statement's text {#two-variables .smaller}
-
-::: {style="font-size:0.8em"}
-
-One row of `fomc_statements.csv`:
-
-| date | url | words | scheduled | text |
-|:--|:--|--:|:--|:--------------------|
-| 2023-03-22 | .../monetary20230322a.htm | 365 | TRUE | "Recent indicators point to modest growth in spending and production ..." |
-
-The two variables built today, for three statements:
-
-| Statement | lower | upper | net tone |
-|:--|--:|--:|--:|
-| 16 Dec 2008 | 0.00 | 0.25 | −1.49 |
-| 22 Mar 2023 | 4.75 | 5.00 | 0.00 |
-| 16 Sep 2026 | 3.75 | 4.00 | 1.57 |
-
-:::
-
-::: {.dashes style="font-size:0.8em"}
-
-- `text` → a pattern → `lower` and `upper`, compared with FRED's daily
-  target. **FRED** is the free data service of the Federal Reserve Bank of
-  St. Louis, one of the Fed's 12 regional banks. It publishes the target
-  for every day.
-- `text` → word counts → **net tone**: positive words minus negative
-  words, per 100 words.
-
-:::
+[Paragraphs 1 and 2 of the policy statement of 16 December 2008, during
+the financial crisis. The Federal Reserve, the US central bank, publishes
+a statement after each policy meeting.]{.source}
 
 # 1 · Text as data in economics {#part-text-data}
 
@@ -367,6 +337,7 @@ on readers.
 
 ::: {.content-visible when-format="revealjs"}
 
+- The Fed's policy statements
 - Finding a word
 - Character classes and quantifiers
 - Anchors and whole words
@@ -376,6 +347,50 @@ on readers.
 
 Unzip [16-text-regex.zip](data/16-text-regex.zip) and open
 `16-text-regex.Rproj`.
+
+:::
+
+## The Fed's policy statements, today's documents {#statement .smaller}
+
+::::: {.columns}
+
+::: {.column width="48%"}
+
+![](figures/16-text-regex/S01-statement-20230322-top.png){fig-align="center" fig-alt="The third paragraph of the Federal Reserve's statement of 22 March 2023, as the Fed's page shows it, with the sentence 'the Committee decided to raise the target range for the federal funds rate to 4-3/4 to 5 percent' highlighted."}
+
+:::
+
+::: {.column width="52%"}
+
+::: {.dashes style="font-size:0.82em"}
+
+- The Federal Reserve ("the Fed") is the US central bank.
+- Its **Federal Open Market Committee (FOMC)** sets the policy interest
+  rate. It meets eight times a year and publishes a statement after each
+  meeting. A few statements follow unscheduled meetings.
+- The **federal funds rate** is the rate banks charge each other for
+  overnight loans. The Fed steers it.
+- The **target range** is the band the FOMC announces for that rate.
+  "4-3/4 to 5 percent" means 4.75 to 5. Before 16 December 2008 the FOMC
+  announced a single number.
+
+:::
+
+:::
+
+:::::
+
+[The file holds every statement from 31 Jan 2006 to 16 Sep 2026, collected
+from federalreserve.gov: 171 statements, 165 of them after scheduled
+meetings. The Fed's pages are in the public domain.]{.source}
+
+::: {.content-visible when-format="revealjs"}
+
+::: {.notes}
+This is the file the scraping session built. The meeting came 12 days
+after Silicon Valley Bank failed, which is why paragraph 2 opens "The U.S.
+banking system is sound and resilient."
+:::
 
 :::
 
@@ -833,9 +848,10 @@ fomc$date[which(!fomc$agree)]
 
 ::: {.dashes style="font-size:0.66em"}
 
-- **FRED's series**: DFEDTAR, the single target to 15 Dec 2008 (copied
-  into both columns), and DFEDTARL and DFEDTARU, the lower and upper
-  limits from 16 Dec 2008.
+- **FRED**, the free data service of the Federal Reserve Bank of St.
+  Louis, gives the target for every day: DFEDTAR, the single target to
+  15 Dec 2008 (copied into both columns), then DFEDTARL and DFEDTARU, the
+  lower and upper limits.
 - **`match()`** finds the position of each statement's next day among
   FRED's dates. Adding 1 to a date gives the next day: on that day FRED
   shows the range just decided.
