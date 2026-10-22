@@ -50,8 +50,10 @@ knitr::opts_knit$set(root.dir = file.path(session_dir, "data/16-text-regex"))
 [the project](data/16-text-regex.zip)
 
 How to turn text into variables with patterns and word counts. The
-Federal Reserve's policy statements since 2006 carry the code and both
-exercises. Two variables come out of them: the target range for the
+session starts with what a regular expression is and its metacharacters,
+then the three everyday uses (validating a format, extracting a value,
+replacing text) on short examples, then the same tools on a large text:
+the Federal Reserve's policy statements since 2006. Two variables come out of them: the target range for the
 policy rate, pulled out of each statement with a regular expression and
 compared with the Fed's own daily series, and the tone of each statement,
 counted with a finance word list. A chatbot writes the extraction code
@@ -80,22 +82,28 @@ corpus.
 
 By the end of this session you can:
 
-- Find a word in many documents with `str_detect()`.
-- Count a word in each document with `str_count()`.
+- Say what a regular expression is and read its metacharacters.
 - Write a pattern with character classes, quantifiers, `^`, `$` and
   `\\b`.
-- Extract numbers from text with capture groups and `str_match()`.
+- Validate a format with an anchored pattern and `str_detect()`.
+- Extract numbers from text with `str_extract()`, capture groups and
+  `str_match()`.
+- Clean and reformat text with `str_replace_all()` and backreferences.
+- Give the base R name of each `stringr` function used.
 - Rerun a test on strings copied from the documents after every change
   to a pattern.
+- Find a word in many documents with `str_detect()`.
+- Count a word in each document with `str_count()`.
+- Split text into words with `str_extract_all()`.
+- Count words with `table()` after dropping stop words.
+- Score each statement's net tone with a finance word list.
 - Read a chatbot's pattern piece by piece, including `(?: )`, lazy `.*?`
   and the options of `regex()`.
 - Compare an extracted variable with FRED's daily series row by row.
 - Find a look-alike character by its code point with `utf8ToInt()`.
 - Replace a character in every document with `str_replace_all()`.
-- Split text into words with `str_extract_all()`.
-- Count words with `table()` after dropping stop words.
-- Score each statement's net tone with a finance word list.
-- Give the base R name of each `stringr` function used.
+- Say when a regular expression is the right tool, and when a parser or a
+  model is.
 
 :::
 
@@ -104,26 +112,31 @@ By the end of this session you can:
 ::: {style="font-size:0.74em"}
 
 1. **Text as data in economics**\
-   [Three studies · the terms]{.topics}
-2. **Regex basics in `stringr`**\
-   [The Fed statements · finding a word · character classes · quantifiers · anchors · whole words · testing a pattern · capture groups · Exercise 1]{.topics}
-3. **Extracting the target range with a chatbot's pattern**\
-   [Reading the pattern piece by piece · running it on 171 statements · comparing with the Fed's daily target · a hyphen that looks like another · fixing the code · base R names]{.topics}
-4. **Counting words and scoring tone**\
-   [Splitting text into words · counting them · stop words · Exercise 2 · a finance word list · net tone]{.topics}
-5. **What patterns and counts miss**
+   [Three papers · the terms]{.topics}
+2. **Regex basics**\
+   [What a regular expression is · metacharacters · character classes · quantifiers · anchors · groups]{.topics}
+3. **Validation, extraction and replacement**\
+   [The functions · checking a format · pulling out numbers · cleaning text · testing a pattern · Exercise 1]{.topics}
+4. **Patterns on 171 Fed statements**\
+   [Finding a word · false positives · word counts · Exercise 2 · net tone]{.topics}
+5. **A chatbot writes the extraction code**\
+   [Reading its pattern · comparing it with the Fed's daily series · a look-alike hyphen · fixing the code]{.topics}
+6. **When to use regex**
 
 :::
 
 ::: {.content-visible when-format="revealjs"}
 
-[In the R Console, during Part 1: `install.packages(c("stringr", "stopwords"))`.
-Before Part 2: unzip [16-text-regex.zip](data/16-text-regex.zip) and open
-`16-text-regex.Rproj`.]{.source}
+::: {style="font-size:0.72em"}
+
+Before Part 4: unzip [16-text-regex.zip](data/16-text-regex.zip) and open
+`16-text-regex.Rproj`.
 
 :::
 
-## Turning a statement's text into variables {#text-to-variables .smaller}
+:::
+
+## From text to variables {#text-to-variables .smaller}
 
 ::::: {.columns}
 
@@ -151,10 +164,12 @@ has [weakened]{style="color:#B31B1B;font-weight:600"} further.
 ::: {.dashes style="font-size:0.9em"}
 
 - **A pattern** finds [0&nbsp;to&nbsp;1/4&nbsp;percent]{style="background:#FFF3B0"}
-  → `lower` = 0 and `upper` = 0.25.
-- **A count of listed words**: the whole statement has
-  [8 negative]{style="color:#B31B1B;font-weight:600"} and 2 positive words
-  in 403 → **net tone** =&nbsp;100&nbsp;×&nbsp;(2&nbsp;−&nbsp;8)&nbsp;/&nbsp;403&nbsp;=&nbsp;−1.49.
+  → `lower` = 0 and `upper` = 0.25 (percent).
+- **A count of words on a finance word list**: the statement has 403
+  words. [8 are negative]{style="color:#B31B1B;font-weight:600"} (the 4 in
+  red are in these two paragraphs) and 2 are positive.
+- **Net tone** = 100 × (positive − negative) / words
+  =&nbsp;100&nbsp;×&nbsp;(2&nbsp;−&nbsp;8)&nbsp;/&nbsp;403&nbsp;=&nbsp;−1.49.
 - Run on all 171 statements from 2006 to 2026, each method gives a column
   you can plot and compare with other data.
 
@@ -164,25 +179,72 @@ has [weakened]{style="color:#B31B1B;font-weight:600"} further.
 
 :::::
 
-[Paragraphs 1 and 2 of the policy statement of 16 December 2008, during
-the financial crisis. The Federal Reserve, the US central bank, publishes
-a statement after each policy meeting.]{.source}
+::: {style="font-size:0.8em; padding-top:0.6em"}
+
+The Federal Reserve (the Fed) is the US central bank. Its policy
+committee, the Federal Open Market Committee (FOMC), sets a target range
+for the federal funds rate (the interest rate banks charge each other on
+overnight loans). It publishes a statement after each meeting.
+
+:::
+
+[Paragraphs 1 and 2 of the FOMC statement of 16 December 2008, during the
+financial crisis.]{.source}
 
 # 1 · Text as data in economics {#part-text-data}
 
 ::: {.content-visible when-format="revealjs"}
 
-- A keyword index from newspapers
-- The tone of Fed meetings
-- One phrase before and after a style rule
+- Three papers that count words
 - The terms
 
-During Part 1, in the R Console:
-`install.packages(c("stringr", "stopwords"))`.
+Install now, in the R Console:
+
+```r
+install.packages(c("stringr", "stopwords"))
+```
 
 :::
 
-## A monthly index of economic policy uncertainty from newspaper articles {#bbd .smaller}
+## Three papers that count words {#papers .smaller}
+
+::: {style="font-size:0.74em"}
+
+| Paper | Text | What they counted | Finding |
+|:-------------|:-------------|:----------------------|:-------------------------|
+| [Baker, Bloom & Davis (QJE, 2016)](https://doi.org/10.1093/qje/qjw024) | articles in 10 US newspapers, each month | share of articles with a word from each of three lists: economy, policy, uncertainty (an uncertainty index) | the index rises near close elections, wars, 9/11, the failure of Lehman Brothers and the 2011 debt-ceiling fight |
+| [Shapiro & Wilson (REStud, 2022)](https://doi.org/10.1093/restud/rdab094) | transcripts of Fed policy meetings, [2000–2011]{style="white-space:nowrap"} | negative and positive words from a finance word list | the committee aimed at about 1.5 percent inflation, below the 2 percent usually assumed |
+| [Djourelova (AER, 2023)](https://doi.org/10.1257/aer.20211537) | more than 2,000 US news outlets | the phrase "illegal immigrant", before and after the Associated Press told its reporters to stop using it in April 2013 | readers of papers that relied on AP stories became less supportive of restrictive immigration policy |
+
+:::
+
+::: {style="font-size:0.74em"}
+
+Lehman Brothers: a large US investment bank that failed in September 2008.
+Debt ceiling: the legal limit on US federal borrowing. Associated Press
+(AP): a US news agency whose stories many local papers reprint.
+
+**Takeaway:** each paper turns text into a variable by counting words or
+a phrase. In the first two, people read a random sample by hand to confirm
+the count measures what the authors claim. Details and figures are on the
+session page.
+
+:::
+
+::: {.content-visible when-format="revealjs"}
+
+::: {.notes}
+Lehman Brothers: a large US investment bank that failed in September 2008.
+The debt ceiling: the legal limit on federal borrowing. The Associated
+Press is a news agency whose stories many local papers reprint.
+:::
+
+:::
+
+::: {.content-hidden when-format="revealjs"}
+
+### Baker, Bloom & Davis: a keyword index from newspapers
+
 
 ::::: {.columns}
 
@@ -234,7 +296,9 @@ NBER WP 21633). The list of the 10 papers is on policyuncertainty.com.
 
 :::
 
-## The tone of Fed meetings, scored with a finance word list {#shapiro-wilson .smaller}
+
+### Shapiro & Wilson: the tone of Fed meetings
+
 
 ::::: {.columns}
 
@@ -285,7 +349,9 @@ over 2000-11.
 
 :::
 
-## One phrase counted before and after a news agency changed its style rule {#djourelova .smaller}
+
+### Djourelova: one phrase in the news
+
 
 ::::: {.columns}
 
@@ -329,28 +395,496 @@ on readers.
 
 :::
 
-## Terms for text as data, shown on the Fed statements {#terms .smaller}
 
-![](figures/16-text-regex/D05-text-terms.png){width="96%" fig-align="center" fig-alt="A diagram of the terms on the Fed file. The corpus holds all 171 statements; a document is one statement, one row; a string is text in R between quotes. Two lanes leave the document. A pattern, or regular expression, describes text to find; the match is the text found, 'to 4-3/4 to 5 percent'; the variables lower and upper come from it. Tokens are single words, 73,839 in the corpus; a word list marks positive and negative words; the counts give the variable net tone."}
+:::
 
-# 2 · Regex basics in stringr {#part-regex}
+## Terms for text as data {#terms .smaller}
+
+![](figures/16-text-regex/D05-text-terms.png){width="96%" fig-align="center" fig-alt="A diagram of the terms on the Fed file. The corpus holds all 171 statements; a document is one statement, one row; a string is text in R between quotes. Two lanes leave the document. A pattern, or regular expression, describes text to find; the match is the text found, '4-3/4 to 5 percent'; the variables lower and upper come from it. Tokens are single words, 73,839 in the corpus; a word list marks positive and negative words; the counts give the variable net tone."}
+
+::: {style="font-size:0.72em"}
+
+Corpus: the 171 Fed statements, 2006–2026. Example document: the
+statement of 22 March 2023 (target range 4-3/4 to 5 percent).
+
+:::
+
+# 2 · Regex basics {#part-regex}
+
+::: {.content-visible when-format="revealjs"}
+
+- What a regular expression is
+- Metacharacters
+- Character classes and the dot
+- Quantifiers
+- Anchors and word boundaries
+- Groups and alternatives
+
+:::
+
+## What a regular expression is {#what-regex .smaller .code-120}
+
+::: {.dashes style="font-size:0.78em"}
+
+- A **regular expression** (regex) is a pattern, written as a string,
+  that describes a set of texts. A function reads the pattern and finds
+  the stretches of text that fit it, called **matches**.
+- Most characters match themselves: the pattern `"rate"` finds the
+  letters r, a, t, e in that order. These are **literals**.
+- A few characters have a special meaning, such as `?`, which makes the
+  piece before it optional. These are **metacharacters**.
+- The same syntax works in most programming languages and text editors.
+
+:::
+
+```{r}
+#| filename: "R Console; needs stringr"
+# install.packages(c("stringr", "stopwords"))   # once
+library(stringr)               # text functions; every name starts with str_
+words <- c("color", "colour", "colr", "Colour")
+str_detect(words, "colou?r")   # TRUE if the string contains a match; ? makes the u optional
+str_view(words, "colou?r")     # the strings that match, each match in < >
+str_detect(words, regex("colou?r", ignore_case = TRUE))   # upper and lower case match alike
+```
+
+::: {style="font-size:0.74em"}
+
+Matching is case-sensitive, so "Colour" does not match until
+`ignore_case = TRUE` inside `regex()` turns that off.
+
+:::
+
+## Metacharacters {#metacharacters .smaller}
+
+::: {style="font-size:0.72em"}
+
+| Symbol | Means | Pattern | Example match |
+|:------|:------------------------------------|:------------|:--------------|
+| `.` | any one character | `r.te` | rate, rite |
+| `[ ]` | one character from the set | `[0-9]` | 4 |
+| `[^ ]` | one character not in the set | `[^0-9]` | the - and / in 4-3/4 |
+| `?` | the piece before, zero or one time | `rates?` | rate, rates |
+| `*` | the piece before, zero or more times | `10*` | 1, 10, 100 |
+| `+` | the piece before, one or more times | `[0-9]+` | 2026 |
+| `{n}` | the piece before, exactly n times | `[0-9]{4}` | 2026 |
+| `^` `$` | the start, the end of the text | `^The` | "The" at the start |
+| <code>&#124;</code> | the piece on either side | <code>raise&#124;lower</code> | raise, lower |
+| `( )` | a group, whose match R can return alone | `([0-9]+)%` | 4% (group: 4) |
+| `\\` | the next character is plain (in R, typed twice) | `\\.` | a period |
+
+:::
+
+::: {style="font-size:0.72em"}
+
+**Shortcuts**: `\\d` a digit, `\\s` a space or line break, `\\w` a letter,
+digit or underscore, `\\b` the edge of a word. In R each backslash is
+written twice: you type `"\\d"` and the pattern receives `\d`. A
+**piece** is one character, a class in brackets, or a group.
+
+:::
+
+## Character classes `[ ]` and `\\d` {#classes .smaller}
+
+```{r}
+#| filename: "R Console; needs stringr"
+# a sentence from the Fed's policy statement of 22 March 2023
+x <- "the Committee decided to raise the target range for the federal funds rate to 4-3/4 to 5 percent."
+str_view(x, "\\d")
+str_view(x, "[0-9/-]")
+str_view(x, "[^a-z ]")      # ^ inside brackets: any character NOT in the set
+```
+
+::: {.dashes style="font-size:0.8em"}
+
+- **Character class**: characters in brackets. It matches any one of them.
+- Inside brackets, `0-9` means any digit and `a-z` any lowercase letter.
+  A hyphen placed last, as in `[0-9/-]`, is a plain hyphen.
+- `[^ ]` matches any one character NOT in the set. The set in `[^a-z ]`
+  is the lowercase letters and the space, so it catches the capital C,
+  the digits, the - and the /, and the final period.
+- **`\\d`**: one digit, the same as `[0-9]`.
+- The Fed writes rates as a whole number and a fraction: "4-3/4 percent"
+  is 4.75 percent.
+
+:::
+
+## The dot and the escape {#dot .smaller .code-110}
+
+```{r}
+#| filename: "R Console; needs stringr and x"
+str_view(c("rate", "rite", "r8te", "rte"), "r.te")   # . : any one character
+str_view(x, "\\.")           # \\. : a period
+c(str_count(x, "."), str_count(x, "\\."))
+```
+
+::: {.dashes style="font-size:0.78em"}
+
+- **The dot `.`**: any one character.
+- The dot needs exactly one character, so "rte" does not match.
+  `str_count()` counts the matches in each string.
+- **Escape**: a backslash that turns a metacharacter back into a plain
+  character: `\\.` a period, `\\$` a dollar sign, `\\?` a question mark,
+  `\\(` a parenthesis.
+- `x` has 97 characters. `"."` matches each of them, and `"\\."` only the
+  period.
+
+:::
+
+## Quantifiers {#quantifiers .smaller .code-120}
+
+```{r}
+#| filename: "R Console; needs x"
+str_extract_all(x, "[0-9/-]+")            # + : one or more of the piece before
+str_extract(x, "\\d+-\\d+/\\d+")           # a whole number, a hyphen, a fraction
+str_detect(c("1/4 percentage point", "1/2 percentage points"), "percentage points?")
+str_extract(c("year 2026", "26"), "\\d{4}")   # {4} : exactly four digits
+```
+
+::: {.dashes style="font-size:0.8em"}
+
+- **Quantifier**: a mark after a piece (one character, a class in
+  brackets, or a group) saying how many times it may repeat: `+` one or
+  more, `*` zero or more, `?` zero or one, `{4}` exactly four.
+- `str_extract()` returns the first match in each string, or NA.
+  `str_extract_all()` returns every match, as a list with one element per
+  string (the `[[1]]`).
+
+:::
+
+## Anchors and word boundaries {#anchors-words .smaller .code-120}
+
+```{r}
+#| filename: "R Console; needs stringr"
+s <- c("rate", "the rate rose", "moderate", "rates")
+str_detect(s, "rate")             # the literal also matches inside other words
+str_detect(s, "\\brate\\b")       # \\b : the edge of a word
+str_detect(s, "^rate$")           # ^ : start of the text; $ : end of the text
+```
+
+::: {.dashes style="font-size:0.8em"}
+
+- **Anchor**: `^` pins the pattern to the start of the text and `$` to
+  the end. With both, the whole string must match. Inside brackets, `^`
+  means NOT.
+- **Word boundary `\\b`**: the edge between a letter, digit or underscore
+  and anything else: a space, a punctuation mark, or the start or end of
+  the text.
+- **False positive**: text the pattern catches but should skip, such as
+  "moderate" when you want the word "rate". **False negative**: text it
+  misses but should catch, such as "rates" under `\\brate\\b`.
+
+:::
+
+## Capture groups `( )` {#groups .smaller .code-120}
+
+```{r}
+#| filename: "R Console; needs stringr"
+rates <- c("4-3/4", "1-1/2", "5")             # rates as the Fed writes them
+m <- str_match(rates, "(\\d+)-(\\d+)/(\\d+)")  # whole number, numerator, denominator
+m
+as.numeric(m[, 2]) + as.numeric(m[, 3]) / as.numeric(m[, 4])   # 4 + 3/4 = 4.75
+```
+
+::: {.dashes style="font-size:0.8em"}
+
+- **Capture group**: a part of the pattern inside `( )`. `str_match()`
+  returns the whole match in column 1, then one column per group, in the
+  order the groups open.
+- The groups split "4-3/4" into 4, 3 and 4, so the last line can compute
+  4 + 3/4 = 4.75.
+- "5" has no fraction, so the pattern finds no match and the whole row is
+  NA.
+
+:::
+
+## Alternatives `|` {#alternatives .smaller .code-120}
+
+```{r}
+#| filename: "R Console; needs stringr"
+# phrases from the Fed statements of 8 Aug 2006, 22 Mar 2023 and 16 Dec 2008
+phrases <- c("keep its target for the federal funds rate at 5-1/4 percent",
+             "raise the target range for the federal funds rate to 4-3/4 to 5 percent",
+             "establish a target range for the federal funds rate of 0 to 1/4 percent")
+str_match(phrases, "(?:at|to|of) ([0-9/-]+) percent")
+```
+
+::: {.dashes style="font-size:0.8em"}
+
+- `at|to|of` matches at, to or of. `(?: )` groups the three words without
+  adding a column, so the number lands in column 2.
+- Rows 2 and 3 return only the upper end of the range:
+  - The pattern needs a space and "percent" right after the number.
+  - After "to 4-3/4" comes "to 5", so the search moves on and matches
+    "to 5 percent".
+  - Getting both ends takes a second number group.
+
+:::
+
+::: {.content-visible when-format="revealjs"}
+
+::: {.notes}
+The same constructions come back in the chatbot's pattern in Part 5.
+:::
+
+:::
+
+# 3 · Validation, extraction and replacement {#part-uses}
+
+::: {.content-visible when-format="revealjs"}
+
+- The functions for each task
+- Validating a format
+- Extracting numbers
+- Replacing and cleaning text
+- Testing a pattern
+- Exercise 1
+
+:::
+
+## The functions for each task {#functions .smaller}
+
+::: {style="font-size:0.7em"}
+
+| Task and result | `stringr` | base R |
+|:---------------------|:------------------------------|:-------------------------------------------------|
+| **find, validate**<br>TRUE or FALSE | `str_detect(x, p)` | `grepl(p, x)` |
+| **count**<br>a number per string | `str_count(x, p)` | `lengths(regmatches(x, gregexpr(p, x)))` |
+| **extract**<br>first match, or NA | `str_extract(x, p)` | `regmatches(x, regexpr(p, x))` |
+| **groups**<br>match, then groups | `str_match(x, p)` | `regmatches(x, regexec(p, x))` |
+| **extract all**<br>a list of matches | `str_extract_all(x, p)` | `regmatches(x, gregexpr(p, x))` |
+| **replace**<br>the new strings | `str_replace_all(x, p, r)` | `gsub(p, r, x)` |
+
+:::
+
+::: {style="font-size:0.72em"}
+
+Result: what the `stringr` function returns. `x` is the text, `p` the
+pattern and `r` the replacement. Base R puts the pattern first, and its
+extract functions drop strings with no match. Chatbots write either style.
+
+:::
+
+::: {.content-hidden when-format="revealjs"}
+
+Where base R and `stringr` behave differently:
+
+| `stringr` | base R | What differs |
+|:--------------------------------|:-------------------------------|:---------------------------|
+| `str_extract(x, p)` | `regmatches(x, regexpr(p, x))` | base R drops strings with no match, so the result is shorter than `x` |
+| `str_match(x, p)` | `regmatches(x, regexec(p, x))` | a list, not a matrix; an optional group that did not match is `""`, not NA |
+| `str_split(x, p)` | `strsplit(x, p)` | `strsplit()` drops a final empty string |
+| `str_c(...)` | `paste0(...)` | `paste0()` writes NA as "NA"; `str_c()` returns NA |
+| `regex(p, ignore_case = TRUE)` | `ignore.case = TRUE` | |
+
+:::
+
+::: {.content-hidden when-format="revealjs"}
+
+**Engine**: the code that runs a pattern. Base R has two, and
+`perl = TRUE` picks the second.
+
+The other functions used today:
+
+| `stringr` | base R |
+|:--|:--|
+| `str_split(x, p)` | `strsplit(x, p)` |
+| `str_sub(x, 1, 4)` | `substr(x, 1, 4)` |
+| `str_to_lower(x)` | `tolower(x)` |
+
+On all 171 statements, the `grepl()` and `gregexpr()` counts equal the
+`stringr` results with or without `perl = TRUE`. The two engines differ on
+the dot: the default engine's `.` matches a line break, which `stringr`'s
+does only with `dotall = TRUE`; with `perl = TRUE`, `.` stops at a line
+break unless the pattern starts with `(?s)`. So the reply's first step,
+run through `regexpr()`, gives 23 NA with the default engine (the same as
+`stringr` with `dotall`) and 36 with `perl = TRUE`. `perl = TRUE` also
+adds lookarounds such as `(?=...)`. The three changes written in base R
+give 170 of 171 with either engine (Practice 5).
+
+:::
+
+## Validating a format {#validation .smaller .code-120}
+
+```{r}
+#| filename: "R Console; needs stringr"
+fips <- c("06037", "6037", "36109", "3610A", " 36109")   # US county codes
+str_detect(fips, "^\\d{5}$")         # exactly five digits, nothing before or after
+str_detect(fips, "\\d{5}")           # without the anchors, " 36109" passes
+fips[!str_detect(fips, "^\\d{5}$")]  # the values that fail
+dates <- c("2026-10-22", "10/22/2026", "2026-1-5")
+str_detect(dates, "^\\d{4}-\\d{2}-\\d{2}$")   # year-month-day, two digits each
+```
+
+::: {.dashes style="font-size:0.8em"}
+
+- **Validation**: checking that every value has the format it should,
+  before you merge or analyze the data.
+- A **FIPS code** is the US government's five-digit code for each US
+  county: two digits for the state, three for the county. Read as a
+  number, "06037" (Los Angeles County, California) becomes 6037, and a
+  merge on it fails.
+
+:::
+
+## Extracting numbers {#extraction .smaller .code-120}
+
+```{r}
+#| filename: "R Console; needs stringr"
+prices <- c("$1,250", "price: $99.99", "free", "$52,000")
+str_extract(prices, "[0-9,.]+")             # digits, commas and periods
+ages <- c("<1", "1-5", "5-10", "15+")        # age groups in a mortality table
+str_match(ages, "(\\d+)(?:-(\\d+))?")         # group 1: the first number; group 2: the second
+```
+
+::: {.dashes style="font-size:0.8em"}
+
+- **Extraction**: keeping only the part of each string that matches.
+- `str_extract()` returns the match as text.
+- `str_match()` returns one column per group, so "5-10" splits into "5"
+  and "10". `(?:-(\\d+))?` makes the hyphen and the second number optional
+  together; when they are missing, group 2 is NA.
+- The pattern returns 1 for "<1" and 15 for "15+". You code by hand that
+  "<1" starts at 0 and that "15+" has no upper end.
+
+:::
+
+## Replacing and cleaning text {#replacement .smaller .code-110}
+
+```{r}
+#| filename: "R Console; needs prices"
+amount <- str_extract(prices, "[0-9,.]+")       # "free" has no digits, so NA
+as.numeric(str_replace_all(amount, ",", ""))    # drop the commas, then convert
+str_squish("  Federal   Reserve \n Board ")     # \n: a line break; result: one space between words
+# month/day/year becomes year-month-day
+str_replace(c("10/22/2026", "01/05/2026"), "(\\d{2})/(\\d{2})/(\\d{4})", "\\3-\\1-\\2")
+```
+
+::: {.dashes style="font-size:0.8em"}
+
+- **Replacement**: rewriting what the pattern matches. `str_replace()`
+  changes the first match, `str_replace_all()` every match.
+- **Backreference**: `\\1`, `\\2` and `\\3` in the replacement stand for
+  what groups 1, 2 and 3 matched. The US writes dates month/day/year
+  (10/22/2026), so the replacement puts the year first: 2026-10-22.
+- `as.numeric("1,250")` gives NA, which is why the commas go first.
+
+:::
+
+## Testing a pattern {#tests .smaller}
+
+```{r}
+#| filename: "R Console; needs stringr"
+should_match <- c("the federal funds rate", "longer-term interest rates")
+should_skip  <- c("at a moderate pace", "to generate sustained improvement")
+str_detect(should_match, "\\brate\\b")
+str_detect(should_skip, "\\brate\\b")
+str_detect(should_match, "\\brates?\\b")      # ? makes the "s" optional
+str_detect(should_skip, "\\brates?\\b")
+str_detect(should_skip, "rate")               # without \\b, "moderate" and "generate" match
+```
+
+::: {.dashes style="font-size:0.72em"}
+
+- Test a pattern on strings with a known answer first. Goal here: the
+  word "rate" or "rates", and not "moderate" or "generate".
+- **Should-match and should-skip tests**: short vectors of real strings
+  the pattern must catch and must leave alone, rerun after every change.
+- `\\brate\\b` misses "rates" (false negative); `"rate"` catches both skip
+  strings (false positives); `\\brates?\\b` passes both.
+- Copy test strings from the documents. When the corpus shows a case the
+  pattern gets wrong, add that string to one of the two vectors.
+
+:::
+
+## Exercise 1 {#exercise-1 .smaller}
+
+::: {.panel-tabset}
+
+### Exercise
+
+::: {style="font-size:1.2em"}
+
+```{r}
+#| label: exercise-1
+#| exercise: true
+#| script: "Exercise 1 (5 minutes)"
+#| eval: false
+# Exercise 1 (5 minutes). R Console; needs stringr. Answers to a survey
+# question on yearly income:
+income <- c("$52,000", "48500", "Income: $61,250.00", "N/A", "about 40k",
+            "$1,000,000")
+# 1. Validation: write ok_pat, a pattern for an answer that is only an
+#    amount: an optional $, then digits and commas, then optional cents
+#    (.00). Run str_detect(income, ok_pat). Alone, $ means the end of the
+#    text, so write \\$ for a dollar sign.
+# 2. Extraction: pull the number out of every answer with str_extract().
+# 3. Replacement: drop the commas with str_replace_all(), then as.numeric().
+# 4. Read the result next to income. Which answers give NA or a wrong number?
+#
+# Two answers to compare with the room: how many answers pass step 1, and
+# what "about 40k" becomes.
+```
+
+:::
+
+### Solution
+
+```{r}
+#| label: exercise-1-solution
+#| purl: false
+#| filename: "R Console; needs stringr"
+income <- c("$52,000", "48500", "Income: $61,250.00", "N/A", "about 40k",
+            "$1,000,000")
+ok_pat <- "^\\$?[0-9,]+(\\.\\d{2})?$"
+str_detect(income, ok_pat)
+n <- str_extract(income, "[0-9,.]+")
+as.numeric(str_replace_all(n, ",", ""))
+```
+
+::: {.content-visible when-format="revealjs"}
+
+**Three answers pass: "\$52,000", "48500" and "\$1,000,000". "about 40k"
+becomes 40, a thousand times too small, with no warning. It fails step 1,
+which is how you find it.**
+
+:::
+
+:::
+
+::: {.content-visible when-format="revealjs"}
+
+::: {.notes}
+Uses only the functions of this part. The $ needs an escape because, on
+its own, $ is the end anchor. Without ^ and $, "Income: $61,250.00" passes
+step 1. "N/A" gives NA in step 2, which is the right answer for a missing
+value.
+:::
+
+:::
+
+# 4 · Patterns on 171 Fed statements {#part-fed}
 
 ::: {.content-visible when-format="revealjs"}
 
 - The Fed's policy statements
-- Finding a word
-- Character classes and quantifiers
-- Anchors and whole words
-- Testing a pattern
-- Capture groups
-- Exercise 1
+- Finding a word in 171 statements
+- False positives in a large text
+- Splitting text into words
+- Word counts and stop words
+- Exercise 2
+- A finance word list and net tone
 
-Unzip [16-text-regex.zip](data/16-text-regex.zip) and open
+::: {style="font-size:0.8em"}
+
+Unzip [16-text-regex.zip](data/16-text-regex.zip) (the 171 statements in
+`fomc_statements.csv`, plus the files for later slides) and open
 `16-text-regex.Rproj`.
 
 :::
 
-## The Fed's policy statements, today's documents {#statement .smaller}
+:::
+
+## The Fed's policy statements {#statement .smaller}
 
 ::::: {.columns}
 
@@ -373,6 +907,9 @@ Unzip [16-text-regex.zip](data/16-text-regex.zip) and open
 - The **target range** is the band the FOMC announces for that rate.
   "4-3/4 to 5 percent" means 4.75 to 5. Before 16 December 2008 the FOMC
   announced a single number.
+- **The file** `fomc_statements.csv` has one row per statement: 171
+  statements, 31 Jan 2006 to 16 Sep 2026, 165 of them after scheduled
+  meetings.
 
 :::
 
@@ -380,9 +917,7 @@ Unzip [16-text-regex.zip](data/16-text-regex.zip) and open
 
 :::::
 
-[The file holds every statement from 31 Jan 2006 to 16 Sep 2026, collected
-from federalreserve.gov: 171 statements, 165 of them after scheduled
-meetings. The Fed's pages are in the public domain.]{.source}
+[Screenshot: federalreserve.gov, statement of 22 March 2023 (public domain).]{.source}
 
 ::: {.content-visible when-format="revealjs"}
 
@@ -394,12 +929,10 @@ banking system is sound and resilient."
 
 :::
 
-## Loading the statements and finding a word with `str_detect()` and `str_count()` {#detect .smaller}
+## Finding a word in 171 statements {#detect .smaller}
 
 ```{r}
 #| filename: "R Console, in the 16-text-regex folder; needs stringr; reads fomc_statements.csv (date, url, words, text, scheduled)"
-# install.packages(c("stringr", "stopwords"))   # once
-library(stringr)                     # text functions; every name starts with str_
 fomc <- read.csv("fomc_statements.csv")
 dim(fomc)
 c(inflation = sum(str_detect(fomc$text, "inflation")),
@@ -410,14 +943,17 @@ summary(fomc$n_infl)
 fomc$date[which(fomc$n_infl == 0)]   # which(): the positions where the condition is TRUE
 ```
 
-::: {style="font-size:0.72em"}
+::: {.dashes style="font-size:0.72em"}
 
-**Literal pattern**: the word itself. Matching is case-sensitive, so
-"Inflation" and "inflation" are different patterns;
-`regex(..., ignore_case = TRUE)` matches either. `str_detect()` returns
-TRUE or FALSE for each statement and `sum()` counts the TRUEs.
-`str_count()` returns the number of matches in each statement, which
-makes it a variable.
+- **Literal pattern**: a pattern with no metacharacters. Matching is
+  case-sensitive: 165 statements contain "inflation", 99 "Inflation", 168
+  either.
+- `str_detect()` gives TRUE or FALSE per statement, and `sum()` counts the
+  TRUEs. `str_count()` gives the number of matches per statement, a new
+  column `n_infl` (0 to 17, median 8).
+- The three statements without "inflation" all followed unscheduled
+  meetings: 17 Aug 2007, and 3 and 23 Mar 2020, as the coronavirus
+  spread.
 
 :::
 
@@ -431,198 +967,115 @@ three statements with no "inflation" are the unscheduled 17 Aug 2007 and
 
 :::
 
-## Matching one character from a set with `\\d`, `[ ]` and `[^ ]` {#classes .smaller}
+## False positives in a large text {#false-positives .smaller}
 
 ```{r}
-#| filename: "R Console; needs stringr"
-x <- "the Committee decided to raise the target range for the federal funds rate to 4-3/4 to 5 percent."
-str_view(x, "\\d")
-str_view(x, "[0-9/-]")
-str_view(x, "[^a-z ]")      # ^ inside brackets: any character NOT in the set
+#| filename: "R Console; needs fomc"
+sum(str_count(fomc$text, "rate"))
+sum(str_count(fomc$text, "\\brate\\b"))
+caught <- unlist(str_extract_all(fomc$text, "[a-z]*rate[a-z]*"))   # every word containing "rate"
+head(sort(table(caught), decreasing = TRUE), 6)
 ```
 
 ::: {.dashes style="font-size:0.74em"}
 
-- R strings write each backslash twice. You type `"\\d"` and the pattern
-  receives `\d`.
-- **Character class**: a set in brackets, any one of which can match.
-  `[^ ]` matches any one character not in the set. A hyphen placed last
-  in brackets is a plain hyphen.
-- **`\\d`**: one digit. **`\\s`**: one space or line break.
-- `str_view()` marks each match with `< >`.
+- The literal "rate" matches 982 times, the whole word 705 times. The
+  other 277 are 58 "rates", which you may want (`\\brates?\\b` keeps them),
+  and 219 inside other words, such as "moderate" (144).
+- A false positive is text the pattern catches but should skip. In a
+  short test vector you see one at a glance. In 171 statements, a table of
+  everything the pattern caught shows them.
+- `unlist()` puts every statement's matches in one vector, so `table()`
+  can count them.
 
 :::
 
-## Matching any character with `.` and a period with `\\.` {#dot .smaller}
+## Splitting text into words {#tokens .smaller}
 
 ```{r}
-#| filename: "R Console; needs x"
-str_view(x, "r.te")          # . : any one character
-str_view(x, "\\.")           # \\. : a period
-c(str_count(x, "."), str_count(x, "\\."))
+#| filename: "R Console; needs stringr and fomc"
+i <- which(fomc$date == "2023-03-22")                         # the row of the 22 Mar 2023 statement
+fomc$year <- as.numeric(str_sub(fomc$date, 1, 4))             # the year, used in Exercise 2
+tokens <- str_extract_all(str_to_lower(fomc$text), "[a-z]+")  # every run of letters
+head(tokens[[i]], 12)
+length(tokens[[i]])
 ```
 
-::: {.dashes style="font-size:0.78em"}
+::: {.dashes style="font-size:0.74em"}
 
-- **The dot `.`**: any one character.
-- **Escape**: a backslash that turns a special character such as `.`
-  back into a plain one.
-- `x` has 97 characters. `"."` matches each of them, and `"\\."` only the
-  full stop.
-
-:::
-
-## Repeating a piece with the quantifiers `+`, `*`, `?` and `{n}` {#quantifiers .smaller}
-
-```{r}
-#| filename: "R Console; needs x and fomc"
-str_extract_all(x, "[0-9/-]+")                   # + : one or more of the piece before
-str_extract(x, "\\d+-\\d+/\\d+")
-table(str_extract(fomc$text, "\\d+ basis points"), useNA = "ifany")
-table(str_extract(fomc$text, "\\d+/\\d+ percentage points?"))   # ? : zero or one "s"
-```
-
-::: {.dashes style="font-size:0.7em"}
-
-- **Quantifier**: a mark after a piece saying how many times it may
-  repeat. `+` one or more, `*` zero or more, `?` zero or one, `{2}`
-  exactly two.
-- **Basis point**: one hundredth of a percentage point. A move from 5 to
-  5.25 percent is 25 basis points, or 1/4 percentage point.
-- `str_extract()` returns the first match in each statement, or NA when
-  there is none; `useNA = "ifany"` makes `table()` count the NAs.
-  `str_extract_all()` returns every match. The Fed writes "4-3/4" for
-  4.75.
-
-:::
-
-## Anchors with `^` and `$`, and whole words with `\\b` {#anchors-words .smaller}
-
-```{r}
-#| filename: "R Console; needs fomc"
-sum(str_detect(fomc$text, "^Information received"))      # ^ : at the start of the text
-str_detect(c("5", "4-3/4", "4-3/4 to 5"), "^[0-9/-]+$")   # $ : at the end
-sum(str_count(fomc$text, "rate"))
-sum(str_count(fomc$text, "\\brate\\b"))                   # \\b : a word boundary
-caught <- unlist(str_extract_all(fomc$text, "[a-z]*rate[a-z]*"))
-head(sort(table(caught), decreasing = TRUE), 6)
-```
-
-::: {.dashes style="font-size:0.68em"}
-
-- **Anchor**: `^` pins the pattern to the start of the text and `$` to
-  the end; with both, the whole string must match. Inside brackets `^`
-  means NOT.
-- **Word boundary `\\b`**: the edge between a letter and a space, a
-  punctuation mark, or the start or end of the text.
-- **False positive**: text the pattern catches but should skip. The
-  literal "rate" catches 219 other words, such as "moderate" (144 times);
-  another 58 are "rates", which you may want. `unlist()` puts every
-  statement's matches in one vector for `table()`.
+- **Token**: one unit of text after splitting, here a word in lower case.
+  Extracting every run of letters does the split: spaces, punctuation and
+  numbers are left out.
+- `str_to_lower()` comes first so "Inflation" and "inflation" count as
+  one word. `tokens` is a list with one vector of words per statement,
+  and `[[i]]` picks one.
+- The apostrophe is not a letter, so "Committee's" becomes two tokens,
+  "committee" and "s".
 
 :::
 
 ::: {.content-visible when-format="revealjs"}
 
 ::: {.notes}
-Statements from 2009 to January 2020 open with "Information received
-since ..."; most statements since July 2022 open with "Recent indicators"
-(23 of 34). The opening phrase is a variable you can build (Practice 1).
+The file's `words` column says 365 for this statement. It counts words
+differently, which is why the slides say tokens.
 :::
 
 :::
 
-## Testing a pattern on two vectors of strings from the statements {#tests .smaller}
+## Word counts and stop words {#stop-words .smaller}
 
 ```{r}
-#| filename: "R Console; needs stringr"
-should_match <- c("the federal funds rate", "longer-term interest rates")
-should_skip  <- c("at a moderate pace", "to generate sustained improvement")
-str_detect(should_match, "\\brate\\b")
-str_detect(should_skip, "\\brate\\b")
-str_detect(should_match, "\\brates?\\b")      # ? makes the "s" optional
-str_detect(should_skip, "\\brates?\\b")
-str_detect(should_skip, "rate")               # the literal catches both
+#| filename: "R Console; needs tokens and the stopwords package"
+all_words <- unlist(tokens)
+length(all_words)
+head(sort(table(all_words), decreasing = TRUE), 8)
+stop_words <- stopwords::stopwords("en")     # pkg::fun(): a package's function without library()
+kept <- all_words[!all_words %in% stop_words & nchar(all_words) > 1]   # !x %in% y: x is not in y
+head(sort(table(kept), decreasing = TRUE), 8)
 ```
 
-::: {.dashes style="font-size:0.72em"}
+::: {.dashes style="font-size:0.74em"}
 
-- **Should-match and should-skip tests**: short vectors of real strings
-  the pattern must catch and must leave alone, rerun after every change.
-- **False negative**: text the pattern misses but should catch ("rates"
-  under `\\brate\\b`).
-- Copy test strings from the documents. When the corpus shows a case the
-  pattern gets wrong, add that string to one of the two vectors.
-
-:::
-
-## Capture groups, alternatives with `|`, and `(?: )` with `str_match()` {#groups .smaller}
-
-```{r}
-#| filename: "R Console; needs stringr"
-r <- c("4-3/4", "1-1/2", "5")
-m <- str_match(r, "(\\d+)-(\\d+)/(\\d+)")
-m
-is.na(m[, 1])                        # TRUE where the pattern found no match
-p <- c("keep its target for the federal funds rate at 5-1/4 percent",
-       "raise the target range for the federal funds rate to 4-3/4 to 5 percent",
-       "establish a target range for the federal funds rate of 0 to 1/4 percent")
-str_match(p, "(?:at|to|of) ([0-9/-]+) percent")
-```
-
-::: {.dashes style="font-size:0.66em"}
-
-- **Capture group**: a part of the pattern inside `( )`. `str_match()`
-  returns the whole match in column 1, then one column per group.
-- **`|`** matches the piece on either side of it. **`(?: )`** groups
-  pieces for `?` or `|` without adding a column.
-- A match is one unbroken run. After "to 4-3/4" comes " to", so the
-  search moves on to "to 5 percent". A range needs a second number group.
+- **Stop words**: very common words dropped before counting ("the", "of",
+  "will"). The package's default English list (Snowball) has 175.
+- **Term frequency**: a word's count divided by all tokens. "inflation" is
+  1,330 of 73,839, or 1.8 percent.
+- `nchar()` counts characters. `nchar(all_words) > 1` drops 1,793 more
+  one-letter tokens: the s of "Committee's" and "U.S.", and middle
+  initials such as the H in Jerome H. Powell (each statement ends by
+  naming the members who voted).
+- The stop list also drops "not" and "no", which reverse a sentence, and
+  "against", which is on the negative word list used for tone.
 
 :::
 
-::: {.content-visible when-format="revealjs"}
-
-::: {.notes}
-The phrases come from 8 Aug 2006, 22 Mar 2023 and 16 Dec 2008. The same
-constructions come back in the chatbot's pattern in Part 3.
-:::
-
-:::
-
-## Exercise 1 {#exercise-1 .smaller}
+## Exercise 2 {#exercise-2 .smaller}
 
 ::: {.panel-tabset}
 
 ### Exercise
 
-::: {style="font-size:1.1em"}
+::: {style="font-size:1.3em"}
 
 ```{r}
-#| label: exercise-1
+#| label: exercise-2
 #| exercise: true
-#| script: "Exercise 1 (5 minutes)"
+#| script: "Exercise 2 (5 minutes)"
 #| eval: false
-# Exercise 1 (5 minutes). R Console, in the 16-text-regex folder; needs
-# stringr and fomc. The decision sentence says "decided to raise",
-# "decided to lower", "decided to keep" or "decided to maintain", then the
-# target. Test strings from the statements:
-should_match <- c("decided to raise the target range",
-                  "decided to keep the target range")
-should_skip  <- c("preferred to lower the target range",
-                  "decided to continue purchasing additional")
-# 1. Write verb_pat, a pattern with one capture group for the verb, in the
-#    form "decided to (...|...|...|...)".
-# 2. Run str_detect(should_match, verb_pat) and
-#    str_detect(should_skip, verb_pat). You want TRUE TRUE, then FALSE FALSE.
-# 3. Pull the verb from every statement with v <- str_match(fomc$text, verb_pat)
-#    and count column 2 with table(v[, 2], useNA = "ifany").
-# 4. Find the first statement that returns NA with k <- which(is.na(v[, 2]))[1].
-#    Print its date with fomc$date[k], and its decision sentence with
-#    str_extract(fomc$text[k], "[^.]*decided[^.]*").
+# Exercise 2 (5 minutes). R Console; needs fomc (with its year column) and
+# tokens from the previous slides.
+# Which words appear in the statements for the first time in 2022?
 #
-# Two answers to compare with the room: how many statements return NA, and
-# why the first one fails.
+# 1. Put the words of the 2022 statements in one vector:
+#      w22 <- unlist(tokens[fomc$year == 2022])
+# 2. Put the words of every statement before 2022 in a second vector
+#    called before.
+# 3. Keep the 2022 words that are not in the vector before (use %in% and !).
+# 4. Count them with table() and sort them, largest first.
+#
+# Two answers to compare with the room: the most frequent new word, and the
+# new words that are people's names.
 ```
 
 :::
@@ -630,22 +1083,22 @@ should_skip  <- c("preferred to lower the target range",
 ### Solution
 
 ```{r}
-#| label: exercise-1-solution
+#| label: exercise-2-solution
 #| purl: false
-#| filename: "R Console; needs fomc, should_match and should_skip"
-verb_pat <- "decided to (raise|lower|keep|maintain)"
-c(str_detect(should_match, verb_pat), str_detect(should_skip, verb_pat))
-v <- str_match(fomc$text, verb_pat)
-table(v[, 2], useNA = "ifany")
-k <- which(is.na(v[, 2]))[1]
-c(fomc$date[k], str_extract(fomc$text[k], "[^.]*decided[^.]*"))
+#| filename: "R Console; needs fomc and tokens"
+w22    <- unlist(tokens[fomc$year == 2022])
+before <- unlist(tokens[fomc$year < 2022])
+new    <- w22[!w22 %in% before]
+head(sort(table(new), decreasing = TRUE), 16)
 ```
 
 ::: {.content-visible when-format="revealjs"}
 
-**71 statements return NA. The first, 31 Jan 2006, says "decided today to
-raise": "today" sits between the two words, and both tests passed
-anyway.**
+**"war" (8), then "russia" and "ukraine" (7 each) and "invasion" (6): from
+16 Mar 2022 the statements say "The invasion of Ukraine by Russia is
+causing tremendous human and economic hardship." The names belong to four
+new voting members of the committee (Lisa D. Cook, Philip N. Jefferson,
+Michael S. Barr, Susan M. Collins); d and n are their middle initials.**
 
 :::
 
@@ -654,33 +1107,170 @@ anyway.**
 ::: {.content-visible when-format="revealjs"}
 
 ::: {.notes}
-With "decided (?:today )?to (raise|lower|keep|maintain)", 37 NA remain
-(keep 45, lower 20, maintain 44, raise 25). Most read "will maintain" or
-"reaffirmed its view", the wordings Part 3 meets. A student who writes
-"(today )?" with plain parentheses finds the verb in column 3; "(?: )"
-keeps it in column 2. The test strings occur in the corpus: "decided to
-raise the target range" in 21 statements, "decided to keep the target
-range" in 23, "preferred to lower the target range" in 8 dissents,
-"decided to continue purchasing additional" in 6.
+Each statement lists the members who voted. Lisa D. Cook and Philip N.
+Jefferson appear from 15 Jun 2022, Michael S. Barr and Susan M. Collins
+from 27 Jul 2022; "d" and "n" are middle initials. Of the 2,886 words in
+the 2022 statements, 105 are new, 27 different words. The exercise needs
+no stop words, so a student whose stopwords install failed can still do
+it.
 :::
 
 :::
 
-# 3 · Extracting the target range with a chatbot's pattern {#part-chatbot}
+## A finance word list {#lm .smaller}
+
+```{r}
+#| filename: "R Console; reads lm_words.csv"
+lm_words <- read.csv("lm_words.csv")         # word, list: "positive" or "negative"; lower case
+table(lm_words$list)
+pos <- lm_words$word[lm_words$list == "positive"]
+neg <- lm_words$word[lm_words$list == "negative"]
+c("liability", "tax", "cost") %in% neg      # three words a general-purpose list calls negative
+```
+
+::: {.dashes style="font-size:0.72em"}
+
+- **Word list (dictionary)**: a fixed list of words tied to a category.
+  Counting the words on a positive and a negative list gives a statement's
+  tone.
+- [Loughran & McDonald (JF, 2011)](https://doi.org/10.1111/j.1540-6261.2010.01625.x)
+  built the lists for 10-Ks, the yearly report every listed US company
+  files with the Securities and Exchange Commission (the US regulator of
+  stock markets).
+- **Finding.** In 10-Ks from 1994 to 2008, a general-purpose list (the
+  Harvard General Inquirer, built for psychology and sociology) flagged
+  many words as negative. Almost three-fourths of them, such as tax, cost
+  and liability, are not negative in financial text.
+- **Takeaway:** a word list built for one kind of text misreads another.
+  [Shapiro & Wilson (REStud, 2022)](https://doi.org/10.1093/restud/rdab094)
+  used these lists on the Fed's meeting transcripts, and the next slides
+  apply them to the statements.
+
+:::
+
+[Free for use in academic research; commercial licences from the authors
+(sraf.nd.edu).]{.source}
+
+## Net tone of each statement {#net-tone .smaller}
+
+::: {style="font-size:0.7em"}
+
+**Net tone**: positive words minus negative words, per 100 tokens.
+
+:::
+
+```{r}
+#| filename: "R Console; needs fomc, tokens, pos and neg"
+net_tone <- function(w) 100 * (sum(w %in% pos) - sum(w %in% neg)) / length(w)
+j <- which(fomc$date == "2008-12-16")
+w <- tokens[[j]]
+w[w %in% neg]
+w[w %in% pos]
+net_tone(w)
+fomc$tone <- sapply(tokens, net_tone)        # sapply(): the function on each statement's words
+fomc[c(which.min(fomc$tone), which.max(fomc$tone)), c("date", "tone")]   # lowest, highest
+```
+
+::: {style="font-size:0.7em"}
+
+On 16 Dec 2008, during the financial crisis, the committee cut its
+target to a range of 0 to 1/4 percent; the statement has 403 tokens. The
+two positive words come from set phrases: "price stability" and
+"exceptionally low".
+
+:::
 
 ::: {.content-visible when-format="revealjs"}
 
-- The prompt and the reply
-- Reading the pattern piece by piece
-- Running it on 171 statements
-- Comparing with the Fed's daily target
-- A hyphen that looks like another
-- Fixing the code
-- Base R names
+::: {.notes}
+The lowest, 16 Sep 2008, came the day after Lehman Brothers filed for
+bankruptcy. Its 220 tokens contain 1 positive and 7 negative words.
+:::
 
 :::
 
-## A student's prompt to a chatbot, and the code in its reply {#prompt-reply .smaller}
+## Drawing net tone over time {#fig-tone .smaller .code-120}
+
+```{r}
+#| label: fig-tone-time
+#| filename: "R Console; needs fomc with its tone column"
+#| fig-show: hide
+#| fig-width: 9
+#| fig-height: 4.4
+par(mar = c(2.5, 4.5, 0.8, 0.5))               # margins in lines: bottom, left, top, right
+plot(as.Date(fomc$date), fomc$tone, type = "h", ylim = c(-3.4, 2.8),
+     xlab = "", ylab = "Net tone per 100 tokens", las = 1)    # "h": one bar per statement
+abline(h = 0, col = "grey60")
+lab <- which(fomc$date %in% c("2008-09-16", "2020-03-03", "2021-07-28"))
+text(as.Date(fomc$date[lab]), fomc$tone[lab], c("16 Sep 2008", "3 Mar 2020", "28 Jul 2021"),
+     pos = c(1, 3, 3), cex = 1, xpd = NA)
+```
+
+::: {.dashes style="font-size:0.8em"}
+
+- `type = "h"` draws one vertical bar from 0 to each statement's tone.
+- `text()` labels three statements: the lowest (16 Sep 2008), the highest
+  (28 Jul 2021) and 3 Mar 2020, a rate cut between scheduled meetings.
+- `pos = 1` puts a label below its bar and `pos = 3` above it. `xpd = NA`
+  lets a label run outside the box.
+
+:::
+
+::: {.content-visible when-format="revealjs"}
+
+::: {style="font-size:0.8em"}
+
+The plot is on the next slide.
+
+:::
+
+:::
+
+::: {.content-visible when-format="revealjs"}
+
+## Net tone of 171 statements, 2006–2026 {#fig-tone-output .smaller}
+
+:::
+
+![](`r knitr::fig_chunk("fig-tone-time", "png")`){.nostretch fig-align="center" width="86%" fig-alt="Net tone per statement from 2006 to 2026 as vertical bars around zero. The bars are negative through 2008, lowest on 16 September 2008, and mostly positive from 2013 to 2019 and in 2021, with 3 March 2020 and 28 July 2021 labelled among the most positive."}
+
+::: {.content-visible when-format="revealjs"}
+
+::: {style="font-size:0.66em"}
+
+Net tone per 100 tokens (Loughran-McDonald lists), one bar per statement:
+103 above zero, 54 below, 14 at zero. Lowest: 16 Sep 2008, the day after
+the US bank Lehman Brothers failed. Highest: 28 Jul 2021. 3 Mar 2020, a
+rate cut between scheduled meetings as the coronavirus spread, still ranks
+8th most positive.
+
+:::
+
+:::
+
+# 5 · A chatbot writes the extraction code {#part-chatbot}
+
+::: {.content-visible when-format="revealjs"}
+
+::: {style="font-size:0.8em"}
+
+The task: pull the target range for the federal funds rate (lower and
+upper limit, in percent) out of each of the 171 statements, with code a
+chatbot wrote.
+
+:::
+
+- The prompt and the reply
+- Reading its pattern piece by piece
+- The reply's tests on 171 statements
+- Comparing it with FRED, the Fed's daily series of the target
+- Where the reply's code fails
+- Two hyphens that look the same
+- Fixing the code
+
+:::
+
+## The prompt and the reply {#prompt-reply .smaller}
 
 ::: {.prompt style="font-size:0.74em; border-left: 4px solid #B31B1B; padding: 0.2em 0.8em; background: #F7F7F7;"}
 
@@ -694,7 +1284,7 @@ upper (here 4.75 and 5).
 
 :::
 
-```{.r filename="chat_reply.R in the zip: the reply's code, unchanged (it also defines num and to_num())"}
+```{.r filename="chat_reply.R in the zip: steps 1 to 3 of the reply's code, unchanged; the lines above them define num and to_num()"}
 # 1. Isolate the part of the statement describing the decision on the funds rate
 seg <- str_extract(
   fomc$text,
@@ -713,8 +1303,9 @@ fomc$upper <- ifelse(is.na(second), first, second)
 ::: {style="font-size:0.66em"}
 
 The reply: "For your example, `"...to 4-3/4 to 5 percent."` gives
-`lower = 4.75` and `upper = 5`." The prompt gives one example sentence and
-no test. The full reply is on the session page.
+`lower = 4.75` and `upper = 5`." The prompt shows one example sentence and
+gives no other statements to test the code on. What follows reads `num`,
+step 1 and step 2 in turn. The full reply is on the session page.
 
 :::
 
@@ -746,7 +1337,7 @@ cat(readLines("chat_reply.md", encoding = "UTF-8"), sep = "\n")
 
 :::
 
-## Reading the reply's number pattern and `to_num()` {#num .smaller}
+## Reading the number pattern {#num .smaller}
 
 ```{r}
 #| filename: "R Console, in the 16-text-regex folder; needs stringr and fomc"
@@ -759,17 +1350,21 @@ to_num(c("4-3/4", "1/4", "5", "0"))
 
 ::: {.dashes style="font-size:0.66em"}
 
+- **`num`**: the reply's pattern for one number as the Fed writes it
+  ("5", "1/4", "4-3/4"). Step 2 uses it twice, for the lower and the
+  upper limit.
 - **`source()`** runs every line of a script file. `chat_reply.R` defines
   `num`, `to_num()`, `seg` and `pat`, and adds `lower` and `upper` to
   `fomc`.
 - **Known-answer test**: inputs whose right output you know before
-  running. `to_num()` anchors its pattern with `^` and `$` and captures
-  the whole number, the numerator and the denominator, so "4-3/4" becomes
-  4 + 3/4.
+  running. In `str_view()` all four strings match in full, and `to_num()`
+  returns 4.75, 0.25, 5 and 0, as expected.
+- `to_num()` (in `chat_reply.R`) splits "4-3/4" into 4, 3 and 4 and
+  returns 4 + 3/4.
 
 :::
 
-## Greedy `.*` and lazy `.*?` in the reply's first step {#greedy-lazy .smaller}
+## Greedy and lazy matching {#greedy-lazy .smaller}
 
 ```{r}
 #| filename: "R Console; needs fomc and seg from chat_reply.R"
@@ -777,23 +1372,30 @@ i <- which(fomc$date == "2023-03-22")
 greedy <- str_extract(fomc$text[i], regex("decided.*percent", dotall = TRUE))
 lazy   <- str_extract(fomc$text[i], regex("decided.*?percent", dotall = TRUE))
 c(nchar(greedy), nchar(lazy))       # nchar() counts characters
-seg[i]                              # the reply's step 1 on this statement
+lazy
+identical(lazy, seg[i])             # the reply's step 1 gives the same text
 ```
 
 ::: {.dashes style="font-size:0.72em"}
 
-- **Greedy `.*`** takes as many characters as it can. Here it runs to the
-  statement's last "percent", "...returning inflation to its 2 percent".
+- Step 1 of the reply cuts the decision sentence out of each statement
+  with lazy `.*?`.
+- **Greedy `.*`** takes as many characters as it can. Here greedy runs 926
+  characters, to the last "percent" in the statement ("...returning
+  inflation to its 2 percent").
 - **Lazy `.*?`** takes as few as it can.
-- **`dotall = TRUE`** lets `.` match a line break, so a match can run
-  from one paragraph into the next.
-- The reply's reason: "This keeps it from picking up other numbers in the
-  statement, such as the 2 percent inflation goal, "25 basis points", or
-  the discount rate."
+- **`dotall = TRUE`** lets `.` match a line break ("\\n"). Paragraphs in
+  `text` are separated by line breaks, so with dotall a match can run from
+  one paragraph into the next.
+- Why the reply stops at the first "percent" after "federal funds rate":
+  "This keeps it from picking up other numbers in the statement, such as
+  the 2 percent inflation goal, '25 basis points', or the discount rate."
+  A basis point is 0.01 percentage point; the discount rate is the rate
+  the Fed charges banks that borrow from it.
 
 :::
 
-## Reading the reply's range pattern piece by piece {#range-pattern .smaller}
+## Reading the range pattern {#range-pattern .smaller}
 
 ```{r}
 #| filename: "R Console; needs seg, pat and i"
@@ -802,38 +1404,42 @@ str_match(seg[i], pat)              # the reply's step 2
 
 ![](figures/16-text-regex/D07-range-pattern.png){width="96%" fig-align="center" fig-alt="The text 'to 4-3/4 to 5 percent' above the four pieces of the reply's pattern: to, at or of then spaces; group 1, the lower limit; an optional ' to ' with group 2, the upper limit; and percent as a whole word."}
 
-::: {style="font-size:0.72em"}
+::: {.dashes style="font-size:0.72em"}
 
-**`str_c()`** joins strings end to end (base R `paste0()`); the reply
-builds `pat` from `num` twice. On this statement group 1 is the lower
-limit and group 2 the upper, and `to_num()` turns them into 4.75 and 5.
+- **`str_c()`** joins strings end to end (base R `paste0()`). `pat` pastes
+  in `num`, the previous slide's number pattern, once per limit.
+- On 22 March 2023, group 1 is "4-3/4" (the lower limit) and group 2 is
+  "5" (the upper). `to_num()` turns them into 4.75 and 5.
+- The second group is optional. A single target such as "at 5-1/4
+  percent", the form used before December 2008, also matches, and the
+  reply then sets upper equal to lower.
 
 :::
 
-## The reply's code on all 171 statements, and the tests it suggests {#reply-all .smaller}
+## The reply's tests on 171 statements {#reply-all .smaller}
 
 ```{r}
 #| filename: "R Console; needs fomc after source(\"chat_reply.R\")"
-sum(is.na(fomc$upper))                         # its first test prints these rows; here, a count
-summary(fomc[, c("lower", "upper")])           # its second test
-sum(fomc$lower > fomc$upper, na.rm = TRUE)     # its third: lower <= upper everywhere
+sum(is.na(fomc$upper))                         # the reply's test 1 prints these rows; here we count them
+summary(fomc[, c("lower", "upper")])           # the reply's test 2
+sum(fomc$lower > fomc$upper, na.rm = TRUE)     # the reply's test 3: lower <= upper
 ```
 
 ::: {.dashes style="font-size:0.7em"}
 
-- The reply ends with three tests: print `fomc[is.na(fomc$upper), "text"]`,
-  run `summary()`, and "check that `lower <= upper` everywhere". It says
-  "statements with no rate decision (a few unscheduled statements about
-  liquidity facilities, for example) return `NA`."
-- The code gives the right answer on the prompt's example, and its tests
-  run. They find 32 statements with no number, more than "a few", and no
-  row with lower above upper. Reading the 32 texts shows wordings the
-  pattern does not expect.
+- The reply suggests three tests: print the NA rows
+  (`fomc[is.na(fomc$upper), "text"]`), run `summary()`, and verify
+  `lower <= upper`.
+- It expects NA only for "a few unscheduled statements about liquidity
+  facilities". There are 32, and reading them shows wordings the pattern
+  misses.
+- `summary()` shows values from 0 to 5.5 percent, all plausible for a
+  policy rate, and no row has lower above upper.
 - The tests cannot say whether the other 139 values are right.
 
 :::
 
-## Comparing the extracted range with FRED's daily target {#fred .smaller}
+## Comparing with FRED {#fred .smaller}
 
 ```{r}
 #| filename: "R Console; needs fomc after the reply's code; reads fred_target_range.csv"
@@ -853,11 +1459,13 @@ fomc$date[which(!fomc$agree)]
   15 Dec 2008 (copied into both columns), then DFEDTARL and DFEDTARU, the
   lower and upper limits.
 - **`match()`** finds the position of each statement's next day among
-  FRED's dates. Adding 1 to a date gives the next day: on that day FRED
-  shows the range just decided.
-- `which()` skips NA, so only the nine wrong statements print. In all
-  nine, lower equals upper, so the reply's lower <= upper test passes on
-  every one.
+  FRED's dates. Adding 1 to a date gives the next day. Since 2017 a new
+  range takes effect the day after the statement, so the next day is the
+  first day FRED shows it.
+- `agree` is TRUE for 130 statements (both limits equal FRED's), FALSE
+  for 9 and NA for 32 (no number found). `which()` skips NA, so only the
+  nine wrong statements print. In all nine, lower equals upper, so the
+  reply's lower <= upper test passes on every one.
 
 :::
 
@@ -871,62 +1479,84 @@ statement date (16 changes). On the statement date itself 106 agree.
 
 :::
 
-## Drawing the extracted range against FRED's target {#fig-fred .smaller}
+## Drawing the comparison with FRED {#fig-fred .smaller}
 
 ```{r}
 #| label: fig-fred-range
-#| filename: "R Console; needs fomc with the reply's lower, upper and agree, and fred"
+#| filename: "R Console; needs fred, and fomc with the reply's lower and upper and the FRED columns"
 #| fig-show: hide
 #| fig-width: 9
-#| fig-height: 4.7
-d <- as.Date(fomc$date) + 1                                   # the day after
-ok <- fomc$agree %in% TRUE
+#| fig-height: 4.4
+d <- as.Date(fomc$date) + 1                    # the day after each statement
+ok <- fomc$agree %in% TRUE                     # %in% TRUE: NA counts as not TRUE
 bad <- fomc$agree %in% FALSE
+par(mar = c(2.5, 4.5, 0.5, 0.5))               # margins in lines: bottom, left, top, right
 plot(as.Date(fred$date), fred$upper, type = "s", col = "grey60", ylim = c(0, 6),
-     xlab = "", ylab = "Percent", las = 1)
+     xlab = "", ylab = "Target, percent", las = 1)    # "s": steps, flat between decisions
 lines(as.Date(fred$date), fred$lower, type = "s", col = "grey60")
 points(d[ok], fomc$upper[ok], pch = 16, cex = 0.7)
 points(d[bad], fomc$lower[bad], pch = 4, cex = 1.4, lwd = 2, col = "firebrick")
-rug(d[is.na(fomc$agree)], col = "darkorange", lwd = 2, ticksize = 0.04)
-text(as.Date(c("2010-04-01", "2012-11-01", "2015-08-01", "2021-03-01")), c(0.8, 1.05, 1.65, 1.0),
-     c("\"will maintain\"", "2014: the match\nruns too far", "\"reaffirmed\"", "the Fed's\nhyphen"),
-     col = c("darkorange", "firebrick", "darkorange", "firebrick"), cex = 0.9)
-legend("top", ncol = 4, bty = "n", cex = 0.85,
-       legend = c("FRED: lower and upper", "equal (130)", "wrong (9)", "NA (32)"),
+segments(d[bad], fomc$fred_lower[bad], d[bad], fomc$lower[bad], col = "firebrick", lwd = 2)
+rug(d[is.na(fomc$agree)], col = "darkorange", lwd = 2, ticksize = 0.04)   # a tick for each NA
+label_x <- as.Date(c("2010-07-01", "2013-06-01", "2015-08-01", "2021-03-01", "2018-10-01", "2025-10-01"))
+label_y <- c(0.8, 1.05, 1.65, 1.0, 0.55, 1.0)  # labels placed by hand at (date, percent)
+text(label_x, label_y, cex = 0.9,
+     c("\"will maintain\"", "2014: the match\nruns too far", "\"reaffirmed\"",
+       "look-alike\nhyphen", "look-alike\nhyphen", "look-alike\nhyphen"),
+     col = c("darkorange", "firebrick", "darkorange", "firebrick", "darkorange", "darkorange"))
+legend("top", ncol = 2, bty = "n", cex = 0.85,
+       legend = c("FRED: lower and upper", paste0("equal (", sum(ok), ")"),
+                  paste0("wrong (", sum(bad), "): lower = upper"),
+                  paste0("NA (", sum(is.na(fomc$agree)), ")")),
        col = c("grey60", "black", "firebrick", "darkorange"),
-       lty = c(1, NA, NA, 1), lwd = c(1, NA, 2, 2), pch = c(NA, 16, 4, NA))
+       lty = c(1, NA, 1, 1), lwd = c(1, NA, 2, 2), pch = c(NA, 16, 4, NA))
 ```
 
 ::: {.content-visible when-format="revealjs"}
 
-## The extracted range against FRED's target, 2006 to 2026 {#fig-fred-output .smaller}
+::: {style="font-size:0.72em"}
+
+The plot is on the next slide. Grey steps: FRED's lower and upper limits.
+Black dots: statements where the reply's values equal FRED's. Red crosses:
+wrong values, with a red line down to FRED's lower limit. Orange ticks
+along the bottom: statements with NA.
 
 :::
 
-![](`r knitr::fig_chunk("fig-fred-range", "png")`){fig-alt="FRED's daily target from 2006 to 2026 as grey step lines, with the reply's values as black points that sit on the line in 130 statements, red crosses for 9 wrong values (six in 2014 and three around 2020 and 2022), and orange ticks along the bottom for 32 statements with no value, clustered in 2009 to 2010, 2015, 2017 to 2018 and 2025 to 2026."}
+:::
 
 ::: {.content-visible when-format="revealjs"}
 
-[FRED's daily target (grey) and the reply's values on the day after each
-statement: upper limit where they agree, lower limit where they do not
-(red), NA as orange ticks. 171 statements; sources: federalreserve.gov,
-FRED.]{.source}
+## Extracted range and FRED, 2006–2026 {#fig-fred-output .smaller}
 
 :::
 
-## Why 41 statements came back missing or wrong {#why-41 .smaller}
+![](`r knitr::fig_chunk("fig-fred-range", "png")`){.nostretch fig-align="center" width="90%" fig-alt="FRED's daily target from 2006 to 2026 as grey step lines, with the reply's values as black points that sit on the line in 130 statements, red crosses with a red line down to FRED's lower limit for 9 wrong values (six in 2014 and three around 2020 and 2022), and orange ticks along the bottom for 32 statements with no value, clustered in 2009 to 2010, 2015, 2017 to 2018 and 2025 to 2026."}
+
+::: {.content-visible when-format="revealjs"}
+
+::: {style="font-size:0.66em"}
+
+171 statements, each plotted on the day after it. Sources:
+federalreserve.gov, FRED. Each cause is listed on the next slide.
+
+:::
+
+:::
+
+## Where the reply's code fails {#why-41 .smaller}
 
 ::: {style="font-size:0.6em"}
 
-| What the statement says | Count | Dates | Returns |
-|:------------------------------------------|--:|:-------------------------|:-----------|
-| "will maintain the target range ... at 0 to 1/4 percent", with no "decided" | 13 | 18&nbsp;Mar&nbsp;2009 to 21&nbsp;Sep&nbsp;2010 | NA |
+| What the statement says | Count | Dates | Code returns |
+|:-----------------------------------------------|-----:|:-----------------------------|:------------------|
+| "will maintain the target range ... at 0 to 1/4 percent": no "decided", which step 1 needs | 13 | 18&nbsp;Mar&nbsp;2009 to 21&nbsp;Sep&nbsp;2010 | NA |
 | "reaffirmed its view that the current 0 to 1/4 percent target range ..." | 8 | 17&nbsp;Dec&nbsp;2014 to 28&nbsp;Oct&nbsp;2015 | NA |
 | the range only in the instruction to the New York Fed (a regional Fed bank) | 1 | 23&nbsp;Mar&nbsp;2020 | NA |
-| no target stated | 1 | 17&nbsp;Aug&nbsp;2007 | NA (right) |
-| the Fed's hyphen inside the upper number ("3&#8209;3/4", character 8209) | 9 | 13&nbsp;Dec&nbsp;2017 to 29&nbsp;Apr&nbsp;2026 | NA |
-| the Fed's hyphen inside the lower number ("1&#8209;1/2", character 8209) | 3 | 11&nbsp;Dec&nbsp;2019, 29&nbsp;Jan&nbsp;2020, 15&nbsp;Jun&nbsp;2022 | 1.75 to 1.75 |
-| an earlier "decided" about asset purchases: the match runs up to 2,354 characters, across paragraphs, to "to 1/4 percent" | 6 | 19&nbsp;Mar to 29&nbsp;Oct&nbsp;2014 | 0.25 to 0.25 |
+| no target stated | 1 | 17&nbsp;Aug&nbsp;2007 | NA (correct) |
+| a look-alike hyphen inside the upper number ("3&#8209;3/4"; next slide) | 9 | 13&nbsp;Dec&nbsp;2017 to 29&nbsp;Apr&nbsp;2026 | NA |
+| a look-alike hyphen inside the lower number ("1&#8209;1/2"; next slide) | 3 | 11&nbsp;Dec&nbsp;2019, 29&nbsp;Jan&nbsp;2020, 15&nbsp;Jun&nbsp;2022 | 1.75 to 1.75;<br>FRED: 1.5 to 1.75 |
+| "decided" is first about asset purchases, so the match runs on (up to 2,354 characters, across paragraphs) to the first "to 1/4 percent" | 6 | 19&nbsp;Mar to 29&nbsp;Oct&nbsp;2014 | 0.25 to 0.25;<br>FRED: 0 to 0.25 |
 
 :::
 
@@ -938,7 +1568,7 @@ breaks, except 29 Oct 2014 (851 characters). In these statements "federal
 funds rate" follows the range, so the first "to X percent" in the
 stretch is "to 1/4 percent". The reply's explanation quotes "by 1/2
 percentage point, to 1 to 1-1/4 percent" as a phrase it handles; that is
-3 Mar 2020, written with the Fed's hyphen, so that row is NA.
+3 Mar 2020, written with the look-alike hyphen, so that row is NA.
 :::
 
 :::
@@ -949,10 +1579,17 @@ percentage point, to 1 to 1-1/4 percent" as a phrase it handles; that is
 #| filename: "R Console; needs fomc, seg and num from chat_reply.R"
 j <- which(fomc$date == "2025-12-10")
 str_view(seg[j], num)
-utf8ToInt(str_extract(seg[j], "3.3/4"))     # the number that identifies each character
+utf8ToInt(str_extract(seg[j], "3.3/4"))     # . matches either hyphen; utf8ToInt(): each code point
 utf8ToInt("3-3/4")                           # typed with the hyphen key
 sum(str_detect(fomc$text, "\u2011"))         # statements with character 8209
 ```
+
+::: {style="font-size:0.66em"}
+
+In the `str_view()` output, "3-1/2" is one match but "3&#8209;3/4" is two,
+`<3>` and `<3/4>`: `num` stops at the look-alike hyphen, so the row is NA.
+
+:::
 
 ::::: {.columns}
 
@@ -969,7 +1606,8 @@ sum(str_detect(fomc$text, "\u2011"))         # statements with character 8209
 - **Code point**: the number a computer stores for each character.
   Unicode is the standard list of them.
 - **Character 8209**: a non-breaking hyphen. Web pages use it to keep
-  "3-3/4" on one line. In R, `"\u2011"` writes it.
+  "3&#8209;3/4" on one line. In R, `"\u2011"` writes it: 2011 is 8209 in
+  hexadecimal (base 16), the form Unicode lists use.
 - The `-` in a pattern matches only character 45.
 
 :::
@@ -1001,14 +1639,17 @@ character.
 
 :::
 
-## Changing the reply's code until 170 of 171 statements equal FRED {#fixes .smaller}
+## Fixing the reply's code {#fixes .smaller}
 
 ```{r}
 #| filename: "R Console; needs fomc, num, to_num() and the FRED columns"
-fomc$text <- str_replace_all(fomc$text, "\u2011", "-")       # 1. the Fed's hyphen becomes "-"
+# 1. the look-alike hyphen (character 8209) becomes "-"
+fomc$text <- str_replace_all(fomc$text, "\u2011", "-")
+# 2. stop at the period; 3. three verbs, no "federal funds rate"
 seg <- str_extract(fomc$text, regex("(?:decided|maintain|reaffirmed)[^.]*?percent\\b",
-                                    ignore_case = TRUE))      # 2. one sentence; 3. three verbs
-m <- str_match(seg, str_c("(", num, ")(?:\\s+to\\s+(", num, "))?\\s+percent\\b"))   # 3. the range anywhere in it
+                                    ignore_case = TRUE))
+# 3. no "to/at/of" before the number
+m <- str_match(seg, str_c("(", num, ")(?:\\s+to\\s+(", num, "))?\\s+percent\\b"))
 fomc$lower <- to_num(m[, 2])
 fomc$upper <- ifelse(is.na(m[, 3]), fomc$lower, to_num(m[, 3]))
 fomc$agree <- fomc$lower == fomc$fred_lower & fomc$upper == fomc$fred_upper
@@ -1017,36 +1658,44 @@ table(fomc$agree, useNA = "ifany")
 
 ::: {.dashes style="font-size:0.72em"}
 
-- **`str_replace_all(x, p, r)`** replaces every match of `p` in `x` with
-  `r`.
-- Change 2 uses `[^.]*?` in place of `.*?` and drops `dotall`, so the
-  match stays inside one sentence.
+- **Change 1**: every look-alike hyphen (character 8209) becomes "-".
+  This fixes the 12 hyphen rows.
+- **Change 2**: `[^.]*?`, as few characters as possible that are not a
+  period, replaces `.*?`, and `dotall` goes. Inside brackets the dot is a
+  plain period, so the match ends with its sentence. The six 2014 rows
+  now give NA in place of a wrong number.
+- **Change 3**: step 1 accepts "maintain" and "reaffirmed" and drops
+  "federal funds rate", which can come after the number ("the current 0
+  to 1/4 percent target range for the federal funds rate"). Step 2 drops
+  "to|at|of", since "current 0 to 1/4" has none.
 
 :::
 
-## Missing and wrong values after each change to the reply's code {#fix-table .smaller}
+## Results after each fix {#fix-table .smaller}
 
 ::: {style="font-size:0.8em"}
 
-Counted against FRED on the day after each statement:
+Each row adds one change to the rows above. Counted against FRED on the
+day after each statement:
 
-| After | NA | Wrong | Equal to FRED |
+| Code | NA | Wrong | Equal |
 |:------------------------------------|--:|--:|--:|
 | The reply as given | 32 | 9 | 130 |
-| 1. Replace character 8209 with "-" | 23 | 6 | 142 |
+| 1. Replace the look-alike hyphen with "-" | 23 | 6 | 142 |
 | 2. Keep the match in one sentence | 36 | 0 | 135 |
 | 3. Accept "maintain" and "reaffirmed"; take the range wherever it sits in the sentence | 1 | 0 | 170 |
 
 :::
 
-::: {.dashes style="font-size:0.74em"}
+::: {.dashes style="font-size:0.8em"}
 
-- Change 2 turns the six 2014 values into NA, and does the same to seven
-  statements that had been right only because the match crossed
-  sentences.
+- Change 2 turns the six 2014 values into NA. It does the same to seven
+  statements from Nov 2010 to Jan 2014, where "decided" is about asset
+  purchases and the range sits in a later sentence. The old match reached
+  it only by crossing sentences.
 - The last NA is 17 Aug 2007, which states no target.
-- The failing sentences, each with its expected numbers, are the test
-  strings to paste back to the chatbot when you ask for a fix.
+- To ask the chatbot for a fix, paste the failing sentences with FRED's
+  numbers for each. They are known-answer tests.
 
 :::
 
@@ -1087,299 +1736,125 @@ count_rows(to_num(m2[, 2]), ifelse(is.na(m2[, 3]), to_num(m2[, 2]), to_num(m2[, 
 
 :::
 
-## The base R name of each `stringr` function {#base-r .smaller}
+# 6 · When to use regex {#part-miss}
 
-::: {style="font-size:0.66em"}
+::: {.content-visible when-format="revealjs"}
 
-Chatbots write either.
+- When to use regex
+- What net tone misses
+- Practice
 
-| `stringr` | base R | What differs |
-|:--------------------------------|:-------------------------------|:---------------------------|
-| `str_detect(x, p)` | `grepl(p, x)` | base R puts the pattern first |
-| `str_extract(x, p)` | `regmatches(x, regexpr(p, x))` | base R drops strings with no match, so the result is shorter than `x` |
-| `str_match(x, p)` | `regmatches(x, regexec(p, x))` | a list, not a matrix; an optional group that did not match is `""`, not NA |
-| `str_replace_all(x, p, r)` | `gsub(p, r, x)` | |
-| `str_split(x, p)` | `strsplit(x, p)` | `strsplit()` drops a final empty string |
-| `str_c(...)` | `paste0(...)` | `paste0()` writes NA as "NA"; `str_c()` returns NA |
-| `regex(p, ignore_case = TRUE)` | `ignore.case = TRUE` | |
+:::
+
+## When to use regex {#when-regex .smaller}
+
+::::: {.columns}
+
+::: {.column width="50%"}
+
+::: {.dashes style="font-size:0.86em"}
+
+**Regex works well when**
+
+- the text follows a format: IDs, dates, amounts, codes
+- the wording repeats, as in the Fed's sentence that states the target
+  range
+- you can list the variants and test each one
+- you need the same answer every time the code runs
+- the corpus is large: a pattern runs on millions of documents in
+  seconds, for free
+
+:::
+
+:::
+
+::: {.column width="50%"}
+
+::: {.dashes style="font-size:0.86em"}
+
+**Use a parser or a model when**
+
+- the meaning depends on context or on negation: the Fed's "might not be
+  strong enough" (13 Sep 2012) scores as positive
+- the same idea is written in more ways than you can list
+- the text is a web page (HTML) or data from an API (JSON), where parts
+  sit inside other parts
+- the variable is a judgment call, such as whether a sentence signals
+  that the Fed will raise its rate
+
+:::
+
+:::
+
+:::::
+
+::: {style="font-size:0.7em"}
+
+**Parser**: a function that reads a structured format into its parts,
+such as `jsonlite::fromJSON()` for JSON or `rvest::read_html()` for a web
+page. **Model**: a language model, the kind of program behind a chatbot,
+asked to read each text and return a label, or a statistical classifier
+trained on texts that people labeled by hand.
+
+:::
+
+::: {style="font-size:0.76em"}
+
+A pattern gives NA or a wrong number, with no error message, when the
+wording or a character changes. A chatbot can write the pattern. You still
+read it, test it on strings from your documents, and compare its output
+with a second source such as FRED.
+
+:::
+
+## What net tone misses {#miss .smaller}
+
+::: {style="font-size:0.8em"}
+
+The target range has a second source, FRED, and 170 of 171 values now
+equal it. Net tone has no second source, so its errors show only when you
+read the sentences it scored. The finance word list scores each word on
+its own:
+
+:::
+
+```{r}
+#| filename: "R Console; needs fomc"
+s <- str_extract(fomc$text[fomc$date == "2012-09-13"], "economic growth might not[^.]*")
+str_view(s, "\\b(not|strong|improvement)\\b")
+```
+
+::: {.dashes style="font-size:0.76em"}
+
+- **Negation.** 13 Sep 2012 (also 24 Oct and 12 Dec 2012): "strong" and
+  "improvement" count as positive. Each word is scored on its own, so the
+  "not" before them changes nothing.
+- **Context.** 25 Apr 2012, "the unemployment rate has declined but
+  remains elevated": "unemployment" and "declined" count as negative,
+  although a falling unemployment rate is good news.
+- **The event behind the words.** 3 Mar 2020, a cut in the target range
+  between scheduled meetings as the coronavirus spread, is the 8th most
+  positive of 171 statements. "strong", "achieving" and "stability" count
+  as positive. "coronavirus" and "risks" are on neither list.
 
 :::
 
 ::: {.content-visible when-format="revealjs"}
 
 ::: {.notes}
-Engine: the code that runs a pattern. Base R has two, and perl = TRUE
-picks the second. The default engine reads (?: ), \\b and .*? as stringr
-does, and its dot also matches a line break.
+The full 13 Sep 2012 sentence opens "The Committee is concerned that",
+and "concerned" is on the negative list, so the sentence nets +1. Shapiro
+and Wilson ignored words after "not", ran their estimates without
+"unemployment", and filtered phrases such as "price stability"; their
+estimates barely moved (working paper version).
 :::
 
 :::
 
 ::: {.content-hidden when-format="revealjs"}
 
-**Engine**: the code that runs a pattern. Base R has two, and
-`perl = TRUE` picks the second.
+**Words the finance list misreads in Fed statements.**
 
-The other functions used today:
-
-| `stringr` | base R |
-|:--|:--|
-| `str_count(x, p)` | `lengths(regmatches(x, gregexpr(p, x)))` |
-| `str_extract_all(x, p)` | `regmatches(x, gregexpr(p, x))` |
-| `str_sub(x, 1, 4)` | `substr(x, 1, 4)` |
-| `str_to_lower(x)` | `tolower(x)` |
-
-On all 171 statements, the `grepl()` and `gregexpr()` counts equal the
-`stringr` results with or without `perl = TRUE`. The two engines differ on
-the dot: the default engine's `.` matches a line break, which `stringr`'s
-does only with `dotall = TRUE`; with `perl = TRUE`, `.` stops at a line
-break unless the pattern starts with `(?s)`. So the reply's first step,
-run through `regexpr()`, gives 23 NA with the default engine (the same as
-`stringr` with `dotall`) and 36 with `perl = TRUE`. `perl = TRUE` also
-adds lookarounds such as `(?=...)`. The three changes written in base R
-give 170 of 171 with either engine (Practice 5).
-
-:::
-
-# 4 · Counting words and scoring tone {#part-words}
-
-::: {.content-visible when-format="revealjs"}
-
-- Splitting text into words
-- Counting them
-- Stop words
-- Exercise 2
-- A finance word list
-- Net tone
-
-:::
-
-## Splitting statements into words {#tokens .smaller}
-
-```{r}
-#| filename: "R Console; needs stringr and fomc"
-i <- which(fomc$date == "2023-03-22")
-fomc$year <- as.numeric(str_sub(fomc$date, 1, 4))               # characters 1 to 4 of "2023-03-22"
-tokens <- str_extract_all(str_to_lower(fomc$text), "[a-z]+")     # every run of letters
-head(tokens[[i]], 12)                                             # 22 Mar 2023
-length(tokens[[i]])
-```
-
-::: {.dashes style="font-size:0.74em"}
-
-- **Token**: one unit of text after splitting, here a word in lower case.
-- `str_to_lower()` comes first so "Inflation" and "inflation" count as
-  one word. `tokens` is a list with one vector of words per statement,
-  and `[[i]]` picks one.
-- Numbers drop out, and "Committee's" becomes "committee" and "s".
-
-:::
-
-::: {.content-visible when-format="revealjs"}
-
-::: {.notes}
-The file's `words` column says 365 for this statement. It counts words
-differently, which is why the slides say tokens.
-:::
-
-:::
-
-## Counting words with `table()`, and dropping stop words {#stop-words .smaller}
-
-```{r}
-#| filename: "R Console; needs tokens and the stopwords package"
-all_words <- unlist(tokens)
-length(all_words)
-head(sort(table(all_words), decreasing = TRUE), 8)
-stop_words <- stopwords::stopwords("en")     # pkg::fun(): a package's function without library()
-kept <- all_words[!all_words %in% stop_words & nchar(all_words) > 1]   # !x %in% y: x is not in y
-head(sort(table(kept), decreasing = TRUE), 8)
-```
-
-::: {.dashes style="font-size:0.68em"}
-
-- **Stop words**: very common words dropped before counting ("the", "of",
-  "will"). This list has 175. **Term frequency**: a word's count divided
-  by all words; "inflation" is 1,330 of 73,839, or 1.8 percent.
-- `nchar(all_words) > 1` drops 1,793 one-letter tokens: middle initials
-  such as the H in Jerome H. Powell, and the s of "Committee's" and
-  "U.S.". The stop list also drops "not", "no" and "against".
-
-:::
-
-## Exercise 2 {#exercise-2 .smaller}
-
-::: {.panel-tabset}
-
-### Exercise
-
-::: {style="font-size:1.3em"}
-
-```{r}
-#| label: exercise-2
-#| exercise: true
-#| script: "Exercise 2 (5 minutes)"
-#| eval: false
-# Exercise 2 (5 minutes). R Console; needs fomc (with its year column) and
-# tokens from the previous slides.
-#
-# 1. Put the words of the 2022 statements in one vector:
-#      w22 <- unlist(tokens[fomc$year == 2022])
-# 2. Put the words of every statement before 2022 in a second vector, before.
-# 3. Keep the 2022 words that never appear in before (use %in% and !).
-# 4. Count them with table() and sort them, largest first.
-#
-# Two answers to compare with the room: the most frequent new word, and the
-# new words that are people's names.
-```
-
-:::
-
-### Solution
-
-```{r}
-#| label: exercise-2-solution
-#| purl: false
-#| filename: "R Console; needs fomc and tokens"
-w22    <- unlist(tokens[fomc$year == 2022])
-before <- unlist(tokens[fomc$year < 2022])
-new    <- w22[!w22 %in% before]
-head(sort(table(new), decreasing = TRUE), 16)
-```
-
-::: {.content-visible when-format="revealjs"}
-
-**"war" (8), then "russia" and "ukraine" (7 each) and "invasion" (6): from
-16 Mar 2022 the statements say "The invasion of Ukraine by Russia is
-causing tremendous human and economic hardship." The names are four new
-voting members.**
-
-:::
-
-:::
-
-::: {.content-visible when-format="revealjs"}
-
-::: {.notes}
-Each statement lists the members who voted. Lisa D. Cook and Philip N.
-Jefferson appear from 15 Jun 2022, Michael S. Barr and Susan M. Collins
-from 27 Jul 2022; "d" and "n" are middle initials. Of the 2,886 words in
-the 2022 statements, 105 are new, 27 different words. The exercise needs
-no stop words, so a student whose stopwords install failed can still do
-it.
-:::
-
-:::
-
-## A finance word list of positive and negative words {#lm .smaller}
-
-```{r}
-#| filename: "R Console; reads lm_words.csv"
-lm_words <- read.csv("lm_words.csv")         # word, list: "positive" or "negative"; lower case
-table(lm_words$list)
-pos <- lm_words$word[lm_words$list == "positive"]
-neg <- lm_words$word[lm_words$list == "negative"]
-c("liability", "tax", "cost") %in% neg
-```
-
-::: {.dashes style="font-size:0.68em"}
-
-- [Loughran & McDonald (JF, 2011)](https://doi.org/10.1111/j.1540-6261.2010.01625.x)
-  built the lists for 10-Ks, the yearly report every listed US company
-  files with the Securities and Exchange Commission (the US regulator of
-  stock markets).
-- **Finding.** In 10-Ks from 1994 to 2008, almost three-fourths of the
-  words a general-purpose list (the Harvard General Inquirer, built for
-  psychology and sociology) counted as negative are words such as tax,
-  cost and liability, which are not negative in financial text.
-- **Takeaway:** a word list built for one kind of text misreads another,
-  so choose one built for your domain and read what it scores.
-
-:::
-
-[Free for use in academic research; commercial licences from the authors
-(sraf.nd.edu).]{.source}
-
-## Net tone of one statement, then of all 171 {#net-tone .smaller}
-
-```{r}
-#| filename: "R Console; needs tokens, pos and neg"
-net_tone <- function(w) 100 * (sum(w %in% pos) - sum(w %in% neg)) / length(w)
-j <- which(fomc$date == "2008-12-16")
-w <- tokens[[j]]
-w[w %in% neg]
-w[w %in% pos]
-net_tone(w)
-fomc$tone <- sapply(tokens, net_tone)        # sapply(): the function on each statement's words
-fomc[which.min(fomc$tone), c("date", "tone")]
-fomc[which.max(fomc$tone), c("date", "tone")]
-```
-
-::: {style="font-size:0.7em"}
-
-**Net tone**: positive words minus negative words, per 100 words. On
-16 Dec 2008, during the financial crisis, the committee cut its target to
-a range of 0 to 1/4 percent; the statement has 403 tokens.
-
-:::
-
-::: {.content-visible when-format="revealjs"}
-
-::: {.notes}
-The lowest, 16 Sep 2008, came the day after Lehman Brothers filed for
-bankruptcy. Its 220 tokens contain 1 positive and 7 negative words.
-:::
-
-:::
-
-## Drawing the target range and net tone of every statement {#fig-tone .smaller}
-
-```{r}
-#| label: fig-range-tone
-#| filename: "R Console; needs fomc after the three changes, with tone, and fred"
-#| fig-show: hide
-#| fig-width: 9
-#| fig-height: 5.2
-par(mfrow = c(2, 1), mar = c(2, 5, 0.5, 1))
-plot(as.Date(fred$date), fred$upper, type = "s", col = "grey60", ylim = c(0, 6),
-     xlab = "", ylab = "Target, percent", las = 1)
-points(as.Date(fomc$date) + 1, fomc$upper, pch = 16, cex = 0.5)
-plot(as.Date(fomc$date), fomc$tone, type = "h", ylim = c(-3.4, 2.8),
-     xlab = "", ylab = "Net tone", las = 1)
-abline(h = 0, col = "grey60")
-lab <- which(fomc$date %in% c("2008-09-16", "2020-03-03", "2021-07-28"))
-text(as.Date(fomc$date[lab]), fomc$tone[lab], c("16 Sep 2008", "3 Mar 2020", "28 Jul 2021"),
-     pos = c(1, 3, 3), cex = 0.8, xpd = NA)
-```
-
-::: {.content-visible when-format="revealjs"}
-
-## Target range and net tone, 2006 to 2026 {#fig-tone-output .smaller}
-
-:::
-
-![](`r knitr::fig_chunk("fig-range-tone", "png")`){fig-alt="Two panels from 2006 to 2026. Top: FRED's upper limit as a grey step line with the extracted upper limits as points on it. Bottom: net tone per statement as vertical bars around zero, lowest on 16 September 2008, with 3 March 2020 and 28 July 2021 labelled among the most positive."}
-
-::: {.content-visible when-format="revealjs"}
-
-[Top: FRED's upper limit (grey) and the upper limit extracted after the
-three changes (points). Bottom: net tone per 100 words, Loughran-McDonald
-lists, one bar per statement; 103 above zero, 54 below, 14 at zero. Mean
-tone is lowest in 2008 (−1.73) and highest in 2018 (+1.53).]{.source}
-
-:::
-
-# What patterns and counts miss {#part-miss}
-
-::: {.content-visible when-format="revealjs"}
-
-- Words the finance list misreads in Fed statements
-- Negation, context and the event behind the words
-- Practice
-
-:::
-
-## Words the finance list scores in Fed statements, and what they mean there {#misread .smaller}
 
 ::: {style="font-size:0.74em"}
 
@@ -1411,46 +1886,6 @@ a curly one.
 
 :::
 
-## What patterns and word counts miss {#miss .smaller}
-
-::: {style="font-size:0.74em"}
-
-After three changes, 170 of 171 target ranges equal FRED's, and every
-match can be printed and read.
-
-:::
-
-```{r}
-#| filename: "R Console; needs fomc"
-s <- str_extract(fomc$text[fomc$date == "2012-09-13"], "economic growth might not[^.]*")
-str_view(s, "\\b(not|strong|improvement)\\b")
-```
-
-::: {.dashes style="font-size:0.68em"}
-
-- **Negation.** 13 Sep 2012 (also 24 Oct and 12 Dec 2012): "strong" and
-  "improvement" count as positive. Each word is scored on its own, so the
-  "not" before them changes nothing.
-- **Context.** 25 Apr 2012, "the unemployment rate has declined but
-  remains elevated": "unemployment" and "declined" count as negative for
-  news a reader calls good.
-- **The event behind the words.** 3 Mar 2020, an emergency cut as the
-  coronavirus spread, is the 8th most positive of 171 statements.
-  "Coronavirus" and "risks" are on neither list.
-- **New wording and look-alike characters** give NA or a wrong number
-  with no error message.
-
-:::
-
-::: {.content-visible when-format="revealjs"}
-
-::: {.notes}
-The full 13 Sep 2012 sentence opens "The Committee is concerned that",
-and "concerned" is on the negative list, so the sentence nets +1. Shapiro
-and Wilson ignored words after "not", ran their estimates without
-"unemployment", and filtered phrases such as "price stability"; their
-estimates barely moved (working paper version).
-:::
 
 :::
 
@@ -1458,19 +1893,26 @@ estimates barely moved (working paper version).
 
 ::: {.content-visible when-format="revealjs"}
 
-Ten exercises on the session page, with solutions behind a click, all on
-the files in the 16-text-regex folder. None needs a network.
+Ten exercises on the session page, with solutions behind a click. Run
+them after the slides' code, which builds `fomc`, `tokens`, `pos` and
+`neg` from the files in the 16-text-regex folder. None needs an internet
+connection.
 
-- **1–4** Patterns and numbers: the opening phrase by year; basis-point
-  moves and dissents; the vote count in the 2026 statements; ranges
-  written as "<1", "1-5", "15+"
-- **5** Base R: the three changes with `gsub()`, `regmatches()` and
-  `regexec()`
-- **6–7** Word counts: "inflation" as a share of words by year; the three
-  word lists of Baker, Bloom & Davis on the statements
-- **8–9** Tone: without the four misread words; the words after "not"
-- **10** Characters: every character in the statements that is not on
-  the keyboard
+- **1–4** Patterns and numbers: the opening phrase by year; rate moves
+  stated in basis points (1 basis point = 0.01 percentage point), and
+  which come from members who voted against; the vote, such as "12 – 0",
+  in the 2026 statements; validating the web address (url) of each
+  statement
+- **5** Base R: the three fixes to the chatbot's code, rewritten with
+  `gsub()`, `regmatches()` and `regexec()`
+- **6–7** Word counts: "inflation" as a share of tokens by year; the
+  three word lists of
+  [Baker, Bloom & Davis (QJE, 2016)](https://doi.org/10.1093/qje/qjw024)
+  on the statements
+- **8–9** Net tone: recomputed without unemployment, against, stability
+  and exceptionally; the word after each "not"
+- **10** Characters: every character with a code point above 127, such as
+  the dash in "12 – 0"
 
 :::
 
@@ -1497,8 +1939,9 @@ Task 7 uses the word lists of
 #  3. The 2026 statements give the vote ("by a 12 – 0 vote"). Extract the
 #     two numbers as numeric columns. Why does "by a (\\d+) - (\\d+) vote"
 #     fail? Use utf8ToInt() on the character between the numbers.
-#  4. Split c("<1", "1-5", "5-10", "15+") into numeric low and high columns,
-#     once with gsub() and strsplit() and once with str_match().
+#  4. Validate the url column: every address should look like
+#     https://www.federalreserve.gov/newsevents/pressreleases/monetaryYYYYMMDDa.htm
+#     Write the pattern with ^, \d{8} and $. Which addresses fail, and why?
 # Base R
 #  5. Rewrite the three changes with gsub(), regmatches() with regexpr(),
 #     and regexec(). Do the same 170 statements equal FRED?
@@ -1543,18 +1986,10 @@ table(dec[, 2])
 vt <- str_match(fomc$text, "by a (\\d+) (.) (\\d+) vote")
 vt[!is.na(vt[, 1]), ]
 utf8ToInt(vt[!is.na(vt[, 1]), 3][1])
-# 4. Ranges written as "<1", "1-5", "15+": "<1" is read as 0 to 1, "15+" as 15 and up
-r4 <- c("<1", "1-5", "5-10", "15+")
-parts <- strsplit(gsub("[<+]", "", r4), "-")
-low  <- sapply(parts, function(p) as.numeric(p[1]))
-high <- sapply(parts, function(p) as.numeric(p[2]))
-below <- grepl("^<", r4)                 # "<1": 0 to 1
-high[below] <- low[below]
-low[below]  <- 0
-data.frame(r4, low, high)
-r4m <- str_match(r4, "^(<)?(\\d+)(?:-(\\d+))?(\\+)?$")
-data.frame(r4, low = ifelse(is.na(r4m[, 2]), as.numeric(r4m[, 3]), 0),
-           high = ifelse(is.na(r4m[, 2]), as.numeric(r4m[, 4]), as.numeric(r4m[, 3])))
+# 4. Statement addresses: three end in "b.htm", a second release that day
+url_ok <- str_detect(fomc$url,
+  "^https://www\\.federalreserve\\.gov/newsevents/pressreleases/monetary\\d{8}a\\.htm$")
+fomc$url[!url_ok]
 # 5. The three changes in base R
 tx  <- gsub("\u2011", "-", fomc$text)
 sg  <- regmatches(tx, regexpr("(?:decided|maintain|reaffirmed)[^.]*?percent\\b", tx,

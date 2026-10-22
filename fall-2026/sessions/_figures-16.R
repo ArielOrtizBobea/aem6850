@@ -256,7 +256,7 @@ term_box(cols[[1]][1], top[1], cols[[1]][2], top[2], "pattern (regex)",
          c("a description of", "text to find"),
          c(paste0("e.g. a number, ", lq, "to", rq, ","), paste0("a number, ", lq, "percent", rq)))
 term_box(cols[[2]][1], top[1], cols[[2]][2], top[2], "match", "the text found",
-         "to 4-3/4 to 5 percent")
+         "4-3/4 to 5 percent")
 term_box(cols[[3]][1], top[1], cols[[3]][2], top[2], "variables", "new columns",
          c("lower 4.75", "upper 5"))
 term_box(cols[[1]][1], bot[1], cols[[1]][2], bot[2], "tokens", "one word each",
