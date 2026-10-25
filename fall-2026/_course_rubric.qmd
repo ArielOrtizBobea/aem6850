@@ -1,0 +1,74 @@
+**15 points.** Five dimensions, three points each. The grader clones your
+repository into an empty folder, runs `code/run_everything.R` in a fresh R
+session, compares what it produces with the target, and reads your code,
+your note and your commits.
+
+### Similarity (3 points)
+
+| | |
+|:--|:--|
+| [3]{.pts .pts-3} | The output is virtually identical to the target. One has to really pay attention to see any difference. |
+| [2]{.pts .pts-2} | The output has one or two clear differences from the target: an element missing, the wrong ordering, a scale or a unit that is not the one specified, values in a table that differ. |
+| [1]{.pts .pts-1} | The output is clearly different from the target: three or more clear differences, or a panel missing. |
+| [0]{.pts .pts-0} | No output, or output of something else. |
+
+Similarity is judged on what the output encodes, not on pixel-level
+matching. A slightly different font size is not a difference. A row
+missing from a table, or a series missing from a panel, is.
+
+### Reproducibility (3 points)
+
+| | |
+|:--|:--|
+| [3]{.pts .pts-3} | The code runs start to finish in a fresh clone, without any edits, and produces the output, getting its data the way the assignment says. Paths are relative to the project root. Nothing depends on objects left over from an earlier session. |
+| [2]{.pts .pts-2} | One minor edit is needed to run it: a stray absolute path, a folder it expected to exist, a `library()` call for something base R already does. Also here: a rule the assignment sets for getting the data is not followed. |
+| [1]{.pts .pts-1} | Several edits are needed, or it runs with errors, or it does not produce the output. |
+| [0]{.pts .pts-0} | The code does not run. |
+
+Two things cost points here every year. **Absolute paths:**
+`read.csv("/Users/you/Desktop/...")` works on your laptop and nowhere
+else; open the `.Rproj` and use `"data/..."`. **Session leftovers:** a
+script that works because an object is still in your environment from
+twenty minutes ago is not a script that works. Restart R and source it
+before you push.
+
+### Coding structure (3 points)
+
+| | |
+|:--|:--|
+| [3]{.pts .pts-3} | The code (1) has clear and logical sections, (2) has a clearly identified parameter section that can be modified to produce slightly different versions of the output, (3) is well annotated, and (4) is concise but spacious. |
+| [2]{.pts .pts-2} | The code has at most one of the following: (1) no clear structure, (2) parameters hard-coded within the core of the script, (3) missing key annotations, (4) too dense or too verbose. |
+| [1]{.pts .pts-1} | The code has more than one of those. |
+| [0]{.pts .pts-0} | There is no code, or the code cannot perform the basic steps needed to generate the output. |
+
+"A clearly identified parameter section" means the URLs, the file names,
+the dates, the constants and the colours live together at the top of each
+script, named, and are used by name below. "Concise" means a step done
+many times is written once and called.
+
+### Verification (3 points)
+
+| | |
+|:--|:--|
+| [3]{.pts .pts-3} | The script states what it expects of its data and stops when the data disagrees, at the places the data can go wrong. At least one check could have failed on a mistake you could actually have made, and your note says for each check what it would have caught. |
+| [2]{.pts .pts-2} | Checking is thin: one place covered and an obvious one left open, or a bound so wide that the right answer and the wrong answer both pass, or the note lists the checks without saying what any of them would catch. |
+| [1]{.pts .pts-1} | Every check is one that cannot fail: a count compared with a number taken from the same run, a test that the line above has already made true. |
+| [0]{.pts .pts-0} | The script makes no check of its own data. |
+
+A check earns its point by being able to fail.
+
+### The note and the history (3 points)
+
+| | |
+|:--|:--|
+| [3]{.pts .pts-3} | The work arrives in separable commits in a sensible order, each message naming what that commit did. The note explains the choices the code makes and why, says what you checked, and discloses the tools, the uses and what you verified. |
+| [2]{.pts .pts-2} | One of those falls short: the whole assignment in a single commit, messages that say only "update", a choice or a check in the code that the note does not mention. A push problem you raised on the day is not counted here. |
+| [1]{.pts .pts-1} | Two or more fall short. |
+| [0]{.pts .pts-0} | No note, or no commit of your own. Also here: a note with no AI disclosure block, or an empty one. The block is required even when it says no AI was used. |
+
+### AI use
+
+Permitted unless an assignment says otherwise, and always disclosed.
+Undisclosed AI use, and code taken from anyone else without saying whose,
+are misrepresentation under the syllabus and are treated as integrity
+violations rather than as grading matters.
