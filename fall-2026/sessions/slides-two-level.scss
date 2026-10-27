@@ -1,0 +1,27 @@
+/*-- scss:rules --*/
+// Two text sizes on every content slide (his rule, 2026-10-26: "clean,
+// slick, simple, with at most two levels of text"). Body text, meaning
+// paragraphs, lists, tables and boxes, is set at the table size. One small
+// size covers code, printed output, code labels, sources and the plan's
+// topics. Section dividers and the title slide keep their own sizes. Add
+// this file after slides.scss in a deck's theme list; a slide that does not
+// fit at these sizes is cut or split, never shrunk.
+
+$body-size:  calc(var(--r-main-font-size) * 0.66);
+$small-size: calc(var(--r-main-font-size) * 0.42);
+
+.reveal .slides section.level2 {
+  p, li, td, th, blockquote, dd, dt, .callout, .agent, figcaption {
+    font-size: $body-size;
+  }
+  p:has(> span.source), .source, .topics {
+    font-size: $small-size;
+  }
+  .source code, .topics code { font-size: inherit; }
+  div.sourceCode pre, div.sourceCode pre code,
+  div.cell-output pre, div.cell-output pre code,
+  .code-with-filename-file, .code-with-filename-file pre,
+  .code-with-filename-file pre strong {
+    font-size: $small-size;
+  }
+}

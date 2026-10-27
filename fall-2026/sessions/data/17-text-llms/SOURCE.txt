@@ -1,0 +1,114 @@
+17-text-llms: where the files in this folder came from
+=======================================================
+
+Open the folder with 17-text-llms.Rproj, so R starts here and the file
+names in the slides work as written. Nothing in this folder needs a
+network or an API key: the model replies are saved in replies/ and demo/.
+
+
+fomc_statements.csv
+-------------------
+Every policy statement of the Federal Open Market Committee from
+31 January 2006 to 16 September 2026: 171 rows, 165 after scheduled
+meetings and 6 after unscheduled ones. Columns: date, url, words, text,
+scheduled. Paragraphs inside text are separated by a blank line ("\n\n").
+The text is as the Fed's pages show it, including the characters the pages
+use that are not on a keyboard (the non-breaking hyphen, code point 8209,
+curly apostrophes, en and em dashes).
+
+Collected from federalreserve.gov in October 2026, the same file the
+scraping session builds. Board of Governors of the Federal Reserve System:
+"Unless otherwise indicated, information on Board's website is in the
+public domain and may be copied and distributed without permission. Please
+cite to the Board as the source of the information."
+  https://www.federalreserve.gov/disclaimer.htm
+
+
+fred_target_range.csv
+---------------------
+The federal funds target for every day from 1 January 2006 to
+30 September 2026: 7,578 rows; columns date, lower, upper (percent).
+To 15 December 2008 the Fed set one target, copied into both columns;
+from 16 December 2008 it sets a range.
+
+FRED, Federal Reserve Bank of St. Louis, downloaded 20 October 2026:
+  DFEDTAR   Federal Funds Target Rate (DISCONTINUED), to 2008-12-15
+    https://fred.stlouisfed.org/series/DFEDTAR
+  DFEDTARL  Federal Funds Target Range - Lower Limit, from 2008-12-16
+    https://fred.stlouisfed.org/series/DFEDTARL
+  DFEDTARU  Federal Funds Target Range - Upper Limit, from 2008-12-16
+    https://fred.stlouisfed.org/series/DFEDTARU
+Each was read from https://fred.stlouisfed.org/graph/fredgraph.csv?id=<id>.
+
+
+lm_words.csv
+------------
+The positive and negative word lists of the Loughran-McDonald Master
+Dictionary, in lower case: 2,692 rows, 347 positive and 2,345 negative;
+columns word, list.
+
+  Loughran, Tim, and Bill McDonald. 2011. "When Is a Liability Not a
+  Liability? Textual Analysis, Dictionaries, and 10-Ks." Journal of
+  Finance 66 (1): 35-65. https://doi.org/10.1111/j.1540-6261.2010.01625.x
+
+Source file: Loughran-McDonald_MasterDictionary_1993-2025.csv, the
+authors' update of March 2026, from
+  https://sraf.nd.edu/loughranmcdonald-master-dictionary/
+Terms, from that page: "The dictionary/sentiment lists are free for use in
+academic research. For commercial licenses, please contact us at
+loughranmcdonald@gmail.com." This file is shipped for academic teaching
+use under those terms.
+
+In the master file each word's Positive and Negative columns hold the year
+the word was added to the list, and a negative year marks a word removed.
+This file keeps the words whose year is above 0, so it leaves out the 17
+removed words. The master dictionary has five more lists (uncertainty,
+litigious, strong modal, weak modal, constraining) not used here.
+
+
+tdw_sentences.csv
+-----------------
+2,480 sentences from documents of the Federal Open Market Committee, each
+labelled by hand as dovish, hawkish or neutral: the Trillion Dollar Words
+dataset.
+
+  Shah, Agam, Suvan Paturi, and Sudheer Chava. 2023. "Trillion Dollar
+  Words: A New Financial Dataset, Task & Market Analysis." Proceedings of
+  the 61st Annual Meeting of the Association for Computational Linguistics,
+  6664-6679. https://doi.org/10.18653/v1/2023.acl-long.368
+  Dataset: https://huggingface.co/datasets/gtfintechlab/fomc_communication
+  Licence: CC BY-NC 4.0, https://creativecommons.org/licenses/by-nc/4.0/
+
+Downloaded 25 October 2026 (train.csv, 1,984 rows; test.csv, 496 rows).
+Columns: id, sentence, year, label, split, orig_index. label: 0 dovish,
+1 hawkish, 2 neutral, from the dataset's README.
+Changes made: the two files are combined, train first; id (1 to 2,480) and
+split (train or test) are added; the column index is dropped and
+orig_index kept; 44 sentences whose characters were damaged by a
+wrong text encoding ("â€”" for a dash, "â€™" for an apostrophe) are
+repaired. Nothing else is changed, including the year column, which ships
+as released.
+
+
+statement_sentences.csv
+-----------------------
+The 171 statements of fomc_statements.csv cut into 2,540 sentences
+(1,195 distinct), made by prep/build_sentences.R: paragraphs split at blank
+lines, the paragraph listing how each member voted and the line giving the
+vote dropped, sentences split after ".", "!" or "?" before a capital
+letter, "St. Louis" kept whole, footnote markers dropped. Columns: id, sid
+(one id per distinct sentence), date, sentence.
+
+
+codebook.txt, range_prompt.txt, model_setup.R, save_replies.R, run_all.R, demo.R
+--------------------------------------------------------------------------------
+The two system prompts, written once before any reply was seen and never
+edited after; codebook.txt condenses the annotation guide of Shah, Paturi
+and Chava (Appendix C.2). The R files made every saved reply; they need
+ellmer and an API key. See README.txt.
+
+
+replies/, demo/
+---------------
+Every model reply, saved when it arrived. See README.txt for the model,
+the run dates, the calls and the tokens.
