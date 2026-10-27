@@ -1461,7 +1461,7 @@ minutes, so "several" means several committee members.
 ```{r}
 #| eval: false
 #| purl: false
-#| filename: "Run by the instructor, live: demo.R; needs ellmer (calls models from R), the API key and model_setup.R"
+#| filename: "Run by the instructor, live: demo.R, part 1; needs ellmer (calls models from R), the API key and model_setup.R"
 source("model_setup.R")                    # loads ellmer; MODEL, CODEBOOK, stance_type
 tdw <- read.csv("tdw_sentences.csv")
 set.seed(6850)
@@ -1905,6 +1905,7 @@ sentence through it. No account and no key.
 
 ```{.default filename="Terminal, on the instructor's laptop; captured 26 Oct 2026"}
 $ brew install ollama                 # once; or the installer from the server's website
+$ ollama serve                        # starts the server; keep this tab open (the installer app does it for you)
 $ ollama pull qwen3.5:4b-q4_K_M       # one model file, downloaded once
 pulling manifest
 pulling e56a899b1540: 100% ▕██████████████████▏ 675 MB
@@ -1928,8 +1929,7 @@ Hawkish
 
 The file's name says its size in billions of weights and how the weights
 are compressed to fit in memory. `--think=false` turns off the reasoning
-text some models write before answering. The server, the model and the
-laptop are named on the session page.
+text some models write before answering.
 
 :::
 
@@ -1938,7 +1938,7 @@ laptop are named on the session page.
 ```{r}
 #| eval: false
 #| purl: false
-#| filename: "Run by the instructor, live; needs ellmer, the model server, CODEBOOK, stance_type, tdw and pick"
+#| filename: "Run by the instructor, live: demo.R, part 2; needs ellmer and the model server"
 LOCAL_MODEL <- "<model file name>"   # the open model's file, set once
 chat_local <- chat_ollama(model = LOCAL_MODEL, system_prompt = CODEBOOK,
                           params = params(temperature = 0, seed = 6850,
