@@ -1,0 +1,57 @@
+18-documents: data for AEM 6850, session 18 (Documents & scans), Thu Oct 29, 2026.
+Assembled 2026-10-27.
+
+h41.pdf
+  Federal Reserve statistical release H.4.1, "Factors Affecting Reserve
+  Balances", 3 October 2024. Board of Governors of the Federal Reserve System,
+  https://www.federalreserve.gov/releases/h41/20241003/h41.pdf (192,780 bytes,
+  11 pages, made in Microsoft Word). US federal work, public domain.
+  Table 5 (consolidated statement) pages 6-7; Table 6 (each Reserve Bank)
+  pages 8-9. Downloaded 2026-10-27.
+
+comp1899_p.pdf, comp1899_p.png
+  One page of the Annual Report of the Comptroller of the Currency, 1899,
+  Volume 1: PDF page 693, printed page 646, Table XVII ("Aggregate resources,
+  expressed in millions of dollars, of national banks on June 30, 1899, and
+  State, savings, private banks, and loan and trust companies at date of
+  latest returns to this bureau"). Cut with pdftools::pdf_subset() from
+  https://fraser.stlouisfed.org/files/docs/publications/comp/1890s/1899/compcurr_1899_vol1.pdf
+  (FRASER, Federal Reserve Bank of St. Louis; 907 pages; 300-dpi scans with
+  an OCR text layer added by the archive). US federal work. The PNG is the
+  page rendered at 300 dpi. Downloaded 2026-10-27.
+
+sheets/
+  Ten-year sheets of monthly rainfall at Abbotsbury Castle, Dorset, England,
+  from the Met Office archive, as published by Rainfall Rescue:
+  https://github.com/ed-hawkins/rainfall-rescue, DATA/ABBOTSBURY-CASTLE/
+  ABBOTSBURY-CASTLE.pdf (six pages, JPEG at 170 ppi, extracted with
+  pdfimages). Licence CC BY 4.0 (Zenodo record 5770390, v2.1.0). Pages 1-6
+  are the 1860s, 1870s, 1880s, 1890s, 1910s and 1920s sheets. crops/ holds
+  130 x 90 px crops (at 3x) of the cells discussed in class.
+  Paper: Hawkins et al., Geoscience Data Journal, 2023,
+  https://doi.org/10.1002/gdj3.157 (CC BY 4.0).
+
+volunteers/
+  The volunteers' transcriptions of each sheet (TYRain_*.csv and the
+  ERROR_ file for the 1880s), and the combined station series
+  (ABBOTSBURY-CASTLE.csv), from the same repository, unchanged. -999 marks
+  a cell the volunteers could not read. The ERROR_ prefix marks a sheet
+  where a year's months do not add up to the transcribed total.
+
+cache/
+  Raw replies of a vision model (one JSON file per sheet and run, and one
+  for the 1899 page), made 2026-10-27 with the ellmer package from R, the
+  model's default settings, prompts in code/prompt_sheet.txt and
+  code/make_cache_1899.R; log.csv records seconds and tokens per call.
+
+ocr/
+  tesseract (eng) output for the pages used, and the page images it ran on.
+  For anyone whose tesseract install fails.
+
+agent/
+  The CSV files and transcripts of two coding-agent runs made before class
+  (2026-10-27): Table 6 of h41.pdf, and the 1880s sheet. request_1880s.txt
+  is the request typed live in class.
+
+rain_volunteers.csv, rain_model.csv, table6.csv
+  Long-format versions built by code/build_csv.R and code/fed_tables.R.
