@@ -1,0 +1,2374 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-html/tabby.min.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/light-border.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-7f8f88aac4f3542376d5c11b86a4c14d.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
+  <meta name="generator" content="quarto-1.9.37">
+
+  <title>AEM 6850 – AEM 6850 · 16 Text I: regex</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="../../site_libs/revealjs/dist/reset.css">
+  <link rel="stylesheet" href="../../site_libs/revealjs/dist/reveal.css">
+  <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+      vertical-align: middle;
+    }
+    /* CSS for syntax highlighting */
+    html { -webkit-text-size-adjust: 100%; }
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      { color: #003b4f; background-color: #f1f3f5; }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span { color: #003b4f; } /* Normal */
+    code span.al { color: #ad0000; } /* Alert */
+    code span.an { color: #5e5e5e; } /* Annotation */
+    code span.at { color: #657422; } /* Attribute */
+    code span.bn { color: #ad0000; } /* BaseN */
+    code span.bu { } /* BuiltIn */
+    code span.cf { color: #003b4f; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #20794d; } /* Char */
+    code span.cn { color: #8f5902; } /* Constant */
+    code span.co { color: #5e5e5e; } /* Comment */
+    code span.cv { color: #5e5e5e; font-style: italic; } /* CommentVar */
+    code span.do { color: #5e5e5e; font-style: italic; } /* Documentation */
+    code span.dt { color: #ad0000; } /* DataType */
+    code span.dv { color: #ad0000; } /* DecVal */
+    code span.er { color: #ad0000; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #ad0000; } /* Float */
+    code span.fu { color: #4758ab; } /* Function */
+    code span.im { color: #00769e; } /* Import */
+    code span.in { color: #5e5e5e; } /* Information */
+    code span.kw { color: #003b4f; font-weight: bold; } /* Keyword */
+    code span.op { color: #5e5e5e; } /* Operator */
+    code span.ot { color: #003b4f; } /* Other */
+    code span.pp { color: #ad0000; } /* Preprocessor */
+    code span.sc { color: #5e5e5e; } /* SpecialChar */
+    code span.ss { color: #20794d; } /* SpecialString */
+    code span.st { color: #20794d; } /* String */
+    code span.va { color: #111111; } /* Variable */
+    code span.vs { color: #20794d; } /* VerbatimString */
+    code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
+  </style>
+  <link rel="stylesheet" href="../../site_libs/revealjs/dist/theme/quarto-ef297f72b834c94a63866c9170156f7a.css">
+  <link href="../../site_libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
+  <link href="../../site_libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
+  <link href="../../site_libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
+  <link href="../../site_libs/revealjs/plugin/quarto-support/footer.css" rel="stylesheet">
+  <style type="text/css">
+    .reveal div.sourceCode {
+      margin: 0;
+      overflow: auto;
+    }
+    .reveal div.hanging-indent {
+      margin-left: 1em;
+      text-indent: -1em;
+    }
+    .reveal .slide:not(.center) {
+      height: 100%;
+    }
+    .reveal .slide.scrollable {
+      overflow-y: auto;
+    }
+    .reveal .footnotes {
+      height: 100%;
+      overflow-y: auto;
+    }
+    .reveal .slide .absolute {
+      position: absolute;
+      display: block;
+    }
+    .reveal .footnotes ol {
+      counter-reset: ol;
+      list-style-type: none; 
+      margin-left: 0;
+    }
+    .reveal .footnotes ol li:before {
+      counter-increment: ol;
+      content: counter(ol) ". "; 
+    }
+    .reveal .footnotes ol li > p:first-child {
+      display: inline-block;
+    }
+    .reveal .slide ul,
+    .reveal .slide ol {
+      margin-bottom: 0.5em;
+    }
+    .reveal .slide ul li,
+    .reveal .slide ol li {
+      margin-top: 0.4em;
+      margin-bottom: 0.2em;
+    }
+    .reveal .slide ul[role="tablist"] li {
+      margin-bottom: 0;
+    }
+    .reveal .slide ul li > *:first-child,
+    .reveal .slide ol li > *:first-child {
+      margin-block-start: 0;
+    }
+    .reveal .slide ul li > *:last-child,
+    .reveal .slide ol li > *:last-child {
+      margin-block-end: 0;
+    }
+    .reveal .slide .columns:nth-child(3) {
+      margin-block-start: 0.8em;
+    }
+    .reveal blockquote {
+      box-shadow: none;
+    }
+    .reveal .tippy-content>* {
+      margin-top: 0.2em;
+      margin-bottom: 0.7em;
+    }
+    .reveal .tippy-content>*:last-child {
+      margin-bottom: 0.2em;
+    }
+    .reveal .slide > img.stretch.quarto-figure-center,
+    .reveal .slide > img.r-stretch.quarto-figure-center {
+      display: block;
+      margin-left: auto;
+      margin-right: auto; 
+    }
+    .reveal .slide > img.stretch.quarto-figure-left,
+    .reveal .slide > img.r-stretch.quarto-figure-left  {
+      display: block;
+      margin-left: 0;
+      margin-right: auto; 
+    }
+    .reveal .slide > img.stretch.quarto-figure-right,
+    .reveal .slide > img.r-stretch.quarto-figure-right  {
+      display: block;
+      margin-left: auto;
+      margin-right: 0; 
+    }
+  </style>
+</head>
+<body class="quarto-light">
+  <div class="reveal">
+    <div class="slides">
+
+<section id="title-slide" class="center">
+  <p class="ttl-number">AEM 6850</p>
+  <p class="ttl-course">Empirical Methods for Applied Economists</p>
+  <p class="ttl-prof">Prof. Ariel Ortiz-Bobea</p>
+  <h1 class="title">16 · Text I: regex</h1>
+  <p class="subtitle">Thursday, October 22, 2026</p>
+  <img class="ttl-seal" src="../images/cornell_seal.svg" alt="Cornell University">
+</section>
+<section id="plan" class="slide level2">
+<h2>Plan for today</h2>
+<div style="font-size:0.74em">
+<ol type="1">
+<li><strong>Text as data in economics</strong><br>
+<span class="topics">Three papers · the terms</span></li>
+<li><strong>Regex basics</strong><br>
+<span class="topics">What a regular expression is · metacharacters · character classes · quantifiers · anchors · groups</span></li>
+<li><strong>Validation, extraction and replacement</strong><br>
+<span class="topics">The functions · checking a format · pulling out numbers · cleaning text · testing a pattern · Exercise 1</span></li>
+<li><strong>Patterns on 171 Fed statements</strong><br>
+<span class="topics">Finding a word · false positives · word counts · Exercise 2 · net tone</span></li>
+<li><strong>A chatbot writes the extraction code</strong><br>
+<span class="topics">Reading its pattern · comparing it with the Fed’s daily series · a look-alike hyphen · fixing the code</span></li>
+<li><strong>When to use regex</strong></li>
+</ol>
+</div>
+<div style="font-size:0.72em">
+<p>Before Part 4: unzip <a href="data/16-text-regex.zip">16-text-regex.zip</a> and open <code>16-text-regex.Rproj</code>.</p>
+</div>
+</section>
+<section id="text-to-variables" class="slide level2 smaller">
+<h2>From text to variables</h2>
+<div class="columns">
+<div class="column" style="width:52%;">
+<div style="font-size:0.88em; border-left: 4px solid #B31B1B; padding: 0.3em 0.9em; background: #F7F7F7;">
+<p>The Federal Open Market Committee decided today to establish a target range for the federal funds rate of <span style="background:#FFF3B0">0&nbsp;to&nbsp;1/4&nbsp;percent</span>.</p>
+<p>Since the Committee’s last meeting, labor market conditions have <span style="color:#B31B1B;font-weight:600">deteriorated</span>, and the available data indicate that consumer spending, business investment, and industrial production have <span style="color:#B31B1B;font-weight:600">declined</span>. Financial markets remain quite <span style="color:#B31B1B;font-weight:600">strained</span> and credit conditions tight. Overall, the outlook for economic activity has <span style="color:#B31B1B;font-weight:600">weakened</span> further.</p>
+</div>
+</div><div class="column" style="width:48%;">
+<div class="dashes" style="font-size:0.9em">
+<ul>
+<li><strong>A pattern</strong> finds <span style="background:#FFF3B0">0&nbsp;to&nbsp;1/4&nbsp;percent</span> → <code>lower</code> = 0 and <code>upper</code> = 0.25 (percent).</li>
+<li><strong>A count of words on a finance word list</strong>: the statement has 403 words. <span style="color:#B31B1B;font-weight:600">8 are negative</span> (the 4 in red are in these two paragraphs) and 2 are positive.</li>
+<li><strong>Net tone</strong> = 100 × (positive − negative) / words =&nbsp;100&nbsp;×&nbsp;(2&nbsp;−&nbsp;8)&nbsp;/&nbsp;403&nbsp;=&nbsp;−1.49.</li>
+<li>Run on all 171 statements from 2006 to 2026, each method gives a column you can plot and compare with other data.</li>
+</ul>
+</div>
+</div></div>
+<div style="font-size:0.8em; padding-top:0.6em">
+<p>The Federal Reserve (the Fed) is the US central bank. Its policy committee, the Federal Open Market Committee (FOMC), sets a target range for the federal funds rate (the interest rate banks charge each other on overnight loans). It publishes a statement after each meeting.</p>
+</div>
+<p><span class="source">Paragraphs 1 and 2 of the FOMC statement of 16 December 2008, during the financial crisis.</span></p>
+</section>
+<section>
+<section id="part-text-data" class="title-slide slide level1 center">
+<h1>1 · Text as data in economics</h1>
+<ul>
+<li>Three papers that count words</li>
+<li>The terms</li>
+</ul>
+<p>Install now, in the R Console:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="fu">c</span>(<span class="st">"stringr"</span>, <span class="st">"stopwords"</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="papers" class="slide level2 smaller">
+<h2>Three papers that count words</h2>
+<div style="font-size:0.74em">
+<table class="caption-top">
+<thead>
+<tr class="header">
+<th style="text-align: left;">Paper</th>
+<th style="text-align: left;">Text</th>
+<th style="text-align: left;">What they counted</th>
+<th style="text-align: left;">Finding</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><a href="https://doi.org/10.1093/qje/qjw024">Baker, Bloom &amp; Davis (QJE, 2016)</a></td>
+<td style="text-align: left;">articles in 10 US newspapers, each month</td>
+<td style="text-align: left;">share of articles with a word from each of three lists: economy, policy, uncertainty (an uncertainty index)</td>
+<td style="text-align: left;">the index rises near close elections, wars, 9/11, the failure of Lehman Brothers and the 2011 debt-ceiling fight</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><a href="https://doi.org/10.1093/restud/rdab094">Shapiro &amp; Wilson (REStud, 2022)</a></td>
+<td style="text-align: left;">transcripts of Fed policy meetings, <span style="white-space:nowrap">2000–2011</span></td>
+<td style="text-align: left;">negative and positive words from a finance word list</td>
+<td style="text-align: left;">the committee aimed at about 1.5 percent inflation, below the 2 percent usually assumed</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><a href="https://doi.org/10.1257/aer.20211537">Djourelova (AER, 2023)</a></td>
+<td style="text-align: left;">more than 2,000 US news outlets</td>
+<td style="text-align: left;">the phrase “illegal immigrant”, before and after the Associated Press told its reporters to stop using it in April 2013</td>
+<td style="text-align: left;">readers of papers that relied on AP stories became less supportive of restrictive immigration policy</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div style="font-size:0.74em">
+<p>Lehman Brothers: a large US investment bank that failed in September 2008. Debt ceiling: the legal limit on US federal borrowing. Associated Press (AP): a US news agency whose stories many local papers reprint.</p>
+<p><strong>Takeaway:</strong> each paper turns text into a variable by counting words or a phrase. In the first two, people read a random sample by hand to confirm the count measures what the authors claim. Details and figures are on the session page.</p>
+</div>
+<aside class="notes">
+<p>Lehman Brothers: a large US investment bank that failed in September 2008. The debt ceiling: the legal limit on federal borrowing. The Associated Press is a news agency whose stories many local papers reprint.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="terms" class="slide level2 smaller">
+<h2>Terms for text as data</h2>
+
+<img data-src="figures/16-text-regex/D05-text-terms.png" class="quarto-figure quarto-figure-center r-stretch" style="width:96.0%" alt="A diagram of the terms on the Fed file. The corpus holds all 171 statements; a document is one statement, one row; a string is text in R between quotes. Two lanes leave the document. A pattern, or regular expression, describes text to find; the match is the text found, '4-3/4 to 5 percent'; the variables lower and upper come from it. Tokens are single words, 73,839 in the corpus; a word list marks positive and negative words; the counts give the variable net tone."><div style="font-size:0.72em">
+<p>Corpus: the 171 Fed statements, 2006–2026. Example document: the statement of 22 March 2023 (target range 4-3/4 to 5 percent).</p>
+</div>
+</section></section>
+<section>
+<section id="part-regex" class="title-slide slide level1 center">
+<h1>2 · Regex basics</h1>
+<ul>
+<li>What a regular expression is</li>
+<li>Metacharacters</li>
+<li>Character classes and the dot</li>
+<li>Quantifiers</li>
+<li>Anchors and word boundaries</li>
+<li>Groups and alternatives</li>
+</ul>
+</section>
+<section id="what-regex" class="slide level2 smaller code-120">
+<h2>What a regular expression is</h2>
+<div class="dashes" style="font-size:0.78em">
+<ul>
+<li>A <strong>regular expression</strong> (regex) is a pattern, written as a string, that describes a set of texts. A function reads the pattern and finds the stretches of text that fit it, called <strong>matches</strong>.</li>
+<li>Most characters match themselves: the pattern <code>"rate"</code> finds the letters r, a, t, e in that order. These are <strong>literals</strong>.</li>
+<li>A few characters have a special meaning, such as <code>?</code>, which makes the piece before it optional. These are <strong>metacharacters</strong>.</li>
+<li>The same syntax works in most programming languages and text editors.</li>
+</ul>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>R Console; needs stringr</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a aria-hidden="true" tabindex="-1"></a><span class="co"># install.packages(c("stringr", "stopwords"))   # once</span></span>
+<span id="cb2-2"><a aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(stringr)               <span class="co"># text functions; every name starts with str_</span></span>
+<span id="cb2-3"><a aria-hidden="true" tabindex="-1"></a>words <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"color"</span>, <span class="st">"colour"</span>, <span class="st">"colr"</span>, <span class="st">"Colour"</span>)</span>
+<span id="cb2-4"><a aria-hidden="true" tabindex="-1"></a><span class="fu">str_detect</span>(words, <span class="st">"colou?r"</span>)   <span class="co"># TRUE if the string contains a match; ? makes the u optional</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; [1]  TRUE  TRUE FALSE FALSE</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a aria-hidden="true" tabindex="-1"></a><span class="fu">str_view</span>(words, <span class="st">"colou?r"</span>)     <span class="co"># the strings that match, each match in &lt; &gt;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; [1] │ &lt;color&gt;
+#&gt; [2] │ &lt;colour&gt;</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a aria-hidden="true" tabindex="-1"></a><span class="fu">str_detect</span>(words, <span class="fu">regex</span>(<span class="st">"colou?r"</span>, <span class="at">ignore_case =</span> <span class="cn">TRUE</span>))   <span class="co"># upper and lower case match alike</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; [1]  TRUE  TRUE FALSE  TRUE</code></pre>
+</div>
+</div>
+<div style="font-size:0.74em">
+<p>Matching is case-sensitive, so “Colour” does not match until <code>ignore_case = TRUE</code> inside <code>regex()</code> turns that off.</p>
+</div>
+</section>
+<section id="metacharacters" class="slide level2 smaller">
+<h2>Metacharacters</h2>
+<div style="font-size:0.72em">
+<table class="caption-top">
+<colgroup>
+<col style="width: 9%">
+<col style="width: 51%">
+<col style="width: 18%">
+<col style="width: 20%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Symbol</th>
+<th style="text-align: left;">Means</th>
+<th style="text-align: left;">Pattern</th>
+<th style="text-align: left;">Example match</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><code>.</code></td>
+<td style="text-align: left;">any one character</td>
+<td style="text-align: left;"><code>r.te</code></td>
+<td style="text-align: left;">rate, rite</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>[ ]</code></td>
+<td style="text-align: left;">one character from the set</td>
+<td style="text-align: left;"><code>[0-9]</code></td>
+<td style="text-align: left;">4</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>[^ ]</code></td>
+<td style="text-align: left;">one character not in the set</td>
+<td style="text-align: left;"><code>[^0-9]</code></td>
+<td style="text-align: left;">the - and / in 4-3/4</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>?</code></td>
+<td style="text-align: left;">the piece before, zero or one time</td>
+<td style="text-align: left;"><code>rates?</code></td>
+<td style="text-align: left;">rate, rates</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>*</code></td>
+<td style="text-align: left;">the piece before, zero or more times</td>
+<td style="text-align: left;"><code>10*</code></td>
+<td style="text-align: left;">1, 10, 100</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>+</code></td>
+<td style="text-align: left;">the piece before, one or more times</td>
+<td style="text-align: left;"><code>[0-9]+</code></td>
+<td style="text-align: left;">2026</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>{n}</code></td>
+<td style="text-align: left;">the piece before, exactly n times</td>
+<td style="text-align: left;"><code>[0-9]{4}</code></td>
+<td style="text-align: left;">2026</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>^</code> <code>$</code></td>
+<td style="text-align: left;">the start, the end of the text</td>
+<td style="text-align: left;"><code>^The</code></td>
+<td style="text-align: left;">“The” at the start</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>|</code></td>
+<td style="text-align: left;">the piece on either side</td>
+<td style="text-align: left;"><code>raise|lower</code></td>
+<td style="text-align: left;">raise, lower</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>( )</code></td>
+<td style="text-align: left;">a group, whose match R can return alone</td>
+<td style="text-align: left;"><code>([0-9]+)%</code></td>
+<td style="text-align: left;">4% (group: 4)</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>\\</code></td>
+<td style="text-align: left;">the next character is plain (in R, typed twice)</td>
+<td style="text-align: left;"><code>\\.</code></td>
+<td style="text-align: left;">a period</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div style="font-size:0.72em">
+<p><strong>Shortcuts</strong>: <code>\\d</code> a digit, <code>\\s</code> a space or line break, <code>\\w</code> a letter, digit or underscore, <code>\\b</code> the edge of a word. In R each backslash is written twice: you type <code>"\\d"</code> and the pattern receives <code>\d</code>. A <strong>piece</strong> is one character, a class in brackets, or a group.</p>
+</div>
+</section>
+<section id="classes" class="slide level2 smaller">
+<h2>Character classes <code>[ ]</code> and <code>\\d</code></h2>
+<div class="cell" data-layout-align="center">
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>R Console; needs stringr</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a aria-hidden="true" tabindex="-1"></a><span class="co"># a sentence from the Fed's policy statement of 22 March 2023</span></span>
+<span id="cb8-2"><a aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="st">"the Committee decided to raise the target range for the federal funds rate to 4-3/4 to 5 percent."</span></span>
+<span id="cb8-3"><a aria-hidden="true" tabindex="-1"></a><span class="fu">str_view</span>(x, <span class="st">"</span><span class="sc">\\</span><span class="st">d"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; [1] │ the Committee decided to raise the target range for the federal funds rate to &lt;4&gt;-&lt;3&gt;/&lt;4&gt; to &lt;5&gt; percent.</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a aria-hidden="true" tabindex="-1"></a><span class="fu">str_view</span>(x, <span class="st">"[0-9/-]"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; [1] │ the Committee decided to raise the target range for the federal funds rate to &lt;4&gt;&lt;-&gt;&lt;3&gt;&lt;/&gt;&lt;4&gt; to &lt;5&gt; percent.</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a aria-hidden="true" tabindex="-1"></a><span class="fu">str_view</span>(x, <span class="st">"[^a-z ]"</span>)      <span class="co"># ^ inside brackets: any character NOT in the set</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; [1] │ the &lt;C&gt;ommittee decided to raise the target range for the federal funds rate to &lt;4&gt;&lt;-&gt;&lt;3&gt;&lt;/&gt;&lt;4&gt; to &lt;5&gt; percent&lt;.&gt;</code></pre>
+</div>
+</div>
+<div class="dashes" style="font-size:0.8em">
+<ul>
+<li><strong>Character class</strong>: characters in brackets. It matches any one of them.</li>
+<li>Inside brackets, <code>0-9</code> means any digit and <code>a-z</code> any lowercase letter. A hyphen placed last, as in <code>[0-9/-]</code>, is a plain hyphen.</li>
+<li><code>[^ ]</code> matches any one character NOT in the set. The set in <code>[^a-z ]</code> is the lowercase letters and the space, so it catches the capital C, the digits, the - and the /, and the final period.</li>
+<li><strong><code>\\d</code></strong>: one digit, the same as <code>[0-9]</code>.</li>
+<li>The Fed writes rates as a whole number and a fraction: “4-3/4 percent” is 4.75 percent.</li>
+</ul>
+</div>
+</section>
+<section id="dot" class="slide level2 smaller code-110">
+<h2>The dot and the escape</h2>
+<div class="cell" data-layout-align="center">
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>R Console; needs stringr and x</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a aria-hidden="true" tabindex="-1"></a><span class="fu">str_view</span>(<span class="fu">c</span>(<span class="st">"rate"</span>, <span class="st">"rite"</span>, <span class="st">"r8te"</span>, <span class="st">"rte"</span>), <span class="st">"r.te"</span>)   <span class="co"># . : any one character</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; [1] │ &lt;rate&gt;
+#&gt; [2] │ &lt;rite&gt;
+#&gt; [3] │ &lt;r8te&gt;</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a aria-hidden="true" tabindex="-1"></a><span class="fu">str_view</span>(x, <span class="st">"</span><span class="sc">\\</span><span class="st">."</span>)           <span class="co"># \\. : a period</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; [1] │ the Committee decided to raise the target range for the federal funds rate to 4-3/4 to 5 percent&lt;.&gt;</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a aria-hidden="true" tabindex="-1"></a><span class="fu">c</span>(<span class="fu">str_count</span>(x, <span class="st">"."</span>), <span class="fu">str_count</span>(x, <span class="st">"</span><span class="sc">\\</span><span class="st">."</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; [1] 97  1</code></pre>
+</div>
+</div>
+<div class="dashes" style="font-size:0.78em">
+<ul>
+<li><strong>The dot <code>.</code></strong>: any one character.</li>
+<li>The dot needs exactly one character, so “rte” does not match. <code>str_count()</code> counts the matches in each string.</li>
+<li><strong>Escape</strong>: a backslash that turns a metacharacter back into a plain character: <code>\\.</code> a period, <code>\\$</code> a dollar sign, <code>\\?</code> a question mark, <code>\\(</code> a parenthesis.</li>
+<li><code>x</code> has 97 characters. <code>"."</code> matches each of them, and <code>"\\."</code> only the period.</li>
+</ul>
+</div>
+</section>
+<section id="quantifiers" class="slide level2 smaller code-120">
+<h2>Quantifiers</h2>
+<div class="cell" data-layout-align="center">
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>R Console; needs x</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a aria-hidden="true" tabindex="-1"></a><span class="fu">str_extract_all</span>(x, <span class="st">"[0-9/-]+"</span>)            <span class="co"># + : one or more of the piece before</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; [[1]]
+#&gt; [1] "4-3/4" "5"</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a aria-hidden="true" tabindex="-1"></a><span class="fu">str_extract</span>(x, <span class="st">"</span><span class="sc">\\</span><span class="st">d+-</span><span class="sc">\\</span><span class="st">d+/</span><span class="sc">\\</span><span class="st">d+"</span>)           <span class="co"># a whole number, a hyphen, a fraction</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; [1] "4-3/4"</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a aria-hidden="true" tabindex="-1"></a><span class="fu">str_detect</span>(<span class="fu">c</span>(<span class="st">"1/4 percentage point"</span>, <span class="st">"1/2 percentage points"</span>), <span class="st">"percentage points?"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; [1] TRUE TRUE</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a aria-hidden="true" tabindex="-1"></a><span class="fu">str_extract</span>(<span class="fu">c</span>(<span class="st">"year 2026"</span>, <span class="st">"26"</span>), <span class="st">"</span><span class="sc">\\</span><span class="st">d{4}"</span>)   <span class="co"># {4} : exactly four digits</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; [1] "2026" NA</code></pre>
+</div>
+</div>
+<div class="dashes" style="font-size:0.8em">
+<ul>
+<li><strong>Quantifier</strong>: a mark after a piece (one character, a class in brackets, or a group) saying how many times it may repeat: <code>+</code> one or more, <code>*</code> zero or more, <code>?</code> zero or one, <code>{4}</code> exactly four.</li>
+<li><code>str_extract()</code> returns the first match in each string, or NA. <code>str_extract_all()</code> returns every match, as a list with one element per string (the <code>[[1]]</code>).</li>
+</ul>
+</div>
+</section>
+<section id="anchors-words" class="slide level2 smaller code-120">
+<h2>Anchors and word boundaries</h2>
+<div class="cell" data-layout-align="center">
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>R Console; needs stringr</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a aria-hidden="true" tabindex="-1"></a>s <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"rate"</span>, <span class="st">"the rate rose"</span>, <span class="st">"moderate"</span>, <span class="st">"rates"</span>)</span>
+<span id="cb28-2"><a aria-hidden="true" tabindex="-1"></a><span class="fu">str_detect</span>(s, <span class="st">"rate"</span>)             <span class="co"># the literal also matches inside other words</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; [1] TRUE TRUE TRUE TRUE</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a aria-hidden="true" tabindex="-1"></a><span class="fu">str_detect</span>(s, <span class="st">"</span><span class="sc">\\</span><span class="st">brate</span><span class="sc">\\</span><span class="st">b"</span>)       <span class="co"># \\b : the edge of a word</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; [1]  TRUE  TRUE FALSE FALSE</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a aria-hidden="true" tabindex="-1"></a><span class="fu">str_detect</span>(s, <span class="st">"^rate$"</span>)           <span class="co"># ^ : start of the text; $ : end of the text</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; [1]  TRUE FALSE FALSE FALSE</code></pre>
+</div>
+</div>
+<div class="dashes" style="font-size:0.8em">
+<ul>
+<li><strong>Anchor</strong>: <code>^</code> pins the pattern to the start of the text and <code>$</code> to the end. With both, the whole string must match. Inside brackets, <code>^</code> means NOT.</li>
+<li><strong>Word boundary <code>\\b</code></strong>: the edge between a letter, digit or underscore and anything else: a space, a punctuation mark, or the start or end of the text.</li>
+<li><strong>False positive</strong>: text the pattern catches but should skip, such as “moderate” when you want the word “rate”. <strong>False negative</strong>: text it misses but should catch, such as “rates” under <code>\\brate\\b</code>.</li>
+</ul>
+</div>
+</section>
+<section id="groups" class="slide level2 smaller code-120">
+<h2>Capture groups <code>( )</code></h2>
+<div class="cell" data-layout-align="center">
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>R Console; needs stringr</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a aria-hidden="true" tabindex="-1"></a>rates <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"4-3/4"</span>, <span class="st">"1-1/2"</span>, <span class="st">"5"</span>)             <span class="co"># rates as the Fed writes them</span></span>
+<span id="cb34-2"><a aria-hidden="true" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">str_match</span>(rates, <span class="st">"(</span><span class="sc">\\</span><span class="st">d+)-(</span><span class="sc">\\</span><span class="st">d+)/(</span><span class="sc">\\</span><span class="st">d+)"</span>)  <span class="co"># whole number, numerator, denominator</span></span>
+<span id="cb34-3"><a aria-hidden="true" tabindex="-1"></a>m</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt;      [,1]    [,2] [,3] [,4]
+#&gt; [1,] "4-3/4" "4"  "3"  "4" 
+#&gt; [2,] "1-1/2" "1"  "1"  "2" 
+#&gt; [3,] NA      NA   NA   NA</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a aria-hidden="true" tabindex="-1"></a><span class="fu">as.numeric</span>(m[, <span class="dv">2</span>]) <span class="sc">+</span> <span class="fu">as.numeric</span>(m[, <span class="dv">3</span>]) <span class="sc">/</span> <span class="fu">as.numeric</span>(m[, <span class="dv">4</span>])   <span class="co"># 4 + 3/4 = 4.75</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; [1] 4.75 1.50   NA</code></pre>
+</div>
+</div>
+<div class="dashes" style="font-size:0.8em">
+<ul>
+<li><strong>Capture group</strong>: a part of the pattern inside <code>( )</code>. <code>str_match()</code> returns the whole match in column 1, then one column per group, in the order the groups open.</li>
+<li>The groups split “4-3/4” into 4, 3 and 4, so the last line can compute 4 + 3/4 = 4.75.</li>
+<li>“5” has no fraction, so the pattern finds no match and the whole row is NA.</li>
+</ul>
+</div>
+</section>
+<section id="alternatives" class="slide level2 smaller code-120">
+<h2>Alternatives <code>|</code></h2>
+<div class="cell" data-layout-align="center">
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>R Console; needs stringr</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a aria-hidden="true" tabindex="-1"></a><span class="co"># phrases from the Fed statements of 8 Aug 2006, 22 Mar 2023 and 16 Dec 2008</span></span>
+<span id="cb38-2"><a aria-hidden="true" tabindex="-1"></a>phrases <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"keep its target for the federal funds rate at 5-1/4 percent"</span>,</span>
+<span id="cb38-3"><a aria-hidden="true" tabindex="-1"></a>             <span class="st">"raise the target range for the federal funds rate to 4-3/4 to 5 percent"</span>,</span>
+<span id="cb38-4"><a aria-hidden="true" tabindex="-1"></a>             <span class="st">"establish a target range for the federal funds rate of 0 to 1/4 percent"</span>)</span>
+<span id="cb38-5"><a aria-hidden="true" tabindex="-1"></a><span class="fu">str_match</span>(phrases, <span class="st">"(?:at|to|of) ([0-9/-]+) percent"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt;      [,1]               [,2]   
+#&gt; [1,] "at 5-1/4 percent" "5-1/4"
+#&gt; [2,] "to 5 percent"     "5"    
+#&gt; [3,] "to 1/4 percent"   "1/4"</code></pre>
+</div>
+</div>
+<div class="dashes" style="font-size:0.8em">
+<ul>
+<li><code>at|to|of</code> matches at, to or of. <code>(?: )</code> groups the three words without adding a column, so the number lands in column 2.</li>
+<li>Rows 2 and 3 return only the upper end of the range:
+<ul>
+<li>The pattern needs a space and “percent” right after the number.</li>
+<li>After “to 4-3/4” comes “to 5”, so the search moves on and matches “to 5 percent”.</li>
+<li>Getting both ends takes a second number group.</li>
+</ul></li>
+</ul>
+</div>
+<aside class="notes">
+<p>The same constructions come back in the chatbot’s pattern in Part 5.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section></section>
+<section>
+<section id="part-uses" class="title-slide slide level1 center">
+<h1>3 · Validation, extraction and replacement</h1>
+<ul>
+<li>The functions for each task</li>
+<li>Validating a format</li>
+<li>Extracting numbers</li>
+<li>Replacing and cleaning text</li>
+<li>Testing a pattern</li>
+<li>Exercise 1</li>
+</ul>
+</section>
+<section id="functions" class="slide level2 smaller">
+<h2>The functions for each task</h2>
+<div style="font-size:0.7em">
+<table class="caption-top">
+<colgroup>
+<col style="width: 21%">
+<col style="width: 30%">
+<col style="width: 48%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Task and result</th>
+<th style="text-align: left;"><code>stringr</code></th>
+<th style="text-align: left;">base R</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><strong>find, validate</strong><br>TRUE or FALSE</td>
+<td style="text-align: left;"><code>str_detect(x, p)</code></td>
+<td style="text-align: left;"><code>grepl(p, x)</code></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>count</strong><br>a number per string</td>
+<td style="text-align: left;"><code>str_count(x, p)</code></td>
+<td style="text-align: left;"><code>lengths(regmatches(x, gregexpr(p, x)))</code></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><strong>extract</strong><br>first match, or NA</td>
+<td style="text-align: left;"><code>str_extract(x, p)</code></td>
+<td style="text-align: left;"><code>regmatches(x, regexpr(p, x))</code></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>groups</strong><br>match, then groups</td>
+<td style="text-align: left;"><code>str_match(x, p)</code></td>
+<td style="text-align: left;"><code>regmatches(x, regexec(p, x))</code></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><strong>extract all</strong><br>a list of matches</td>
+<td style="text-align: left;"><code>str_extract_all(x, p)</code></td>
+<td style="text-align: left;"><code>regmatches(x, gregexpr(p, x))</code></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>replace</strong><br>the new strings</td>
+<td style="text-align: left;"><code>str_replace_all(x, p, r)</code></td>
+<td style="text-align: left;"><code>gsub(p, r, x)</code></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div style="font-size:0.72em">
+<p>Result: what the <code>stringr</code> function returns. <code>x</code> is the text, <code>p</code> the pattern and <code>r</code> the replacement. Base R puts the pattern first, and its extract functions drop strings with no match. Chatbots write either style.</p>
+</div>
+</section>
+<section id="validation" class="slide level2 smaller code-120">
+<h2>Validating a format</h2>
+<div class="cell" data-layout-align="center">
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>R Console; needs stringr</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a aria-hidden="true" tabindex="-1"></a>fips <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"06037"</span>, <span class="st">"6037"</span>, <span class="st">"36109"</span>, <span class="st">"3610A"</span>, <span class="st">" 36109"</span>)   <span class="co"># US county codes</span></span>
+<span id="cb40-2"><a aria-hidden="true" tabindex="-1"></a><span class="fu">str_detect</span>(fips, <span class="st">"^</span><span class="sc">\\</span><span class="st">d{5}$"</span>)         <span class="co"># exactly five digits, nothing before or after</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; [1]  TRUE FALSE  TRUE FALSE FALSE</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a aria-hidden="true" tabindex="-1"></a><span class="fu">str_detect</span>(fips, <span class="st">"</span><span class="sc">\\</span><span class="st">d{5}"</span>)           <span class="co"># without the anchors, " 36109" passes</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; [1]  TRUE FALSE  TRUE FALSE  TRUE</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a aria-hidden="true" tabindex="-1"></a>fips[<span class="sc">!</span><span class="fu">str_detect</span>(fips, <span class="st">"^</span><span class="sc">\\</span><span class="st">d{5}$"</span>)]  <span class="co"># the values that fail</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; [1] "6037"   "3610A"  " 36109"</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a aria-hidden="true" tabindex="-1"></a>dates <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"2026-10-22"</span>, <span class="st">"10/22/2026"</span>, <span class="st">"2026-1-5"</span>)</span>
+<span id="cb46-2"><a aria-hidden="true" tabindex="-1"></a><span class="fu">str_detect</span>(dates, <span class="st">"^</span><span class="sc">\\</span><span class="st">d{4}-</span><span class="sc">\\</span><span class="st">d{2}-</span><span class="sc">\\</span><span class="st">d{2}$"</span>)   <span class="co"># year-month-day, two digits each</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; [1]  TRUE FALSE FALSE</code></pre>
+</div>
+</div>
+<div class="dashes" style="font-size:0.8em">
+<ul>
+<li><strong>Validation</strong>: checking that every value has the format it should, before you merge or analyze the data.</li>
+<li>A <strong>FIPS code</strong> is the US government’s five-digit code for each US county: two digits for the state, three for the county. Read as a number, “06037” (Los Angeles County, California) becomes 6037, and a merge on it fails.</li>
+</ul>
+</div>
+</section>
+<section id="extraction" class="slide level2 smaller code-120">
+<h2>Extracting numbers</h2>
+<div class="cell" data-layout-align="center">
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>R Console; needs stringr</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a aria-hidden="true" tabindex="-1"></a>prices <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"$1,250"</span>, <span class="st">"price: $99.99"</span>, <span class="st">"free"</span>, <span class="st">"$52,000"</span>)</span>
+<span id="cb48-2"><a aria-hidden="true" tabindex="-1"></a><span class="fu">str_extract</span>(prices, <span class="st">"[0-9,.]+"</span>)             <span class="co"># digits, commas and periods</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; [1] "1,250"  "99.99"  NA       "52,000"</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a aria-hidden="true" tabindex="-1"></a>ages <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"&lt;1"</span>, <span class="st">"1-5"</span>, <span class="st">"5-10"</span>, <span class="st">"15+"</span>)        <span class="co"># age groups in a mortality table</span></span>
+<span id="cb50-2"><a aria-hidden="true" tabindex="-1"></a><span class="fu">str_match</span>(ages, <span class="st">"(</span><span class="sc">\\</span><span class="st">d+)(?:-(</span><span class="sc">\\</span><span class="st">d+))?"</span>)         <span class="co"># group 1: the first number; group 2: the second</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt;      [,1]   [,2] [,3]
+#&gt; [1,] "1"    "1"  NA  
+#&gt; [2,] "1-5"  "1"  "5" 
+#&gt; [3,] "5-10" "5"  "10"
+#&gt; [4,] "15"   "15" NA</code></pre>
+</div>
+</div>
+<div class="dashes" style="font-size:0.8em">
+<ul>
+<li><strong>Extraction</strong>: keeping only the part of each string that matches.</li>
+<li><code>str_extract()</code> returns the match as text.</li>
+<li><code>str_match()</code> returns one column per group, so “5-10” splits into “5” and “10”. <code>(?:-(\\d+))?</code> makes the hyphen and the second number optional together; when they are missing, group 2 is NA.</li>
+<li>The pattern returns 1 for “&lt;1” and 15 for “15+”. You code by hand that “&lt;1” starts at 0 and that “15+” has no upper end.</li>
+</ul>
+</div>
+</section>
+<section id="replacement" class="slide level2 smaller code-110">
+<h2>Replacing and cleaning text</h2>
+<div class="cell" data-layout-align="center">
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>R Console; needs prices</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a aria-hidden="true" tabindex="-1"></a>amount <span class="ot">&lt;-</span> <span class="fu">str_extract</span>(prices, <span class="st">"[0-9,.]+"</span>)       <span class="co"># "free" has no digits, so NA</span></span>
+<span id="cb52-2"><a aria-hidden="true" tabindex="-1"></a><span class="fu">as.numeric</span>(<span class="fu">str_replace_all</span>(amount, <span class="st">","</span>, <span class="st">""</span>))    <span class="co"># drop the commas, then convert</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; [1]  1250.00    99.99       NA 52000.00</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a aria-hidden="true" tabindex="-1"></a><span class="fu">str_squish</span>(<span class="st">"  Federal   Reserve </span><span class="sc">\n</span><span class="st"> Board "</span>)     <span class="co"># \n: a line break; result: one space between words</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; [1] "Federal Reserve Board"</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb56"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a aria-hidden="true" tabindex="-1"></a><span class="co"># month/day/year becomes year-month-day</span></span>
+<span id="cb56-2"><a aria-hidden="true" tabindex="-1"></a><span class="fu">str_replace</span>(<span class="fu">c</span>(<span class="st">"10/22/2026"</span>, <span class="st">"01/05/2026"</span>), <span class="st">"(</span><span class="sc">\\</span><span class="st">d{2})/(</span><span class="sc">\\</span><span class="st">d{2})/(</span><span class="sc">\\</span><span class="st">d{4})"</span>, <span class="st">"</span><span class="sc">\\</span><span class="st">3-</span><span class="sc">\\</span><span class="st">1-</span><span class="sc">\\</span><span class="st">2"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; [1] "2026-10-22" "2026-01-05"</code></pre>
+</div>
+</div>
+<div class="dashes" style="font-size:0.8em">
+<ul>
+<li><strong>Replacement</strong>: rewriting what the pattern matches. <code>str_replace()</code> changes the first match, <code>str_replace_all()</code> every match.</li>
+<li><strong>Backreference</strong>: <code>\\1</code>, <code>\\2</code> and <code>\\3</code> in the replacement stand for what groups 1, 2 and 3 matched. The US writes dates month/day/year (10/22/2026), so the replacement puts the year first: 2026-10-22.</li>
+<li><code>as.numeric("1,250")</code> gives NA, which is why the commas go first.</li>
+</ul>
+</div>
+</section>
+<section id="tests" class="slide level2 smaller">
+<h2>Testing a pattern</h2>
+<div class="cell" data-layout-align="center">
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>R Console; needs stringr</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb58"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a aria-hidden="true" tabindex="-1"></a>should_match <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"the federal funds rate"</span>, <span class="st">"longer-term interest rates"</span>)</span>
+<span id="cb58-2"><a aria-hidden="true" tabindex="-1"></a>should_skip  <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"at a moderate pace"</span>, <span class="st">"to generate sustained improvement"</span>)</span>
+<span id="cb58-3"><a aria-hidden="true" tabindex="-1"></a><span class="fu">str_detect</span>(should_match, <span class="st">"</span><span class="sc">\\</span><span class="st">brate</span><span class="sc">\\</span><span class="st">b"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; [1]  TRUE FALSE</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb60"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb60-1"><a aria-hidden="true" tabindex="-1"></a><span class="fu">str_detect</span>(should_skip, <span class="st">"</span><span class="sc">\\</span><span class="st">brate</span><span class="sc">\\</span><span class="st">b"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; [1] FALSE FALSE</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb62"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb62-1"><a aria-hidden="true" tabindex="-1"></a><span class="fu">str_detect</span>(should_match, <span class="st">"</span><span class="sc">\\</span><span class="st">brates?</span><span class="sc">\\</span><span class="st">b"</span>)      <span class="co"># ? makes the "s" optional</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; [1] TRUE TRUE</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb64"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb64-1"><a aria-hidden="true" tabindex="-1"></a><span class="fu">str_detect</span>(should_skip, <span class="st">"</span><span class="sc">\\</span><span class="st">brates?</span><span class="sc">\\</span><span class="st">b"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; [1] FALSE FALSE</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb66"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb66-1"><a aria-hidden="true" tabindex="-1"></a><span class="fu">str_detect</span>(should_skip, <span class="st">"rate"</span>)               <span class="co"># without \\b, "moderate" and "generate" match</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; [1] TRUE TRUE</code></pre>
+</div>
+</div>
+<div class="dashes" style="font-size:0.72em">
+<ul>
+<li>Test a pattern on strings with a known answer first. Goal here: the word “rate” or “rates”, and not “moderate” or “generate”.</li>
+<li><strong>Should-match and should-skip tests</strong>: short vectors of real strings the pattern must catch and must leave alone, rerun after every change.</li>
+<li><code>\\brate\\b</code> misses “rates” (false negative); <code>"rate"</code> catches both skip strings (false positives); <code>\\brates?\\b</code> passes both.</li>
+<li>Copy test strings from the documents. When the corpus shows a case the pattern gets wrong, add that string to one of the two vectors.</li>
+</ul>
+</div>
+</section>
+<section id="exercise-1" class="slide level2 smaller">
+<h2>Exercise 1</h2>
+<div class="panel-tabset">
+<ul id="tabset-1" class="panel-tabset-tabby"><li><a data-tabby-default="" href="#tabset-1-1">Exercise</a></li><li><a href="#tabset-1-2">Solution</a></li></ul>
+<div class="tab-content">
+<div id="tabset-1-1">
+<div style="font-size:1.2em">
+<div class="cell" data-layout-align="center" data-exercise="true" data-script="Exercise 1 (5 minutes)">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb68"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb68-1"><a aria-hidden="true" tabindex="-1"></a><span class="co"># Exercise 1 (5 minutes). R Console; needs stringr. Answers to a survey</span></span>
+<span id="cb68-2"><a aria-hidden="true" tabindex="-1"></a><span class="co"># question on yearly income:</span></span>
+<span id="cb68-3"><a aria-hidden="true" tabindex="-1"></a>income <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"$52,000"</span>, <span class="st">"48500"</span>, <span class="st">"Income: $61,250.00"</span>, <span class="st">"N/A"</span>, <span class="st">"about 40k"</span>,</span>
+<span id="cb68-4"><a aria-hidden="true" tabindex="-1"></a>            <span class="st">"$1,000,000"</span>)</span>
+<span id="cb68-5"><a aria-hidden="true" tabindex="-1"></a><span class="co"># 1. Validation: write ok_pat, a pattern for an answer that is only an</span></span>
+<span id="cb68-6"><a aria-hidden="true" tabindex="-1"></a><span class="co">#    amount: an optional $, then digits and commas, then optional cents</span></span>
+<span id="cb68-7"><a aria-hidden="true" tabindex="-1"></a><span class="co">#    (.00). Run str_detect(income, ok_pat). Alone, $ means the end of the</span></span>
+<span id="cb68-8"><a aria-hidden="true" tabindex="-1"></a><span class="co">#    text, so write \\$ for a dollar sign.</span></span>
+<span id="cb68-9"><a aria-hidden="true" tabindex="-1"></a><span class="co"># 2. Extraction: pull the number out of every answer with str_extract().</span></span>
+<span id="cb68-10"><a aria-hidden="true" tabindex="-1"></a><span class="co"># 3. Replacement: drop the commas with str_replace_all(), then as.numeric().</span></span>
+<span id="cb68-11"><a aria-hidden="true" tabindex="-1"></a><span class="co"># 4. Read the result next to income. Which answers give NA or a wrong number?</span></span>
+<span id="cb68-12"><a aria-hidden="true" tabindex="-1"></a><span class="co">#</span></span>
+<span id="cb68-13"><a aria-hidden="true" tabindex="-1"></a><span class="co"># Two answers to compare with the room: how many answers pass step 1, and</span></span>
+<span id="cb68-14"><a aria-hidden="true" tabindex="-1"></a><span class="co"># what "about 40k" becomes.</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+</div>
+<div id="tabset-1-2">
+<div class="cell" data-layout-align="center">
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>R Console; needs stringr</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb69"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb69-1"><a aria-hidden="true" tabindex="-1"></a>income <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"$52,000"</span>, <span class="st">"48500"</span>, <span class="st">"Income: $61,250.00"</span>, <span class="st">"N/A"</span>, <span class="st">"about 40k"</span>,</span>
+<span id="cb69-2"><a aria-hidden="true" tabindex="-1"></a>            <span class="st">"$1,000,000"</span>)</span>
+<span id="cb69-3"><a aria-hidden="true" tabindex="-1"></a>ok_pat <span class="ot">&lt;-</span> <span class="st">"^</span><span class="sc">\\</span><span class="st">$?[0-9,]+(</span><span class="sc">\\</span><span class="st">.</span><span class="sc">\\</span><span class="st">d{2})?$"</span></span>
+<span id="cb69-4"><a aria-hidden="true" tabindex="-1"></a><span class="fu">str_detect</span>(income, ok_pat)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; [1]  TRUE  TRUE FALSE FALSE FALSE  TRUE</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb71"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb71-1"><a aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="fu">str_extract</span>(income, <span class="st">"[0-9,.]+"</span>)</span>
+<span id="cb71-2"><a aria-hidden="true" tabindex="-1"></a><span class="fu">as.numeric</span>(<span class="fu">str_replace_all</span>(n, <span class="st">","</span>, <span class="st">""</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; [1]   52000   48500   61250      NA      40 1000000</code></pre>
+</div>
+</div>
+<p><strong>Three answers pass: “$52,000”, “48500” and “$1,000,000”. “about 40k” becomes 40, a thousand times too small, with no warning. It fails step 1, which is how you find it.</strong></p>
+</div>
+</div>
+</div>
+<aside class="notes">
+<p>Uses only the functions of this part. The $ needs an escape because, on its own, $ is the end anchor. Without ^ and $, “Income: $61,250.00” passes step 1. “N/A” gives NA in step 2, which is the right answer for a missing value.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section></section>
+<section>
+<section id="part-fed" class="title-slide slide level1 center">
+<h1>4 · Patterns on 171 Fed statements</h1>
+<ul>
+<li>The Fed’s policy statements</li>
+<li>Finding a word in 171 statements</li>
+<li>False positives in a large text</li>
+<li>Splitting text into words</li>
+<li>Word counts and stop words</li>
+<li>Exercise 2</li>
+<li>A finance word list and net tone</li>
+</ul>
+<div style="font-size:0.8em">
+<p>Unzip <a href="data/16-text-regex.zip">16-text-regex.zip</a> (the 171 statements in <code>fomc_statements.csv</code>, plus the files for later slides) and open <code>16-text-regex.Rproj</code>.</p>
+</div>
+</section>
+<section id="statement" class="slide level2 smaller">
+<h2>The Fed’s policy statements</h2>
+<div class="columns">
+<div class="column" style="width:48%;">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="figures/16-text-regex/S01-statement-20230322-top.png" class="quarto-figure quarto-figure-center" alt="The third paragraph of the Federal Reserve's statement of 22 March 2023, as the Fed's page shows it, with the sentence 'the Committee decided to raise the target range for the federal funds rate to 4-3/4 to 5 percent' highlighted."></p>
+</figure>
+</div>
+</div><div class="column" style="width:52%;">
+<div class="dashes" style="font-size:0.82em">
+<ul>
+<li>The Federal Reserve (“the Fed”) is the US central bank.</li>
+<li>Its <strong>Federal Open Market Committee (FOMC)</strong> sets the policy interest rate. It meets eight times a year and publishes a statement after each meeting. A few statements follow unscheduled meetings.</li>
+<li>The <strong>federal funds rate</strong> is the rate banks charge each other for overnight loans. The Fed steers it.</li>
+<li>The <strong>target range</strong> is the band the FOMC announces for that rate. “4-3/4 to 5 percent” means 4.75 to 5. Before 16 December 2008 the FOMC announced a single number.</li>
+<li><strong>The file</strong> <code>fomc_statements.csv</code> has one row per statement: 171 statements, 31 Jan 2006 to 16 Sep 2026, 165 of them after scheduled meetings.</li>
+</ul>
+</div>
+</div></div>
+<p><span class="source">Screenshot: federalreserve.gov, statement of 22 March 2023 (public domain).</span></p>
+<aside class="notes">
+<p>This is the file the scraping session built. The meeting came 12 days after Silicon Valley Bank failed, which is why paragraph 2 opens “The U.S. banking system is sound and resilient.”</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="detect" class="slide level2 smaller">
+<h2>Finding a word in 171 statements</h2>
+<div class="cell" data-layout-align="center">
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>R Console, in the 16-text-regex folder; needs stringr; reads fomc_statements.csv (date, url, words, text, scheduled)</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb73"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb73-1"><a aria-hidden="true" tabindex="-1"></a>fomc <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"fomc_statements.csv"</span>)</span>
+<span id="cb73-2"><a aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(fomc)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; [1] 171   5</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb75"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb75-1"><a aria-hidden="true" tabindex="-1"></a><span class="fu">c</span>(<span class="at">inflation =</span> <span class="fu">sum</span>(<span class="fu">str_detect</span>(fomc<span class="sc">$</span>text, <span class="st">"inflation"</span>)),</span>
+<span id="cb75-2"><a aria-hidden="true" tabindex="-1"></a>  <span class="at">Inflation =</span> <span class="fu">sum</span>(<span class="fu">str_detect</span>(fomc<span class="sc">$</span>text, <span class="st">"Inflation"</span>)),</span>
+<span id="cb75-3"><a aria-hidden="true" tabindex="-1"></a>  <span class="at">either    =</span> <span class="fu">sum</span>(<span class="fu">str_detect</span>(fomc<span class="sc">$</span>text, <span class="fu">regex</span>(<span class="st">"inflation"</span>, <span class="at">ignore_case =</span> <span class="cn">TRUE</span>))))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; inflation Inflation    either 
+#&gt;       165        99       168</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb77"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb77-1"><a aria-hidden="true" tabindex="-1"></a>fomc<span class="sc">$</span>n_infl <span class="ot">&lt;-</span> <span class="fu">str_count</span>(fomc<span class="sc">$</span>text, <span class="fu">regex</span>(<span class="st">"inflation"</span>, <span class="at">ignore_case =</span> <span class="cn">TRUE</span>))</span>
+<span id="cb77-2"><a aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fomc<span class="sc">$</span>n_infl)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt;    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+#&gt;   0.000   5.000   8.000   7.795  10.500  17.000</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb79"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb79-1"><a aria-hidden="true" tabindex="-1"></a>fomc<span class="sc">$</span>date[<span class="fu">which</span>(fomc<span class="sc">$</span>n_infl <span class="sc">==</span> <span class="dv">0</span>)]   <span class="co"># which(): the positions where the condition is TRUE</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; [1] "2007-08-17" "2020-03-03" "2020-03-23"</code></pre>
+</div>
+</div>
+<div class="dashes" style="font-size:0.72em">
+<ul>
+<li><strong>Literal pattern</strong>: a pattern with no metacharacters. Matching is case-sensitive: 165 statements contain “inflation”, 99 “Inflation”, 168 either.</li>
+<li><code>str_detect()</code> gives TRUE or FALSE per statement, and <code>sum()</code> counts the TRUEs. <code>str_count()</code> gives the number of matches per statement, a new column <code>n_infl</code> (0 to 17, median 8).</li>
+<li>The three statements without “inflation” all followed unscheduled meetings: 17 Aug 2007, and 3 and 23 Mar 2020, as the coronavirus spread.</li>
+</ul>
+</div>
+<aside class="notes">
+<p>Paragraphs inside <code>text</code> are separated by a blank line (“”). The three statements with no “inflation” are the unscheduled 17 Aug 2007 and 23 Mar 2020 and the emergency cut of 3 Mar 2020.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="false-positives" class="slide level2 smaller">
+<h2>False positives in a large text</h2>
+<div class="cell" data-layout-align="center">
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>R Console; needs fomc</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb81"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb81-1"><a aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(<span class="fu">str_count</span>(fomc<span class="sc">$</span>text, <span class="st">"rate"</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; [1] 982</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb83"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb83-1"><a aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(<span class="fu">str_count</span>(fomc<span class="sc">$</span>text, <span class="st">"</span><span class="sc">\\</span><span class="st">brate</span><span class="sc">\\</span><span class="st">b"</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; [1] 705</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb85"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb85-1"><a aria-hidden="true" tabindex="-1"></a>caught <span class="ot">&lt;-</span> <span class="fu">unlist</span>(<span class="fu">str_extract_all</span>(fomc<span class="sc">$</span>text, <span class="st">"[a-z]*rate[a-z]*"</span>))   <span class="co"># every word containing "rate"</span></span>
+<span id="cb85-2"><a aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(<span class="fu">sort</span>(<span class="fu">table</span>(caught), <span class="at">decreasing =</span> <span class="cn">TRUE</span>), <span class="dv">6</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; caught
+#&gt;       rate   moderate      rates moderately  moderated   generate 
+#&gt;        705        144         58         42         21          3</code></pre>
+</div>
+</div>
+<div class="dashes" style="font-size:0.74em">
+<ul>
+<li>The literal “rate” matches 982 times, the whole word 705 times. The other 277 are 58 “rates”, which you may want (<code>\\brates?\\b</code> keeps them), and 219 inside other words, such as “moderate” (144).</li>
+<li>A false positive is text the pattern catches but should skip. In a short test vector you see one at a glance. In 171 statements, a table of everything the pattern caught shows them.</li>
+<li><code>unlist()</code> puts every statement’s matches in one vector, so <code>table()</code> can count them.</li>
+</ul>
+</div>
+</section>
+<section id="tokens" class="slide level2 smaller">
+<h2>Splitting text into words</h2>
+<div class="cell" data-layout-align="center">
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>R Console; needs stringr and fomc</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb87"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb87-1"><a aria-hidden="true" tabindex="-1"></a>i <span class="ot">&lt;-</span> <span class="fu">which</span>(fomc<span class="sc">$</span>date <span class="sc">==</span> <span class="st">"2023-03-22"</span>)                         <span class="co"># the row of the 22 Mar 2023 statement</span></span>
+<span id="cb87-2"><a aria-hidden="true" tabindex="-1"></a>fomc<span class="sc">$</span>year <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(<span class="fu">str_sub</span>(fomc<span class="sc">$</span>date, <span class="dv">1</span>, <span class="dv">4</span>))             <span class="co"># the year, used in Exercise 2</span></span>
+<span id="cb87-3"><a aria-hidden="true" tabindex="-1"></a>tokens <span class="ot">&lt;-</span> <span class="fu">str_extract_all</span>(<span class="fu">str_to_lower</span>(fomc<span class="sc">$</span>text), <span class="st">"[a-z]+"</span>)  <span class="co"># every run of letters</span></span>
+<span id="cb87-4"><a aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(tokens[[i]], <span class="dv">12</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt;  [1] "recent"     "indicators" "point"      "to"         "modest"    
+#&gt;  [6] "growth"     "in"         "spending"   "and"        "production"
+#&gt; [11] "job"        "gains"</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb89"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb89-1"><a aria-hidden="true" tabindex="-1"></a><span class="fu">length</span>(tokens[[i]])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; [1] 364</code></pre>
+</div>
+</div>
+<div class="dashes" style="font-size:0.74em">
+<ul>
+<li><strong>Token</strong>: one unit of text after splitting, here a word in lower case. Extracting every run of letters does the split: spaces, punctuation and numbers are left out.</li>
+<li><code>str_to_lower()</code> comes first so “Inflation” and “inflation” count as one word. <code>tokens</code> is a list with one vector of words per statement, and <code>[[i]]</code> picks one.</li>
+<li>The apostrophe is not a letter, so “Committee’s” becomes two tokens, “committee” and “s”.</li>
+</ul>
+</div>
+<aside class="notes">
+<p>The file’s <code>words</code> column says 365 for this statement. It counts words differently, which is why the slides say tokens.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="stop-words" class="slide level2 smaller">
+<h2>Word counts and stop words</h2>
+<div class="cell" data-layout-align="center">
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>R Console; needs tokens and the stopwords package</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb91"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb91-1"><a aria-hidden="true" tabindex="-1"></a>all_words <span class="ot">&lt;-</span> <span class="fu">unlist</span>(tokens)</span>
+<span id="cb91-2"><a aria-hidden="true" tabindex="-1"></a><span class="fu">length</span>(all_words)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; [1] 73839</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb93"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb93-1"><a aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(<span class="fu">sort</span>(<span class="fu">table</span>(all_words), <span class="at">decreasing =</span> <span class="cn">TRUE</span>), <span class="dv">8</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; all_words
+#&gt;       the       and        to        of committee        in inflation      will 
+#&gt;      5320      2854      2576      2382      1706      1534      1330       950</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb95"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb95-1"><a aria-hidden="true" tabindex="-1"></a>stop_words <span class="ot">&lt;-</span> stopwords<span class="sc">::</span><span class="fu">stopwords</span>(<span class="st">"en"</span>)     <span class="co"># pkg::fun(): a package's function without library()</span></span>
+<span id="cb95-2"><a aria-hidden="true" tabindex="-1"></a>kept <span class="ot">&lt;-</span> all_words[<span class="sc">!</span>all_words <span class="sc">%in%</span> stop_words <span class="sc">&amp;</span> <span class="fu">nchar</span>(all_words) <span class="sc">&gt;</span> <span class="dv">1</span>]   <span class="co"># !x %in% y: x is not in y</span></span>
+<span id="cb95-3"><a aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(<span class="fu">sort</span>(<span class="fu">table</span>(kept), <span class="at">decreasing =</span> <span class="cn">TRUE</span>), <span class="dv">8</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; kept
+#&gt; committee inflation  economic      rate   federal    policy    market   percent 
+#&gt;      1706      1330       842       705       686       649       642       619</code></pre>
+</div>
+</div>
+<div class="dashes" style="font-size:0.74em">
+<ul>
+<li><strong>Stop words</strong>: very common words dropped before counting (“the”, “of”, “will”). The package’s default English list (Snowball) has 175.</li>
+<li><strong>Term frequency</strong>: a word’s count divided by all tokens. “inflation” is 1,330 of 73,839, or 1.8 percent.</li>
+<li><code>nchar()</code> counts characters. <code>nchar(all_words) &gt; 1</code> drops 1,793 more one-letter tokens: the s of “Committee’s” and “U.S.”, and middle initials such as the H in Jerome H. Powell (each statement ends by naming the members who voted).</li>
+<li>The stop list also drops “not” and “no”, which reverse a sentence, and “against”, which is on the negative word list used for tone.</li>
+</ul>
+</div>
+</section>
+<section id="exercise-2" class="slide level2 smaller">
+<h2>Exercise 2</h2>
+<div class="panel-tabset">
+<ul id="tabset-2" class="panel-tabset-tabby"><li><a data-tabby-default="" href="#tabset-2-1">Exercise</a></li><li><a href="#tabset-2-2">Solution</a></li></ul>
+<div class="tab-content">
+<div id="tabset-2-1">
+<div style="font-size:1.3em">
+<div class="cell" data-layout-align="center" data-exercise="true" data-script="Exercise 2 (5 minutes)">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb97"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb97-1"><a aria-hidden="true" tabindex="-1"></a><span class="co"># Exercise 2 (5 minutes). R Console; needs fomc (with its year column) and</span></span>
+<span id="cb97-2"><a aria-hidden="true" tabindex="-1"></a><span class="co"># tokens from the previous slides.</span></span>
+<span id="cb97-3"><a aria-hidden="true" tabindex="-1"></a><span class="co"># Which words appear in the statements for the first time in 2022?</span></span>
+<span id="cb97-4"><a aria-hidden="true" tabindex="-1"></a><span class="co">#</span></span>
+<span id="cb97-5"><a aria-hidden="true" tabindex="-1"></a><span class="co"># 1. Put the words of the 2022 statements in one vector:</span></span>
+<span id="cb97-6"><a aria-hidden="true" tabindex="-1"></a><span class="co">#      w22 &lt;- unlist(tokens[fomc$year == 2022])</span></span>
+<span id="cb97-7"><a aria-hidden="true" tabindex="-1"></a><span class="co"># 2. Put the words of every statement before 2022 in a second vector</span></span>
+<span id="cb97-8"><a aria-hidden="true" tabindex="-1"></a><span class="co">#    called before.</span></span>
+<span id="cb97-9"><a aria-hidden="true" tabindex="-1"></a><span class="co"># 3. Keep the 2022 words that are not in the vector before (use %in% and !).</span></span>
+<span id="cb97-10"><a aria-hidden="true" tabindex="-1"></a><span class="co"># 4. Count them with table() and sort them, largest first.</span></span>
+<span id="cb97-11"><a aria-hidden="true" tabindex="-1"></a><span class="co">#</span></span>
+<span id="cb97-12"><a aria-hidden="true" tabindex="-1"></a><span class="co"># Two answers to compare with the room: the most frequent new word, and the</span></span>
+<span id="cb97-13"><a aria-hidden="true" tabindex="-1"></a><span class="co"># new words that are people's names.</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+</div>
+<div id="tabset-2-2">
+<div class="cell" data-layout-align="center">
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>R Console; needs fomc and tokens</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb98"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb98-1"><a aria-hidden="true" tabindex="-1"></a>w22    <span class="ot">&lt;-</span> <span class="fu">unlist</span>(tokens[fomc<span class="sc">$</span>year <span class="sc">==</span> <span class="dv">2022</span>])</span>
+<span id="cb98-2"><a aria-hidden="true" tabindex="-1"></a>before <span class="ot">&lt;-</span> <span class="fu">unlist</span>(tokens[fomc<span class="sc">$</span>year <span class="sc">&lt;</span> <span class="dv">2022</span>])</span>
+<span id="cb98-3"><a aria-hidden="true" tabindex="-1"></a>new    <span class="ot">&lt;-</span> w22[<span class="sc">!</span>w22 <span class="sc">%in%</span> before]</span>
+<span id="cb98-4"><a aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(<span class="fu">sort</span>(<span class="fu">table</span>(new), <span class="at">decreasing =</span> <span class="cn">TRUE</span>), <span class="dv">16</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; new
+#&gt;       war    russia   ukraine attentive  invasion    issued      cook  creating 
+#&gt;         8         7         7         6         6         6         5         5 
+#&gt;         d jefferson      lisa         n    philip  weighing      barr   collins 
+#&gt;         5         5         5         5         5         5         4         4</code></pre>
+</div>
+</div>
+<p><strong>“war” (8), then “russia” and “ukraine” (7 each) and “invasion” (6): from 16 Mar 2022 the statements say “The invasion of Ukraine by Russia is causing tremendous human and economic hardship.” The names belong to four new voting members of the committee (Lisa D. Cook, Philip N. Jefferson, Michael S. Barr, Susan M. Collins); d and n are their middle initials.</strong></p>
+</div>
+</div>
+</div>
+<aside class="notes">
+<p>Each statement lists the members who voted. Lisa D. Cook and Philip N. Jefferson appear from 15 Jun 2022, Michael S. Barr and Susan M. Collins from 27 Jul 2022; “d” and “n” are middle initials. Of the 2,886 words in the 2022 statements, 105 are new, 27 different words. The exercise needs no stop words, so a student whose stopwords install failed can still do it.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="lm" class="slide level2 smaller">
+<h2>A finance word list</h2>
+<div class="cell" data-layout-align="center">
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>R Console; reads lm_words.csv</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb100"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb100-1"><a aria-hidden="true" tabindex="-1"></a>lm_words <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"lm_words.csv"</span>)         <span class="co"># word, list: "positive" or "negative"; lower case</span></span>
+<span id="cb100-2"><a aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(lm_words<span class="sc">$</span>list)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; 
+#&gt; negative positive 
+#&gt;     2345      347</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb102"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb102-1"><a aria-hidden="true" tabindex="-1"></a>pos <span class="ot">&lt;-</span> lm_words<span class="sc">$</span>word[lm_words<span class="sc">$</span>list <span class="sc">==</span> <span class="st">"positive"</span>]</span>
+<span id="cb102-2"><a aria-hidden="true" tabindex="-1"></a>neg <span class="ot">&lt;-</span> lm_words<span class="sc">$</span>word[lm_words<span class="sc">$</span>list <span class="sc">==</span> <span class="st">"negative"</span>]</span>
+<span id="cb102-3"><a aria-hidden="true" tabindex="-1"></a><span class="fu">c</span>(<span class="st">"liability"</span>, <span class="st">"tax"</span>, <span class="st">"cost"</span>) <span class="sc">%in%</span> neg      <span class="co"># three words a general-purpose list calls negative</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; [1] FALSE FALSE FALSE</code></pre>
+</div>
+</div>
+<div class="dashes" style="font-size:0.72em">
+<ul>
+<li><strong>Word list (dictionary)</strong>: a fixed list of words tied to a category. Counting the words on a positive and a negative list gives a statement’s tone.</li>
+<li><a href="https://doi.org/10.1111/j.1540-6261.2010.01625.x">Loughran &amp; McDonald (JF, 2011)</a> built the lists for 10-Ks, the yearly report every listed US company files with the Securities and Exchange Commission (the US regulator of stock markets).</li>
+<li><strong>Finding.</strong> In 10-Ks from 1994 to 2008, a general-purpose list (the Harvard General Inquirer, built for psychology and sociology) flagged many words as negative. Almost three-fourths of them, such as tax, cost and liability, are not negative in financial text.</li>
+<li><strong>Takeaway:</strong> a word list built for one kind of text misreads another. <a href="https://doi.org/10.1093/restud/rdab094">Shapiro &amp; Wilson (REStud, 2022)</a> used these lists on the Fed’s meeting transcripts, and the next slides apply them to the statements.</li>
+</ul>
+</div>
+<p><span class="source">Free for use in academic research; commercial licences from the authors (sraf.nd.edu).</span></p>
+</section>
+<section id="net-tone" class="slide level2 smaller">
+<h2>Net tone of each statement</h2>
+<div style="font-size:0.7em">
+<p><strong>Net tone</strong>: positive words minus negative words, per 100 tokens.</p>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>R Console; needs fomc, tokens, pos and neg</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb104"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb104-1"><a aria-hidden="true" tabindex="-1"></a>net_tone <span class="ot">&lt;-</span> <span class="cf">function</span>(w) <span class="dv">100</span> <span class="sc">*</span> (<span class="fu">sum</span>(w <span class="sc">%in%</span> pos) <span class="sc">-</span> <span class="fu">sum</span>(w <span class="sc">%in%</span> neg)) <span class="sc">/</span> <span class="fu">length</span>(w)</span>
+<span id="cb104-2"><a aria-hidden="true" tabindex="-1"></a>j <span class="ot">&lt;-</span> <span class="fu">which</span>(fomc<span class="sc">$</span>date <span class="sc">==</span> <span class="st">"2008-12-16"</span>)</span>
+<span id="cb104-3"><a aria-hidden="true" tabindex="-1"></a>w <span class="ot">&lt;-</span> tokens[[j]]</span>
+<span id="cb104-4"><a aria-hidden="true" tabindex="-1"></a>w[w <span class="sc">%in%</span> neg]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; [1] "deteriorated" "declined"     "strained"     "weakened"     "diminished"  
+#&gt; [6] "declines"     "weaker"       "weak"</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb106"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb106-1"><a aria-hidden="true" tabindex="-1"></a>w[w <span class="sc">%in%</span> pos]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; [1] "stability"     "exceptionally"</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb108"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb108-1"><a aria-hidden="true" tabindex="-1"></a><span class="fu">net_tone</span>(w)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; [1] -1.488834</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb110"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb110-1"><a aria-hidden="true" tabindex="-1"></a>fomc<span class="sc">$</span>tone <span class="ot">&lt;-</span> <span class="fu">sapply</span>(tokens, net_tone)        <span class="co"># sapply(): the function on each statement's words</span></span>
+<span id="cb110-2"><a aria-hidden="true" tabindex="-1"></a>fomc[<span class="fu">c</span>(<span class="fu">which.min</span>(fomc<span class="sc">$</span>tone), <span class="fu">which.max</span>(fomc<span class="sc">$</span>tone)), <span class="fu">c</span>(<span class="st">"date"</span>, <span class="st">"tone"</span>)]   <span class="co"># lowest, highest</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt;           date      tone
+#&gt; 24  2008-09-16 -2.727273
+#&gt; 130 2021-07-28  2.057613</code></pre>
+</div>
+</div>
+<div style="font-size:0.7em">
+<p>On 16 Dec 2008, during the financial crisis, the committee cut its target to a range of 0 to 1/4 percent; the statement has 403 tokens. The two positive words come from set phrases: “price stability” and “exceptionally low”.</p>
+</div>
+<aside class="notes">
+<p>The lowest, 16 Sep 2008, came the day after Lehman Brothers filed for bankruptcy. Its 220 tokens contain 1 positive and 7 negative words.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="fig-tone" class="slide level2 smaller code-120">
+<h2>Drawing net tone over time</h2>
+<div class="cell" data-layout-align="center">
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>R Console; needs fomc with its tone column</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb112"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb112-1"><a aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mar =</span> <span class="fu">c</span>(<span class="fl">2.5</span>, <span class="fl">4.5</span>, <span class="fl">0.8</span>, <span class="fl">0.5</span>))               <span class="co"># margins in lines: bottom, left, top, right</span></span>
+<span id="cb112-2"><a aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">as.Date</span>(fomc<span class="sc">$</span>date), fomc<span class="sc">$</span>tone, <span class="at">type =</span> <span class="st">"h"</span>, <span class="at">ylim =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="fl">3.4</span>, <span class="fl">2.8</span>),</span>
+<span id="cb112-3"><a aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">""</span>, <span class="at">ylab =</span> <span class="st">"Net tone per 100 tokens"</span>, <span class="at">las =</span> <span class="dv">1</span>)    <span class="co"># "h": one bar per statement</span></span>
+<span id="cb112-4"><a aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">h =</span> <span class="dv">0</span>, <span class="at">col =</span> <span class="st">"grey60"</span>)</span>
+<span id="cb112-5"><a aria-hidden="true" tabindex="-1"></a>lab <span class="ot">&lt;-</span> <span class="fu">which</span>(fomc<span class="sc">$</span>date <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"2008-09-16"</span>, <span class="st">"2020-03-03"</span>, <span class="st">"2021-07-28"</span>))</span>
+<span id="cb112-6"><a aria-hidden="true" tabindex="-1"></a><span class="fu">text</span>(<span class="fu">as.Date</span>(fomc<span class="sc">$</span>date[lab]), fomc<span class="sc">$</span>tone[lab], <span class="fu">c</span>(<span class="st">"16 Sep 2008"</span>, <span class="st">"3 Mar 2020"</span>, <span class="st">"28 Jul 2021"</span>),</span>
+<span id="cb112-7"><a aria-hidden="true" tabindex="-1"></a>     <span class="at">pos =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">3</span>, <span class="dv">3</span>), <span class="at">cex =</span> <span class="dv">1</span>, <span class="at">xpd =</span> <span class="cn">NA</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+<div class="dashes" style="font-size:0.8em">
+<ul>
+<li><code>type = "h"</code> draws one vertical bar from 0 to each statement’s tone.</li>
+<li><code>text()</code> labels three statements: the lowest (16 Sep 2008), the highest (28 Jul 2021) and 3 Mar 2020, a rate cut between scheduled meetings.</li>
+<li><code>pos = 1</code> puts a label below its bar and <code>pos = 3</code> above it. <code>xpd = NA</code> lets a label run outside the box.</li>
+</ul>
+</div>
+<div style="font-size:0.8em">
+<p>The plot is on the next slide.</p>
+</div>
+</section>
+<section id="fig-tone-output" class="slide level2 smaller">
+<h2>Net tone of 171 statements, 2006–2026</h2>
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="16-text-regex_files/figure-revealjs/fig-tone-time-1.png" class="quarto-figure quarto-figure-center" style="width:86.0%" alt="Net tone per statement from 2006 to 2026 as vertical bars around zero. The bars are negative through 2008, lowest on 16 September 2008, and mostly positive from 2013 to 2019 and in 2021, with 3 March 2020 and 28 July 2021 labelled among the most positive."></p>
+</figure>
+</div>
+<div style="font-size:0.66em">
+<p>Net tone per 100 tokens (Loughran-McDonald lists), one bar per statement: 103 above zero, 54 below, 14 at zero. Lowest: 16 Sep 2008, the day after the US bank Lehman Brothers failed. Highest: 28 Jul 2021. 3 Mar 2020, a rate cut between scheduled meetings as the coronavirus spread, still ranks 8th most positive.</p>
+</div>
+</section></section>
+<section>
+<section id="part-chatbot" class="title-slide slide level1 center">
+<h1>5 · A chatbot writes the extraction code</h1>
+<div style="font-size:0.8em">
+<p>The task: pull the target range for the federal funds rate (lower and upper limit, in percent) out of each of the 171 statements, with code a chatbot wrote.</p>
+</div>
+<ul>
+<li>The prompt and the reply</li>
+<li>Reading its pattern piece by piece</li>
+<li>The reply’s tests on 171 statements</li>
+<li>Comparing it with FRED, the Fed’s daily series of the target</li>
+<li>Where the reply’s code fails</li>
+<li>Two hyphens that look the same</li>
+<li>Fixing the code</li>
+</ul>
+</section>
+<section id="prompt-reply" class="slide level2 smaller">
+<h2>The prompt and the reply</h2>
+<div class="prompt" style="font-size:0.74em; border-left: 4px solid #B31B1B; padding: 0.2em 0.8em; background: #F7F7F7;">
+<p>I have a data frame in R called fomc with a column text that holds the full text of every FOMC statement since 2006, one statement per row. Each statement says what the Fed decided about its policy rate, for example: “the Committee decided to raise the target range for the federal funds rate to 4-3/4 to 5 percent.” Write R code with stringr that extracts the target range from each statement into two numeric columns, lower and upper (here 4.75 and 5).</p>
+</div>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>chat_reply.R in the zip: steps 1 to 3 of the reply's code, unchanged; the lines above them define num and to_num()</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb113" data-filename="chat_reply.R in the zip: steps 1 to 3 of the reply's code, unchanged; the lines above them define num and to_num()"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb113-1"><a aria-hidden="true" tabindex="-1"></a><span class="co"># 1. Isolate the part of the statement describing the decision on the funds rate</span></span>
+<span id="cb113-2"><a aria-hidden="true" tabindex="-1"></a>seg <span class="ot">&lt;-</span> <span class="fu">str_extract</span>(</span>
+<span id="cb113-3"><a aria-hidden="true" tabindex="-1"></a>  fomc<span class="sc">$</span>text,</span>
+<span id="cb113-4"><a aria-hidden="true" tabindex="-1"></a>  <span class="fu">regex</span>(<span class="st">"decided.*?federal funds rate.*?percent</span><span class="sc">\\</span><span class="st">b"</span>, <span class="at">ignore_case =</span> <span class="cn">TRUE</span>, <span class="at">dotall =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb113-5"><a aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb113-6"><a aria-hidden="true" tabindex="-1"></a><span class="co"># 2. Pull out "to/at/of X [to Y] percent"</span></span>
+<span id="cb113-7"><a aria-hidden="true" tabindex="-1"></a>pat <span class="ot">&lt;-</span> <span class="fu">str_c</span>(<span class="st">"</span><span class="sc">\\</span><span class="st">b(?:to|at|of)</span><span class="sc">\\</span><span class="st">s+("</span>, num, <span class="st">")(?:</span><span class="sc">\\</span><span class="st">s+to</span><span class="sc">\\</span><span class="st">s+("</span>, num, <span class="st">"))?</span><span class="sc">\\</span><span class="st">s+percent</span><span class="sc">\\</span><span class="st">b"</span>)</span>
+<span id="cb113-8"><a aria-hidden="true" tabindex="-1"></a>m   <span class="ot">&lt;-</span> <span class="fu">str_match</span>(seg, pat)</span>
+<span id="cb113-9"><a aria-hidden="true" tabindex="-1"></a><span class="co"># 3. Convert to numeric</span></span>
+<span id="cb113-10"><a aria-hidden="true" tabindex="-1"></a>first  <span class="ot">&lt;-</span> <span class="fu">to_num</span>(m[, <span class="dv">2</span>])</span>
+<span id="cb113-11"><a aria-hidden="true" tabindex="-1"></a>second <span class="ot">&lt;-</span> <span class="fu">to_num</span>(m[, <span class="dv">3</span>])</span>
+<span id="cb113-12"><a aria-hidden="true" tabindex="-1"></a>fomc<span class="sc">$</span>lower <span class="ot">&lt;-</span> first</span>
+<span id="cb113-13"><a aria-hidden="true" tabindex="-1"></a>fomc<span class="sc">$</span>upper <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(<span class="fu">is.na</span>(second), first, second)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div style="font-size:0.66em">
+<p>The reply: “For your example, <code>"...to 4-3/4 to 5 percent."</code> gives <code>lower = 4.75</code> and <code>upper = 5</code>.” The prompt shows one example sentence and gives no other statements to test the code on. What follows reads <code>num</code>, step 1 and step 2 in turn. The full reply is on the session page.</p>
+</div>
+<p><span class="source">Reply from Claude (claude-sonnet-5-5) through Anthropic’s API, 20 October 2026, to the prompt shown. The same prompt in the chat at claude.ai can return different code.</span></p>
+<aside class="notes">
+<p>This is the chatbot the course recommended. Students will get different code if they paste the prompt; the steps that follow apply to any reply.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="num" class="slide level2 smaller">
+<h2>Reading the number pattern</h2>
+<div class="cell" data-layout-align="center">
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>R Console, in the 16-text-regex folder; needs stringr and fomc</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb114"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb114-1"><a aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">"chat_reply.R"</span>)      <span class="co"># runs the reply's code, unchanged</span></span>
+<span id="cb114-2"><a aria-hidden="true" tabindex="-1"></a><span class="fu">str_view</span>(<span class="fu">c</span>(<span class="st">"5"</span>, <span class="st">"1/4"</span>, <span class="st">"4-3/4"</span>, <span class="st">"0.25"</span>), num)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; [1] │ &lt;5&gt;
+#&gt; [2] │ &lt;1/4&gt;
+#&gt; [3] │ &lt;4-3/4&gt;
+#&gt; [4] │ &lt;0.25&gt;</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb116"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb116-1"><a aria-hidden="true" tabindex="-1"></a><span class="fu">to_num</span>(<span class="fu">c</span>(<span class="st">"4-3/4"</span>, <span class="st">"1/4"</span>, <span class="st">"5"</span>, <span class="st">"0"</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; [1] 4.75 0.25 5.00 0.00</code></pre>
+</div>
+</div>
+
+<img data-src="figures/16-text-regex/D06-num-pattern.png" class="quarto-figure quarto-figure-center r-stretch" style="width:94.0%" alt="The pattern num split into three pieces: backslash d plus, one or more digits; an optional group of a period and digits, as in .25; an optional group of either -3/4 or /4."><div class="dashes" style="font-size:0.66em">
+<ul>
+<li><strong><code>num</code></strong>: the reply’s pattern for one number as the Fed writes it (“5”, “1/4”, “4-3/4”). Step 2 uses it twice, for the lower and the upper limit.</li>
+<li><strong><code>source()</code></strong> runs every line of a script file. <code>chat_reply.R</code> defines <code>num</code>, <code>to_num()</code>, <code>seg</code> and <code>pat</code>, and adds <code>lower</code> and <code>upper</code> to <code>fomc</code>.</li>
+<li><strong>Known-answer test</strong>: inputs whose right output you know before running. In <code>str_view()</code> all four strings match in full, and <code>to_num()</code> returns 4.75, 0.25, 5 and 0, as expected.</li>
+<li><code>to_num()</code> (in <code>chat_reply.R</code>) splits “4-3/4” into 4, 3 and 4 and returns 4 + 3/4.</li>
+</ul>
+</div>
+</section>
+<section id="greedy-lazy" class="slide level2 smaller">
+<h2>Greedy and lazy matching</h2>
+<div class="cell" data-layout-align="center">
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>R Console; needs fomc and seg from chat_reply.R</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb118"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb118-1"><a aria-hidden="true" tabindex="-1"></a>i <span class="ot">&lt;-</span> <span class="fu">which</span>(fomc<span class="sc">$</span>date <span class="sc">==</span> <span class="st">"2023-03-22"</span>)</span>
+<span id="cb118-2"><a aria-hidden="true" tabindex="-1"></a>greedy <span class="ot">&lt;-</span> <span class="fu">str_extract</span>(fomc<span class="sc">$</span>text[i], <span class="fu">regex</span>(<span class="st">"decided.*percent"</span>, <span class="at">dotall =</span> <span class="cn">TRUE</span>))</span>
+<span id="cb118-3"><a aria-hidden="true" tabindex="-1"></a>lazy   <span class="ot">&lt;-</span> <span class="fu">str_extract</span>(fomc<span class="sc">$</span>text[i], <span class="fu">regex</span>(<span class="st">"decided.*?percent"</span>, <span class="at">dotall =</span> <span class="cn">TRUE</span>))</span>
+<span id="cb118-4"><a aria-hidden="true" tabindex="-1"></a><span class="fu">c</span>(<span class="fu">nchar</span>(greedy), <span class="fu">nchar</span>(lazy))       <span class="co"># nchar() counts characters</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; [1] 926  82</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb120"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb120-1"><a aria-hidden="true" tabindex="-1"></a>lazy</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; [1] "decided to raise the target range for the federal funds rate to 4-3/4 to 5 percent"</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb122"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb122-1"><a aria-hidden="true" tabindex="-1"></a><span class="fu">identical</span>(lazy, seg[i])             <span class="co"># the reply's step 1 gives the same text</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; [1] TRUE</code></pre>
+</div>
+</div>
+<div class="dashes" style="font-size:0.72em">
+<ul>
+<li>Step 1 of the reply cuts the decision sentence out of each statement with lazy <code>.*?</code>.</li>
+<li><strong>Greedy <code>.*</code></strong> takes as many characters as it can. Here greedy runs 926 characters, to the last “percent” in the statement (“…returning inflation to its 2 percent”).</li>
+<li><strong>Lazy <code>.*?</code></strong> takes as few as it can.</li>
+<li><strong><code>dotall = TRUE</code></strong> lets <code>.</code> match a line break (“\n”). Paragraphs in <code>text</code> are separated by line breaks, so with dotall a match can run from one paragraph into the next.</li>
+<li>Why the reply stops at the first “percent” after “federal funds rate”: “This keeps it from picking up other numbers in the statement, such as the 2 percent inflation goal, ‘25 basis points’, or the discount rate.” A basis point is 0.01 percentage point; the discount rate is the rate the Fed charges banks that borrow from it.</li>
+</ul>
+</div>
+</section>
+<section id="range-pattern" class="slide level2 smaller">
+<h2>Reading the range pattern</h2>
+<div class="cell" data-layout-align="center">
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>R Console; needs seg, pat and i</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb124"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb124-1"><a aria-hidden="true" tabindex="-1"></a><span class="fu">str_match</span>(seg[i], pat)              <span class="co"># the reply's step 2</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt;      [,1]                    [,2]    [,3]
+#&gt; [1,] "to 4-3/4 to 5 percent" "4-3/4" "5"</code></pre>
+</div>
+</div>
+
+<img data-src="figures/16-text-regex/D07-range-pattern.png" class="quarto-figure quarto-figure-center r-stretch" style="width:96.0%" alt="The text 'to 4-3/4 to 5 percent' above the four pieces of the reply's pattern: to, at or of then spaces; group 1, the lower limit; an optional ' to ' with group 2, the upper limit; and percent as a whole word."><div class="dashes" style="font-size:0.72em">
+<ul>
+<li><strong><code>str_c()</code></strong> joins strings end to end (base R <code>paste0()</code>). <code>pat</code> pastes in <code>num</code>, the previous slide’s number pattern, once per limit.</li>
+<li>On 22 March 2023, group 1 is “4-3/4” (the lower limit) and group 2 is “5” (the upper). <code>to_num()</code> turns them into 4.75 and 5.</li>
+<li>The second group is optional. A single target such as “at 5-1/4 percent”, the form used before December 2008, also matches, and the reply then sets upper equal to lower.</li>
+</ul>
+</div>
+</section>
+<section id="reply-all" class="slide level2 smaller">
+<h2>The reply’s tests on 171 statements</h2>
+<div class="cell" data-layout-align="center">
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>R Console; needs fomc after source("chat_reply.R")</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb126"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb126-1"><a aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(<span class="fu">is.na</span>(fomc<span class="sc">$</span>upper))                         <span class="co"># the reply's test 1 prints these rows; here we count them</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; [1] 32</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb128"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb128-1"><a aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fomc[, <span class="fu">c</span>(<span class="st">"lower"</span>, <span class="st">"upper"</span>)])           <span class="co"># the reply's test 2</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt;      lower           upper      
+#&gt;  Min.   :0.000   Min.   :0.250  
+#&gt;  1st Qu.:0.000   1st Qu.:0.250  
+#&gt;  Median :1.000   Median :1.250  
+#&gt;  Mean   :1.939   Mean   :2.128  
+#&gt;  3rd Qu.:4.250   3rd Qu.:4.500  
+#&gt;  Max.   :5.250   Max.   :5.500  
+#&gt;  NAs    :32      NAs    :32</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb130"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb130-1"><a aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(fomc<span class="sc">$</span>lower <span class="sc">&gt;</span> fomc<span class="sc">$</span>upper, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)     <span class="co"># the reply's test 3: lower &lt;= upper</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; [1] 0</code></pre>
+</div>
+</div>
+<div class="dashes" style="font-size:0.7em">
+<ul>
+<li>The reply suggests three tests: print the NA rows (<code>fomc[is.na(fomc$upper), "text"]</code>), run <code>summary()</code>, and verify <code>lower &lt;= upper</code>.</li>
+<li>It expects NA only for “a few unscheduled statements about liquidity facilities”. There are 32, and reading them shows wordings the pattern misses.</li>
+<li><code>summary()</code> shows values from 0 to 5.5 percent, all plausible for a policy rate, and no row has lower above upper.</li>
+<li>The tests cannot say whether the other 139 values are right.</li>
+</ul>
+</div>
+</section>
+<section id="fred" class="slide level2 smaller">
+<h2>Comparing with FRED</h2>
+<div class="cell" data-layout-align="center">
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>R Console; needs fomc after the reply's code; reads fred_target_range.csv</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb132"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb132-1"><a aria-hidden="true" tabindex="-1"></a>fred <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"fred_target_range.csv"</span>)                <span class="co"># date, lower, upper: one row per day</span></span>
+<span id="cb132-2"><a aria-hidden="true" tabindex="-1"></a>k <span class="ot">&lt;-</span> <span class="fu">match</span>(<span class="fu">as.Date</span>(fomc<span class="sc">$</span>date) <span class="sc">+</span> <span class="dv">1</span>, <span class="fu">as.Date</span>(fred<span class="sc">$</span>date))    <span class="co"># + 1: the day after each statement</span></span>
+<span id="cb132-3"><a aria-hidden="true" tabindex="-1"></a>fomc<span class="sc">$</span>fred_lower <span class="ot">&lt;-</span> fred<span class="sc">$</span>lower[k]</span>
+<span id="cb132-4"><a aria-hidden="true" tabindex="-1"></a>fomc<span class="sc">$</span>fred_upper <span class="ot">&lt;-</span> fred<span class="sc">$</span>upper[k]</span>
+<span id="cb132-5"><a aria-hidden="true" tabindex="-1"></a>fomc<span class="sc">$</span>agree <span class="ot">&lt;-</span> fomc<span class="sc">$</span>lower <span class="sc">==</span> fomc<span class="sc">$</span>fred_lower <span class="sc">&amp;</span> fomc<span class="sc">$</span>upper <span class="sc">==</span> fomc<span class="sc">$</span>fred_upper</span>
+<span id="cb132-6"><a aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(fomc<span class="sc">$</span>agree, <span class="at">useNA =</span> <span class="st">"ifany"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; 
+#&gt; FALSE  TRUE  &lt;NA&gt; 
+#&gt;     9   130    32</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb134"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb134-1"><a aria-hidden="true" tabindex="-1"></a>fomc<span class="sc">$</span>date[<span class="fu">which</span>(<span class="sc">!</span>fomc<span class="sc">$</span>agree)]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; [1] "2014-03-19" "2014-04-30" "2014-06-18" "2014-07-30" "2014-09-17"
+#&gt; [6] "2014-10-29" "2019-12-11" "2020-01-29" "2022-06-15"</code></pre>
+</div>
+</div>
+<div class="dashes" style="font-size:0.66em">
+<ul>
+<li><strong>FRED</strong>, the free data service of the Federal Reserve Bank of St. Louis, gives the target for every day: DFEDTAR, the single target to 15 Dec 2008 (copied into both columns), then DFEDTARL and DFEDTARU, the lower and upper limits.</li>
+<li><strong><code>match()</code></strong> finds the position of each statement’s next day among FRED’s dates. Adding 1 to a date gives the next day. Since 2017 a new range takes effect the day after the statement, so the next day is the first day FRED shows it.</li>
+<li><code>agree</code> is TRUE for 130 statements (both limits equal FRED’s), FALSE for 9 and NA for 32 (no number found). <code>which()</code> skips NA, so only the nine wrong statements print. In all nine, lower equals upper, so the reply’s lower &lt;= upper test passes on every one.</li>
+</ul>
+</div>
+<aside class="notes">
+<p>Since March 2017 a new range takes effect, and appears in FRED, the day after the statement (30 changes). From 2006 to 2016 FRED shows it from the statement date (16 changes). On the statement date itself 106 agree.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="fig-fred" class="slide level2 smaller">
+<h2>Drawing the comparison with FRED</h2>
+<div class="cell" data-layout-align="center">
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>R Console; needs fred, and fomc with the reply's lower and upper and the FRED columns</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb136"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb136-1"><a aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> <span class="fu">as.Date</span>(fomc<span class="sc">$</span>date) <span class="sc">+</span> <span class="dv">1</span>                    <span class="co"># the day after each statement</span></span>
+<span id="cb136-2"><a aria-hidden="true" tabindex="-1"></a>ok <span class="ot">&lt;-</span> fomc<span class="sc">$</span>agree <span class="sc">%in%</span> <span class="cn">TRUE</span>                     <span class="co"># %in% TRUE: NA counts as not TRUE</span></span>
+<span id="cb136-3"><a aria-hidden="true" tabindex="-1"></a>bad <span class="ot">&lt;-</span> fomc<span class="sc">$</span>agree <span class="sc">%in%</span> <span class="cn">FALSE</span></span>
+<span id="cb136-4"><a aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mar =</span> <span class="fu">c</span>(<span class="fl">2.5</span>, <span class="fl">4.5</span>, <span class="fl">0.5</span>, <span class="fl">0.5</span>))               <span class="co"># margins in lines: bottom, left, top, right</span></span>
+<span id="cb136-5"><a aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">as.Date</span>(fred<span class="sc">$</span>date), fred<span class="sc">$</span>upper, <span class="at">type =</span> <span class="st">"s"</span>, <span class="at">col =</span> <span class="st">"grey60"</span>, <span class="at">ylim =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">6</span>),</span>
+<span id="cb136-6"><a aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">""</span>, <span class="at">ylab =</span> <span class="st">"Target, percent"</span>, <span class="at">las =</span> <span class="dv">1</span>)    <span class="co"># "s": steps, flat between decisions</span></span>
+<span id="cb136-7"><a aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(<span class="fu">as.Date</span>(fred<span class="sc">$</span>date), fred<span class="sc">$</span>lower, <span class="at">type =</span> <span class="st">"s"</span>, <span class="at">col =</span> <span class="st">"grey60"</span>)</span>
+<span id="cb136-8"><a aria-hidden="true" tabindex="-1"></a><span class="fu">points</span>(d[ok], fomc<span class="sc">$</span>upper[ok], <span class="at">pch =</span> <span class="dv">16</span>, <span class="at">cex =</span> <span class="fl">0.7</span>)</span>
+<span id="cb136-9"><a aria-hidden="true" tabindex="-1"></a><span class="fu">points</span>(d[bad], fomc<span class="sc">$</span>lower[bad], <span class="at">pch =</span> <span class="dv">4</span>, <span class="at">cex =</span> <span class="fl">1.4</span>, <span class="at">lwd =</span> <span class="dv">2</span>, <span class="at">col =</span> <span class="st">"firebrick"</span>)</span>
+<span id="cb136-10"><a aria-hidden="true" tabindex="-1"></a><span class="fu">segments</span>(d[bad], fomc<span class="sc">$</span>fred_lower[bad], d[bad], fomc<span class="sc">$</span>lower[bad], <span class="at">col =</span> <span class="st">"firebrick"</span>, <span class="at">lwd =</span> <span class="dv">2</span>)</span>
+<span id="cb136-11"><a aria-hidden="true" tabindex="-1"></a><span class="fu">rug</span>(d[<span class="fu">is.na</span>(fomc<span class="sc">$</span>agree)], <span class="at">col =</span> <span class="st">"darkorange"</span>, <span class="at">lwd =</span> <span class="dv">2</span>, <span class="at">ticksize =</span> <span class="fl">0.04</span>)   <span class="co"># a tick for each NA</span></span>
+<span id="cb136-12"><a aria-hidden="true" tabindex="-1"></a>label_x <span class="ot">&lt;-</span> <span class="fu">as.Date</span>(<span class="fu">c</span>(<span class="st">"2010-07-01"</span>, <span class="st">"2013-06-01"</span>, <span class="st">"2015-08-01"</span>, <span class="st">"2021-03-01"</span>, <span class="st">"2018-10-01"</span>, <span class="st">"2025-10-01"</span>))</span>
+<span id="cb136-13"><a aria-hidden="true" tabindex="-1"></a>label_y <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fl">0.8</span>, <span class="fl">1.05</span>, <span class="fl">1.65</span>, <span class="fl">1.0</span>, <span class="fl">0.55</span>, <span class="fl">1.0</span>)  <span class="co"># labels placed by hand at (date, percent)</span></span>
+<span id="cb136-14"><a aria-hidden="true" tabindex="-1"></a><span class="fu">text</span>(label_x, label_y, <span class="at">cex =</span> <span class="fl">0.9</span>,</span>
+<span id="cb136-15"><a aria-hidden="true" tabindex="-1"></a>     <span class="fu">c</span>(<span class="st">"</span><span class="sc">\"</span><span class="st">will maintain</span><span class="sc">\"</span><span class="st">"</span>, <span class="st">"2014: the match</span><span class="sc">\n</span><span class="st">runs too far"</span>, <span class="st">"</span><span class="sc">\"</span><span class="st">reaffirmed</span><span class="sc">\"</span><span class="st">"</span>,</span>
+<span id="cb136-16"><a aria-hidden="true" tabindex="-1"></a>       <span class="st">"look-alike</span><span class="sc">\n</span><span class="st">hyphen"</span>, <span class="st">"look-alike</span><span class="sc">\n</span><span class="st">hyphen"</span>, <span class="st">"look-alike</span><span class="sc">\n</span><span class="st">hyphen"</span>),</span>
+<span id="cb136-17"><a aria-hidden="true" tabindex="-1"></a>     <span class="at">col =</span> <span class="fu">c</span>(<span class="st">"darkorange"</span>, <span class="st">"firebrick"</span>, <span class="st">"darkorange"</span>, <span class="st">"firebrick"</span>, <span class="st">"darkorange"</span>, <span class="st">"darkorange"</span>))</span>
+<span id="cb136-18"><a aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">"top"</span>, <span class="at">ncol =</span> <span class="dv">2</span>, <span class="at">bty =</span> <span class="st">"n"</span>, <span class="at">cex =</span> <span class="fl">0.85</span>,</span>
+<span id="cb136-19"><a aria-hidden="true" tabindex="-1"></a>       <span class="at">legend =</span> <span class="fu">c</span>(<span class="st">"FRED: lower and upper"</span>, <span class="fu">paste0</span>(<span class="st">"equal ("</span>, <span class="fu">sum</span>(ok), <span class="st">")"</span>),</span>
+<span id="cb136-20"><a aria-hidden="true" tabindex="-1"></a>                  <span class="fu">paste0</span>(<span class="st">"wrong ("</span>, <span class="fu">sum</span>(bad), <span class="st">"): lower = upper"</span>),</span>
+<span id="cb136-21"><a aria-hidden="true" tabindex="-1"></a>                  <span class="fu">paste0</span>(<span class="st">"NA ("</span>, <span class="fu">sum</span>(<span class="fu">is.na</span>(fomc<span class="sc">$</span>agree)), <span class="st">")"</span>)),</span>
+<span id="cb136-22"><a aria-hidden="true" tabindex="-1"></a>       <span class="at">col =</span> <span class="fu">c</span>(<span class="st">"grey60"</span>, <span class="st">"black"</span>, <span class="st">"firebrick"</span>, <span class="st">"darkorange"</span>),</span>
+<span id="cb136-23"><a aria-hidden="true" tabindex="-1"></a>       <span class="at">lty =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="cn">NA</span>, <span class="dv">1</span>, <span class="dv">1</span>), <span class="at">lwd =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="cn">NA</span>, <span class="dv">2</span>, <span class="dv">2</span>), <span class="at">pch =</span> <span class="fu">c</span>(<span class="cn">NA</span>, <span class="dv">16</span>, <span class="dv">4</span>, <span class="cn">NA</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+<div style="font-size:0.72em">
+<p>The plot is on the next slide. Grey steps: FRED’s lower and upper limits. Black dots: statements where the reply’s values equal FRED’s. Red crosses: wrong values, with a red line down to FRED’s lower limit. Orange ticks along the bottom: statements with NA.</p>
+</div>
+</section>
+<section id="fig-fred-output" class="slide level2 smaller">
+<h2>Extracted range and FRED, 2006–2026</h2>
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="16-text-regex_files/figure-revealjs/fig-fred-range-1.png" class="quarto-figure quarto-figure-center" style="width:90.0%" alt="FRED's daily target from 2006 to 2026 as grey step lines, with the reply's values as black points that sit on the line in 130 statements, red crosses with a red line down to FRED's lower limit for 9 wrong values (six in 2014 and three around 2020 and 2022), and orange ticks along the bottom for 32 statements with no value, clustered in 2009 to 2010, 2015, 2017 to 2018 and 2025 to 2026."></p>
+</figure>
+</div>
+<div style="font-size:0.66em">
+<p>171 statements, each plotted on the day after it. Sources: federalreserve.gov, FRED. Each cause is listed on the next slide.</p>
+</div>
+</section>
+<section id="why-41" class="slide level2 smaller">
+<h2>Where the reply’s code fails</h2>
+<div style="font-size:0.6em">
+<table class="caption-top">
+<colgroup>
+<col style="width: 46%">
+<col style="width: 5%">
+<col style="width: 29%">
+<col style="width: 18%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">What the statement says</th>
+<th style="text-align: right;">Count</th>
+<th style="text-align: left;">Dates</th>
+<th style="text-align: left;">Code returns</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">“will maintain the target range … at 0 to 1/4 percent”: no “decided”, which step 1 needs</td>
+<td style="text-align: right;">13</td>
+<td style="text-align: left;">18&nbsp;Mar&nbsp;2009 to 21&nbsp;Sep&nbsp;2010</td>
+<td style="text-align: left;">NA</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">“reaffirmed its view that the current 0 to 1/4 percent target range …”</td>
+<td style="text-align: right;">8</td>
+<td style="text-align: left;">17&nbsp;Dec&nbsp;2014 to 28&nbsp;Oct&nbsp;2015</td>
+<td style="text-align: left;">NA</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">the range only in the instruction to the New York Fed (a regional Fed bank)</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: left;">23&nbsp;Mar&nbsp;2020</td>
+<td style="text-align: left;">NA</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">no target stated</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: left;">17&nbsp;Aug&nbsp;2007</td>
+<td style="text-align: left;">NA (correct)</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">a look-alike hyphen inside the upper number (“3‑3/4”; next slide)</td>
+<td style="text-align: right;">9</td>
+<td style="text-align: left;">13&nbsp;Dec&nbsp;2017 to 29&nbsp;Apr&nbsp;2026</td>
+<td style="text-align: left;">NA</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">a look-alike hyphen inside the lower number (“1‑1/2”; next slide)</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: left;">11&nbsp;Dec&nbsp;2019, 29&nbsp;Jan&nbsp;2020, 15&nbsp;Jun&nbsp;2022</td>
+<td style="text-align: left;">1.75 to 1.75;<br>FRED: 1.5 to 1.75</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">“decided” is first about asset purchases, so the match runs on (up to 2,354 characters, across paragraphs) to the first “to 1/4 percent”</td>
+<td style="text-align: right;">6</td>
+<td style="text-align: left;">19&nbsp;Mar to 29&nbsp;Oct&nbsp;2014</td>
+<td style="text-align: left;">0.25 to 0.25;<br>FRED: 0 to 0.25</td>
+</tr>
+</tbody>
+</table>
+</div>
+<aside class="notes">
+<p>The 2014 segments run 2,330 to 2,354 characters with two paragraph breaks, except 29 Oct 2014 (851 characters). In these statements “federal funds rate” follows the range, so the first “to X percent” in the stretch is “to 1/4 percent”. The reply’s explanation quotes “by 1/2 percentage point, to 1 to 1-1/4 percent” as a phrase it handles; that is 3 Mar 2020, written with the look-alike hyphen, so that row is NA.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="hyphens" class="slide level2 smaller">
+<h2>Two hyphens that look the same</h2>
+<div class="cell" data-layout-align="center">
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>R Console; needs fomc, seg and num from chat_reply.R</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb137"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb137-1"><a aria-hidden="true" tabindex="-1"></a>j <span class="ot">&lt;-</span> <span class="fu">which</span>(fomc<span class="sc">$</span>date <span class="sc">==</span> <span class="st">"2025-12-10"</span>)</span>
+<span id="cb137-2"><a aria-hidden="true" tabindex="-1"></a><span class="fu">str_view</span>(seg[j], num)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; [1] │ decided to lower the target range for the federal funds rate by &lt;1/4&gt; percentage point to &lt;3-1/2&gt; to &lt;3&gt;‑&lt;3/4&gt; percent</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb139"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb139-1"><a aria-hidden="true" tabindex="-1"></a><span class="fu">utf8ToInt</span>(<span class="fu">str_extract</span>(seg[j], <span class="st">"3.3/4"</span>))     <span class="co"># . matches either hyphen; utf8ToInt(): each code point</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; [1]   51 8209   51   47   52</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb141"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb141-1"><a aria-hidden="true" tabindex="-1"></a><span class="fu">utf8ToInt</span>(<span class="st">"3-3/4"</span>)                           <span class="co"># typed with the hyphen key</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; [1] 51 45 51 47 52</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb143"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb143-1"><a aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(<span class="fu">str_detect</span>(fomc<span class="sc">$</span>text, <span class="st">"\u2011"</span>))         <span class="co"># statements with character 8209</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; [1] 34</code></pre>
+</div>
+</div>
+<div style="font-size:0.66em">
+<p>In the <code>str_view()</code> output, “3-1/2” is one match but “3‑3/4” is two, <code>&lt;3&gt;</code> and <code>&lt;3/4&gt;</code>: <code>num</code> stops at the look-alike hyphen, so the row is NA.</p>
+</div>
+<div class="columns">
+<div class="column" style="width:50%;">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="figures/16-text-regex/D08-two-hyphens.png" class="quarto-figure quarto-figure-center" alt="Two versions of 3-3/4 side by side that look the same: one typed with the hyphen key, character 45, and one from the Fed's web pages, character 8209, the non-breaking hyphen."></p>
+</figure>
+</div>
+</div><div class="column" style="width:50%;">
+<div class="dashes" style="font-size:0.66em">
+<ul>
+<li><strong>Code point</strong>: the number a computer stores for each character. Unicode is the standard list of them.</li>
+<li><strong>Character 8209</strong>: a non-breaking hyphen. Web pages use it to keep “3‑3/4” on one line. In R, <code>"\u2011"</code> writes it: 2011 is 8209 in hexadecimal (base 16), the form Unicode lists use.</li>
+<li>The <code>-</code> in a pattern matches only character 45.</li>
+</ul>
+</div>
+</div></div>
+<aside class="notes">
+<p>The Fed’s pages use character 8209 fifty times, in 34 statements from July 2015 on, and in 12 of them it sits inside a number.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="fixes" class="slide level2 smaller">
+<h2>Fixing the reply’s code</h2>
+<div class="cell" data-layout-align="center">
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>R Console; needs fomc, num, to_num() and the FRED columns</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb145"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb145-1"><a aria-hidden="true" tabindex="-1"></a><span class="co"># 1. the look-alike hyphen (character 8209) becomes "-"</span></span>
+<span id="cb145-2"><a aria-hidden="true" tabindex="-1"></a>fomc<span class="sc">$</span>text <span class="ot">&lt;-</span> <span class="fu">str_replace_all</span>(fomc<span class="sc">$</span>text, <span class="st">"\u2011"</span>, <span class="st">"-"</span>)</span>
+<span id="cb145-3"><a aria-hidden="true" tabindex="-1"></a><span class="co"># 2. stop at the period; 3. three verbs, no "federal funds rate"</span></span>
+<span id="cb145-4"><a aria-hidden="true" tabindex="-1"></a>seg <span class="ot">&lt;-</span> <span class="fu">str_extract</span>(fomc<span class="sc">$</span>text, <span class="fu">regex</span>(<span class="st">"(?:decided|maintain|reaffirmed)[^.]*?percent</span><span class="sc">\\</span><span class="st">b"</span>,</span>
+<span id="cb145-5"><a aria-hidden="true" tabindex="-1"></a>                                    <span class="at">ignore_case =</span> <span class="cn">TRUE</span>))</span>
+<span id="cb145-6"><a aria-hidden="true" tabindex="-1"></a><span class="co"># 3. no "to/at/of" before the number</span></span>
+<span id="cb145-7"><a aria-hidden="true" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">str_match</span>(seg, <span class="fu">str_c</span>(<span class="st">"("</span>, num, <span class="st">")(?:</span><span class="sc">\\</span><span class="st">s+to</span><span class="sc">\\</span><span class="st">s+("</span>, num, <span class="st">"))?</span><span class="sc">\\</span><span class="st">s+percent</span><span class="sc">\\</span><span class="st">b"</span>))</span>
+<span id="cb145-8"><a aria-hidden="true" tabindex="-1"></a>fomc<span class="sc">$</span>lower <span class="ot">&lt;-</span> <span class="fu">to_num</span>(m[, <span class="dv">2</span>])</span>
+<span id="cb145-9"><a aria-hidden="true" tabindex="-1"></a>fomc<span class="sc">$</span>upper <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(<span class="fu">is.na</span>(m[, <span class="dv">3</span>]), fomc<span class="sc">$</span>lower, <span class="fu">to_num</span>(m[, <span class="dv">3</span>]))</span>
+<span id="cb145-10"><a aria-hidden="true" tabindex="-1"></a>fomc<span class="sc">$</span>agree <span class="ot">&lt;-</span> fomc<span class="sc">$</span>lower <span class="sc">==</span> fomc<span class="sc">$</span>fred_lower <span class="sc">&amp;</span> fomc<span class="sc">$</span>upper <span class="sc">==</span> fomc<span class="sc">$</span>fred_upper</span>
+<span id="cb145-11"><a aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(fomc<span class="sc">$</span>agree, <span class="at">useNA =</span> <span class="st">"ifany"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; 
+#&gt; TRUE &lt;NA&gt; 
+#&gt;  170    1</code></pre>
+</div>
+</div>
+<div class="dashes" style="font-size:0.72em">
+<ul>
+<li><strong>Change 1</strong>: every look-alike hyphen (character 8209) becomes “-”. This fixes the 12 hyphen rows.</li>
+<li><strong>Change 2</strong>: <code>[^.]*?</code>, as few characters as possible that are not a period, replaces <code>.*?</code>, and <code>dotall</code> goes. Inside brackets the dot is a plain period, so the match ends with its sentence. The six 2014 rows now give NA in place of a wrong number.</li>
+<li><strong>Change 3</strong>: step 1 accepts “maintain” and “reaffirmed” and drops “federal funds rate”, which can come after the number (“the current 0 to 1/4 percent target range for the federal funds rate”). Step 2 drops “to|at|of”, since “current 0 to 1/4” has none.</li>
+</ul>
+</div>
+</section>
+<section id="fix-table" class="slide level2 smaller">
+<h2>Results after each fix</h2>
+<div style="font-size:0.8em">
+<p>Each row adds one change to the rows above. Counted against FRED on the day after each statement:</p>
+<table class="caption-top" style="width:100%;">
+<colgroup>
+<col style="width: 80%">
+<col style="width: 6%">
+<col style="width: 6%">
+<col style="width: 6%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Code</th>
+<th style="text-align: right;">NA</th>
+<th style="text-align: right;">Wrong</th>
+<th style="text-align: right;">Equal</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">The reply as given</td>
+<td style="text-align: right;">32</td>
+<td style="text-align: right;">9</td>
+<td style="text-align: right;">130</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">1. Replace the look-alike hyphen with “-”</td>
+<td style="text-align: right;">23</td>
+<td style="text-align: right;">6</td>
+<td style="text-align: right;">142</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">2. Keep the match in one sentence</td>
+<td style="text-align: right;">36</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">135</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">3. Accept “maintain” and “reaffirmed”; take the range wherever it sits in the sentence</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">170</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="dashes" style="font-size:0.8em">
+<ul>
+<li>Change 2 turns the six 2014 values into NA. It does the same to seven statements from Nov 2010 to Jan 2014, where “decided” is about asset purchases and the range sits in a later sentence. The old match reached it only by crossing sentences.</li>
+<li>The last NA is 17 Aug 2007, which states no target.</li>
+<li>To ask the chatbot for a fix, paste the failing sentences with FRED’s numbers for each. They are known-answer tests.</li>
+</ul>
+</div>
+<aside class="notes">
+<p>The seven: 3 Nov 2010, 14 Dec 2010, 26 Jan 2011, 15 Mar 2011, 27 Apr 2011, 18 Dec 2013 and 29 Jan 2014. The code for the two middle rows is on the page.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section></section>
+<section>
+<section id="part-miss" class="title-slide slide level1 center">
+<h1>6 · When to use regex</h1>
+<ul>
+<li>When to use regex</li>
+<li>What net tone misses</li>
+<li>Practice</li>
+</ul>
+</section>
+<section id="when-regex" class="slide level2 smaller">
+<h2>When to use regex</h2>
+<div class="columns">
+<div class="column" style="width:50%;">
+<div class="dashes" style="font-size:0.86em">
+<p><strong>Regex works well when</strong></p>
+<ul>
+<li>the text follows a format: IDs, dates, amounts, codes</li>
+<li>the wording repeats, as in the Fed’s sentence that states the target range</li>
+<li>you can list the variants and test each one</li>
+<li>you need the same answer every time the code runs</li>
+<li>the corpus is large: a pattern runs on millions of documents in seconds, for free</li>
+</ul>
+</div>
+</div><div class="column" style="width:50%;">
+<div class="dashes" style="font-size:0.86em">
+<p><strong>Use a parser or a model when</strong></p>
+<ul>
+<li>the meaning depends on context or on negation: the Fed’s “might not be strong enough” (13 Sep 2012) scores as positive</li>
+<li>the same idea is written in more ways than you can list</li>
+<li>the text is a web page (HTML) or data from an API (JSON), where parts sit inside other parts</li>
+<li>the variable is a judgment call, such as whether a sentence signals that the Fed will raise its rate</li>
+</ul>
+</div>
+</div></div>
+<div style="font-size:0.7em">
+<p><strong>Parser</strong>: a function that reads a structured format into its parts, such as <code>jsonlite::fromJSON()</code> for JSON or <code>rvest::read_html()</code> for a web page. <strong>Model</strong>: a language model, the kind of program behind a chatbot, asked to read each text and return a label, or a statistical classifier trained on texts that people labeled by hand.</p>
+</div>
+<div style="font-size:0.76em">
+<p>A pattern gives NA or a wrong number, with no error message, when the wording or a character changes. A chatbot can write the pattern. You still read it, test it on strings from your documents, and compare its output with a second source such as FRED.</p>
+</div>
+</section>
+<section id="miss" class="slide level2 smaller">
+<h2>What net tone misses</h2>
+<div style="font-size:0.8em">
+<p>The target range has a second source, FRED, and 170 of 171 values now equal it. Net tone has no second source, so its errors show only when you read the sentences it scored. The finance word list scores each word on its own:</p>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>R Console; needs fomc</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb147"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb147-1"><a aria-hidden="true" tabindex="-1"></a>s <span class="ot">&lt;-</span> <span class="fu">str_extract</span>(fomc<span class="sc">$</span>text[fomc<span class="sc">$</span>date <span class="sc">==</span> <span class="st">"2012-09-13"</span>], <span class="st">"economic growth might not[^.]*"</span>)</span>
+<span id="cb147-2"><a aria-hidden="true" tabindex="-1"></a><span class="fu">str_view</span>(s, <span class="st">"</span><span class="sc">\\</span><span class="st">b(not|strong|improvement)</span><span class="sc">\\</span><span class="st">b"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; [1] │ economic growth might &lt;not&gt; be &lt;strong&gt; enough to generate sustained &lt;improvement&gt; in labor market conditions</code></pre>
+</div>
+</div>
+<div class="dashes" style="font-size:0.76em">
+<ul>
+<li><strong>Negation.</strong> 13 Sep 2012 (also 24 Oct and 12 Dec 2012): “strong” and “improvement” count as positive. Each word is scored on its own, so the “not” before them changes nothing.</li>
+<li><strong>Context.</strong> 25 Apr 2012, “the unemployment rate has declined but remains elevated”: “unemployment” and “declined” count as negative, although a falling unemployment rate is good news.</li>
+<li><strong>The event behind the words.</strong> 3 Mar 2020, a cut in the target range between scheduled meetings as the coronavirus spread, is the 8th most positive of 171 statements. “strong”, “achieving” and “stability” count as positive. “coronavirus” and “risks” are on neither list.</li>
+</ul>
+</div>
+<aside class="notes">
+<p>The full 13 Sep 2012 sentence opens “The Committee is concerned that”, and “concerned” is on the negative list, so the sentence nets +1. Shapiro and Wilson ignored words after “not”, ran their estimates without “unemployment”, and filtered phrases such as “price stability”; their estimates barely moved (working paper version).</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="practice" class="slide level2 smaller">
+<h2>Practice</h2>
+<p>Ten exercises on the session page, with solutions behind a click. Run them after the slides’ code, which builds <code>fomc</code>, <code>tokens</code>, <code>pos</code> and <code>neg</code> from the files in the 16-text-regex folder. None needs an internet connection.</p>
+<ul>
+<li><strong>1–4</strong> Patterns and numbers: the opening phrase by year; rate moves stated in basis points (1 basis point = 0.01 percentage point), and which come from members who voted against; the vote, such as “12 – 0”, in the 2026 statements; validating the web address (url) of each statement</li>
+<li><strong>5</strong> Base R: the three fixes to the chatbot’s code, rewritten with <code>gsub()</code>, <code>regmatches()</code> and <code>regexec()</code></li>
+<li><strong>6–7</strong> Word counts: “inflation” as a share of tokens by year; the three word lists of <a href="https://doi.org/10.1093/qje/qjw024">Baker, Bloom &amp; Davis (QJE, 2016)</a> on the statements</li>
+<li><strong>8–9</strong> Net tone: recomputed without unemployment, against, stability and exceptionally; the word after each “not”</li>
+<li><strong>10</strong> Characters: every character with a code point above 127, such as the dash in “12 – 0”</li>
+</ul>
+
+
+</section></section>
+    </div>
+  <div class="quarto-auto-generated-content" style="display: none;">
+<div class="footer footer-default">
+<p>AEM 6850 · Session 16</p>
+</div>
+</div></div>
+
+  <script>window.backupDefine = window.define; window.define = undefined;</script>
+  <script src="../../site_libs/revealjs/dist/reveal.js"></script>
+  <!-- reveal.js plugins -->
+  <script src="../../site_libs/revealjs/plugin/quarto-line-highlight/line-highlight.js"></script>
+  <script src="../../site_libs/revealjs/plugin/pdf-export/pdfexport.js"></script>
+  <script src="../../site_libs/revealjs/plugin/reveal-menu/menu.js"></script>
+  <script src="../../site_libs/revealjs/plugin/reveal-menu/quarto-menu.js"></script>
+  <script src="../../site_libs/revealjs/plugin/quarto-support/support.js"></script>
+  
+
+  <script src="../../site_libs/revealjs/plugin/notes/notes.js"></script>
+  <script src="../../site_libs/revealjs/plugin/search/search.js"></script>
+  <script src="../../site_libs/revealjs/plugin/zoom/zoom.js"></script>
+  <script src="../../site_libs/revealjs/plugin/math/math.js"></script>
+  <script>window.define = window.backupDefine; window.backupDefine = undefined;</script>
+
+  <script>
+
+      // Full list of configuration options available at:
+      // https://revealjs.com/config/
+      Reveal.initialize({
+'controlsAuto': false,
+'previewLinksAuto': false,
+'pdfSeparateFragments': false,
+'autoAnimateEasing': "ease",
+'autoAnimateDuration': 1,
+'autoAnimateUnmatched': true,
+'jumpToSlide': true,
+'menu': {"side":"left","useTextContentForMissingTitles":true,"markers":false,"loadIcons":false,"custom":[{"title":"Tools","icon":"<i class=\"fas fa-gear\"></i>","content":"<ul class=\"slide-menu-items\">\n<li class=\"slide-tool-item active\" data-item=\"0\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.fullscreen(event)\"><kbd>f</kbd> Fullscreen</a></li>\n<li class=\"slide-tool-item\" data-item=\"1\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.speakerMode(event)\"><kbd>s</kbd> Speaker View</a></li>\n<li class=\"slide-tool-item\" data-item=\"2\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.overview(event)\"><kbd>o</kbd> Slide Overview</a></li>\n<li class=\"slide-tool-item\" data-item=\"3\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.togglePdfExport(event)\"><kbd>e</kbd> PDF Export Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"4\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.toggleScrollView(event)\"><kbd>r</kbd> Scroll View Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"5\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.keyboardHelp(event)\"><kbd>?</kbd> Keyboard Help</a></li>\n</ul>"}],"openButton":true},
+'smaller': false,
+ 
+        // Display controls in the bottom right corner
+        controls: true,
+
+        // Help the user learn the controls by providing hints, for example by
+        // bouncing the down arrow when they first encounter a vertical slide
+        controlsTutorial: false,
+
+        // Determines where controls appear, "edges" or "bottom-right"
+        controlsLayout: 'edges',
+
+        // Visibility rule for backwards navigation arrows; "faded", "hidden"
+        // or "visible"
+        controlsBackArrows: 'faded',
+
+        // Display a presentation progress bar
+        progress: true,
+
+        // Display the page number of the current slide
+        slideNumber: 'c/t',
+
+        // 'all', 'print', or 'speaker'
+        showSlideNumber: 'all',
+
+        // Add the current slide number to the URL hash so that reloading the
+        // page/copying the URL will return you to the same slide
+        hash: true,
+
+        // Start with 1 for the hash rather than 0
+        hashOneBasedIndex: false,
+
+        // Flags if we should monitor the hash and change slides accordingly
+        respondToHashChanges: true,
+
+        // Push each slide change to the browser history
+        history: false,
+
+        // Enable keyboard shortcuts for navigation
+        keyboard: true,
+
+        // Enable the slide overview mode
+        overview: true,
+
+        // Disables the default reveal.js slide layout (scaling and centering)
+        // so that you can use custom CSS layout
+        disableLayout: false,
+
+        // Vertical centering of slides
+        center: false,
+
+        // Enables touch navigation on devices with touch input
+        touch: true,
+
+        // Loop the presentation
+        loop: false,
+
+        // Change the presentation direction to be RTL
+        rtl: false,
+
+        // see https://revealjs.com/vertical-slides/#navigation-mode
+        navigationMode: 'linear',
+
+        // Randomizes the order of slides each time the presentation loads
+        shuffle: false,
+
+        // Turns fragments on and off globally
+        fragments: true,
+
+        // Flags whether to include the current fragment in the URL,
+        // so that reloading brings you to the same fragment position
+        fragmentInURL: false,
+
+        // Flags if the presentation is running in an embedded mode,
+        // i.e. contained within a limited portion of the screen
+        embedded: false,
+
+        // Flags if we should show a help overlay when the questionmark
+        // key is pressed
+        help: true,
+
+        // Flags if it should be possible to pause the presentation (blackout)
+        pause: true,
+
+        // Flags if speaker notes should be visible to all viewers
+        showNotes: false,
+
+        // Global override for autoplaying embedded media (null/true/false)
+        autoPlayMedia: null,
+
+        // Global override for preloading lazy-loaded iframes (null/true/false)
+        preloadIframes: null,
+
+        // Number of milliseconds between automatically proceeding to the
+        // next slide, disabled when set to 0, this value can be overwritten
+        // by using a data-autoslide attribute on your slides
+        autoSlide: 0,
+
+        // Stop auto-sliding after user input
+        autoSlideStoppable: true,
+
+        // Use this method for navigation when auto-sliding
+        autoSlideMethod: null,
+
+        // Specify the average time in seconds that you think you will spend
+        // presenting each slide. This is used to show a pacing timer in the
+        // speaker view
+        defaultTiming: null,
+
+        // Enable slide navigation via mouse wheel
+        mouseWheel: false,
+
+        // The display mode that will be used to show slides
+        display: 'block',
+
+        // Hide cursor if inactive
+        hideInactiveCursor: true,
+
+        // Time before the cursor is hidden (in ms)
+        hideCursorTime: 5000,
+
+        // Opens links in an iframe preview overlay
+        previewLinks: false,
+
+        // Transition style (none/fade/slide/convex/concave/zoom)
+        transition: 'none',
+
+        // Transition speed (default/fast/slow)
+        transitionSpeed: 'default',
+
+        // Transition style for full page slide backgrounds
+        // (none/fade/slide/convex/concave/zoom)
+        backgroundTransition: 'none',
+
+        // Number of slides away from the current that are visible
+        viewDistance: 3,
+
+        // Number of slides away from the current that are visible on mobile
+        // devices. It is advisable to set this to a lower number than
+        // viewDistance in order to save resources.
+        mobileViewDistance: 2,
+
+        // The "normal" size of the presentation, aspect ratio will be preserved
+        // when the presentation is scaled to fit different resolutions. Can be
+        // specified using percentage units.
+        width: 1050,
+
+        height: 700,
+
+        // Factor of the display size that should remain empty around the content
+        margin: 0.1,
+
+        math: {
+          mathjax: 'https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js',
+          config: 'TeX-AMS_HTML-full',
+          tex2jax: {
+            inlineMath: [['\\(','\\)']],
+            displayMath: [['\\[','\\]']],
+            balanceBraces: true,
+            processEscapes: false,
+            processRefs: true,
+            processEnvironments: true,
+            preview: 'TeX',
+            skipTags: ['script','noscript','style','textarea','pre','code'],
+            ignoreClass: 'tex2jax_ignore',
+            processClass: 'tex2jax_process'
+          },
+        },
+
+        // reveal.js plugins
+        plugins: [QuartoLineHighlight, PdfExport, RevealMenu, QuartoSupport,
+
+          RevealMath,
+          RevealNotes,
+          RevealSearch,
+          RevealZoom
+        ]
+      });
+    </script>
+    <script>
+      // Keep slide-by-slide navigation in narrow windows, such as a side pane.
+      // Reveal switches to a scrolling page when the window is 435 px wide or
+      // less; a width of 0 turns that off.
+      (function () {
+        function keepSlides() {
+          Reveal.configure({ scrollActivationWidth: 0 });
+          Reveal.layout();
+        }
+        window.addEventListener("load", function () {
+          if (!window.Reveal) return;
+          if (Reveal.isReady()) keepSlides(); else Reveal.on("ready", keepSlides);
+        });
+      })();
+    </script>
+    
+    <script>
+      // htmlwidgets need to know to resize themselves when slides are shown/hidden.
+      // Fire the "slideenter" event (handled by htmlwidgets.js) when the current
+      // slide changes (different for each slide format).
+      (function () {
+        // dispatch for htmlwidgets
+        function fireSlideEnter() {
+          const event = window.document.createEvent("Event");
+          event.initEvent("slideenter", true, true);
+          window.document.dispatchEvent(event);
+        }
+
+        function fireSlideChanged(previousSlide, currentSlide) {
+          fireSlideEnter();
+
+          // dispatch for shiny
+          if (window.jQuery) {
+            if (previousSlide) {
+              window.jQuery(previousSlide).trigger("hidden");
+            }
+            if (currentSlide) {
+              window.jQuery(currentSlide).trigger("shown");
+            }
+          }
+        }
+
+        // hookup for slidy
+        if (window.w3c_slidy) {
+          window.w3c_slidy.add_observer(function (slide_num) {
+            // slide_num starts at position 1
+            fireSlideChanged(null, w3c_slidy.slides[slide_num - 1]);
+          });
+        }
+
+      })();
+    </script>
+
+    <script id="quarto-html-after-body" type="application/javascript">
+      window.document.addEventListener("DOMContentLoaded", function (event) {
+        const tabsets =  window.document.querySelectorAll(".panel-tabset-tabby")
+        tabsets.forEach(function(tabset) {
+          const tabby = new Tabby('#' + tabset.id);
+        });
+        const isCodeAnnotation = (el) => {
+          for (const clz of el.classList) {
+            if (clz.startsWith('code-annotation-')) {                     
+              return true;
+            }
+          }
+          return false;
+        }
+        const onCopySuccess = function(e) {
+          // button target
+          const button = e.trigger;
+          // don't keep focus
+          button.blur();
+          // flash "checked"
+          button.classList.add('code-copy-button-checked');
+          var currentTitle = button.getAttribute("title");
+          button.setAttribute("title", "Copied!");
+          let tooltip;
+          if (window.bootstrap) {
+            button.setAttribute("data-bs-toggle", "tooltip");
+            button.setAttribute("data-bs-placement", "left");
+            button.setAttribute("data-bs-title", "Copied!");
+            tooltip = new bootstrap.Tooltip(button, 
+              { trigger: "manual", 
+                customClass: "code-copy-button-tooltip",
+                offset: [0, -8]});
+            tooltip.show();    
+          }
+          setTimeout(function() {
+            if (tooltip) {
+              tooltip.hide();
+              button.removeAttribute("data-bs-title");
+              button.removeAttribute("data-bs-toggle");
+              button.removeAttribute("data-bs-placement");
+            }
+            button.setAttribute("title", currentTitle);
+            button.classList.remove('code-copy-button-checked');
+          }, 1000);
+          // clear code selection
+          e.clearSelection();
+        }
+        const getTextToCopy = function(trigger) {
+          const outerScaffold = trigger.parentElement.cloneNode(true);
+          const codeEl = outerScaffold.querySelector('code');
+          for (const childEl of codeEl.children) {
+            if (isCodeAnnotation(childEl)) {
+              childEl.remove();
+            }
+          }
+          return codeEl.innerText;
+        }
+        const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+          text: getTextToCopy
+        });
+        clipboard.on('success', onCopySuccess);
+        if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+          const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+            text: getTextToCopy,
+            container: window.document.getElementById('quarto-embedded-source-code-modal')
+          });
+          clipboardModal.on('success', onCopySuccess);
+        }
+          var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+          var mailtoRegex = new RegExp(/^mailto:/);
+            var filterRegex = new RegExp("https:\/\/arielortizbobea\.github\.io\/aem6850\/");
+          var isInternal = (href) => {
+              return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+          }
+          // Inspect non-navigation links and adorn them if external
+         var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+          for (var i=0; i<links.length; i++) {
+            const link = links[i];
+            if (!isInternal(link.href)) {
+              // undo the damage that might have been done by quarto-nav.js in the case of
+              // links that we want to consider external
+              if (link.dataset.originalHref !== undefined) {
+                link.href = link.dataset.originalHref;
+              }
+                // target, if specified
+                link.setAttribute("target", "_blank");
+                if (link.getAttribute("rel") === null) {
+                  link.setAttribute("rel", "noopener");
+                }
+            }
+          }
+        function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+          const config = {
+            allowHTML: true,
+            maxWidth: 500,
+            delay: 100,
+            arrow: false,
+            appendTo: function(el) {
+                return el.closest('section.slide') || el.parentElement;
+            },
+            interactive: true,
+            interactiveBorder: 10,
+            theme: 'light-border',
+            placement: 'bottom-start',
+          };
+          if (contentFn) {
+            config.content = contentFn;
+          }
+          if (onTriggerFn) {
+            config.onTrigger = onTriggerFn;
+          }
+          if (onUntriggerFn) {
+            config.onUntrigger = onUntriggerFn;
+          }
+            config['offset'] = [0,0];
+            config['maxWidth'] = 700;
+          window.tippy(el, config); 
+        }
+        const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+        for (var i=0; i<noterefs.length; i++) {
+          const ref = noterefs[i];
+          tippyHover(ref, function() {
+            // use id or data attribute instead here
+            let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+            try { href = new URL(href).hash; } catch {}
+            const id = href.replace(/^#\/?/, "");
+            const note = window.document.getElementById(id);
+            if (note) {
+              return note.innerHTML;
+            } else {
+              return "";
+            }
+          });
+        }
+        const findCites = (el) => {
+          const parentEl = el.parentElement;
+          if (parentEl) {
+            const cites = parentEl.dataset.cites;
+            if (cites) {
+              return {
+                el,
+                cites: cites.split(' ')
+              };
+            } else {
+              return findCites(el.parentElement)
+            }
+          } else {
+            return undefined;
+          }
+        };
+        var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+        for (var i=0; i<bibliorefs.length; i++) {
+          const ref = bibliorefs[i];
+          const citeInfo = findCites(ref);
+          if (citeInfo) {
+            tippyHover(citeInfo.el, function() {
+              var popup = window.document.createElement('div');
+              citeInfo.cites.forEach(function(cite) {
+                var citeDiv = window.document.createElement('div');
+                citeDiv.classList.add('hanging-indent');
+                citeDiv.classList.add('csl-entry');
+                var biblioDiv = window.document.getElementById('ref-' + cite);
+                if (biblioDiv) {
+                  citeDiv.innerHTML = biblioDiv.innerHTML;
+                }
+                popup.appendChild(citeDiv);
+              });
+              return popup.innerHTML;
+            });
+          }
+        }
+      });
+      </script>
+    
+
+</body></html>
