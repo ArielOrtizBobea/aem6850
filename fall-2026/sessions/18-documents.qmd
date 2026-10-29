@@ -61,30 +61,30 @@ habit throughout: every extracted number is checked against something the
 page itself prints (a total, an accounting identity, a row count) and
 against a second reading where one exists.
 
-**The project.** Install the packages once, in the R Console:
-`install.packages(c("pdftools", "tesseract", "stringr", "jsonlite", "magick"))`
-(the `tesseract` package brings the OCR program and its English training
-data with it; on Linux install the poppler and tesseract system libraries
-first). Download [18-documents.zip](data/18-documents.zip), unzip it, and
-open `18-documents.Rproj`, so that R starts in the project folder. Nobody
-needs an API key: every model reply was saved before class and ships in
-the folder. It holds:
+**The project.** Download [18-documents.zip](data/18-documents.zip), unzip
+it, and open `18-documents.Rproj`, so that R starts in the project folder.
+The [live script](18-documents.R) opens by loading the packages it uses
+and installing any that are missing (the `tesseract` package brings the
+OCR program and its English training data with it; on Linux install the
+poppler and tesseract system libraries first). Nobody needs an API key:
+every model reply is saved in the folder. Its `README.md` says what is
+where:
 
-- `h41.pdf`: the Fed's H.4.1 release of 3 October 2024, 11 pages.
-- `comp1899_p.pdf` and `comp1899_p.png`: one page (printed page 646) of
-  the Comptroller of the Currency's annual report for 1899, as a one-page
-  PDF with the archive's text layer and as a 300-dpi image.
-- `sheets/`: six ten-year rainfall sheets from Abbotsbury Castle as JPEG
-  images, 1860s to 1920s (the session uses five), and `crops/` of the
-  cells discussed.
-- `volunteers/`: the transcriptions volunteers typed for each sheet, as
-  published by Rainfall Rescue.
-- `cache/`: every vision-model reply, saved as JSON, plus `log.csv` with
-  the seconds and tokens of each call.
-- `ocr/`: the OCR output for every page used, for anyone whose
-  `tesseract` install fails.
+- `data/`: the raw files, exactly as downloaded: the Fed's H.4.1 release
+  of 3 October 2024 (`h41.pdf`), one page of the Comptroller of the
+  Currency's 1899 report (`comp1899_p.pdf`), the Abbotsbury rainfall
+  sheets (`sheets/`) and the volunteers' typing of them (`volunteers/`).
+- `data_clean/`: everything computed from those: the 1899 page as a
+  300-dpi image, the OCR output (`ocr/`, also for anyone whose
+  `tesseract` install fails), the reference copy of the 1899 table, and
+  the rainfall sheets as long tables.
+- `replies/`: every vision-model reply, as returned; `sizes/` holds the
+  same pages read by a smaller and a larger model.
+- `logs/`: `model_calls.csv`, one line per model call with its seconds
+  and tokens.
+- `code/`: the scripts that made `data_clean/`, `replies/` and `logs/`,
+  numbered in the order of the lecture; `run_everything.R` runs them all.
 - `agent/`: the CSV files and transcripts of the two coding-agent runs.
-- `code/`: the scripts that made the cache and the comparison files.
 
 ## Objectives {#objectives}
 
@@ -111,11 +111,11 @@ By the end of this session you can:
 2. **Reading a born-digital PDF**\
    [The H.4.1, the Federal Reserve's balance sheet: its text layer, line by line, into a data frame; Exercise 1]{.topics}
 3. **Reading a scan of a printed page**\
-   [Two OCR readings of an 1899 bank table, scored by the totals the page prints; then a vision model]{.topics}
+   [How OCR and a vision model read; two OCR readings of an 1899 bank table, scored by the totals the page prints; then a vision model]{.topics}
 4. **Reading a handwritten page**\
    [Rainfall sheets: your typing of one year, the volunteers' typing and a vision model's reading, checked against each other and the written totals; Exercise 2; a sheet handed to an agent, live]{.topics}
 5. **Reading thousands of pages**\
-   [Seconds and dollars per page; an agent for a few pages, a loop for many]{.topics}
+   [Cost and cells right by reader and model size; an agent for a few pages, a loop for many]{.topics}
 
 :::
 
@@ -123,11 +123,10 @@ By the end of this session you can:
 
 ::: {.slide-text}
 
-Now, in the R Console: `install.packages(c("pdftools", "tesseract",
-"stringr", "jsonlite", "magick"))`; then unzip
-[18-documents.zip](data/18-documents.zip) from the session page and open
-`18-documents.Rproj`. No account with a model provider is needed: every
-model reply was saved before class.
+Now: unzip [18-documents.zip](data/18-documents.zip) from the session
+page, open `18-documents.Rproj`, then the live script: its first lines
+load the packages and install any that are missing. No account with a
+model provider is needed: every model reply is saved in the folder.
 
 :::
 
@@ -358,10 +357,10 @@ Where printed records live, beyond these three:
 ```{r}
 #| filename: "R Console, in the 18-documents folder; needs pdftools and magick"
 library(pdftools)                               # reads the text and the pages of a PDF
-pdf_info("h41.pdf")$keys$Creator                # h41.pdf, the H.4.1: which program made it
-substr(pdf_text("h41.pdf")[1], 1, 120)          # the first 120 characters of its page 1 text
-substr(pdf_text("comp1899_p.pdf")[1], 1, 140)   # the 1899 page, a scan: text too?
-img <- magick::image_read("sheets/abbotsbury_1870s.jpg")   # a handwritten rainfall sheet, a JPEG
+pdf_info("data/h41.pdf")$keys$Creator           # h41.pdf, the H.4.1: which program made it
+substr(pdf_text("data/h41.pdf")[1], 1, 120)     # the first 120 characters of its page 1 text
+substr(pdf_text("data/comp1899_p.pdf")[1], 1, 140)   # the 1899 page, a scan: text too?
+img <- magick::image_read("data/sheets/abbotsbury_1870s.jpg")   # a handwritten rainfall sheet, a JPEG
 magick::image_info(img)[, 1:3]                  # an image has pixels, no text to ask for
 ```
 
@@ -390,11 +389,11 @@ Every reading gets a check: a total the page prints, or a second reading.
 
 | Route | The file in the folder, and the part that uses it | The check |
 |:--|:--|:--|
-| 1 · Text layer | `h41.pdf`, the H.4.1, the Fed's balance sheet (Part\ 2) | assets = liabilities + capital; the Fed's twelve regional Reserve Banks add to the Total column |
-| 2 · OCR | `comp1899_p.png`, the 1899 page, bank resources by state (Part\ 3) | each row's five kinds of bank add to its Total |
-| 3 · Vision model | its saved replies in `cache/`, for the 1899 page (Part\ 3) and the rainfall sheets (Part\ 4) | the same row sums; a sheet's months add to the total the observer wrote |
-| 4 · Typing by hand | `sheets/abbotsbury_1870s.jpg`, a rainfall sheet: you type one year (Part\ 4) | your typing against the volunteers' typing of the same sheet |
-| 5 · Already typed | FRASER's OCR text in `comp1899_p.pdf` (Part\ 3); the volunteers' files in `volunteers/` (Part\ 4) | FRASER's: the row sums; the volunteers': the written totals |
+| 1 · Text layer | `data/h41.pdf`, the H.4.1, the Fed's balance sheet (Part\ 2) | assets = liabilities + capital; the twelve Reserve Banks add to the Total |
+| 2 · OCR | `data_clean/comp1899_p.png`, the 1899 page, bank resources by state (Part\ 3) | each row's five kinds of bank add to its Total |
+| 3 · Vision model | its saved replies in `replies/`, for the 1899 page (Part\ 3) and the rainfall sheets (Part\ 4) | the same row sums; a sheet's months add to the total the observer wrote |
+| 4 · Typing by hand | `data/sheets/abbotsbury_1870s.jpg`, a rainfall sheet: you type one year (Part\ 4) | your typing against the volunteers' typing of the same sheet |
+| 5 · Already typed | FRASER's OCR text in `data/comp1899_p.pdf` (Part\ 3); the volunteers' files in `data/volunteers/` (Part\ 4) | FRASER's: the row sums; the volunteers': the written totals |
 
 : {tbl-colwidths="[18,46,36]"}
 
@@ -472,7 +471,7 @@ A printed row is one line of the text, so finding a row is a search for its labe
 ```{r}
 #| filename: "R Console, in the 18-documents folder; needs pdftools"
 library(pdftools)                              # reads the text stored in a PDF
-txt <- pdf_text("h41.pdf")                     # the H.4.1, the Fed's balance sheet: one string per page
+txt <- pdf_text("data/h41.pdf")                # the H.4.1, the Fed's balance sheet: one string per page
 length(txt)
 lines <- strsplit(txt[6], "\n")[[1]]           # page 6 (Table 5), one element per printed line
 length(lines)
@@ -743,6 +742,48 @@ Comptroller's reports.
 
 :::
 
+## How OCR and a vision model read a page {#ocr-vs-model}
+
+::: {.slide-text}
+
+OCR matches the letter shapes of each word and scores its confidence; a
+vision model reads squares of the image with your instructions and
+writes the reply in the format you ask for.
+
+:::
+
+![](figures/18-documents/ocr-vs-model.png){width="88%" fig-align="center"}
+
+::: {.slide-text}
+
+| | OCR | Vision model |
+|:----|:----------|:----------|
+| Reads | print, word by word | print, layout, handwriting |
+| A misread | garbled, scored low: bovL4 at 0 | a plausible number, unscored |
+| Two runs | the same text | can differ |
+| Runs on | your computer, free | a provider's servers, billed per **token** |
+
+:::
+
+::: {.notes}
+The row is the last one of the 1899 bank table that follows, scanned at
+300 dpi. Top: tesseract's own word boxes and confidences (`ocr_data()`);
+it wrote 4,708.0" for 4,708.6 and bovL4 for 1,071.4, both scored low, and
+87.8, right, also at 21. Bottom: the model's saved reading of the same
+row, every number right. The reply's words are tokens too, and each is
+billed.
+:::
+
+::: {.content-visible when-format="revealjs"}
+
+::: {.notes}
+The squares are 28 pixels a side, as the provider documents; the full
+1899 page holds about 5,400 of them, so it is shrunk slightly to the
+4,784 a request takes at most.
+:::
+
+:::
+
 ## The 1899 bank table and its printed totals {#comp1899}
 
 ::: {.slide-text}
@@ -778,9 +819,9 @@ Summing each row's five columns against its printed Total flags 11 of the 58 row
 
 ```{r}
 #| filename: "R Console, in the 18-documents folder; needs pdftools"
-arch <- strsplit(pdf_text("comp1899_p.pdf"), "\n")[[1]]   # the text FRASER's OCR stored in the 1899 page's PDF, by line
+arch <- strsplit(pdf_text("data/comp1899_p.pdf"), "\n")[[1]]   # the text FRASER's OCR stored in the 1899 page's PDF, by line
 grep("Total United States|Total New England", arch, value = TRUE)   # two of the table's 58 rows
-a <- read.csv("ocr/comp1899_archive.csv")                 # that text parsed into 58 rows before class (code/ocr_runs.R)
+a <- read.csv("data_clean/ocr/comp1899_archive.csv")    # that text parsed into 58 rows before class (code/2_ocr_runs.R)
 sum(abs(rowSums(a[, 2:6], na.rm = TRUE) - a$total) > 0.05)   # rows whose five bank columns (2:6) miss the Total
 ```
 
@@ -810,10 +851,10 @@ Running OCR yourself gives a **confidence** for every word, 0 to 100; the low-co
 ```{r}
 #| filename: "R Console, in the 18-documents folder; needs tesseract (about 15 seconds)"
 library(tesseract)                                        # the OCR program, with English training data
-ocr_txt <- ocr("comp1899_p.png")                          # the 1899 bank table as a 300-dpi image
+ocr_txt <- ocr("data_clean/comp1899_p.png")               # the 1899 bank table as a 300-dpi image
 tes <- strsplit(ocr_txt, "\n")[[1]]
 grep("Total United States", tes, value = TRUE)            # the table's last row, all US banks
-words <- ocr_data("comp1899_p.png")                       # every word with a confidence, 0 to 100
+words <- ocr_data("data_clean/comp1899_p.png")            # every word with a confidence, 0 to 100
 head(words[grepl("^[0-9,.]+$", words$word) & words$confidence < 80, c("word", "confidence")])   # doubted numbers
 ```
 
@@ -829,7 +870,7 @@ printed rules between columns come out as bars, brackets and letters
 :::
 
 ::: {.notes}
-A student whose `tesseract` install fails can read `ocr/comp1899_300.txt`
+A student whose `tesseract` install fails can read `data_clean/ocr/comp1899_300.txt`
 instead.
 :::
 
@@ -854,7 +895,7 @@ amounts from the text layer (`lines8` and `amt` from Part 2).
 ta <- lines8[grep("Total assets", lines8)]   # the Total assets line of page 8, from the PDF's text
 truth <- as.numeric(gsub("[ ,]", "", str_extract_all(ta, amt)[[1]]))   # its 13 amounts, pulled by amt
 right <- sapply(c(300, 100), function(d) {
-  png <- pdf_convert("h41.pdf", pages = 8, dpi = d, filenames = sprintf("ocr/h41_p8_%d.png", d), verbose = FALSE)
+  png <- pdf_convert("data/h41.pdf", pages = 8, dpi = d, filenames = sprintf("data_clean/ocr/h41_p8_%d.png", d), verbose = FALSE)
   l <- grep("Total assets", strsplit(ocr(png), "\n")[[1]], value = TRUE)[1]
   if (is.na(l)) return(0)                                 # OCR found no such line
   l <- gsub("\\s*,\\s*", ",", gsub("[]|})]", "", l))     # OCR's stray spaces around commas, and its rules
@@ -914,7 +955,7 @@ A vision model, an AI model that reads an image, returned all 58 rows of the 189
 ```{r}
 #| filename: "R Console, in the 18-documents folder; needs jsonlite; no account needed"
 library(jsonlite)                                           # reads JSON, the text format model replies arrive in
-m1899 <- fromJSON("cache/comp1899_run1.json")               # the model's saved reading of the 1899 page, one row each
+m1899 <- fromJSON("replies/comp1899_run1.json")             # the model's saved reading of the 1899 page, one row each
 nrow(m1899)
 ```
 
@@ -948,19 +989,19 @@ replies are kept in the cache folder.
 
 ::: {.content-visible unless-format="revealjs"}
 
-The working call (`code/make_cache_1899.R`), in one chat: a plain request
+The working call (`code/3_model_1899.R`), in one chat: a plain request
 with the image, then the structured request:
 
 ```r
 chat  <- chat_anthropic(system_prompt = PROMPT, model = MODEL, cache = "none")
 md    <- chat$chat("Transcribe every row of the table on this page as a markdown table, one row per printed row, blank cells left empty.",
-                   content_image_file("comp1899_p.png", resize = "none"))
+                   content_image_file("data_clean/comp1899_p.png", resize = "none"))
 reply <- chat$chat_structured("Now return the same rows as structured data.", type = type_array(row_type))
 ```
 
 `resize = "none"` matters: the package's default shrinks the image to fit
 512 pixels a side, which makes the digits unreadable. The three failed
-one-call replies are kept in `cache/comp1899_direct_run1.json` to `_run3.json`.
+one-call replies are kept in `replies/comp1899_direct_run1.json` to `_run3.json`.
 
 :::
 
@@ -1040,7 +1081,7 @@ OCR, trained on print, reads handwriting as noise: a few digits survive, in no u
 
 ```{r}
 #| filename: "R Console, in the 18-documents folder; needs tesseract"
-cat(substr(ocr("sheets/abbotsbury_1870s.jpg"), 1, 400))
+cat(substr(ocr("data/sheets/abbotsbury_1870s.jpg"), 1, 400))
 ```
 
 ::: {.slide-text}
@@ -1059,7 +1100,7 @@ Route 5, already typed: the Rainfall Rescue volunteers' file for the 1870s sheet
 
 ```{r}
 #| filename: "R Console, in the 18-documents folder"
-f <- "volunteers/TYRain_1870-1879_04_pt1-page-064.csv"     # the 1870s Abbotsbury sheet as the volunteers typed it
+f <- "data/volunteers/TYRain_1870-1879_04_pt1-page-064.csv"     # the 1870s Abbotsbury sheet as the volunteers typed it
 vol <- read.csv(f, skip = 4, check.names = FALSE)[1:13, 1:11]  # skip 4 metadata lines; rows 1:13 = Jan..Dec + Total
 names(vol)[1] <- "month"
 vol[vol == -999] <- NA                                     # -999: the volunteers could not read the cell
@@ -1134,21 +1175,21 @@ The call sends the image of the 1870s sheet and a **schema**, a fixed format for
 ```{r}
 #| eval: false
 #| purl: false
-#| filename: "Run by the instructor before class, code/make_cache.R (part); needs ellmer and a model provider account"
+#| filename: "Run by the instructor before class, code/4_model_sheets.R (part); needs ellmer and a model provider account"
 library(ellmer)
 MODEL  <- "<model id>"                              # the model's full id, written once
 PROMPT <- paste(readLines("code/prompt_sheet.txt"), collapse = "\n")   # the instructions, quoted on the page
 cells  <- setNames(rep(list(type_number(required = FALSE)), 13), c(tolower(month.abb), "total"))   # null allowed
 year_type <- do.call(type_object, c(list(year = type_integer()), cells))   # the reply format: one object per year
 chat  <- chat_anthropic(system_prompt = PROMPT, model = MODEL, cache = "none")
-img   <- content_image_file("sheets/abbotsbury_1870s.jpg", resize = "none")   # the sheet's image, full size
+img   <- content_image_file("data/sheets/abbotsbury_1870s.jpg", resize = "none")   # the sheet's image, full size
 reply <- chat$chat_structured(img, type = type_array(year_type))   # one object per year column, saved as JSON
 ```
 
 ```{r}
 #| filename: "R Console, in the 18-documents folder; needs jsonlite; no account needed"
 library(jsonlite)                                           # reads JSON, the format of the saved reply
-mod_y <- fromJSON("cache/abbotsbury_1870s_run1.json")       # the saved reply for the 1870s sheet: one row per year
+mod_y <- fromJSON("replies/abbotsbury_1870s_run1.json")     # the saved reply for the 1870s sheet: one row per year
 mod <- data.frame(month = vol$month, t(as.matrix(mod_y[, -1])), check.names = FALSE)   # months as rows, as in vol
 names(mod)[-1] <- mod_y$year
 head(mod, 2)
@@ -1171,18 +1212,18 @@ are years. Return one object per year column. Copy every number exactly
 as written on the sheet. Where a cell is blank or you cannot read it,
 return null. Do not compute or correct anything."
 
-The loop that filled `cache/` before class, one call per sheet, never
+The loop that filled `replies/` before class, one call per sheet, never
 twice:
 
 ```{r}
 #| eval: false
 #| purl: false
-#| filename: "code/make_cache.R (part): the loop that filled cache/ before class"
+#| filename: "code/4_model_sheets.R (part): the loop that filled replies/ before class"
 for (s in c("1860s", "1870s", "1880s", "1890s", "1910s")) {   # the five rainfall sheets
-  out <- sprintf("cache/abbotsbury_%s_run1.json", s)
+  out <- sprintf("replies/abbotsbury_%s_run1.json", s)
   if (file.exists(out)) next                                  # done already: never call twice
   reply <- chat_anthropic(system_prompt = PROMPT, model = MODEL, cache = "none")$chat_structured(
-    content_image_file(sprintf("sheets/abbotsbury_%s.jpg", s), resize = "none"), type = type_array(year_type))
+    content_image_file(sprintf("data/sheets/abbotsbury_%s.jpg", s), resize = "none"), type = type_array(year_type))
   jsonlite::write_json(reply, out, pretty = TRUE, digits = NA, auto_unbox = TRUE, null = "null", na = "null")
 }
 ```
@@ -1249,13 +1290,13 @@ where the sheet has none; Exercise 2 meets the second.
 Six minutes. Find the cells where only one reading of the 1910s sheet
 holds a number, and read them on the image.
 
-1. The volunteers' file `volunteers/TYRain_1910-1919_11_pt1-page-034.csv`,
+1. The volunteers' file `data/volunteers/TYRain_1910-1919_11_pt1-page-034.csv`,
    read as `vol` was (skip 4 lines, rows 1:13).
-2. The model's saved reply `cache/abbotsbury_1910s_run1.json`, read as
+2. The model's saved reply `replies/abbotsbury_1910s_run1.json`, read as
    `mod` was (`fromJSON()`, then transposed to months as rows).
 3. The share of cells where the two agree, then the cells where one
    reading holds a number and the other does not.
-4. Those cells on the image, `sheets/abbotsbury_1910s.jpg`: what does
+4. Those cells on the image, `data/sheets/abbotsbury_1910s.jpg`: what does
    the sheet say there?
 
 ```{r}
@@ -1265,11 +1306,11 @@ holds a number, and read them on the image.
 #| include: false
 #| eval: false
 # Exercise 2 (6 minutes). The 1910s sheet, two readings.
-# 1. vol2 from volunteers/TYRain_1910-1919_11_pt1-page-034.csv (skip = 4, rows 1:13).
-# 2. mod2 from cache/abbotsbury_1910s_run1.json, transposed to months as rows.
+# 1. vol2 from data/volunteers/TYRain_1910-1919_11_pt1-page-034.csv (skip = 4, rows 1:13).
+# 2. mod2 from replies/abbotsbury_1910s_run1.json, transposed to months as rows.
 # 3. mean(m2 == v2, na.rm = TRUE) on all 13 rows; then the cells where
 #    is.na(m2) != is.na(v2): a number on one side only.
-# 4. Open sheets/abbotsbury_1910s.jpg and read those cells yourself.
+# 4. Open data/sheets/abbotsbury_1910s.jpg and read those cells yourself.
 ```
 
 ### Solution
@@ -1278,9 +1319,9 @@ holds a number, and read them on the image.
 #| label: exercise-2-solution
 #| exercise: true
 #| script: "Exercise 2, solution"
-vol2 <- read.csv("volunteers/TYRain_1910-1919_11_pt1-page-034.csv", skip = 4, check.names = FALSE)[1:13, 1:11]
+vol2 <- read.csv("data/volunteers/TYRain_1910-1919_11_pt1-page-034.csv", skip = 4, check.names = FALSE)[1:13, 1:11]
 names(vol2)[1] <- "month"; vol2[vol2 == -999] <- NA
-mod2_y <- fromJSON("cache/abbotsbury_1910s_run1.json")
+mod2_y <- fromJSON("replies/abbotsbury_1910s_run1.json")
 mod2 <- data.frame(month = vol2$month, t(as.matrix(mod2_y[, -1])), check.names = FALSE); names(mod2)[-1] <- mod2_y$year
 m2 <- as.matrix(mod2[, -1]); v2 <- as.matrix(vol2[, -1])     # all 13 rows: the months and the Total
 mean(m2 == v2, na.rm = TRUE)                                   # on the cells both readings hold
@@ -1387,37 +1428,121 @@ difference row flags both years.
 
 # 5 · Reading thousands of pages {#part-scale}
 
-## Seconds and dollars per page {#cost}
+## Cost per page by reader and model size {#cost}
 
 ::: {.slide-text}
 
-About 10 seconds and 1 cent a sheet: about $800 for all 66,000 sheets.
+A model bills by the tokens it reads and writes, pieces of image and
+text: a rainfall sheet costs a tenth of a cent with the small model and
+3 cents with the large.
 
 :::
 
 ```{r}
 #| filename: "R Console, in the 18-documents folder"
-log <- read.csv("cache/log.csv")                                  # one line per model call before class
-PRICE <- c(input = 2, output = 10)                                # $ per million tokens, provider's list, 25 Oct 2026
-log$dollars <- (log$input_tokens * PRICE["input"] + log$output_tokens * PRICE["output"]) / 1e6
-round(colMeans(log[, c("seconds", "dollars")]), 3)              # per sheet: the mean of ten calls
+log <- read.csv("logs/model_calls.csv")  # each call before class; three sizes of one model
+# $ per million tokens read, written (provider's list, 29 Oct 2026); / 1e4 below gives cents
+PRICE <- rbind(small = c(0.10, 0.50), medium = c(2, 10), large = c(4, 20))
+log$cents <- (log$input_tokens * PRICE[log$size, 1] + log$output_tokens * PRICE[log$size, 2]) / 1e4
+log$page <- ifelse(log$page == "1899", "1899 page", "rainfall sheet")
+round(tapply(log$cents, list(log$size, log$page), mean), 2)   # cents per page, mean of the calls
 ```
 
 ::: {.slide-text}
 
-| | One sheet | 66,000 sheets, all of Rainfall Rescue | The Comptroller's reports, 1863–1941: 79 volumes, about 70,000 pages |
-|:--|--:|--:|--:|
-| Time | 9.6 s | 176 hours one call at a time; 22 hours with eight at once | about 190 hours |
-| Cost | 1.2 cents | about $800 | about $850 |
+| Reader | 70,000 report pages like 1899's | 66,000 handwritten sheets |
+|:------|---------:|---------:|
+| tesseract (free OCR) | free; 15 s a page, 290 hours | fails on handwriting |
+| Small model | about $400 | about $70 |
+| Medium model | about $6,400 | about $800 |
+| Large model | about $15,600 | about $1,900 |
+
+:::
+
+::: {.notes}
+The 1899 page costs more than a sheet because its reply holds 348
+numbers, written twice by the two-step call. A model takes about 10
+seconds a sheet at any size; the hours are one call at a time, and eight
+calls at once cut them by eight. The 70,000 pages assume every volume is
+the size of 1899's.
+:::
+
+::: {.content-visible when-format="revealjs"}
+
+::: {.notes}
+Prices: the provider's list on 29 Oct 2026, $ per million tokens in and
+out: small 0.10/0.50, medium 2/10, large 4/20; batch requests cost half.
+The provider also sells a larger model at 10/50, not run here. Other
+providers sell similar ladders: OpenAI's from 0.10/0.50 to 10/50,
+Google's Gemini from 0.25/1.50 to 2/10; ellmer's chat_openai() and
+chat_google_gemini() take the same request. A cloud OCR service (AWS
+Textract) charges by the page: $1.50 per 1,000 pages for text, $15 with
+tables, so the 70,000 pages with tables cost about $1,050.
+:::
+
+:::
+
+## Cells right by reader and model size {#accuracy}
+
+::: {.slide-text}
+
+On the printed page every model size gets 347 or 348 of the 348 cells
+right, so the cheapest model will do; on the handwritten sheets the
+small model writes hundreds of numbers into blank cells.
 
 :::
 
 ::: {.slide-text}
 
-Ten calls, billed by the **tokens**, the pieces of text and image a
-provider bills by. The 70,000 pages assume every volume is the size of
-1899's.
+| | Free OCR (tesseract) | Small model | Medium model | Large model |
+|:------------------------|--------:|------:|------:|------:|
+| Cents per 1899 page | 0 | 0.58 | 9.13 | 22.22 |
+| 1899: cells matching the reference, of 348 | 277 | 347 | 348 | 347 |
+| 1899: rows adding to their Total, of 58 | 14 | 57 | 58 | 57 |
+| Cents per rainfall sheet | 0 | 0.10 | 1.21 | 2.94 |
+| Sheets: cells matching the volunteers, of 666 | fails | 642 | 655 | 662 |
+| Sheets: numbers in blank cells | fails | 390 | 16 | 65 |
 
+:::
+
+::: {.slide-text}
+
+Sheet counts add two runs of five sheets; the volunteers are Rainfall
+Rescue's typists. Score a sample this way before a big run: a row off
+its Total flags a wrong cell, and a number in a blank cell flags an
+invented one.
+
+:::
+
+::: {.notes}
+The scores come from code/8_compare_sizes.R on the saved replies in
+replies/sizes/ (the small and large models) and in replies/ (the
+medium model, the one the deck uses). The 666
+cells are those where both a model and the volunteers hold a number. The
+small model's miss on the 1899 page is 1,836.6 for 1,886.6 (Total New
+England, Total); the large model's is a blank for 136.0 (California,
+state banks). The numbers in blank cells leave out the braced months,
+where one figure covers two months; most of the large model's 65 are
+zeros in a blank year.
+:::
+
+## The small model's numbers in blank years {#blank-columns}
+
+::: {.slide-text}
+
+The 1890s sheet has two years filled in; in both runs the small model
+wrote numbers into the eight blank years, and run 2's zeros even add to
+their zero totals.
+
+:::
+
+![](figures/18-documents/blank-columns.png){width="70%" fig-align="center"}
+
+::: {.notes}
+In red, what the small model wrote into 1892 to 1895; it did the same
+for 1896 to 1899. Run 1 wrote 3 in every cell; run 2 counted from 185
+and 2 up to 13, then wrote zeros. The zeros pass the months-against-total
+check, so only counting numbers in blank cells catches them.
 :::
 
 ## Choosing between an agent and a loop {#agent-or-loop}
@@ -1469,7 +1594,8 @@ account, every reply is saved.
 - 4, the checks: test the months of the 1860s sheet against the written
   totals, for the model's reply and for the volunteers' file.
 - 5, cost: count the pages of the Comptroller's report for 1900 on
-  FRASER and estimate the minutes and dollars a model run would take.
+  FRASER and estimate the hours and dollars a run would take with each
+  model size.
 
 :::
 
@@ -1484,21 +1610,21 @@ account, every reply is saved.
 # txt, amt, tab6, vol, mod and months. No task needs a key.
 
 # The text layer
-#  1. Table 1 of h41.pdf ("Factors Affecting Reserve Balances", pages 1-2)
+#  1. Table 1 of data/h41.pdf ("Factors Affecting Reserve Balances", pages 1-2)
 #     prints a total row for reserve bank credit. Build the table as a data
 #     frame with the rows_of() approach and test the printed total.
 
 # OCR
-#  2. pdf_convert("comp1899_p.pdf", dpi = 200, ...) then ocr(); pull the
+#  2. pdf_convert("data/comp1899_p.pdf", dpi = 200, ...) then ocr(); pull the
 #     "Total United States" row and count the cells that match the printed
 #     values (4,708.6 1,636.0 1,071.4 2,400.7 87.8 9,904.5). Compare with
-#     300 dpi (ocr/comp1899_300.txt).
+#     300 dpi (data_clean/ocr/comp1899_300.txt).
 
 # The model
-#  3. The 1890s sheet: cache/abbotsbury_1890s_run1.json against
-#     volunteers/TYRain_1890-1899_09_pt1-page-113.csv. Agreement share, the
+#  3. The 1890s sheet: replies/abbotsbury_1890s_run1.json against
+#     data/volunteers/TYRain_1890-1899_09_pt1-page-113.csv. Agreement share, the
 #     differing cells, and your own reading of each on
-#     sheets/abbotsbury_1890s.jpg.
+#     data/sheets/abbotsbury_1890s.jpg.
 
 # The checks
 #  4. The 1860s sheet: for the volunteers' file and the model's reply,
@@ -1507,8 +1633,9 @@ account, every reply is saved.
 
 # Cost
 #  5. On FRASER, find the Comptroller's annual report for 1900 and its page
-#     count. With the seconds and tokens per page in cache/log.csv, how long
-#     and how much would a model run over the whole volume take?
+#     count. With the seconds and tokens of the 1899 page in
+#     logs/model_calls.csv, how long and how much would a run over the whole
+#     volume take with each model size?
 ```
 
 :::

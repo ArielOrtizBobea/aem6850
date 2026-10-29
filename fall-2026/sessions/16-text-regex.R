@@ -8,6 +8,16 @@
 # (Mac) or Ctrl-Enter (Windows).
 # = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 
+# Preliminary ----
+# Clean up workspace and load or install necessary packages if necessary
+  rm(list=ls())
+  want <- c("stopwords","stringr")
+  need <- want[!(want %in% installed.packages()[,"Package"])]
+  if (length(need)) install.packages(need)
+  lapply(want, function(i) require(i, character.only=TRUE))
+  rm(want, need)
+
+
 # install.packages(c("stringr", "stopwords"))   # once
 library(stringr)               # text functions; every name starts with str_
 words <- c("color", "colour", "colr", "Colour")

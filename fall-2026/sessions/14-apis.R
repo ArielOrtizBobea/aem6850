@@ -8,6 +8,16 @@
 # (Mac) or Ctrl-Enter (Windows).
 # = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 
+# Preliminary ----
+# Clean up workspace and load or install necessary packages if necessary
+  rm(list=ls())
+  want <- c("httr2","jsonlite")
+  need <- want[!(want %in% installed.packages()[,"Package"])]
+  if (length(need)) install.packages(need)
+  lapply(want, function(i) require(i, character.only=TRUE))
+  rm(want, need)
+
+
 # = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 # Exercise 1 (2 minutes) ----
 # Exercise 1 (2 minutes). In your browser; no R needed.

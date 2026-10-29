@@ -56,7 +56,7 @@ dots <- function(w, h = 26) {                 # a row of dots marking cut rows
 
 # ==== BLOCK: pages DEPS: setup ====
 # Fed pages 6, 8 and 9 at 150 dpi, into the scratch of this script.
-pg <- pdf_convert(file.path(dat, "h41.pdf"), pages = c(6, 8, 9), dpi = 150,
+pg <- pdf_convert(file.path(dat, "data/h41.pdf"), pages = c(6, 8, 9), dpi = 150,
                   filenames = file.path(tempdir(), c("p6.png", "p8.png", "p9.png")), verbose = FALSE)
 names(pg) <- c("p6", "p8", "p9")
 # ==== END BLOCK ====
@@ -111,7 +111,7 @@ scr <- "/private/tmp/claude-501/-Users-ao332-github-aem6850/f96c179c-1948-428f-9
 h <- 900
 a <- image_scale(image_read(pg["p6"]), paste0("x", h))
 b <- image_scale(image_read(file.path(scr, "comp1899_100-693.png")), paste0("x", h))
-sheet <- if (file.exists(file.path(dat, "sheets/abbotsbury_1870s.jpg"))) file.path(dat, "sheets/abbotsbury_1870s.jpg") else file.path(scr, "sheet-000.jpg")
+sheet <- if (file.exists(file.path(dat, "data/sheets/abbotsbury_1870s.jpg"))) file.path(dat, "data/sheets/abbotsbury_1870s.jpg") else file.path(scr, "sheet-000.jpg")
 c3 <- image_scale(image_read(sheet), paste0("x", h))
 gap <- image_blank(40, h, "white")
 cap <- function(img, txt) {
@@ -129,15 +129,15 @@ image_write(im, file.path(out, "three-documents.png"))
 # document, cut to one 4:3 shape so the three sit in one table row.
 # Boxes in pixels: H.4.1 page 1 at 150 dpi, the 1899 page at 300 dpi
 # (comp1899_p.png), the 1870s sheet as published (170 ppi).
-p1 <- pdf_convert(file.path(dat, "h41.pdf"), pages = 1, dpi = 150,
+p1 <- pdf_convert(file.path(dat, "data/h41.pdf"), pages = 1, dpi = 150,
                   filenames = file.path(tempdir(), "h41_p1.png"), verbose = FALSE)
 cut43 <- function(file, x0, y0, w) {
   im <- image_crop(image_read(file), geometry_area(w, round(w * 3 / 4), x0, y0))
   image_border(image_scale(im, "900x675!"), rule, "2x2")
 }
 image_write(cut43(p1, 40, 50, 1200), file.path(out, "doc-h41.png"))
-image_write(cut43(file.path(dat, "comp1899_p.png"), 60, 20, 1540), file.path(out, "doc-comp1899.png"))
-image_write(cut43(file.path(dat, "sheets/abbotsbury_1870s.jpg"), 70, 40, 590), file.path(out, "doc-sheet.png"))
+image_write(cut43(file.path(dat, "data_clean/comp1899_p.png"), 60, 20, 1540), file.path(out, "doc-comp1899.png"))
+image_write(cut43(file.path(dat, "data/sheets/abbotsbury_1870s.jpg"), 70, 40, 590), file.path(out, "doc-sheet.png"))
 # ==== END BLOCK ====
 
 # ==== BLOCK: agent_routes DEPS: setup ====
@@ -185,17 +185,17 @@ dev.off()
 # ==== BLOCK: sheets DEPS: setup ====
 # The two sheet images the slides show, copied from the project.
 for (s in c("1870s", "1880s")) {
-  f <- file.path(dat, sprintf("sheets/abbotsbury_%s.jpg", s))
+  f <- file.path(dat, sprintf("data/sheets/abbotsbury_%s.jpg", s))
   if (file.exists(f)) file.copy(f, file.path(out, sprintf("sheet-%s.jpg", s)), overwrite = TRUE)
 }
 # ==== END BLOCK ====
 
 # ==== BLOCK: dpi_crops DEPS: setup ====
 # Slide "The Fed's page 8 at 300 and 100 dpi": the Total assets row of page 8
-# from the two OCR input images made in prep (ocr/h41_p8_300.png, _100.png).
+# from the two OCR input images made in prep (data_clean/ocr/h41_p8_300.png, _100.png).
 # The row sits at y 264-281 pt; x 10-780 pt (the page is landscape, 792 pt wide).
 im <- lapply(c(300, 100), function(d) {
-  f <- file.path(dat, sprintf("ocr/h41_p8_%d.png", d))
+  f <- file.path(dat, sprintf("data_clean/ocr/h41_p8_%d.png", d))
   r <- crop_pts(f, 10, 262, 780, 283, dpi = d)
   r <- image_scale(r, sprintf("%dx", round(1700 * d / 300)))   # one scale for both: at 100 dpi the row is a third as wide
   l <- image_blank(1700, 40, "white")
@@ -208,9 +208,9 @@ image_write(image_append(c(im[[1]], band(im[[1]], 14), im[[2]]), stack = TRUE), 
 # ==== BLOCK: cells_1870s DEPS: setup ====
 # Slide "Model against volunteers, cell by cell": the one cell of the 1870s
 # sheet where the two readings differ (September 1877), from the crop made
-# in prep (sheets/crops/, 130 x 90 px around the cell at 3x), with the two
+# in prep (data_clean/crops/, 130 x 90 px around the cell at 3x), with the two
 # readings and the written total beside it. Placed at about 70% width.
-cr <- image_read(file.path(dat, "sheets/crops/1870s_1877_sep.png"))
+cr <- image_read(file.path(dat, "data_clean/crops/1870s_1877_sep.png"))
 cr <- image_scale(cr, "x240")
 l <- image_blank(820, image_info(cr)$height, "white")
 l <- image_annotate(l, "September 1877", size = 30, color = ink, gravity = "northwest", location = "+18+22")
@@ -225,7 +225,7 @@ image_write(im, file.path(out, "cells-1870s.png"))
 # Slide "Your typing of 1877 against the volunteers'": the month labels and
 # the 1877 column of the 1870s sheet, side by side, at 2x, so students can
 # type the twelve months from the screen. Pixel boxes on the 671 x 1090 JPEG.
-sh <- image_read(file.path(dat, "sheets/abbotsbury_1870s.jpg"))
+sh <- image_read(file.path(dat, "data/sheets/abbotsbury_1870s.jpg"))
 y0 <- 245; y1 <- 682
 labs <- image_crop(sh, geometry_area(86, y1 - y0, 82, y0))
 c77  <- image_crop(sh, geometry_area(49, y1 - y0, 464, y0))
@@ -238,8 +238,8 @@ image_write(image_border(im, rule, "1x1"), file.path(out, "col-1877.png"))
 # ==== BLOCK: cells_1880s DEPS: setup ====
 # Slide "The 1880s sheet handed to a coding agent": the two braced cells,
 # June/July 1886 and January/February 1887, from the prep crops.
-a <- image_scale(image_read(file.path(dat, "sheets/crops/1880s_1886_jun.png")), "x200")
-b <- image_scale(image_read(file.path(dat, "sheets/crops/1880s_1887_jan.png")), "x200")
+a <- image_scale(image_read(file.path(dat, "data_clean/crops/1880s_1886_jun.png")), "x200")
+b <- image_scale(image_read(file.path(dat, "data_clean/crops/1880s_1887_jan.png")), "x200")
 lab <- function(img, txt) {
   l <- image_blank(image_info(img)$width, 40, "white")
   l <- image_annotate(l, txt, size = 22, color = ink, gravity = "center")
@@ -289,4 +289,94 @@ h49 <- image_read_pdf(han, pages = 49, density = 200)   # appendix page 47: Figu
 h50 <- image_read_pdf(han, pages = 50, density = 200)   # appendix page 48: Figure 11
 image_write(image_border(box(h49, 60, 210, 560, 540), "white", "10x10"), file.path(out, "hanlon-weather-note.png"))
 image_write(image_border(box(h50, 60, 135, 560, 378), "white", "10x10"), file.path(out, "hanlon-fog-weeks.png"))
+# ==== END BLOCK ====
+
+# ==== BLOCK: ocr_vs_model DEPS: setup ====
+# Slide "How OCR and a vision model read a page": the six numbers of the
+# Total United States row of the 1899 table (data_clean/comp1899_p.png, 300 dpi), twice.
+# Top: the words tesseract boxed (ocr_data, about 15 seconds), with what it
+# wrote and its confidence under each box. Bottom: the same numbers cut into
+# the 28-pixel squares a vision model reads, with what the model wrote
+# (replies/comp1899_run1.json). Placed at 88% width (about 925 px): canvas
+# 9.6 x 2.85 in.
+suppressPackageStartupMessages({ library(tesseract); library(jsonlite) })
+f99 <- file.path(dat, "data_clean/comp1899_p.png")
+wd  <- ocr_data(f99)
+bb  <- do.call(rbind, lapply(strsplit(wd$bbox, ","), as.integer))
+wd$x0 <- bb[, 1]; wd$y0 <- bb[, 2]; wd$x1 <- bb[, 3]; wd$y1 <- bb[, 4]
+i   <- which(wd$word == "United" & c(wd$word[-1], "") == "States")[1]
+X0 <- 700; X1 <- 1500; Y0 <- 2262; Y1 <- 2342           # page pixels around the six numbers
+w  <- wd[abs(wd$y0 - wd$y0[i]) < 25 & wd$x0 >= X0 & wd$x1 <= X1, ]
+crop <- as.raster(image_crop(image_read(f99), geometry_area(X1 - X0, Y1 - Y0, X0, Y0)))
+m99 <- fromJSON(file.path(dat, "replies/comp1899_run1.json"))
+mv  <- unlist(m99[grepl("United States", m99$row_label),
+                  c("national", "state", "loan_trust", "savings", "private", "total")])
+cx  <- c(769, 902, 1030, 1161, 1320, 1440)              # centre of each printed number, page px
+L <- 2.25; R <- 9.5; s <- (R - L) / (X1 - X0)            # inches per page pixel
+px <- function(x) L + (x - X0) * s
+H  <- (Y1 - Y0) * s
+png(file.path(out, "ocr-vs-model.png"), width = 9.6, height = 2.85, units = "in", res = 200)
+par(mar = c(0, 0, 0, 0), family = "sans")
+plot.new(); plot.window(xlim = c(0, 9.6), ylim = c(0, 2.85), xaxs = "i", yaxs = "i")
+text(L, 2.76, "Total United States, 1899 table, 300 dpi: national, state, loan & trust, savings, private, total",
+     adj = c(0, 0.5), cex = 0.85, col = grey)
+# OCR band
+yb <- 1.9
+rasterImage(crop, L, yb, R, yb + H)
+for (k in seq_len(nrow(w))) {
+  rect(px(w$x0[k]), yb + (Y1 - w$y1[k]) * s, px(w$x1[k]), yb + (Y1 - w$y0[k]) * s,
+       border = acc, lwd = 1.6)
+  num <- grepl("[0-9]", w$word[k])
+  text(px((w$x0[k] + w$x1[k]) / 2), yb - 0.2, w$word[k], family = "mono", cex = 1.05,
+       col = ink, font = 2)
+  if (num) text(px((w$x0[k] + w$x1[k]) / 2), yb - 0.43, round(w$confidence[k]), cex = 0.85,
+                col = if (w$confidence[k] < 50) acc else grey)
+}
+text(0.1, yb + H / 2 + 0.12, "OCR", adj = c(0, 0.5), cex = 1.25, font = 2, col = ink)
+text(0.1, yb + H / 2 - 0.3, "boxes each word, then\nmatches letter shapes;\nconfidence under each",
+     adj = c(0, 0.5), cex = 0.85, col = grey)
+# vision-model band
+yb2 <- 0.42
+rasterImage(crop, L, yb2, R, yb2 + H)
+g <- seq(ceiling(X0 / 28) * 28, X1, by = 28)
+segments(px(g), yb2, px(g), yb2 + H, col = adjustcolor(blue, 0.7), lwd = 1)
+gy <- seq(ceiling(Y0 / 28) * 28, Y1, by = 28)
+segments(L, yb2 + (Y1 - gy) * s, R, yb2 + (Y1 - gy) * s, col = adjustcolor(blue, 0.7), lwd = 1)
+text(px(cx), yb2 - 0.22, formatC(mv, format = "f", digits = 1), family = "mono", cex = 1.05,
+     col = ink, font = 2)
+text(0.1, yb2 + H / 2 + 0.12, "Vision model", adj = c(0, 0.5), cex = 1.25, font = 2, col = ink)
+text(0.1, yb2 + H / 2 - 0.3, "reads squares of the image,\none token each, with your\ninstructions; writes the reply",
+     adj = c(0, 0.5), cex = 0.85, col = grey)
+dev.off()
+# ==== END BLOCK ====
+
+# ==== BLOCK: blank_columns DEPS: setup ====
+# Slide "Cells right by reader and model size": the 1890s rainfall sheet,
+# where only 1890 and 1891 are filled in, with the numbers the small model
+# wrote into the blank columns 1892-1895 in its two runs
+# (replies/sizes/abbotsbury_1890s_small_run1.json, _run2.json), in red.
+# Cell centres as in code/6_compare_sheets.R. Placed at about 62% width.
+suppressPackageStartupMessages(library(jsonlite))
+sh <- image_read(file.path(dat, "data/sheets/abbotsbury_1890s.jpg"))
+xs <- seq(182, 574, length.out = 10); ys <- c(seq(290, 597, length.out = 12), 638)
+mo <- c(tolower(month.abb), "total")
+pane <- function(run) {
+  m <- fromJSON(file.path(dat, sprintf("replies/sizes/abbotsbury_1890s_small_run%d.json", run)))
+  im <- sh
+  for (k in 3:6) {                                  # the columns 1892 to 1895
+    v <- unlist(m[m$year == 1889 + k, mo])
+    for (j in seq_along(mo)) if (!is.na(v[j]))
+      im <- image_annotate(im, formatC(v[j], format = "fg"), size = 17, weight = 700, color = acc,
+                           gravity = "center", location = sprintf("%+d%+d", round(xs[k] - 338), round(ys[j] - 545)))
+  }
+  im <- image_crop(im, "360x430+68+238")
+  im <- image_scale(im, "x520")
+  lab <- image_annotate(image_blank(image_info(im)$width, 46, "white"),
+                        sprintf("small model, run %d", run), size = 28, color = ink,
+                        gravity = "center")
+  image_append(c(lab, image_border(im, rule, "1x1")), stack = TRUE)
+}
+p1 <- pane(1); p2 <- pane(2)
+image_write(image_append(c(p1, image_blank(30, image_info(p1)$height, "white"), p2)),
+            file.path(out, "blank-columns.png"))
 # ==== END BLOCK ====

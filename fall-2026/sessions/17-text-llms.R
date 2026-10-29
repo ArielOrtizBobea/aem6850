@@ -8,6 +8,16 @@
 # (Mac) or Ctrl-Enter (Windows).
 # = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 
+# Preliminary ----
+# Clean up workspace and load or install necessary packages if necessary
+  rm(list=ls())
+  want <- c("jsonlite")
+  need <- want[!(want %in% installed.packages()[,"Package"])]
+  if (length(need)) install.packages(need)
+  lapply(want, function(i) require(i, character.only=TRUE))
+  rm(want, need)
+
+
 fomc <- read.csv("fomc_statements.csv")   # 171 statements
 i <- which(fomc$date == "2023-03-22")
 

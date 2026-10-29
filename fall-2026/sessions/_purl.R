@@ -13,6 +13,12 @@
 # With no `script:` option the chunk label is used: `pull-the-data` becomes
 # `Pull the data`. Unlabelled chunks are appended to the section above them.
 #
+# Every live script opens with a Preliminary section that clears the
+# workspace and loads the packages the script uses, installing any that are
+# missing (the 2025 in-class idiom). The packages are read off the purled
+# code: library(x), require(x), requireNamespace("x") and x::f, base
+# packages left out. A script that uses base R only gets no such section.
+#
 # Called from a hidden chunk at the foot of each session .qmd, so a plain
 # `quarto render` produces all three artifacts. When there are enough sessions
 # to want a single build step, move this to R/ and call it from a project
@@ -54,6 +60,47 @@
   stats::setNames(as.list(vals), trimws(keys))
 }
 
+# Packages the purled code uses: library(x), require(x), requireNamespace("x")
+# and x::f outside comments; base packages and one-letter names left out.
+.base_packages <- c("base", "compiler", "datasets", "graphics", "grDevices", "grid",
+                    "methods", "parallel", "splines", "stats", "stats4", "tcltk",
+                    "tools", "utils")
+.packages_used <- function(code) {
+  code <- sub("(^|\\s)#.*$", "", code)                  # drop comments
+  code <- code[!grepl("character.only", code, fixed = TRUE)]
+  pull <- function(re) {
+    hit <- regmatches(code, gregexpr(re, code, perl = TRUE))
+    unlist(lapply(hit, function(h) sub(re, "\\1", h, perl = TRUE)))
+  }
+  pk <- c(pull("\\b(?:library|require)\\(\\s*[\"']?([A-Za-z][A-Za-z0-9.]*)"),
+          pull("\\brequireNamespace\\(\\s*[\"']([A-Za-z][A-Za-z0-9.]*)"),
+          pull("\\b([A-Za-z][A-Za-z0-9.]*):::?[A-Za-z.]"))
+  pk <- unique(pk[nchar(pk) >= 2])
+  sort(setdiff(pk, .base_packages))
+}
+
+# The 2025 in-class opening: clear the workspace, load the packages, install
+# any that are missing.
+.preliminary <- function(pkgs) {
+  if (!length(pkgs)) return(character())
+  want <- character(); cur <- ""                 # "a","b",... in lines of 64 characters
+  for (item in sprintf('"%s"', pkgs)) {
+    nxt <- if (nzchar(cur)) paste0(cur, ",", item) else item
+    if (nchar(nxt) > 64 && nzchar(cur)) { want <- c(want, paste0(cur, ",")); cur <- item } else cur <- nxt
+  }
+  want <- c(want, cur)
+  want <- c(paste0("  want <- c(", want[1]), if (length(want) > 1) paste0("            ", want[-1]))
+  want[length(want)] <- paste0(want[length(want)], ")")
+  c("# Preliminary ----",
+    "# Clean up workspace and load or install necessary packages if necessary",
+    "  rm(list=ls())",
+    want,
+    '  need <- want[!(want %in% installed.packages()[,"Package"])]',
+    "  if (length(need)) install.packages(need)",
+    "  lapply(want, function(i) require(i, character.only=TRUE))",
+    "  rm(want, need)")
+}
+
 .prettify <- function(label) {
   txt <- gsub("-", " ", label)
   sub("^(.)", "\\U\\1", txt, perl = TRUE)
@@ -66,13 +113,16 @@
 #' @param course     banner line 1
 #' @param instructor banner line 2
 #' @param how        banner line for how to run it
+#' @param packages   open with the Preliminary section that loads or
+#'                   installs the packages the script uses
 #' @return `out`, invisibly
 purl_session <- function(qmd,
                          out = sub("\\.qmd$", ".R", qmd),
                          course = "AEM 6850 -- Empirical Methods for Applied Economists",
                          instructor = "Prof. Ariel Ortiz-Bobea",
                          how = paste("Run it one line at a time: put the cursor on a line and press",
-                                     "Cmd-Return (Mac) or Ctrl-Enter (Windows).")) {
+                                     "Cmd-Return (Mac) or Ctrl-Enter (Windows)."),
+                         packages = TRUE) {
 
   src <- readLines(qmd, warn = FALSE)
   fm <- .front_matter(src)
@@ -139,6 +189,9 @@ purl_session <- function(qmd,
     body_out <- body_out[-length(body_out)]
   }
 
-  writeLines(c(banner, "", body_out, "", "", "# The end"), out)
+  prelim <- if (packages) .preliminary(.packages_used(body_out)) else character()
+  if (length(prelim)) prelim <- c(prelim, "", "")
+
+  writeLines(c(banner, "", prelim, body_out, "", "", "# The end"), out)
   invisible(out)
 }

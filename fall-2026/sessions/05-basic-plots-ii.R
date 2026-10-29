@@ -8,6 +8,16 @@
 # (Mac) or Ctrl-Enter (Windows).
 # = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 
+# Preliminary ----
+# Clean up workspace and load or install necessary packages if necessary
+  rm(list=ls())
+  want <- c("magick","mapproj","maps","RColorBrewer")
+  need <- want[!(want %in% installed.packages()[,"Package"])]
+  if (length(need)) install.packages(need)
+  lapply(want, function(i) require(i, character.only=TRUE))
+  rm(want, need)
+
+
 # Build the table ----
 pm <- read.csv("data/epa_pm25_la_county_2025.csv",
                colClasses = c("Site.ID" = "character"))
