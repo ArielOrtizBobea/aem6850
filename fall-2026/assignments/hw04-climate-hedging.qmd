@@ -1,0 +1,187 @@
+---
+title: "HW4 · How often do climate stories hedge on the science?"
+subtitle: "Out Mon Nov 2 · due Mon Nov 9, 11:59 pm"
+pagetitle: "AEM 6850 · HW4"
+---
+
+**AI assistance is recommended on this one.** Use it, disclose it, and
+write the note yourself.
+
+---
+
+## The question
+
+Boykoff & Boykoff
+([GLOBAL ENVIRONMENTAL CHANGE, 2004](https://doi.org/10.1016/j.gloenvcha.2003.10.001))
+read the climate coverage of four US newspapers from 1988 to 2002 by hand.
+About half the stories gave equal space to the scientists who said people
+are warming the planet and to those who doubted it. How often did New York
+Times climate stories state warming, or its human cause, as uncertain from
+1988 to 2026? Here you will use a large language model with open weights
+on your own laptop to read these stories and make a similar
+classification.
+
+## What counts as uncertain
+
+Only the warming itself, or people's role in causing it, counts. Some
+made-up sentences and how to label them:
+
+| Sentence | Label |
+|:--|:--|
+| Scientists predict that burning coal and oil may warm the planet. | uncertain |
+| Whether people are changing the climate is still in dispute. | uncertain |
+| The planet has warmed about 1 degree Celsius in a century, mostly from burning fossil fuels. | fact |
+| Warming could cut wheat yields by a tenth, though estimates vary. | fact: the doubt is about an effect |
+| Some senators doubt that people cause warming; most climate scientists say the evidence is clear. | fact: the story reports the doubt and states the science as settled |
+| Delegates argued late into the night over emission targets. | not stated |
+
+## Target image
+
+![Target image](https://arielortizbobea.github.io/assets/data/hw4_target.png)
+
+## Data
+
+1. **The New York Times: an API.** The Archive API returns everything the
+   paper published in one month as JSON: headline, summary, first
+   paragraph, date, type, subject tags and address. There is no article
+   text.
+   `https://api.nytimes.com/svc/archive/v1/1988/6.json?api-key=...`
+   It needs a free key: create an account at
+   <https://developer.nytimes.com>, add an app, and enable the Archive API
+   for it. The API allows 500 requests a day, 12 seconds apart, so the 466
+   months from January 1988 to October 2026 take about two and a half
+   hours.
+2. **Global temperature: a CSV.** NASA GISTEMP v4, one row a year, the
+   annual mean in column `J-D`:
+   <https://data.giss.nasa.gov/gistemp/tabledata_v4/GLB.Ts+dSST.csv>
+3. **The model: open weights, on your laptop.** `qwen3.5:9b-q4_K_M`, run
+   through Ollama. Setup is below.
+
+A month holds 4,000 to 10,000 items. Keep the climate items and the fields
+you use, save each month, and never request a month twice.
+
+## How long it took me
+
+On my laptop (a MacBook Pro with an M2 Max chip and 64 GB of memory), the
+466 downloads took about two and a half hours and the model close to three
+hours: about 2,900 topic calls and 2,000 hedging calls, close to 2 seconds
+each. A laptop without an Apple chip or a graphics card can be several
+times slower. Time the model on 20 stories, then plan the full run,
+overnight if you need to. Save every reply, so a run that stops picks up
+where it stopped. Start early.
+
+## The model
+
+1. Install Ollama from <https://ollama.com/download> (Mac, Windows or
+   Linux) and open it. It runs in the background and serves the model on
+   your laptop.
+2. In the Terminal, download the model once (6.6 GB):
+   `ollama pull qwen3.5:9b-q4_K_M`. On a laptop with 8 GB of memory or
+   less, use `qwen3.5:4b-q4_K_M` (3.3 GB) instead and say so in
+   `NOTES.md`.
+3. Check that it answers: `ollama run qwen3.5:9b-q4_K_M "Say hello"`.
+4. In R, install `ellmer` and call the model with `chat_ollama()`. In
+   `params()`, set the temperature to 0, the seed to 6850, and
+   `reasoning_effort = "none"` to turn its thinking off. With thinking on,
+   each call takes much longer.
+
+## Your key
+
+Save it in `~/.Renviron` as `NYT_KEY=...`, restart R, and read it with
+`Sys.getenv("NYT_KEY")`. The key must never appear in your code, your
+notes or a commit. GitHub keeps every commit, so a key deleted later is
+still in the history; if one reaches GitHub, delete it at
+developer.nytimes.com and make a new one.
+
+## Which stories
+
+- **Tagged stories** carry one of the paper's subject tags: Global
+  Warming, Greenhouse Effect, Greenhouse Gas Emissions, or United Nations
+  Framework Convention on Climate Change. The tags are in `keywords`,
+  where `name` is `subject`; older items have them in capitals.
+- **News stories only:** `type_of_material` is `News`. Drop blog posts,
+  whose address contains `blogs.nytimes.com` or `/blogs/` (some years type
+  them as News), and stories that appear twice.
+- **At most 100 stories a year**, drawn at random from that year's
+  tagged stories after `set.seed(6850)`, so the model's work stays near
+  three hours. Every year before 2006 has fewer than 100, so all of them
+  are read. That is about 2,900 of the 10,275 stories. You may have the
+  model read every story; on a laptop that takes about three times as
+  long.
+
+## The labels
+
+Ask the model two questions about each story's headline, summary and first
+paragraph, one call each, without the date:
+
+1. Is the story's main subject climate change? This is a second filter:
+   the tags also catch stories that only touch on climate.
+2. For the stories that are: does it state that the Earth is warming, or
+   that people are causing it, as fact or as uncertain, or does it say
+   nothing about it? Only the warming and its cause count. Doubt about the
+   effects, the costs or a treaty does not.
+
+Asking the model to copy the words about warming before it answers helps.
+Write each prompt like the codebook in session 17: one sentence on what
+the model reads, one line defining each label, with the words that signal
+uncertainty (predict, believe, may, could, theory), then rules for the
+cases in between, including what does not count. My climate-filter
+prompt has 3 sentences (about 75 words) and my hedging prompt 10 (about
+180). Label at least 30 stories yourself before you look at the
+model's answers, and compare. Change one thing in the prompt at a time,
+and check each version against your hand labels.
+
+## Output
+
+- `figures/hw4_target.png`, 10 × 10.5 inches at 200 dpi.
+- `data_clean/labels.csv`: one row per story the model read, with its id,
+  date and both answers.
+- `data_clean/stories_per_year.csv`: the tagged news stories each year.
+- `NOTES.md`: the number of stories left after each filter, your two
+  questions word for word, your hand check (how many stories, how many the
+  model got right, and the ones it got wrong), and an AI disclosure (tools,
+  uses, what you checked).
+
+## Figure rules
+
+- Three panels stacked on one time axis, 1988 to 2026. Mark 2026 with a
+  star: it runs to October.
+- Top: climate stories per year, the tagged news stories times the share
+  the model found to be about climate change. An arrow and a label mark
+  five events: the UN climate conferences in Kyoto (COP3, 1997),
+  Copenhagen (COP15, 2009), Paris (COP21, 2015) and Glasgow (COP26, 2021),
+  and the IPCC's Fourth Assessment Report (AR4, 2007).
+- Middle: each year's share of climate stories that state warming, or its
+  human cause, as uncertain, one bar a year.
+- Bottom: one cell a year, coloured by global temperature from cool to
+  warm.
+- A dark background.
+
+Font, exact shades and the key's layout are never differences. Your bars
+may not match the target image exactly: the stories in your sample, the
+wording of your two questions and the model you use all move them a
+little.
+
+## How to submit
+
+Your repository is **`hw4-<your github username>`** in the course
+organization. It holds only a README that links to this page; the
+project's layout is yours to set up. Put the code in `code/`, with
+`code/run_everything.R` running it all, and paths relative to the project
+root. Do not commit the months you download, since the paper's terms do
+not allow sharing them: list that folder in `.gitignore`. Commit the two
+CSV files above instead. The grader has no NYT key, so the script that
+draws the figure must run from a fresh clone with those two files and
+NASA's CSV. Commit as you go; the grader uses the last commit pushed
+before the deadline.
+
+## AI on this one
+
+Recommended. Ask for the script rather than the answer, check what it
+gives you, and disclose in `NOTES.md` which tools you used, for what, and
+what you checked. Undisclosed use is treated as an integrity violation.
+
+## Rubric
+
+The course rubric, on the [Homework page](../assignments.qmd#rubric):
+five dimensions, three points each.

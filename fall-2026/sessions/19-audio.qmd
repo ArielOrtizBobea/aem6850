@@ -1,69 +1,2195 @@
 ---
 title: "19 · Audio I: speech to text"
-subtitle: "Tuesday, Nov 3, 2026"
+subtitle: "Tuesday, November 3, 2026"
 pagetitle: "AEM 6850 · 19 Audio I: speech to text"
+execute:
+  echo: true
+format:
+  html:
+    toc: true
+    toc-depth: 2
+  revealjs:
+    output-file: 19-audio-slides.html
+    theme: [default, slides.scss, slides-two-level.scss]
+    template-partials:
+      - title-slide.html
+    include-after-body: _keep-slides.html
+    footer: "AEM 6850 · Session 19"
+    slide-number: c/t
+    controls: true
+    incremental: false
+    code-line-numbers: false
+    code-overflow: scroll
+    history: false
+    link-external-newwindow: true
+resources:
+  - data/19-audio/data/clips/*.mp3
 ---
 
-::: {.callout-note appearance="simple"}
-Materials for this session are not published yet. They appear here
-before class.
-:::
+```{r}
+#| purl: false
+#| include: false
+knitr::opts_chunk$set(
+  comment = "#>",
+  collapse = FALSE,
+  fig.width = 9,
+  fig.height = 4.4,
+  fig.align = "center",
+  fig.show = "hold",
+  dpi = 150
+)
+options(width = 80)
+# Every chunk runs in the project folder, so the paths on the page are the
+# paths students use.
+session_dir <- getwd()
+knitr::opts_knit$set(root.dir = file.path(session_dir, "data/19-audio"))
+fig_dir <- file.path(session_dir, "figures/19-audio")
+```
+
+::: {.content-hidden when-format="revealjs"}
+
+[Slides](19-audio-slides.html) · [Live script](19-audio.R) ·
+[Source](https://github.com/ArielOrtizBobea/aem6850/blob/main/fall-2026/sessions/19-audio.qmd) ·
+[the project](data/19-audio.zip)
+
+Who said what, and when, in the Federal Reserve's press conference of
+1 February 2023, and how far can the table built from it be trusted? A
+speech-to-text model writes every word of the 44-minute recording with its
+time. A second model marks which voice is talking when. R joins the two
+into one row per turn, and the times give the pause before each answer,
+the speaking rate and how often the chair says "you know". The Fed's own
+transcript is the reference throughout: the turn counts are set against its
+speaker tags, and the words of a 30-second passage against its text.
+
+**The project.** Download [19-audio.zip](data/19-audio.zip),
+unzip it, and open `19-audio.Rproj`, so that R starts in the project
+folder. The scripts load the one package they use, jsonlite, and install
+it if it is missing. Nobody needs Python, an account or the network: every model reply
+is saved in the folder, and the R code reads only those files. Its
+`README.md` says what is where:
+
+```default
+19-audio/
+  data/        the Fed's transcript PDF and the clips cut from the recording;
+               media/ holds the video and its sound (not in the zip, 246 MB)
+  replies/     every model reply, exactly as returned, and the Fed's text
+  code/        1_words.R to 6_wer.R and align.R, in lecture order; run_everything.R
+  data_clean/  what the scripts compute: words.rds, seg.rds, w.rds, utterances.csv
+  logs/        run times, the models' own logs, what the scripts print
+  tools/       SETUP.md and the Python scripts that made the replies
+```
 
 ## Objectives {#objectives}
 
 By the end of this session you can:
 
-- Transcribe a recording with a speech-to-text model, a program that
-  listens to a recording and writes out the words it hears, and keep
-  the timestamps for each word.
-- Label who is speaking and join the speaker labels to the words by
-  time.
-- Build an utterance table with one row per utterance (one unbroken
-  turn by one speaker): speaker, text, start and end.
-- Save the raw model output so the table rebuilds without transcribing
-  again.
-- Transcribe a short clip by hand and compute the word-error rate of the
-  model's transcript against it.
+- Explain how a recording becomes data: a vector of samples, stored whole
+  (WAV) or compressed (MP3), and turned into a spectrogram before a model
+  writes any word.
+- Explain what a speech-to-text model returns (words, times, the model's
+  own rating of each word) and why it writes what a captioner would write.
+- Explain how speaker labels are made from the voice alone, and why their
+  resolution is the window the method listens to.
+- Turn the two raw outputs into a table with one row per turn (speaker,
+  start, end, text), rebuilt from the saved files in seconds.
+- Measure from the times: turns per speaker, the pause before each answer,
+  speaking rate, how often a filler phrase is said.
+- Judge a transcript against a reference: turn counts against the official
+  transcript, word-error rate on a 30-second passage, which words the errors
+  fall on.
+- Decide where to run a model, on the laptop or through an API, from the
+  recording's terms, its length and the need to rerun.
 
-## What we cover {#coverage}
+Left out: pitch, energy and emotion (measures of the sound itself); running
+Python in class (the commands are in `tools/SETUP.md`); translation and
+forced alignment.
 
-- What recorded speech, once written down, has measured in economics.
-  [Hassan et al. (QJE, 2019)](https://doi.org/10.1093/qje/qjz021)
-  measured each firm's political risk as the share of its earnings calls
-  (the quarterly calls where managers present results and answer
-  analysts' questions) spent on political risks.
+:::
+
+## Plan for today {#plan}
+
+::: {.slide-text}
+
+1. **Sound as data**\
+   [Samples · sound files · the spectrogram · words]{.topics}
+2. **Recorded speech as research data**\
+   [Two studies · where to run a model]{.topics}
+3. **Who said what, and when**\
+   [The model's reply · speaker labels · joining by time · turns, Exercise 1 · a clip, live]{.topics}
+4. **Pauses, speaking rate and "you know"**\
+   [Pauses before answers · speaking rate · "you know" · Exercise 2]{.topics}
+5. **Word-error rate against the Fed's transcript**\
+   [The transcript of the Fed, the US central bank, as reference · `adist()` · normalization · four runs]{.topics}
+
+:::
+
+::: {.content-visible when-format="revealjs"}
+
+## The project folder {#project-folder}
+
+::: {.slide-text}
+
+Unzip [19-audio.zip](data/19-audio.zip) and open `19-audio.Rproj`, so that R
+starts in the project folder; every path on the slides is relative to it.
+
+:::
+
+```{.default filename="19-audio/, as its README.md describes it"}
+19-audio/
+  data/        the Fed's transcript PDF and the clips cut from the recording
+  replies/     the two models' replies, exactly as returned, and the transcript's text
+  code/        1_words.R to 6_wer.R (wer: word-error rate) and align.R, in lecture order
+  data_clean/  what the scripts compute: words.rds, seg.rds, w.rds (saved R tables), utterances.csv
+  logs/        run times and what the scripts print
+  tools/       SETUP.md and the Python scripts that made the replies
+```
+
+::: {.slide-text}
+
+The recording: the press conference of the Fed (the US central bank) on 1 Feb
+2023, 44 min. `replies/` holds the replies of the two models run on it before
+class in Python (speech to text; speaker labels), so nobody needs Python, an
+account or the network. The scripts load jsonlite and install it if
+missing. The session page links the R script.
+
+:::
+
+:::
+
+## The Fed press conference of 1 February 2023 {#conference}
+
+::: {.slide-text}
+
+This session works on one recording, the Fed's press conference of 1 Feb
+2023, and checks everything it builds against the Fed's own transcript of it.
+A **turn** is one person's talk until another speaks; the transcript tags 76.
+
+:::
+
+![](figures/19-audio/f1-conference.png){width="74%" fig-align="center"}
+
+::: {.dashes}
+
+- The Fed is the US central bank. After each meeting of the FOMC, its
+  rate-setting committee, Chair Powell reads a statement on camera, then
+  answers reporters for about 40 minutes; Michelle Smith, the moderator,
+  calls each reporter by first name.
+
+:::
+
+::: {.notes}
+44 min 37 s, 23 pages, 19 speakers. Chair Jerome Powell has 30 turns;
+Michelle Smith of the Fed's staff moderates and calls each reporter by
+first name (17 turns); 17 reporters have 29. The 25 basis points are on
+transcript page 1, the range on page 3. A basis point is a hundredth of a
+percentage point. Times are mm:ss on the video. Her exact title in February
+2023 is not confirmed, hence "of the Fed's staff".
+:::
+
+::: {.content-visible unless-format="revealjs"}
+
+The FOMC meets eight times a year. That day it raised its interest rate by
+0.25 percentage point (25 basis points; a basis point is a hundredth of a
+percentage point), to 4½ to 4¾ percent. The conference lasted 44 minutes 37
+seconds; the transcript runs to 23 pages and names 19 speakers. Chair Jerome Powell has 30 turns. Michelle
+Smith of the Fed's staff moderates: she calls each reporter by first name,
+17 turns in all. The 17 reporters have 29 turns. The figure pairs a frame
+of the Fed's video (Powell answering, at about 16:11) with page 1 of the
+transcript, which opens "CHAIR POWELL. Good afternoon, and welcome."
+
+:::
+
+## The table this session builds {#the-table}
+
+::: {.slide-text}
+
+From the press conference of the Fed, the US central bank, on 1 Feb 2023 (44
+min; Chair Powell reads a statement, then answers reporters), a speech-to-text
+model writes every word with its time, a second model marks which voice is
+talking when, and R joins the two into one row per turn. The second model is
+there because the question is who said what.
+
+:::
+
+![](figures/19-audio/f2-pipeline.png){width="88%" fig-align="center"}
+
+```{.default filename="data_clean/utterances.csv, 3 of its 56 rows (times in seconds; text cut at 45 characters)"}
+  speaker  start    end  text
+1 SPK00    11.10 417.73  colleagues and I understand the hardship that
+2 SPK02   425.29 450.75  Chris Rugeber, Associated Press. Thank you fo
+3 SPK00   452.63 490.93  So it is important that overall financial con
+```
+
+::: {.slide-text}
+
+The question this session answers: how far can this table be trusted?
+
+:::
+
+::: {.notes}
+An utterance is the speaker-label literature's word for a turn; the file
+keeps it. Why row 1 starts at "colleagues" comes with the join.
+:::
+
+# 1 · Sound as data {#part-sound}
+
+## A recording is a vector of numbers {#vector}
+
+::: {.slide-text}
+
+A microphone turns air pressure into a voltage, and the recorder samples it
+16,000 times a second: a recording is one long vector of numbers, here the
+first 2 minutes of the Fed's press conference of 1 Feb 2023.
+
+:::
+
+::::: {.columns}
+
+::: {.column width="56%"}
+
+```{r}
+#| label: sound-vector
+#| script: "A recording as a vector of numbers"
+#| filename: "R Console, 19-audio folder; the script installs tuneR if missing"
+#| collapse: true
+#| fig.show: hide
+#| fig-width: 5
+#| fig-height: 3.1
+library(tuneR)
+wav <- readWave("data/clips/open2min.wav")
+wav@samp.rate          # samples a second
+length(wav@left)       # samples in 2 minutes
+i <- 112800 + 1:800    # 50 ms from 7.05 s
+wav@left[i[1:6]]       # the first six
+plot((i - 1) / 16000, wav@left[i], type = "l",
+     main = "\"Good\", 7.05 to 7.10 s",
+     xlab = "seconds", ylab = "amplitude")
+```
+
+:::
+
+::: {.column width="44%"}
+
+```{r}
+#| echo: false
+#| purl: false
+#| out-width: "100%"
+knitr::include_graphics(knitr::fig_chunk("sound-vector", "png"), error = FALSE)
+```
+
+:::
+
+:::::
+
+::: {.dashes}
+
+- **Sample**: one reading, a whole number. **Sampling rate**: samples a
+  second, in hertz (Hz, per second). **Amplitude**: a sample's size.
+- Plotted: 50 ms of Chair Powell's "Good", from 7.05 s. Two minutes hold
+  1,920,000 numbers; the whole 44:37 conference, about 42.8 million.
+
+:::
+
+::: {.notes}
+"Good afternoon" is the first thing Powell says. The model places "Good"
+from 6.62 s; the sound itself starts near 7.05 s.
+:::
+
+::: {.content-visible unless-format="revealjs"}
+
+`readWave()` returns a Wave object: `@left` holds the samples of its one
+channel (a stereo file has `@right` as well), `@samp.rate` the sampling rate
+and `@bit` the bits per sample, 16 here, so each sample is a whole number
+from −32,768 to 32,767. The 50 milliseconds plotted start where the sound
+of "Good", the first word of the conference, begins. The speech-to-text
+model places the word from 6.62 s; from 6.62 to 7.05 s the recording holds
+only the room's noise and a click.
+
+The first two minutes of the conference, Powell's opening statement
+(`data/clips/open2min.mp3`):
+
+<audio controls preload="none" src="data/19-audio/data/clips/open2min.mp3"></audio>
+
+:::
+
+## How sound is stored {#storage}
+
+::: {.slide-text}
+
+A sound file is those numbers written down, whole or compressed, and the
+sampling rate sets the highest frequency the file keeps.
+
+:::
+
+![](figures/19-audio/f12-storage.png){width="88%" fig-align="center"}
+
+::: {.dashes}
+
+- **WAV** writes every sample as a 16-bit integer; **MP3** and **AAC** drop
+  what the ear barely hears, here at a quarter of the size.
+- Half the sampling rate is the highest frequency kept: 8 kHz at 16 kHz,
+  enough for speech.
+
+:::
+
+```{.bash filename="Terminal, not run in class; needs ffmpeg: the Fed's video to the 16 kHz mono WAV in data/media/"}
+ffmpeg -i video.mp4 -vn -ac 1 -ar 16000 out.wav
+# -vn: drop the video; -ac 1: one channel (mono); -ar 16000: 16,000 samples a second
+```
+
+::: {.content-visible unless-format="revealjs"}
+
+The Fed's video carries its sound as AAC at 48,000 samples a second in
+stereo: six times the samples of the 16 kHz mono WAV, in a quarter of its
+size. Written out whole at that rate, the same 44:37 would fill 514 MB. The
+models read 16 kHz mono, so one ffmpeg line converts the sound before
+anything else: `-vn` drops the video, `-ac 1` mixes the two channels into
+one, and `-ar 16000` resamples to 16,000 a second. A sampled wave holds
+frequencies up to half its sampling rate: 8 kHz at 16 kHz, which keeps what
+tells words apart; a CD's 44.1 kHz keeps up to 22 kHz, the top of human
+hearing. The clips ship as WAV, which the models read, and as MP3, which
+this page plays.
+
+:::
+
+## From samples to a picture of sound {#spectrogram}
+
+::: {.slide-text}
+
+A speech-to-text model first cuts the vector into 25-ms windows, one every
+10 ms, and measures the energy at each frequency in each window: the
+**spectrogram**, a picture of energy by frequency over time.
+
+:::
+
+::::: {.columns}
+
+::: {.column width="58%"}
+
+![](figures/19-audio/f10-spectrogram.png){width="100%"}
+
+:::
+
+::: {.column width="42%"}
+
+::: {.dashes}
+
+- **Frequency**: how many times a second the pressure swings, in Hz.
+- **Window**: 25 ms, 400 samples, measured as one.
+- **Mel scale**: frequencies spaced the way the ear hears them, pooled
+  into 80 bands.
+- One second: 100 windows × 80 bands (128 in the large model).
+
+:::
+
+:::
+
+:::::
+
+[Chair Powell's "Good afternoon", 6.62 to 7.46 s of the Fed's press
+conference of 1 Feb 2023; darker is more energy. The word times, and the
+dashed boundary, are the model's; the sound starts near 7.05 s.]{.source}
+
+::: {.notes}
+The dashed line is the model's boundary between the two words. The
+spectrogram on the slide stops at 8 kHz, half the sampling rate.
+:::
+
+::: {.content-visible unless-format="revealjs"}
+
+The figure computes the spectrogram the way a model's first step does,
+before the mel step: windows of 25 milliseconds (400 samples) every 10
+milliseconds, each through a Fourier transform (`fft()` in R), which says
+how much of each frequency the window holds; the shaded band is one
+window. The models then pool the
+frequencies into bands on the mel scale, narrow at low frequencies and wide
+at high ones, since the ear tells low pitches apart more finely than high
+ones, and take the log of the energy: 80 bands for the small model, 128 for
+the large. A 30-second chunk, the piece the model reads at once, becomes
+3,000 windows. The word boundaries drawn are the model's: it
+places "Good" from 6.62 s, while the sound itself starts near 7.05 s.
+
+:::
+
+## From the picture to words {#how-it-writes}
+
+::: {.slide-text}
+
+The speech-to-text model reads the **spectrogram** (energy by frequency over
+time) and writes words the way a language model continues text: hence no
+"um", and the loop in the figure.
+
+:::
+
+![](figures/19-audio/f4-words-per-minute.png){width="80%" fig-align="center"}
+
+::: {.dashes}
+
+- **Language model**: picks the next word from the words so far and the
+  sound, and can get stuck repeating itself.
+- Each 30-second chunk is written with the previous chunk's text as context,
+  which carries a repeat forward: the small model writes 10,302 words, the
+  large 7,451.
+
+:::
+
+::: {.notes}
+No restarts either. The small model is a smaller size of the same family;
+from 34:57 it repeats one phrase to the end. The phrase:
+"we are going to be cautious about the fact that", from the segment at
+2097.9 s; 10,302 words against 7,451, about 9½ minutes of audio lost. Large and small are two
+sizes of one model family. On this recording the model wrote "you know" 70
+times and the Fed's transcript keeps 75.
+:::
+
+::: {.content-visible unless-format="revealjs"}
+
+The model family was trained on 680,000 hours of audio from the web, each
+paired with the transcript found with it, after machine-made captions were
+filtered out ([Radford et al. (ICML, 2023)](https://proceedings.mlr.press/v202/radford23a.html)).
+Human transcripts drop fillers and restarts, so the model learned to drop
+them too: the Fed's 23-page transcript holds no "um" or "uh", and the model
+wrote none.
+
+:::
+
+# 2 · Recorded speech as research data {#part-research}
+
+## FOMC meeting transcripts as data on deliberation {#paper-fomc}
+
+::: {.slide-text}
+
+In late 1993 members of the FOMC, the rate-setting committee of the Fed (the
+US central bank), learned that their meetings were recorded and that the
+transcripts would be published after five years; their words changed.
+
+:::
+
+::::: {.columns}
+
+::: {.column width="36%"}
+
+![](figures/19-audio/cap-fomc1993-p1.png){width="80%" fig-align="center"}
+
+[The FOMC meeting of November 16, 1993: the first page of the transcript,
+federalreserve.gov.]{.source}
+
+:::
+
+::: {.column width="64%"}
+
+::: {.dashes}
+
+- Fed staff type every closed-door meeting.
+- [Hansen, McMahon & Prat (QJE, 2018)](https://doi.org/10.1093/qje/qjx045)
+  (QJE, the Quarterly Journal of Economics) compare meetings before and
+  after November 1993.
+- **Natural experiment**: a change the researcher did not make, here the
+  decision to publish.
+- A recording without such a transcript needs a speech-to-text model.
+
+:::
+
+:::
+
+:::::
+
+::: {.notes}
+The paper ran no speech model: a typed transcript exists for every FOMC
+meeting since March 1976.
+:::
+
+## FOMC meeting transcripts as data on deliberation {#paper-fomc-result}
+
+::: {.slide-text}
+
+After November 1993, when the FOMC, the rate-setting committee of the Fed
+(the US central bank), decided its meeting transcripts would be published,
+members new to it, more than experienced ones, discussed more topics, cited
+more data and spoke more like the chair, Alan Greenspan.
+
+:::
+
+::: {.dashes}
+
+- **Topic model**: groups of words that appear together.
   [Hansen, McMahon & Prat (QJE, 2018)](https://doi.org/10.1093/qje/qjx045)
-  measured how members of the Federal Reserve committee that sets US
-  interest rates changed the way they deliberated once they knew their
-  meeting transcripts would be published.
-  [Sautner et al. (JF, 2023)](https://doi.org/10.1111/jofi.13219)
-  measured firms' exposure to climate change from the attention it gets
-  on earnings calls. All three work from transcripts typed by
-  professionals; a speech-to-text model produces that text for
-  recordings that come without one.
-- Where recordings come from, and the terms attached to public archives
-  and licensed collections. The running example: Federal Reserve press
-  conferences, whose official transcripts are the reference for
-  measuring the model's errors.
-- Speech-to-text models return the transcript, the word-for-word record
-  of what was said, with a timestamp (seconds from the start of the
-  recording) for the start and end of each word or segment, a stretch
-  of speech returned as one piece. You can run one locally, on your own
-  computer so the audio never leaves your machine, or send the audio to
-  a provider's API.
-- Speaker diarization is a separate step that marks which voice is
-  talking when, labelling them Speaker 1, Speaker 2 and so on. You join
-  those labels to the words by their timestamps.
-- The utterance table is the deliverable. The raw model output sits
-  next to it, saved exactly as it came back, so every cleaning step can
-  be rerun from it.
-- Word-error rate (WER) counts substitutions (wrong words), deletions
-  (missing words) and insertions (extra words), and divides by the
-  number of words in a reference transcript, a careful hand transcript
-  of a short clip. To verify a transcript, write the reference before
-  you read the model's version, compute the rate, and listen again to
-  the passages where it is worst. Errors tend to cluster on names,
-  numbers and overlapping speech.
-- Running the models yourself needs Python and a few large installs. A
-  setup guide comes with the session materials, and the model output is
-  provided too, so every step also runs in R alone.
+  measure "more like the chair" as topic shares closer to the chair's.
+
+:::
+
+**Takeaway:** what people say in a meeting, tagged by speaker, is data on
+behaviour.
+
+::: {.notes}
+More topics and more data reads as preparation (discipline); speaking like
+the chair reads as conformity. The paper's influence measure says
+discipline dominates.
+:::
+
+::: {.content-visible unless-format="revealjs"}
+
+The paper needed no speech model: the Fed has typed a transcript of every
+FOMC meeting since March 1976. The two effects have names in the paper.
+More topics and more data read as better preparation, which the authors
+call discipline; speaking more like the chair reads as conformity. Their
+measure of each member's influence on the discussion says discipline
+dominates.
+
+:::
+
+## Political risk measured from earnings calls {#paper-risk}
+
+::: {.slide-text}
+
+The share of an earnings call spent on political phrases near a word for
+risk measures the firm's political risk.
+
+:::
+
+![](figures/19-audio/f3-political-risk.png){width="72%" fig-align="center"}
+
+::: {.dashes}
+
+- **Earnings call**: each quarter, managers of a company listed on a stock
+  exchange present results to investment analysts; a vendor types it.
+- [Hassan, Hollander, van Lent & Tahoun (QJE, 2019)](https://doi.org/10.1093/qje/qjz021):
+  firms with more of it hire and invest less and spend more on lobbying;
+  most of its variation lies between firms.
+
+:::
+
+**Takeaway:** a few minutes of typed talk per firm, over thousands of firms,
+is a firm-level variable.
+
+::: {.notes}
+The measure: the share of each call's two-word phrases that come from
+political texts and sit within ten words of a word for risk or
+uncertainty. The phrases shown are from the paper's own table of top
+political bigrams.
+:::
+
+::: {.content-visible unless-format="revealjs"}
+
+The measure counts the two-word phrases (bigrams) of each call that come
+from political texts and sit within ten words of "risk", "uncertainty" or
+a synonym, and divides by all the call's bigrams. The sample is 178,173
+calls of 7,357 US-listed firms from 2002 to 2016, with transcripts licensed
+from a vendor. The three phrases in the figure come from the paper's own
+table of the most political bigrams.
+
+[Sautner, van Lent, Vilkov & Zhang (JF, 2023)](https://doi.org/10.1111/jofi.13219)
+measure firms' exposure to climate change from the same kind of transcript:
+more than 10,000 firms in 34 countries, 2002 to 2020, with a method that
+discovers the climate keywords from the text itself.
+
+:::
+
+::::: {.content-visible unless-format="revealjs"}
+
+## Where recordings come from {#sources-of-audio}
+
+::: {.slide-text}
+
+A recording's terms say whether a transcript exists, whether the audio may be
+copied and where it may go. **Public domain**: no copyright, anyone may copy.
+**Licence**: a contract on what you may do with a file.
+
+| Source | What exists | Terms |
+|:--|:--|:--|
+| Press conferences of the Fed, the US central bank | video; a transcript the next day, its final version two weeks later | public domain |
+| FOMC meetings | transcripts of the FOMC, the Fed's rate-setting committee, out after five years | public domain |
+| ECB (European Central Bank) press conferences | webcast and transcript on ecb.europa.eu | ECB copyright; free use with the ECB cited |
+| Earnings calls | audio and transcripts of firms' quarterly results calls, sold by a data vendor | a licence, which sets what may be copied or sent out |
+| Your own interviews | nothing until you record it | **consent** from each person; approval by the **IRB**, the university board for research with people |
+
+: {tbl-colwidths="[27,40,33]"}
+
+:::
+
+[The two studies before used typed transcripts, which carry no times; a
+recording gives each word's time. The Fed's website "is in the public
+domain".]{.source}
+
+![](figures/19-audio/cap-fed-page.png){width="80%" fig-align="center"}
+
+The Fed's page for the conference holds the embedded video and the
+"Transcript" link. The preliminary transcript went up the day after the
+conference, with the video; the final version (the one in the project) came
+about two weeks later. The Fed's wording continues: "Please cite to the
+Board as the source of the information."
+
+One more source, for comparison: oral arguments at the US Supreme Court,
+the highest US court. The audio of every argument is posted on
+supremecourt.gov the day it is heard (the online archive starts with the
+2010 Term; recordings exist since 1955). The site states no reuse terms;
+a work of the US government carries no copyright (17 U.S.C. 105).
+
+Both studies in this part took their transcripts from one vendor under
+licence. The vendor kept the audio of each call for about a year
+([Mayew & Venkatachalam (JF, 2012)](https://doi.org/10.1111/j.1540-6261.2011.01705.x)).
+
+:::::
+
+## Where to run a speech-to-text model {#where-to-run}
+
+::: {.slide-text}
+
+On your own computer the audio stays with you and nothing is charged; an
+**API**, a service your code sends a file to over the internet and that
+sends a reply back, returns the same word table for a fee per minute of
+audio.
+
+| | On your computer | Through an API |
+|:--|:--|:--|
+| Where the audio goes | stays on the machine, so licensed or confidential audio can be used | the provider's servers, only if the audio's terms allow |
+| What it costs | nothing after the install | a fee per minute of audio |
+| What you install | Python and a model file, hundreds of megabytes to a few gigabytes | an API key (a password your code sends) and a few lines of code |
+| This recording, 44 min | 5 min 7 s on a laptop with a graphics chip; a 30-s clip of it in 8.5 s | the upload, then the provider's processing time |
+| Speaker labels (who speaks when) | a second model, run on the same audio | some services return them in the same call |
+| Reruns | the same model file gives the same words | the provider retires models, so the saved reply is what you rerun from |
+
+: {tbl-colwidths="[24,38,38]"}
+
+The recording: the press conference of the Fed, the US central bank, on 1 Feb
+2023.
+
+:::
+
+::: {.content-visible unless-format="revealjs"}
+
+### The API route in R {#api-route}
+
+A request to a speech-to-text API is one upload: a multipart POST (a
+request that carries a file) with the audio and a few parameters. One of
+them asks for a time on every word; without it the reply holds segments
+only. The reply is JSON with the same word table the laptop run writes,
+and some services return speaker labels in the same call. The provider
+charges per minute of audio and decides when a model is retired, so the
+saved reply is the object a paper can be rebuilt from. The shape of the
+request, with no provider named:
+
+```{r}
+#| eval: false
+#| purl: false
+#| filename: "Not run in class: the shape of a speech-to-text request; needs httr2, an account and a key in ~/.Renviron"
+library(httr2)
+resp <- request("https://api.example.com/v1/transcriptions") |>      # the provider's address
+  req_headers(Authorization = paste("Bearer", Sys.getenv("STT_API_KEY"))) |>
+  req_body_multipart(file = curl::form_file("data/clips/schneider30.wav"),
+                     model = "<model id>",
+                     word_timestamps = "true") |>                    # its name varies by provider
+  req_perform()
+reply <- resp_body_json(resp)    # the text, then the words with their start and end
+```
+
+:::
+
+# 3 · Who said what, and when {#part-who}
+
+## What a speech-to-text model returns {#reply}
+
+::: {.slide-text}
+
+The speech-to-text model returns one JSON file: the whole text, then
+segments, each holding its words with a start, an end and a probability.
+
+:::
+
+```{.json filename="replies/words.json, the 1 Feb 2023 press conference of the Fed (the US central bank): its first segment, Chair Powell's"}
+{"text": " Good afternoon and welcome. My colleagues and I ...", "language": "en",
+ "segments": [{"id": 0, "start": 6.62, "end": 8.40, "text": " Good afternoon and welcome.",
+     "words": [{"word": " Good",      "start": 6.62, "end": 7.14, "probability": 0.558},
+               {"word": " afternoon", "start": 7.14, "end": 7.46, "probability": 0.996},
+               {"word": " and",       "start": 7.46, "end": 8.14, "probability": 0.681},
+               {"word": " welcome.",  "start": 8.14, "end": 8.40, "probability": 0.997}]},
+   ...1,710 more segments]}
+```
+
+::: {.dashes}
+
+- **JSON**: a text format for nested lists. **Segment**: a phrase returned
+  as one piece. **Timestamp**: seconds from the start of the recording.
+- **Probability**: the model's own rating of the word it chose, so a
+  confidently wrong word scores high.
+- **Raw reply**: the file as the model wrote it, never edited by hand; this
+  one, from the large model, holds 1,711 segments and 7,451 words.
+
+:::
+
+::: {.content-visible unless-format="revealjs"}
+
+The slide leaves out the token list and three scores each segment carries:
+`avg_logprob`, the average log-probability of its tokens; `compression_ratio`,
+how much its text shrinks when compressed, high for text that repeats
+itself; and `no_speech_prob`, the model's rating that the stretch holds no
+speech. The compression ratio comes back below.
+
+:::
+
+## Reading the reply in R {#read-reply}
+
+::: {.slide-text}
+
+`fromJSON()` reads the speech-to-text reply for the 1 Feb 2023 press
+conference of the Fed (the US central bank) as a list, and one line stacks its
+1,711 per-segment word tables into one data frame of 7,451 words.
+
+:::
+
+```{r}
+#| script: "Reading the reply in R"
+#| filename: "R Console, in the 19-audio folder (open 19-audio.Rproj first); the script installs jsonlite if it is missing"
+library(jsonlite)
+stt <- fromJSON("replies/words.json")
+names(stt)
+# stt$segments: one row per segment; its words column holds a small table per row
+words <- do.call(rbind, stt$segments$words)    # stack the 1,711 per-segment word tables
+words <- words[, c("word", "start", "end", "probability")]
+words$word <- trimws(words$word)               # the model puts a space before each word
+dim(words)
+```
+
+::::: {.columns}
+
+::: {.column width="48%"}
+
+```{r}
+#| filename: "R Console; words from above"
+head(words, 4)
+```
+
+:::
+
+::: {.column width="52%"}
+
+::: {.slide-text}
+
+`stt`, short for speech to text, holds the whole reply. `words` has one row
+per word, with its start, end and probability; the slides that follow use it.
+
+:::
+
+:::
+
+:::::
+
+## The reply beside the Fed's transcript {#reply-vs-fed}
+
+::: {.slide-text}
+
+The speech-to-text model's word count comes close to that of the transcript
+that the Fed, the US central bank, posted for the 1 Feb 2023 press conference.
+
+| | The model's reply | The Fed's transcript |
+|:--|--:|--:|
+| Words | 7,451 | 7,365 |
+| "you know" | 70 | 75 |
+
+: {tbl-colwidths="[30,35,35]"}
+
+The transcript's count leaves out its page headers and speaker tags such as
+"CHAIR POWELL."; "you know" is a filler phrase, counted per answer later in
+the session. Spelling differs: the model writes "2%" where the Fed writes "2
+percent".
+
+:::
+
+::: {.content-visible unless-format="revealjs"}
+
+The Fed's count comes from the text layer of its PDF, saved as
+`replies/fed_transcript.txt`, once the lines that are not speech are
+dropped:
+
+```{r}
+#| filename: "R Console, in the 19-audio folder; base R"
+fed <- readLines("replies/fed_transcript.txt", encoding = "UTF-8", warn = FALSE)
+fed <- sub("^\f", "", fed)                                   # a form feed starts each page
+header <- "^(February 1, 2023|FINAL|Page [0-9]+ of 23|.*Press Conference)$"
+fed <- fed[fed != "" & !grepl(header, fed)]                  # blank lines, page headers
+fed <- sub("^[A-Z][A-Z-]+( [A-Z][A-Z-]+)+\\. ", "", fed)     # speaker tags: "CHAIR POWELL. "
+fed_text <- paste(fed, collapse = " ")
+length(strsplit(trimws(fed_text), "\\s+")[[1]])              # the Fed's spoken words
+```
+
+:::
+
+::: {.content-visible unless-format="revealjs"}
+
+### Counting the small model's words per minute {#loop-in-r}
+
+[Radford et al. (ICML, 2023)](https://proceedings.mlr.press/v202/radford23a.html)
+also name the failure in the words-per-minute figure of Part 1: a model that
+reads the text it has just written can fall into repeating it. Run again
+with each chunk decoded on its own (`replies/words_base_nocond.json`), the small model
+writes 7,264 words and no loop (Practice 1). The loop shows in a word count
+and in the segment's own `compression_ratio`: a text that repeats itself
+compresses well.
+
+```{r}
+#| filename: "R Console, in the 19-audio folder; needs jsonlite; words and stt from the slides before"
+small <- fromJSON("replies/words_base.json")                       # the small model, same settings
+small_words <- do.call(rbind, small$segments$words)
+per_min <- rbind(large = table(floor(words$start / 60)),          # words per minute of the conference
+                 small = table(floor(small_words$start / 60)))
+per_min[, 34:45]                                                   # minutes 33 to 44
+c(large = max(stt$segments$compression_ratio), small = max(small$segments$compression_ratio))
+```
+
+:::
+
+## When a speaker-label model is needed {#rttm}
+
+::: {.slide-text}
+
+A recording with one voice (a lecture, a read statement, a podcast monologue)
+needs only the speech-to-text model; a second, speaker-label model is needed
+when the research question is who said it.
+
+:::
+
+![](figures/19-audio/f11-when-labels.png){width="80%" fig-align="center"}
+
+::: {.dashes}
+
+- Who said it is the question in the 1 Feb 2023 press conference of the Fed
+  (the US central bank), in an earnings call (a firm's managers answering
+  analysts on its quarterly results), an interview or a committee meeting.
+- **Speaker diarization**: marking which voice is talking when, with one
+  anonymous label per voice.
+
+:::
+
+## What a speaker-label model returns {#rttm-file}
+
+::: {.slide-text}
+
+The speaker-label model returns stretches with a start, a duration and a label
+such as `SPK00`, and no names.
+
+:::
+
+```{r}
+#| filename: "R Console, in the 19-audio folder; replies/speakers.rttm is the speaker-label model's reply"
+#| collapse: true
+readLines("replies/speakers.rttm", n = 2)
+seg <- read.table("replies/speakers.rttm")[, c(4, 5, 8)]   # start, duration, label
+names(seg) <- c("start", "dur", "speaker")
+seg$end <- seg$start + seg$dur
+seg <- seg[order(seg$start), ]
+head(seg, 3)
+c(stretches = nrow(seg), labels = length(unique(seg$speaker)))
+```
+
+::: {.dashes}
+
+- **RTTM**: plain text, one line per stretch, ten columns; start in 4,
+  duration 5, label 8.
+- 86 stretches, 19 labels for the 1 Feb 2023 press conference of the Fed (the
+  US central bank): as many as the people its transcript names. Made in 58 s on a laptop, with no account.
+
+:::
+
+## How speaker labels are made {#how-labels}
+
+::: {.slide-text}
+
+In the 1 Feb 2023 press conference of the Fed (the US central bank), the
+speaker-label model gives windows that sound alike one label.
+
+:::
+
+::: {.dashes}
+
+- **Window**: a 3-second stretch of the recording, one every 1.5 s; 1,566 of
+  the 1,783 are at least half speech, and one under half gets no label.
+- **Voice embedding**: numbers that sit close for the same voice;
+  **clustering** groups them.
+- Each kept window labels its middle 1.5 s. **Labelled stretch**:
+  consecutive windows with the same label, merged.
+
+:::
+
+## How speaker labels are made {#how-labels-short}
+
+::: {.slide-text}
+
+In the 1 Feb 2023 press conference of the Fed (the US central bank), a voice
+shorter than a window gets no label of its own.
+
+:::
+
+::: {.dashes}
+
+- The speaker-label model labels **windows**, 3-second stretches of the
+  recording, one every 1.5 s; one under half speech gets no label.
+- At 15:23 the moderator's half-second name call "Howard" sits inside four
+  seconds of quiet, so every window around it is dropped.
+- At 21:38 a reporter's half-second "Yes", inside a window filled by Powell,
+  the Fed chair, takes his label.
+
+:::
+
+::: {.notes}
+"Howard." gets no label; "Yes." became Powell's.
+:::
+
+## Speaker labels across the conference {#labels-timeline}
+
+::: {.slide-text}
+
+In the 1 Feb 2023 press conference of the Fed (the US central bank), `SPK00`
+(Chair Powell) holds the long stretches; the moderator's name call "Howard." at
+15:23 falls in a 4.5-s gap whose windows were dropped, before `SPK07`, the
+reporter's label. Windows overlap, so they are drawn on two rows.
+
+:::
+
+![](figures/19-audio/f5-labels-timeline.png){width="88%" fig-align="center"}
+
+::: {.notes}
+Top: the 86 stretches, one row per label: SPK00 has 56 of them, 1,896 of
+the 2,415 labelled seconds; 262 s of the conference carry no label. Bottom:
+915 to 935 s; the windows starting at 921.0, 922.5 and 924.0 s hold too
+little speech and are dropped.
+:::
+
+::: {.content-visible unless-format="revealjs"}
+
+The shipped labels come from `tools/diarize_ecapa.py`. An energy gate
+keeps a 3-second window only when more than half its 30-millisecond frames
+hold speech; 1,566 windows were kept. Each kept window becomes an
+embedding from a network trained on thousands of voices, the embeddings are
+clustered, each window labels its middle 1.5 s, and neighbours with the
+same label merge into one stretch. So a stretch's edges fall on the
+1.5-second grid, and nothing shorter than a window is heard as a voice of
+its own. A half-second word inside a window the other voice fills takes
+that voice's label: a reporter's "Yes." at 21:38 became Powell's. In the
+top panel one label holds the long stretches (56 of them, 1,896 of the
+2,415 labelled seconds: Powell), the other 18 hold short ones, and 262
+seconds of the conference carry no label. The bottom panel zooms on 915 to
+935 s: the windows that start at 921.0, 922.5 and 924.0 s hold too little
+speech and are dropped, and "Howard." falls between two stretches.
+
+A finer method scores every frame for up to three local voices before it
+embeds and clusters, and resolves turns shorter than a second. Its weights
+sit behind an account on the model-hosting site: a click that accepts each
+model's user conditions and a read token, with the code itself under an
+open licence. `tools/SETUP.md` lists the steps. Its file would be another
+RTTM, and the `read.table()` lines above read any RTTM file.
+
+:::
+
+## A speaker label for every word {#join}
+
+::: {.slide-text}
+
+Joining by time: each word takes the label of the stretch holding its
+midpoint, or `NA`, R's mark for a missing value.
+
+:::
+
+![](figures/19-audio/f6-findinterval.png){width="52%" fig-align="center"}
+
+```{r}
+#| filename: "R Console; base R; the figure's three stretches start at 0, 2 and 5 s"
+#| collapse: true
+findInterval(c(0.5, 2.1, 4.9, 7.0), c(0, 2, 5))   # the last start at or before each time
+```
+
+::: {.slide-text}
+
+`findInterval()` gives, for each time, the last stretch that starts at or
+before it. A time past that stretch's end, such as 7.0 after stretch 3 ends
+at 6.5, lies in a gap and gets `NA`.
+
+:::
+
+## A speaker label for every word {#join-words}
+
+::: {.slide-text}
+
+Each of the 7,451 words of the 1 Feb 2023 press conference of the Fed (the US
+central bank) takes the label of the stretch holding its midpoint; 267, 3.6%,
+fall before the first stretch or in a gap and get none.
+
+:::
+
+```{r}
+#| filename: "R Console, in the 19-audio folder; needs words (the 7,451-word table) and seg (the 86 stretches)"
+#| collapse: true
+mid <- (words$start + words$end) / 2     # a word goes with the stretch holding most of it
+i <- findInterval(mid, seg$start)        # the last stretch that starts before the midpoint
+i[i == 0] <- NA                          # before the first stretch
+i[!is.na(i) & mid > seg$end[i]] <- NA    # past that stretch's end, in a gap
+words$speaker <- seg$speaker[i]
+c(no_label = sum(is.na(words$speaker)), share = round(mean(is.na(words$speaker)), 3))
+words[words$start > 923 & words$start < 926.5, ]
+```
+
+::: {.slide-text}
+
+The stretches come from the speaker-label model; `probability` is the
+speech-to-text model's own rating of each word. The rows from 923 to 926.5 s:
+the moderator's name call "Howard." and the reporter's own "Howard Schneider",
+whose first word is unlabelled.
+
+:::
+
+::: {.notes}
+Joining by time: attaching to each word the stretch whose start and end
+surround it. The first five words, "Good afternoon and welcome. My" (6.62
+to 11.10 s), fall before the first stretch (11.25 s), which is why row 1 of
+the table begins at "colleagues". "Howard." at 923.79 s falls in a gap.
+:::
+
+::: {.content-visible unless-format="revealjs"}
+
+**Joining by time** attaches to each word the stretch whose start and end
+surround it. The midpoint decides for a word that straddles the edge of a
+stretch. The first five words of the conference, "Good afternoon and
+welcome. My" (6.62 to 11.10 s), fall before the first stretch, which starts
+at 11.25 s; that is why row 1 of the utterance table begins at
+"colleagues". "Howard.", the moderator's name call at 923.79 s, falls in the gap
+between two stretches, as does the first "Howard" of the reporter's own
+introduction.
+
+:::
+
+## Turns numbered with cumsum() {#turns}
+
+::: {.slide-text}
+
+A turn starts wherever the label changes, and a running total of those
+changes numbers the turns: 56 in all, 27 of them Chair Powell's.
+
+:::
+
+```{r}
+#| filename: "R Console, in the 19-audio folder; needs words, the 7,451-word table with its speaker labels"
+w <- words[!is.na(words$speaker), ]                          # the 7,184 labelled words
+new_turn <- c(TRUE, w$speaker[-1] != w$speaker[-nrow(w)])    # TRUE where the label changes
+w$turn <- cumsum(new_turn)
+max(w$turn)
+turn_label <- tapply(w$speaker, w$turn, unique)              # one label per turn
+sort(table(turn_label), decreasing = TRUE)[1:4]
+powell <- names(sort(table(w$speaker), decreasing = TRUE))[1] # the label with the most words
+powell
+```
+
+::: {.slide-text}
+
+`cumsum()` is a running total in which TRUE counts as 1: labels A A B B B A
+give changes TRUE FALSE TRUE FALSE FALSE TRUE and turns 1 1 2 2 2 3.
+`tapply()` splits a column by a grouping and applies a function to each
+piece. `powell` is `SPK00`, the label with the most words: Chair Powell's.
+
+:::
+
+::: {.notes}
+Powell's label is the one with the most words; the moderator is found from
+her words, in the exercise. Of the 19 labels, one has 27 turns, one has 5,
+seven have 2 and ten have 1.
+:::
+
+::: {.content-visible unless-format="revealjs"}
+
+The turns of every label, and the three labels with the most words:
+
+```{r}
+#| filename: "R Console, in the 19-audio folder; w and turn_label from above"
+table(turn_label)
+head(sort(table(w$speaker), decreasing = TRUE), 3)
+```
+
+:::
+
+## Exercise 1 {#exercise-1}
+
+::: {.panel-tabset}
+
+### Exercise
+
+Count Chair Powell's turns and the moderator's from the speaker labels of the
+1 Feb 2023 Fed press conference, and set them beside the Fed's transcript
+(Powell 30, moderator 17). 5 minutes. **Turn**: one person's talk until
+another speaks.
+
+1. Run the session's R script through the `cumsum()` lines; Powell's count is
+   `sum(turn_label == powell)`.
+2. The moderator's turns are her name calls. Print the words from 417.5 to
+   421.5 s (her first) and read their labels: is there one to count?
+3. `rbind()` your counts over `c(30, 17)`.
+
+```{.default filename="Built by the script by then"}
+words: 7,451 words, speaker label or NA;  w, turn_label: labelled words, one label per turn;  powell: SPK00
+```
+
+```{r}
+#| label: exercise-1
+#| exercise: true
+#| script: "Exercise 1 (5 minutes)"
+#| include: false
+#| eval: false
+# Exercise 1 (5 minutes). The two files joined, the turns counted.
+# 1. words and seg as built in Part 3 (run this script to that point,
+#    or source code/1_words.R and code/2_speakers.R).
+# 2. Give each word the label at its midpoint (findInterval() at the midpoint,
+#    the two NA cases); count the words with no label.
+# 3. Number the turns with cumsum(); turn_label; powell = the label with the most words.
+# 4. The moderator calls each reporter by name. Print the words between 417.5 and
+#    421.5 s, her first name call, and read their labels:
+#    words[words$start > 417.5 & words$start < 421.5, c("word", "start", "speaker")]
+# 5. Compare: rbind(model = c(powell = ..., moderator = ...), fed = c(30, 17))
+# Two answers to compare with the room (say them aloud): your two counts against
+# 30 and 17, and the label on "Chris Rugeber." at 07:00, the moderator's first
+# name call.
+```
+
+### Solution
+
+```{r}
+#| label: exercise-1-solution
+#| purl: false
+#| filename: "R Console; words, turn_label and powell as built on the slides before"
+rbind(model = c(powell = sum(turn_label == powell), moderator = 0),
+      fed   = c(powell = 30, moderator = 17))
+words[words$start > 417.5 & words$start < 421.5, c("word", "start", "speaker")]
+```
+
+::: {.slide-text}
+
+267 words with no label; 56 turns; Powell 27. No label holds short turns
+that name reporters, so the moderator has 0: "look forward to your
+questions. Chris Rugeber." carries `NA` throughout; "Chris" at 425.29 s,
+the reporter introducing himself, is `SPK02`.
+
+:::
+
+:::
+
+::: {.content-visible when-format="revealjs"}
+
+::: {.notes}
+As students start: in a terminal in the 19-audio folder with the
+environment active (source ~/.venvs/aem6850-audio/bin/activate), run the
+mlx_whisper line of the clip slide; leave it running, about 9 s.
+:::
+
+:::
+
+## Turn counts against the transcript {#turns-vs-fed}
+
+::: {.slide-text}
+
+In the 1 Feb 2023 press conference of the Fed (the US central bank), turns
+counted from the speaker labels give Chair Powell 27 against the transcript's
+30 and the moderator 0 against 17: each of her name calls is shorter than the
+labels' 3-second window.
+
+| Speaker | Transcript | From labels | Why, and when to listen in the video |
+|:--|--:|--:|:--|
+| Powell | 30 | 27 | two answers merged: at 21:38 a reporter's 0.5-s "Yes." inside a window Powell fills took his label; at 28:47 the 4.3-s follow-up "Can we get there with the 5%?" got none. "Go ahead." at 09:48: never written by the speech-to-text model |
+| Moderator | 17 | 0 | 16 name calls written ("Howard." at 15:23), all in gaps between labelled stretches; "Colby, and then Howard." at 11:41: never written, 6.6 s with no words |
+| Reporters | 29 | 26 + 3 strays | two pairs of reporters share a label; three stray labels, each on one to four words, at 09:53, 40:48 and 44:31 |
+
+: {tbl-colwidths="[13,13,13,61]"}
+
+Michelle Smith, the moderator, calls each reporter by first name: 13 of her 16
+written name calls last 0.6 s or less; the longest, "Let's go to Brendan for the
+last question." at 43:03, lasts 1.8\ s.
+
+:::
+
+::: {.notes}
+Names come from the Fed's transcript. Strays: SPK04, four words at 09:53
+("December? You know, we're"); SPK17, "That's" at 40:48; SPK01, "Thank" at
+44:31. Shared labels: Siegel and Guida as SPK03, Rabinovitch and Robb as
+SPK14. The model spelled Rugaber "Rugeber". Optional plays at 15:23 and
+21:38 if time allows.
+:::
+
+## The utterance table with tapply() {#utterances}
+
+::: {.slide-text}
+
+One `tapply()` per column over the turn number collapses `w`, the 7,184
+labelled words, into `utt`, the utterance table: 56 rows of speaker, start,
+end and text.
+
+:::
+
+```{r}
+#| filename: "R Console, in the 19-audio folder; needs w, the labelled words with their turn numbers"
+utt <- data.frame(
+  speaker = tapply(w$speaker, w$turn, unique),
+  start   = tapply(w$start,   w$turn, min),
+  end     = tapply(w$end,     w$turn, max),
+  text    = tapply(w$word,    w$turn, paste, collapse = " "))   # a turn's words as one string
+nrow(utt)
+write.csv(utt, "data_clean/utterances.csv", row.names = FALSE)
+first <- head(utt, 5); first$text <- substr(first$text, 1, 45)  # substr(): characters 1 to 45
+print(first, right = FALSE)
+```
+
+::: {.slide-text}
+
+`paste(collapse = " ")` glues a turn's words into one string; the pauses,
+rates and counts that follow read the saved CSV. Names come from the text:
+the label with the most words opens with "Good afternoon" (Chair Powell), and
+"Chris Rugeber, Associated Press" introduces himself.
+
+:::
+
+::: {.content-visible unless-format="revealjs"}
+
+The moderator has no label to name. A named copy of the table takes one
+lookup vector; the reporters can be named the same way from their
+introductions:
+
+```{r}
+#| filename: "R Console, in the 19-audio folder; utt from above"
+who <- c(SPK00 = "Powell", SPK02 = "Rugaber (AP)")
+utt$name <- who[utt$speaker]       # NA for the labels not yet named
+head(utt[, c("speaker", "name", "start")], 3)
+```
+
+:::
+
+## The 30-second clip transcribed on a laptop {#live-run}
+
+::: {.slide-text}
+
+One terminal line transcribes 30 seconds of the 1 Feb 2023 press conference of
+the Fed (the US central bank) in about nine seconds, with no account and no
+charge. Part 5 scores exactly these words.
+
+:::
+
+```{.bash filename="Terminal, in the 19-audio folder, with the Python environment of tools/SETUP.md active"}
+mlx_whisper data/clips/schneider30.wav --model mlx-community/whisper-large-v3-turbo \
+  --language en --word-timestamps True --output-format json \
+  --output-dir replies --output-name clip30_live
+```
+
+```{.json filename="replies/clip30_live.json, the first segment, reformatted; probability: the model's rating of a word"}
+{"start": 0.0, "end": 2.98, "text": " So I guess I would say it this way.",
+ "words": [{"word": " So", "start": 0.0, "end": 0.54, "probability": 0.599},
+           {"word": " I", "start": 0.54, "end": 1.2, "probability": 0.801}, ...
+```
+
+::: {.slide-text}
+
+The clip: Powell, the Fed chair, answering Howard Schneider of Reuters, 16:09.6
+to 16:39.6. `mlx_whisper`, a speech-to-text program, runs the large model and
+asks for English, word times and JSON, under a new name; the words match the
+shipped `replies/clip30_turbo.json`. The whole conference takes 5 min 7 s to
+transcribe.
+
+:::
+
+[Every file in replies/ was made on 2 November 2026 on the instructor's
+laptop; model ids, settings, commands and run times are in
+tools/SETUP.md.]{.source}
+
+::: {.notes}
+Open replies/clip30_live.json in the editor. If the run failed, open
+replies/clip30_turbo.json instead (same words) and the screen recording.
+Two minutes of audio take 18 s. The first run downloads the model (its
+size is in tools/SETUP.md); keep HF_HOME unset or pointing at the cache
+that holds it.
+:::
+
+::: {.content-visible unless-format="revealjs"}
+
+The terminal after the run, on the instructor's laptop:
+
+![](figures/19-audio/cap-terminal-live.png){width="88%" fig-align="center"}
+
+### The raw replies saved beside the table {#raw-replies}
+
+Every model reply is kept exactly as returned, beside the code that reads
+it and a README that says how it was made. For each reply the README
+records the model and its settings, the date and time the file was
+written, the run time and the word count; for `words.json`: "the full
+conference, ... a time on every word; 00:40, 307 s; 7,451 words."
+
+The rebuild is one line, `source("code/run_everything.R")`. It takes about
+a second and prints the same lines as `logs/run_everything.log`. A new
+transcription takes minutes, and it may not return the same words. R
+cannot make two of the files, `replies/words.json` and
+`replies/speakers.rttm`; the commands that made them are in
+`tools/SETUP.md`. Nothing in `replies/` is edited by hand, and a live run
+writes under a new name beside the shipped reply.
+
+**How the audio was fetched and cut** (from `tools/SETUP.md`). The Fed's
+page embeds a video player whose public configuration names the video
+file; the MP4 link it returns expires within minutes, so it is asked for
+afresh each time. One ffmpeg line turns the video's sound into the 16 kHz
+mono WAV the model reads (`ffmpeg -i video.mp4 -vn -ac 1 -ar 16000 out.wav`),
+and two more cut the clips. `data/media/` is not in the zip: it holds
+246 MB, one click away on federalreserve.gov.
+
+:::
+
+# 4 · Pauses, speaking rate and "you know" {#part-pauses}
+
+## The pause before an answer {#pause}
+
+::: {.slide-text}
+
+The pause before a turn is its start minus the previous row's end in `utt`,
+the utterance table, from which every measure in this part is computed.
+
+:::
+
+```{r}
+#| filename: "R Console, in the 19-audio folder; reads data_clean/utterances.csv, one row per turn"
+utt <- read.csv("data_clean/utterances.csv")
+utt$words <- lengths(strsplit(utt$text, " "))                       # words per turn
+powell <- names(which.max(tapply(utt$words, utt$speaker, sum)))     # the label with the most words
+clock  <- function(s) sprintf("%02d:%02d", floor(s / 60), floor(s %% 60))   # seconds to mm:ss
+# x <- c(10, 20, 30); c(NA, x[-3]) gives NA 10 20: the previous row's value
+utt$pause <- utt$start - c(NA, utt$end[-nrow(utt)])                 # this start minus the previous end
+head(utt[, c("speaker", "start", "end", "pause")], 6)
+```
+
+::: {.slide-text}
+
+The **pause before an answer**: from the end of the question to the start of
+the answer. `clock()` turns seconds into mm:ss, the video's clock. The first
+question starts 7.56 s after Chair Powell's opening statement ends; the
+moderator's name call "Chris Rugeber.", with no speaker label, sits inside the gap.
+
+:::
+
+::: {.notes}
+So a gap in the table is not always silence. Powell's first answer came
+1.88 s after the question.
+:::
+
+## Speaking rate per turn {#rate}
+
+::: {.slide-text}
+
+Words divided by a turn's duration give its speaking rate: Chair Powell's
+median turn runs at 3.0 words a second, the reporters' at 3.2.
+
+:::
+
+```{r}
+#| filename: "R Console; needs utt (the utterance table, one row per turn) and powell (SPK00, Chair Powell)"
+utt$rate <- utt$words / (utt$end - utt$start)          # words per second
+utt$who  <- ifelse(utt$speaker == powell, "Powell", "others")
+med <- tapply(utt$rate, utt$who, median)
+round(cbind(turns = table(utt$who), per_second = med, per_minute = 60 * med), 1)
+round(utt$rate[1], 2)                                  # the opening statement
+```
+
+::: {.slide-text}
+
+**Speaking rate**: words per second within a turn. `ifelse()` picks one of
+two values per row; `tapply()` takes each group's median. Powell first reads
+a prepared opening statement, 960 words in 407 s, 2.36 a second, then answers
+questions. A turn that merges two answers (28:47) also spans the question
+between them, so it reads slower.
+
+:::
+
+::: {.notes}
+The rate uses each turn's own start and end, so a label gap between turns
+does not enter it.
+:::
+
+## Counting "you know" in each answer {#you-know}
+
+::: {.slide-text}
+
+A filler phrase counted per turn separates read speech from spoken: none in
+Chair Powell's 960-word opening statement, 63 in his 26 answers.
+
+:::
+
+```{r}
+#| label: you-know-bars
+#| script: Counting "you know" in each answer
+#| fig.show: !expr if (knitr::pandoc_to("revealjs")) "hide" else "hold"
+#| filename: "R Console; needs utt (one row per turn), powell (SPK00, Chair Powell) and clock() (seconds to mm:ss)"
+mine <- utt[utt$speaker == powell, ]
+hits <- gregexpr("\\byou know\\b", mine$text, ignore.case = TRUE)   # every match in each turn
+mine$you_know <- lengths(regmatches(mine$text, hits))               # how many per turn
+c(opening = mine$you_know[1], answers = sum(mine$you_know[-1]),
+  per_100_words = round(100 * sum(mine$you_know[-1]) / sum(mine$words[-1]), 2))
+barplot(100 * mine$you_know / mine$words, names.arg = clock(mine$start), las = 2,
+        ylab = "\"you know\" per 100 words", main = "Each of Powell's 27 turns, by its start time")
+```
+
+::: {.slide-text}
+
+A **filler phrase** is said while thinking and carries no content.
+`gregexpr()` finds every match, `regmatches()` pulls them out, `lengths()`
+counts them; `\\b` marks a word boundary. Over the conference the
+speech-to-text model wrote 70 and the transcript of the Fed, the US central
+bank, keeps 75, so compare counts taken from the same source.
+
+:::
+
+::: {.notes}
+An edited transcript keeps some fillers and cuts others.
+:::
+
+::: {.content-visible unless-format="revealjs"}
+
+Chair Powell's read opening statement at 00:11 has no "you know", and 18 of
+his 26 spoken answers have at least one: 4.2 per 100 words at 38:30 (5 in
+119 words), 1.4 in the 652-word answer at 25:24. Each bar is one of his 27
+turns, at its start on the video's clock, drawn by the `barplot()` line of
+the counting code.
+
+The count for every Powell turn:
+
+```{r}
+#| filename: "R Console, in the 19-audio folder; mine and clock() from above"
+data.frame(at = clock(mine$start), mine[, c("words", "you_know")])
+```
+
+:::
+
+## Exercise 2 {#exercise-2}
+
+::: {.panel-tabset}
+
+### Exercise
+
+Find the pause before each of Chair Powell's answers: how many, the median,
+the longest and its time on the video's clock (4 minutes, R Console). His
+first row, the opening statement, has no question before it.
+
+```{.default filename="What the slides have built"}
+utt      the utterance table, one row per turn; pause = its start minus the previous turn's end, in s
+powell   SPK00, the label with the most words (Chair Powell)
+clock()  turns seconds into mm:ss, the video's clock
+```
+
+1. Keep Powell's rows of `utt` that have a pause; count them and take the
+   median pause.
+2. The longest, with `which.max()`: its pause, `clock()` of its start,
+   `substr()` of its text.
+
+Compare with your neighbours: the median pause, and the clock time of the
+longest with its first words.
+
+```{r}
+#| label: exercise-2
+#| exercise: true
+#| script: "Exercise 2 (4 minutes)"
+#| include: false
+#| eval: false
+# Exercise 2 (4 minutes). The pause before each Powell answer.
+# 1. utt with its pause column, powell and clock(), as built on the slides before.
+# 2. answers <- Powell's rows that have a pause (the opening statement has none).
+# 3. How many answers; median(answers$pause).
+# 4. The longest: its pause, clock(start), and the first words of its text
+#    (substr(text, 1, 45)).
+# Two answers to compare with the room: the median pause in seconds, and the
+# clock time of the longest pause with what the answer begins with.
+```
+
+### Solution
+
+```{r}
+#| label: exercise-2-solution
+#| purl: false
+#| filename: "R Console; utt, powell and clock() as built on the slides before"
+answers <- utt[utt$speaker == powell & !is.na(utt$pause), ]
+nrow(answers); median(answers$pause)
+top <- answers[which.max(answers$pause), ]
+data.frame(at = clock(top$start), pause = top$pause, text = substr(top$text, 1, 45))
+answers[order(answers$pause, decreasing = TRUE)[1:5], c("start", "pause")]
+```
+
+::: {.slide-text}
+
+26 answers, a median pause of 1.76 s; the longest, 6.56 s at 22:58, after
+Jeanna Smialek's question.
+
+:::
+
+:::
+
+::: {.content-visible when-format="revealjs"}
+
+::: {.notes}
+After the solution, play pause_2258.mp3 from the session page (22:50 to
+23:00): the room hears words inside the "pause".
+:::
+
+:::
+
+::: {.content-visible unless-format="revealjs"}
+
+The longest pause, 22:50 to 23:00 of the conference
+(`data/clips/pause_2258.mp3`):
+
+<audio controls preload="none" src="data/19-audio/data/clips/pause_2258.mp3"></audio>
+
+:::
+
+## The five longest pauses, listened to {#pauses-heard}
+
+::: {.slide-text}
+
+All five longest pauses before Chair Powell's answers in `utt`, the utterance
+table, hold words with no speaker label; the longest real silence before an
+answer is 4.58 s, at 43:38.
+
+| At | Pause in `utt` | Silence between words | Words in the gap with no label |
+|:--|--:|--:|:--|
+| 22:58 | 6.56 | 3.14 | 7: "on the committee. So, the committee, obviously," |
+| 43:38 | 5.90 | 4.58 | 3: "summer? Look, it's" |
+| 37:03 | 4.66 | 2.10 | 4: "outcome? I'm not particularly" |
+| 23:45 | 4.34 | 1.26 | 6: "between moves? I mean, I think" |
+| 38:30 | 3.06 | 2.18 | 3: "on the economy?" |
+
+: {tbl-colwidths="[10,17,19,54]"}
+
+The pause in `utt` runs from the question's last labelled word to the
+answer's first, so words the labels missed sit inside it; 16 of his 26
+answers hold such words. The silence is the largest gap between consecutive
+words there. A long pause is played back, and its words read, before it is
+reported.
+
+:::
+
+::: {.notes}
+Play pause_4338.mp3 from the page (43:30 to 43:44), the debt-ceiling
+question, the last of the conference, before "Look, it's very hard to think
+about all the different possibilities". At 22:58 the 3.14 s falls between
+"committee." and "So,". Reporters: Smialek at 22:58 and 23:45, Rabinovitch
+at 37:03, Horsley at 38:30, Pedersen at 43:38.
+:::
+
+::: {.content-visible unless-format="revealjs"}
+
+The longest real silence, 43:30 to 43:44 (`data/clips/pause_4338.mp3`):
+the debt-ceiling question, the last of the conference, and the start of the
+answer, "Look, it's very hard to think about all the different
+possibilities".
+
+<audio controls preload="none" src="data/19-audio/data/clips/pause_4338.mp3"></audio>
+
+:::
+
+## The pause before every Powell answer {#pause-figure}
+
+::: {.slide-text}
+
+For Chair Powell's 26 answers, the silence between words is the number to
+report, since the table's gaps hold words with no speaker label (they fell
+between labelled stretches): median 1.07 s against the table's 1.76 s.
+
+:::
+
+![](figures/19-audio/f8-pauses.png){width="86%" fig-align="center"}
+
+::: {.slide-text}
+
+Open circles come from `data_clean/utterances.csv`, the utterance table; blue
+dots from `data_clean/words.rds`, the 7,451-word table that `code/1_words.R`
+saves, with each word's start and end.
+
+:::
+
+[Chair Powell's 26 answers in the 1 Feb 2023 press conference of the Fed (the US central bank).]{.source}
+
+::: {.content-visible unless-format="revealjs"}
+
+The silence comes from the word table. For each answer, take every word that
+starts at or after the end of the previous turn and before the answer
+starts, and find the longest gap in that sequence, counted from the previous
+turn's end to the answer's start. The comparison allows 0.005 s either way:
+the times are written to the hundredth, and a time read back from the CSV
+can differ from the JSON's in the last binary digit (1425.61 against
+1425.6099999999999).
+
+```{r}
+#| filename: "R Console, in the 19-audio folder; utt, powell, clock() and words from the slides before"
+utt$prev_end <- c(NA, utt$end[-nrow(utt)])                # where the turn before ends
+answers <- utt[utt$speaker == powell & !is.na(utt$pause), ]
+silence <- function(from, to) {                           # the longest gap from one time to another
+  g <- words[words$start > from - 0.005 & words$start < to - 0.005, ]   # the words in between
+  max(c(g$start, to) - c(from, g$end))
+}
+answers$silence <- mapply(silence, answers$prev_end, answers$start)
+c(table = median(answers$pause), words = median(answers$silence))
+words[words$start > 1371.7 & words$start < 1378.3, c("word", "start", "end", "speaker")]
+```
+
+The nine words around 22:58: the question ends with "shared on the
+committee." (no label; "shared" starts the instant the labelled part of the
+question ends), then 3.14 s of silence, then "So, the committee,
+obviously," (no label), and Powell's labelled answer starts with "did".
+The slide counts only the words that start after the previous turn's end:
+16 answers hold such words, and each of the five longest gaps holds one
+word fewer than the rule above takes in (17 answers by that rule).
+
+:::
+
+# 5 · Word-error rate against the Fed's transcript {#part-wer}
+
+## The Fed's passage beside the model's words {#passage}
+
+::: {.slide-text}
+
+For a 30-second clip of the 1 Feb 2023 press conference of the Fed (the US
+central bank), the transcript's 105 words are the **reference transcript**,
+the text treated as correct; the large speech-to-text model's 104 words differ
+from it in three places.
+
+:::
+
+::::: {.columns}
+
+::: {.column width="50%"}
+
+```{=html}
+<div class="sourceCode"><pre class="sourceCode"><code>So I guess I would say it this way. We can now
+say, I think, for the first time that the
+disinflationary process has started. We can see
+that. And we see it, really, in goods prices so
+far. Goods prices is a big sector. <mark>We—</mark>this is
+what we thought would happen since the very
+beginning, and now here it is actually
+happening, and for the reasons we thought.
+<mark>We—</mark>you know, it's supply chains, it's
+shortages, and it's demand revolving back
+towards services. So this is a good thing. This
+is a good thing. But that's, you know, around a
+quarter of the</code></pre></div>
+```
+
+[The Fed's transcript, page 9: `replies/clip30_fed.txt`]{.source}
+
+:::
+
+::: {.column width="50%"}
+
+```{=html}
+<div class="sourceCode"><pre class="sourceCode"><code>So I guess I would say it this way. We can now
+say, I think, for the first time that the
+disinflationary process has started. We can see
+that. And we see it really in goods prices so
+far. Goods prices is a big sector. This is what
+we thought would happen since the very
+beginning, and now here it is actually
+happening. And for the reasons we thought, you
+know, it's supply chains, it's shortages, and
+it's demand revolving back towards services. So
+this is a good thing. This is a good thing. But
+that's, you know, around a quarter of the
+<mark>time.</mark></code></pre></div>
+```
+
+[What the large speech-to-text model wrote from the clip: `replies/clip30_turbo.json`]{.source}
+
+:::
+
+:::::
+
+::: {.slide-text}
+
+The clip, Chair Powell answering Howard Schneider of Reuters from 16:09.6 to
+16:39.6, ends mid-sentence. Neither text holds an "um": the transcript's
+editors kept two restarts, "We—", that the model dropped, and the model
+guessed "time." at the cut. Punctuation and capitals are not counted.
+
+:::
+
+::: {.notes}
+Play schneider30.mp3 from the session page. The clip stops before the
+transcript's next words, "PCE price index". The 23-page transcript holds no
+"um" or "uh", and the model wrote none: the editors and the model make the
+same kind of edit.
+:::
+
+::: {.content-visible unless-format="revealjs"}
+
+The 30-second clip (`data/clips/schneider30.mp3`):
+
+<audio controls preload="none" src="data/19-audio/data/clips/schneider30.mp3"></audio>
+
+:::
+
+## Word-error rate on an eleven-word example {#wer-toy}
+
+::: {.slide-text}
+
+Word-error rate is substitutions plus deletions plus insertions divided by
+the reference's word count: three edits in eleven words is 0.27.
+
+:::
+
+![](figures/19-audio/f9-alignment.png){width="86%" fig-align="center"}
+
+::: {.dashes}
+
+- **Substitution**: a wrong word in place of the right one ("processes" for
+  "process"). **Deletion**: a reference word the model left out ("now").
+  **Insertion**: a word the model added (the first "really", after "has").
+- **Word-error rate**: the three counts summed and divided by the
+  reference's length, so a model that adds many words can score above 1.
+
+:::
+
+## Counting word edits with adist() {#adist}
+
+::: {.slide-text}
+
+`adist()` counts the fewest single edits between two strings letter by
+letter, so one character per distinct word makes it count edits word by word.
+
+:::
+
+```{r}
+#| filename: "R Console; base R only"
+#| collapse: true
+word_edits <- function(ref, hyp) {
+  vocab <- unique(c(ref, hyp))                  # every distinct word
+  r <- intToUtf8(match(ref, vocab) + 1000)      # one character per word, past the ordinary letters
+  h <- intToUtf8(match(hyp, vocab) + 1000)
+  adist(r, h, counts = TRUE)
+}
+ref <- strsplit("so we can now say that the process has really started", " ")[[1]]
+hyp <- strsplit("so we can say that the processes has really really started", " ")[[1]]
+d <- word_edits(ref, hyp)
+attr(d, "counts")[1, 1, ]
+sum(attr(d, "counts")) / length(ref)
+attr(d, "trafos")
+```
+
+::: {.slide-text}
+
+**Edit distance**: the fewest substitutions, deletions and insertions that
+turn one sequence into the other. `ref` is the reference, `hyp` the model's
+text (its hypothesis); `match()` numbers each word and `intToUtf8()` turns
+each number into one character. The path in `"trafos"` reads M match, S
+substitution, D deletion, I insertion.
+
+:::
+
+## Normalizing both texts before scoring {#normalize}
+
+::: {.slide-text}
+
+Both texts are written by the same rules before counting, and those rules
+decide the score.
+
+:::
+
+```{r}
+#| filename: "R Console, in the 19-audio folder; base R"
+to_words <- function(x) {
+  x <- tolower(paste(x, collapse = " "))
+  x <- gsub("[-/—–]", " ", x)          # dashes and slashes split words: "We—this" -> "we this"
+  x <- gsub("[^a-z0-9' ]", "", x)      # other punctuation dropped; the straight apostrophe stays
+  strsplit(trimws(x), " +")[[1]]
+}
+to_words("We—this is what we thought. We—you know, it's P.C.E.")
+ref <- to_words(readLines("replies/clip30_fed.txt", encoding = "UTF-8", warn = FALSE))
+length(ref)
+```
+
+::: {.slide-text}
+
+**Normalization**: writing both texts by the same rules before comparing
+them. The transcript PDF prints a curly apostrophe (`’`) where the
+speech-to-text models write a straight one (`'`). Left curly, the punctuation
+rule drops it and "it's" becomes "its": the large model's 3 edits on the clip
+(0.029) become 7 (0.067). `replies/clip30_fed.txt`, the transcript's text for
+the clip, ships with straight apostrophes.
+
+:::
+
+::: {.notes}
+"4½" loses its fraction, so numbers are read by eye.
+:::
+
+## Four runs scored on the 30-second clip {#four-runs}
+
+::: {.slide-text}
+
+On the 30-second clip (Powell at 16:09, 1 Feb 2023, the Fed's press
+conference), the large model makes 3 edits against the Fed's 105-word
+transcript passage, the small one 9.
+
+:::
+
+```{r}
+#| filename: "R Console; needs jsonlite, ref (the 105 reference words), to_words() and word_edits() from the slides before"
+runs <- c(small = "replies/clip30_base.json",   small_prompt = "replies/clip30_base_prompt.json",
+          large = "replies/clip30_turbo.json",  large_prompt = "replies/clip30_turbo_prompt.json")
+hyps  <- lapply(runs, function(f) to_words(fromJSON(f)$text))   # one word vector per file
+score <- function(h) { k <- attr(word_edits(ref, h), "counts")[1, 1, ]
+                       c(model_words = length(h), k, rate = round(sum(k) / length(ref), 3)) }
+t(sapply(hyps, score))                                          # one row per run
+```
+
+::: {.slide-text}
+
+Small (`clip30_base.json`) and large (`clip30_turbo.json`) are two sizes of
+one speech-to-text model. `word_edits()` lines the model's words up with the
+reference and counts `ins` (words added), `del` (reference words left out)
+and `sub` (words replaced); `rate` is their sum over the 105 reference words.
+A **prompt** is text put in front of the model before it writes.
+
+:::
+
+::: {.notes}
+model_words counts the words in each reply's text field after
+normalization.
+:::
+
+## Four runs scored on the 30-second clip {#prompt-runs}
+
+::: {.slide-text}
+
+A prompt full of fillers barely moves the large speech-to-text model
+(word-error rate 0.029 to 0.048) and stops the small one at 12.7 s of the
+30-s clip of Powell at 16:09, 1 Feb 2023, 67 words short (0.648).
+
+:::
+
+::: {.content-visible when-format="revealjs"}
+
+```{r}
+#| filename: "R Console; hyps (the four runs' words) and score() (the edit counter) from the slide before"
+#| purl: false
+t(sapply(hyps, score))
+```
+
+:::
+
+```{r}
+#| filename: "R Console, in the 19-audio folder; needs jsonlite"
+fromJSON("replies/clip30_base_prompt.json")$segments[, c("start", "end")]   # small model, prompted: one segment
+substr(fromJSON("replies/clip30_turbo_prompt.json")$text, 1, 51)             # large model, prompted: first words
+```
+
+::: {.slide-text}
+
+The model continues a prompt in its style; this one lists fillers the models
+drop ("Um, uh, so, you know, I- I think..."). The large model then writes
+restarts ("I would— I would") and an "Uh" that the Fed's transcript lacks:
+each is one edit, a word added, dropped or replaced.
+
+:::
+
+::: {.notes}
+The prompted "Uh," sits at 3.62 s with probability 0.12.
+:::
+
+## Where the errors fall {#errors}
+
+::: {.slide-text}
+
+The large model's three errors on the 30-second clip are two restarts
+("We—") the transcript printed and one word guessed at the clip's cut; none
+is a wrong word.
+
+:::
+
+```{r}
+#| filename: "R Console, in the 19-audio folder; needs ref (the 105 reference words) and hyps (each run's words)"
+source("code/align.R")     # align(): walks attr(d, "trafos") and prints one row per edit
+```
+
+::::: {.columns}
+
+::: {.column width="50%"}
+
+```{r}
+#| filename: "R Console: the large model (replies/clip30_turbo.json)"
+align(ref, hyps$large)
+```
+
+:::
+
+::: {.column width="50%"}
+
+```{r}
+#| filename: "R Console: the small model (replies/clip30_base.json)"
+align(ref, hyps$small)
+```
+
+:::
+
+:::::
+
+::: {.slide-text}
+
+**Alignment**: the two texts lined up word by word. `op`: D a reference word
+the model left out, S a word it replaced, I a word it added, at `ref_pos` in
+the reference; 46 and 71 are the transcript's two "We—". The small model
+writes wrong words ("change" for "chains") and drops "you know" twice, which
+biases a filler count.
+
+:::
+
+::: {.content-visible unless-format="revealjs"}
+
+`align()` in full, from `code/align.R`:
+
+```{r}
+#| filename: "R Console, in the 19-audio folder"
+cat(readLines("code/align.R"), sep = "\n")
+```
+
+The prompted large run adds the restarts and the "Uh" the prompt invited,
+and guesses another word at the cut:
+
+```{r}
+#| filename: "R Console, in the 19-audio folder; ref, hyps and align() from above"
+align(ref, hyps$large_prompt)
+clip <- do.call(rbind, fromJSON("replies/clip30_turbo.json")$segments$words)
+tail(clip, 2)                      # the last two words, both placed at 29.98 s
+```
+
+The guessed "time." has the lowest probability in the clip, 0.12; the
+"the" before it, 0.49, also sits at the cut. One clip of the chair into a
+good microphone measures the chair: a reporter on a room microphone needs
+a clip of their own (Practice 8 starts the habit).
+
+:::
+
+## How far the table can be trusted {#trust}
+
+::: {.slide-text}
+
+The utterance table from the 1 Feb 2023 press conference of the Fed (the US
+central bank) gets the words right 97 times in 100 on a 30-s clip, and the
+measures on words and times stand; its speaker labels miss every turn shorter
+than 3 seconds.
+
+| What was measured | Against what | Result, the table's number first |
+|:--|:--|:--|
+| Words | the Fed's own transcript: its text of the 30-s clip (Powell's answer at 16:09) and its word count over the conference | word-error rate 0.029; 7,451 words against 7,365; "you know" 70 against 75 |
+| Turns | the transcript's speaker tags | Powell, the Fed chair, 27 turns of 30; the moderator, who calls on the reporters, 0 of 17; 267 words with no label (3.6%) |
+| Pauses | listening, and the gaps between words | the five longest are gaps in the labels; median 1.76 s by the table, 1.07 s by the words |
+
+: {tbl-colwidths="[16,36,48]"}
+
+One caveat: the word times are the model's reconstruction of where each word
+falls, so the guessed "time." at the clip's cut has a zero-length time, 29.98
+to 29.98 s.
+
+:::
+
+::: {.content-visible unless-format="revealjs"}
+
+What a paper that uses such a table reports: the model, its settings and
+the date it ran; that the raw reply is kept; a word-error rate on a clip
+against a reference; the turn counts against a transcript; and the share of
+words with no label.
+
+:::
+
+## Practice {#practice}
+
+::: {.content-visible when-format="revealjs"}
+
+Ten tasks on the session page, run in the 19-audio folder on the 1 Feb 2023
+press conference of the Fed (the US central bank): `words`, `seg`, `w`, `utt`
+and the two 30-s clip replies.
+
+- **1–2** `words`: the small model, chunks read alone · ten lowest
+  probabilities
+- **3–4** `seg`, `w`: labels by word start · 68 runs of unlabelled words
+- **5–7** `utt`: longest answer · silences over 2.5 s · silence before
+  answers
+- **8–10** word-error rate: your transcript of the opening (earphones) ·
+  curly apostrophes · small-model clip errors
+
+:::
+
+::: {.content-hidden when-format="revealjs"}
+
+```{r}
+#| label: practice
+#| exercise: true
+#| script: "Practice"
+#| eval: false
+# Practice. Run in the 19-audio folder after the slides' code has built
+# words (with its speaker column), seg, w, utt (with pause, words and rate),
+# powell, clock(), to_words(), word_edits(), ref, hyps and align().
+# None needs Python, an account or the network; task 8 needs earphones.
+
+# Reading model output
+#  1. replies/words_base_nocond.json is the small model run again with each
+#     30-second chunk decoded without the text before it. Read its words as
+#     on the slides and count them per minute with table(floor(start / 60)).
+#     Does it still loop after 34:57? Set minutes 35 to 44 beside the large
+#     model's.
+#  2. The ten words in words with the lowest probability, with their clock
+#     times. Where in the conference do they fall?
+# Speaker labels
+#  3. Label each word by its start time instead of its midpoint. How many
+#     words change label?
+#  4. rle(is.na(words$speaker)) gives the runs of unlabelled words. How many
+#     runs are there, and how many are the moderator calling a reporter by
+#     name?
+# Measures from the times
+#  5. Powell's longest answer by words, his opening statement left out: its
+#     start, end and length in seconds. Read its text. Is it one answer?
+#  6. Every silence over 2.5 s between consecutive words in words, with the
+#     words on either side and the clock time it ends. What happens in the
+#     two longest?
+#  7. For each Powell answer, the longest silence between words from the end
+#     of the previous turn to the start of the answer. The median and the
+#     longest, with its clock time, against the table's 1.76 s.
+# Word-error rate
+#  8. With earphones, write your own transcript of 0:06 to 0:36 of
+#     data/clips/open2min.mp3 by the rules on the session page, before you
+#     open any model file; save it as data_clean/my_opening.txt. Score the
+#     large and small models' words that start before 36.6 s against it, and
+#     against the Fed's text of the same passage.
+#  9. Put the PDF's curly apostrophes back into the reference with
+#     gsub("'", "\u2019", ...) and score the large model again. Which words
+#     change, and what is the rate?
+# Alignment
+# 10. align(ref, hyps$small) lists the small model's nine errors on the
+#     clip. Find each in data/clips/schneider30.mp3 with the times of the
+#     model's segments, and listen. Which are wrong words, and which are
+#     restarts?
+```
+
+**Rules for the hand transcript of task 8.** Write it before you open any
+model file. Play the clip at reduced speed, in three passes. Keep fillers,
+restarts and repeated words; write numbers as spoken and acronyms as
+letters. Mark a word you cannot make out `[unclear]` and leave it out of
+the count.
+
+<audio controls preload="none" src="data/19-audio/data/clips/open2min.mp3"></audio>
+
+::: {.callout-note collapse="true" title="Solutions"}
+
+```{r}
+#| label: practice-solutions
+#| purl: false
+#| filename: "R Console; after the slides' code"
+# 1. No loop without conditioning: within a few words of the large model
+nc <- do.call(rbind, fromJSON("replies/words_base_nocond.json")$segments$words)
+nrow(nc)
+rbind(large = table(floor(words$start / 60))[36:45],
+      no_conditioning = table(floor(nc$start / 60))[36:45])
+# 2. The ten lowest probabilities
+low <- words[order(words$probability)[1:10], c("word", "start", "probability")]
+low$at <- clock(low$start)
+low
+# 3. Labels by start time instead of midpoint
+label_at <- function(t) {
+  i <- findInterval(t, seg$start)
+  i[i == 0] <- NA
+  i[!is.na(i) & t > seg$end[i]] <- NA
+  seg$speaker[i]
+}
+by_start <- label_at(words$start)
+changed <- ifelse(is.na(by_start) | is.na(words$speaker),
+                  is.na(by_start) != is.na(words$speaker), by_start != words$speaker)
+sum(changed)
+# 4. The runs of unlabelled words
+r <- rle(is.na(words$speaker))
+last <- cumsum(r$lengths); first <- last - r$lengths + 1
+na_runs <- data.frame(from = first, to = last, n = r$lengths)[r$values, ]
+nrow(na_runs)
+na_runs$at <- clock(words$start[na_runs$from])
+na_runs$text <- substr(mapply(function(a, b) paste(words$word[a:b], collapse = " "),
+                              na_runs$from, na_runs$to), 1, 50)
+print(na_runs[, c("at", "n", "text")], row.names = FALSE)
+# 5. Powell's longest answer (his first row is the opening statement)
+long <- utt[utt$speaker == powell, ][-1, ]
+long <- long[which.max(long$words), ]
+c(start = long$start, end = long$end, seconds = long$end - long$start, words = long$words)
+clock(long$start)
+# 6. Silences over 2.5 s between consecutive words
+gap <- words$start[-1] - words$end[-nrow(words)]
+big <- which(gap > 2.5)
+length(big)
+head(data.frame(gap = gap[big], after = words$word[big], before = words$word[big + 1],
+                ends_at = clock(words$start[big + 1]))[order(-gap[big]), ], 5)
+# 7. The silence before each answer, from the word table
+answers$silence <- mapply(silence, answers$prev_end, answers$start)
+c(median = median(answers$silence), longest = max(answers$silence))
+clock(answers$start[which.max(answers$silence)])
+# 8. The two models from 0:06 to 0:36, against the Fed's text of the passage
+fed_open <- to_words(gsub("\u2019", "'", sub(" of the Federal Reserve.*$", "", fed_text)))
+large_open <- to_words(words$word[words$start < 36.6])
+small_open <- to_words(small_words$word[small_words$start < 36.6])
+rbind(large = c(attr(word_edits(fed_open, large_open), "counts")[1, 1, ]),
+      small = c(attr(word_edits(fed_open, small_open), "counts")[1, 1, ]))
+if (file.exists("data_clean/my_opening.txt")) {     # your own transcript, once written
+  mine_ref <- to_words(readLines("data_clean/my_opening.txt", warn = FALSE))
+  sapply(list(large = large_open, small = small_open),
+         function(h) round(sum(attr(word_edits(mine_ref, h), "counts")) / length(mine_ref), 3))
+}
+# 9. The curly apostrophes put back
+curly <- to_words(gsub("'", "\u2019", readLines("replies/clip30_fed.txt", encoding = "UTF-8", warn = FALSE)))
+k <- attr(word_edits(curly, hyps$large), "counts")[1, 1, ]
+c(k, rate = round(sum(k) / length(curly), 3))
+setdiff(curly, ref)
+# 10. The small model's errors, and where its segments fall in the clip
+align(ref, hyps$small)
+fromJSON("replies/clip30_base.json")$segments[, c("start", "end", "text")]
+```
+
+Task 1: no loop; minutes 35 to 44 run 190 161 161 164 143 189 169 192 157
+78 words against the large model's 203 164 168 176 148 188 165 188 156 84.
+Task 2: four of the five lowest fall between 33:48 and 35:54 ("for" at
+34:14, probability 0.0009); the fifth is "Thank" at 44:31, a reporter at the
+very end. Task 3: 43 words. Task 4: 68 runs, 16 of them the moderator's
+name calls ("Chris Rugeber.", "Rachel.", "Neil.", "Howard.", "Victoria." and,
+for "Jeanna and then Steve", "Gina and this team."). Task 5: 652 words,
+25:24 to 29:35 (250.7 s): two answers to Steve Liesman, merged around his
+unlabelled follow-up "Can we get there with the 5%?" at 28:47. Task 6:
+twenty silences; the longest, 6.86 s, ends at 18:48 with "Nick", and the
+next, 6.58 s, ends at 11:47, where the transcript has "Colby, and then
+Howard." and the model wrote nothing. Task 7: median 1.07 s, longest 4.58 s
+at 43:38. Task 8: your rate depends on your transcript; against the Fed's
+text the models lose points on "we've" for "we have" and "2 %" for "2
+percent", which are normalization, not hearing. Task 9: 1 insertion, 2
+deletions and 4 substitutions, 0.067: "it's" three times and "that's".
+Task 10: the six places of the slide, with "since" heard as "to" and
+"chains" as "change".
+
+:::
+
+:::
+
+::: {.content-hidden when-format="revealjs"}
+
+## Sources {#sources}
+
+[Hansen, McMahon & Prat (QJE, 2018)](https://doi.org/10.1093/qje/qjx045);
+[Hassan, Hollander, van Lent & Tahoun (QJE, 2019)](https://doi.org/10.1093/qje/qjz021);
+[Sautner, van Lent, Vilkov & Zhang (JF, 2023)](https://doi.org/10.1111/jofi.13219);
+[Mayew & Venkatachalam (JF, 2012)](https://doi.org/10.1111/j.1540-6261.2011.01705.x);
+[Radford et al. (ICML, 2023)](https://proceedings.mlr.press/v202/radford23a.html).
+Board of Governors of the Federal Reserve System,
+[Transcript of Chair Powell's Press Conference, February 1, 2023](https://www.federalreserve.gov/mediacenter/files/FOMCpresconf20230201.pdf),
+final version, and the [conference page](https://www.federalreserve.gov/monetarypolicy/fomcpresconf20230201.htm)
+with the video (public domain);
+[FOMC meeting transcript, November 16, 1993](https://www.federalreserve.gov/monetarypolicy/files/FOMC19931116meeting.pdf)
+(public domain); [jsonlite](https://cran.r-project.org/package=jsonlite).
+The models, their versions and the commands behind every reply are in
+`tools/SETUP.md`.
+
+**Links:** [slides](19-audio-slides.html) · [Syllabus](../syllabus.qmd)
+
+:::
+
+```{r}
+#| purl: false
+#| include: false
+source(file.path(session_dir, "_purl.R"))
+purl_session(file.path(session_dir, "19-audio.qmd"),
+             file.path(session_dir, "19-audio.R"))
+```

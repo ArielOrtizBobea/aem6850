@@ -1,0 +1,144 @@
+
+==== code/1_words.R ====
+
+Loading required package: jsonlite
+[1] "text"     "segments" "language"
+segments: 1711 
+[1] 7451    4
+        word start   end probability
+1       Good  6.62  7.14   0.5576172
+2  afternoon  7.14  7.46   0.9960938
+3        and  7.46  8.14   0.6811523
+4   welcome.  8.14  8.40   0.9970703
+5         My 10.58 11.10   0.9960938
+6 colleagues 11.10 11.48   0.9975586
+         whisper  fed
+words       7451 7365
+you_know      70   75
+
+==== code/2_speakers.R ====
+
+SPEAKER fomc20230201 1 11.25 7.50 <NA> <NA> SPK00 <NA> <NA>
+SPEAKER fomc20230201 1 21.75 30.00 <NA> <NA> SPK00 <NA> <NA>
+SPEAKER fomc20230201 1 54.75 15.00 <NA> <NA> SPK00 <NA> <NA>
+   start  dur speaker    end
+1  11.25  7.5   SPK00  18.75
+2  21.75 30.0   SPK00  51.75
+3  54.75 15.0   SPK00  69.75
+4  72.75 16.5   SPK00  89.25
+5  92.25  6.0   SPK00  98.25
+6 101.25 22.5   SPK00 123.75
+segments: 86  labels: 19 
+
+==== code/3_join_turns.R ====
+
+words with no label: 267  share: 0.036 
+turns: 56 
+turn_label
+SPK00 SPK01 SPK02 SPK03 SPK04 SPK05 SPK06 SPK07 SPK08 SPK09 SPK10 SPK11 SPK12 
+   27     1     1     5     1     1     2     1     2     2     1     1     2 
+SPK13 SPK14 SPK15 SPK16 SPK17 SPK18 
+    2     2     1     2     1     1 
+
+SPK00 SPK03 SPK10 SPK14 SPK07 SPK11 SPK09 SPK13 SPK08 SPK12 SPK05 SPK06 SPK02 
+ 5605   187   178   143   135   119   105   103    98    93    90    82    71 
+SPK18 SPK15 SPK16 SPK04 SPK01 SPK17 
+   62    54    53     4     1     1 
+      powell moderator
+model     27         0
+fed       30        17
+
+==== code/4_utterances.R ====
+
+utterances: 56 
+  speaker start  end    text                                         
+1 SPK00    11.10 417.73 colleagues and I understand the hardship that
+2 SPK02   425.29 450.75 Chris Rugeber, Associated Press. Thank you fo
+3 SPK00   452.63 490.93 So it is important that overall financial con
+4 SPK03   497.09 519.65 Hi, Chair Powell. Thank you for taking our qu
+5 SPK00   521.31 587.21 I would say it is a good thing that the disin
+
+==== code/5_pauses.R ====
+
+answers: 26  median pause (s): 1.76 
+  at    pause text                                         
+1 22:58 6.56  did not see this as a time to pause. We judge
+2 43:38 5.90  very hard to think about all the different po
+3 37:03 4.66  concerned about the divergence, no, because i
+4 23:45 4.34  this is not something that the committee is t
+5 38:30 3.06  That's the general sense of it. Look, we unde
+    at pause silence
+ 07:32  1.88    1.14
+ 08:41  1.66    1.18
+ 09:55  0.00    0.00
+ 10:42  0.58    0.58
+ 12:06  2.98    2.02
+ 13:27  1.20    0.92
+ 16:11  2.76    1.52
+ 19:17  2.76    1.46
+ 20:38  2.46    1.78
+ 21:23  3.00    1.62
+ 21:34  0.38    0.38
+ 22:11  0.00    0.00
+ 22:58  6.56    3.14
+ 23:45  4.34    1.26
+ 25:24  3.02    1.42
+ 30:27  1.76    0.86
+ 32:01  0.84    0.84
+ 32:31  1.00    1.00
+ 34:38  1.58    0.72
+ 35:51  0.32    0.32
+ 37:03  4.66    2.10
+ 38:30  3.06    2.18
+ 39:31  0.80    0.80
+ 40:48  0.00    0.00
+ 42:26  1.76    0.22
+ 43:38  5.90    4.58
+median silence before an answer (s): 1.07  longest: 4.58 at 43:38 
+       turns per_second per_minute
+others    29        3.2      192.5
+Powell    27        3.0      181.6
+    at words you_know per_100_words
+ 00:11   960        0           0.0
+ 07:32   117        0           0.0
+ 08:41   159        0           0.0
+ 09:55    50        1           2.0
+ 10:42   150        0           0.0
+ 12:06   215        2           0.9
+ 13:27   346        4           1.2
+ 16:11   487        6           1.2
+ 19:17   231        4           1.7
+ 20:38    71        2           2.8
+ 21:23     4        0           0.0
+ 21:34   108        0           0.0
+ 22:11    47        0           0.0
+ 22:58    95        1           1.1
+ 23:45    98        2           2.0
+ 25:24   652        9           1.4
+ 30:27   213        1           0.5
+ 32:01     4        0           0.0
+ 32:31   285        7           2.5
+ 34:38   218        4           1.8
+ 35:51   115        2           1.7
+ 37:03   180        2           1.1
+ 38:30   119        5           4.2
+ 39:31   230        5           2.2
+ 40:48   176        3           1.7
+ 42:26   125        0           0.0
+ 43:38   150        3           2.0
+opening statement: 0  answers: 63  per 100 words in the answers: 1.36 
+
+==== code/6_wer.R ====
+
+reference words: 105 
+ [1] "so"    "i"     "guess" "i"     "would" "say"   "it"    "this"  "way"  
+[10] "we"    "can"   "now"  
+             ref_words model_words ins del sub  rate
+base               105          99   0   6   3 0.086
+base_prompt        105          39   1  67   0 0.648
+turbo              105         104   1   2   0 0.029
+turbo_prompt       105         109   4   0   1 0.048
+ op ref_pos ref model
+  D      46  we      
+  D      71  we      
+  I     105      time
