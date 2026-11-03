@@ -1,6 +1,6 @@
 # =============================================================
 # AEM 6850 - Session 19: Audio
-# Script 5 of 6 - pauses, speaking rate and "you know", from the turns.
+# Script 6 of 7 - pauses, speaking rate and "you know", from the turns.
 #
 # Uses the utterance table (script 4): the pause before each of Powell's
 # answers, how fast each speaker talks, and how often Powell says
@@ -14,7 +14,7 @@
 # Open 19-audio.Rproj first. It sits at the project root, so the
 # working directory is 19-audio/ and every path below is relative to it.
 #
-#   source("code/5_pauses.R")
+#   source("code/6_pauses.R")
 # =============================================================
 
 

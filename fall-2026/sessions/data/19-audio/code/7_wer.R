@@ -1,6 +1,6 @@
 # =============================================================
 # AEM 6850 - Session 19: Audio
-# Script 6 of 6 - word-error rate on a 30-second clip.
+# Script 7 of 7 - word-error rate on a 30-second clip.
 #
 # Scores four Whisper runs on the same 30 seconds of Powell's answer to
 # Howard Schneider (16:09 to 16:39 in the video) against the Fed's text of
@@ -12,7 +12,7 @@
 # Open 19-audio.Rproj first. It sits at the project root, so the
 # working directory is 19-audio/ and every path below is relative to it.
 #
-#   source("code/6_wer.R")
+#   source("code/7_wer.R")
 # =============================================================
 
   # Load or install the packages this script uses

@@ -1,0 +1,38 @@
+# The live run in R, rehearsed 3 November 2026 at 00:03 EST on the instructor's laptop (Apple M2 Max),
+# in a fresh R session started in the 19-audio folder: audio.whisper 0.5.0 built with Metal, the model file
+# data/media/models/ggml-large-v3-turbo.bin (1,625 MB), use_gpu = TRUE, nothing downloaded.
+# Times: predict() 1.6 to 2.2 s and whisper() 0.9 to 1.1 s (system.time, elapsed, three fresh sessions);
+# from starting R to the last line printed, 3.2 to 3.8 s wall (five fresh sessions).
+# The words: 101 in 10 segments and 126 tokens. Against the shipped replies/clip30_turbo.json (104 words,
+# the Python route) it drops one "you know" and does not guess "time." at the cut; against the Fed's text
+# (105 words) it drops the two "We" restarts and that "you know": 4 deletions, word-error rate 0.038.
+# Below, the R console as it read after the run, 118 columns wide (the options(width = 118) line that
+# set the width is left out, as are the 57 lines whisper.cpp writes to stderr while it loads the model).
+
+> library(audio.whisper)
+> m   <- whisper("data/media/models/ggml-large-v3-turbo.bin", use_gpu = TRUE)
+system_info: hardware_concurrency = 12 | WHISPER : COREML = 0 | OPENVINO = 0 | Metal : EMBED_LIBRARY = 1 | CPU : NEON = 1 | ARM_FMA = 1 | FP16_VA = 1 | MATMUL_INT8 = 1 | DOTPROD = 1 | ACCELERATE = 1 | REPACK = 1 | 
+> out <- predict(m, "data/clips/schneider30.wav", token_timestamps = TRUE)
+system_info: n_threads = 1 / 12 | WHISPER : COREML = 0 | OPENVINO = 0 | Metal : EMBED_LIBRARY = 1 | CPU : NEON = 1 | ARM_FMA = 1 | FP16_VA = 1 | MATMUL_INT8 = 1 | DOTPROD = 1 | ACCELERATE = 1 | REPACK = 1 | 
+Processing data/clips/schneider30.wav (480256 samples, 30.016 sec), n_threads = 1, n_processors = 1, lang = auto, translate = 0, timestamps = 1, beam_size = -1, best_of = 5
+[00:00:00.000 --> 00:00:03.000]   So I guess I would say it this way.
+[00:00:03.000 --> 00:00:09.320]   We can now say, I think, for the first time that the disinflationary process has started.
+[00:00:09.320 --> 00:00:10.440]   We can see that.
+[00:00:10.440 --> 00:00:12.760]   And we see it really in goods prices so far.
+[00:00:12.760 --> 00:00:15.200]   Goods prices is a big sector.
+[00:00:15.200 --> 00:00:19.420]   This is what we thought would happen since the very beginning, and now here it is actually happening.
+[00:00:19.420 --> 00:00:25.760]   And for the reasons we thought, you know, it's supply chains, it's shortages, and it's demand revolving back towards services.
+[00:00:25.760 --> 00:00:27.100]   So this is a good thing.
+[00:00:27.100 --> 00:00:27.900]   This is a good thing.
+[00:00:28.240 --> 00:00:30.020]   But that's around a quarter of the
+> out$data[1:3, c("from", "text")]
+          from                                                                                       text
+1 00:00:00.000                                                        So I guess I would say it this way.
+2 00:00:03.000  We can now say, I think, for the first time that the disinflationary process has started.
+3 00:00:09.320                                                                           We can see that.
+> head(out$tokens, 4)
+  segment token_id  token token_prob   token_from     token_to
+1       1      407     So  0.6722499 00:00:00.000 00:00:00.230
+2       1      286      I  0.7659008 00:00:00.230 00:00:00.340
+3       1     2041  guess  0.9975235 00:00:00.360 00:00:00.910
+4       1      286      I  0.9974741 00:00:00.910 00:00:01.020

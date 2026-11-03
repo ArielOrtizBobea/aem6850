@@ -1,6 +1,6 @@
 # =============================================================
 # AEM 6850 - Session 19: Audio
-# Script 1 of 6 - the words Whisper heard, one row per word.
+# Script 1 of 7 - the words Whisper heard, one row per word.
 #
 # Reads the full press conference of 1 February 2023 as transcribed by
 # Whisper (large-v3-turbo, with a start and end time on every word), stacks

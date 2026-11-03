@@ -1,6 +1,6 @@
 # =============================================================
 # AEM 6850 - Session 19: Audio
-# Script 3 of 6 - put a speaker label on every word, then cut turns.
+# Script 3 of 7 - put a speaker label on every word, then cut turns.
 #
 # Joins Whisper's words (script 1) to the speaker segments (script 2) by
 # time: each word takes the label of the segment its midpoint falls in. A

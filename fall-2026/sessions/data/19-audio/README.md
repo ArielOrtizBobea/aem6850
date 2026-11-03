@@ -41,10 +41,21 @@ path in the slides, the live script and the scripts below is relative to it.
 - `clips/howard10.mp3`: 919 to 929 s (15:19 to 15:29), the moderator's
   "Howard." (923.79 to 924.23 s) between Powell's "a lot of work left to
   do." and "Howard Schneider with Reuters"; the call gets no speaker label.
+- `clips/yes6.mp3`: 1294.0 to 1300.4 s (21:34 to 21:40), Powell's "you're
+  asking about prioritization in effect." then the reporter's "Yes."
+  (1298.61 to 1298.77 s), which takes Powell's speaker label.
+- `clips/loop90.mp3`: 2070 to 2160 s (34:30 to 36:00), the stretch where
+  the small model's transcript falls into its loop (from 34:57) while the
+  large model's keeps up with Powell; the session page plays it with both
+  models' words lit as they are spoken.
 - `media/`: the whole conference, `fomc20230201_270p.mp4` (the video,
   172.5 MB) and `fomc20230201.wav` (its sound, 85.7 MB). They are kept out
   of the course's git repository for their size; `tools/SETUP.md` shows
   how to fetch the video and make the WAV.
+- `media/models/`: the two model files the R route reads,
+  `ggml-base.bin` (148 MB) and `ggml-large-v3-turbo.bin` (1,625 MB). Kept
+  out of git and out of the zip for their size; "The R route" in
+  `tools/SETUP.md` gives the line that downloads them.
 
 **`data_clean/`, computed.** The number is the script that writes the file.
 
@@ -98,9 +109,12 @@ run took.
   each Whisper segment with the label it got.
 - `run_everything.log`: what each script prints, from the run of
   2 November 2026.
-- `live_run.txt`: the terminal after the rehearsal of the live run
+- `live_run.txt`: the terminal after a rehearsal of the Python route
   (`replies/clip30_live.json`): the command, the segments as printed, the
   run time and the first lines of the reply.
+- `live_run_r.txt`: the R console after the rehearsal of the live run in
+  class, the R route with audio.whisper on the 30-second clip: the lines,
+  what they printed, and the run times in the comment lines at the top.
 
 **`tools/`.** The Python scripts behind the replies, copied unchanged,
 and `SETUP.md`: the environment, the models and the exact command behind
@@ -110,13 +124,17 @@ each reply.
 
 | Script | What it does |
 |:--|:--|
+| `0_sound.R` | the opening clip read as samples with tuneR: sampling rate, sample count, 50 ms of "Good" plotted to `data_clean/good_50ms.png` |
 | `1_words.R` | Whisper's reply as a table, one row per word; words and "you know" beside the Fed's transcript |
 | `2_speakers.R` | the speaker segments, read from the RTTM file |
 | `3_join_turns.R` | each word takes the label of the segment its midpoint falls in; turns; turns against the transcript |
 | `4_utterances.R` | one row per turn: speaker, start, end, text |
-| `5_pauses.R` | the pause before each of Powell's answers, the silence between words before each, speaking rate, "you know" in each answer |
-| `6_wer.R` | word-error rate of the four runs on the 30-second clip |
-| `align.R` | `align()`: where a run's words differ from the reference, one row per edit; sourced by `6_wer.R` |
+| `5_transcribe.R` | the 30-second clip transcribed in R with the `whisper` package (CRAN), beside the Fed's text; installs it, and torch's library, on the first run |
+| `6_pauses.R` | the pause before each of Powell's answers, the silence between words before each, speaking rate, "you know" in each answer |
+| `7_wer.R` | word-error rate of the four runs on the 30-second clip |
+| `align.R` | `align()`: where a run's words differ from the reference, one row per edit; sourced by `7_wer.R` |
+| `python/1_words.py` | Python, before class: the speech-to-text reply, `replies/words.json` (needs the full WAV and the environment of `tools/SETUP.md`) |
+| `python/2_speakers.py` | Python, before class: the speaker labels, `replies/speakers.rttm` |
 
 `code/run_everything.R` runs them all, in order, in about two seconds,
 and prints a `==== code/N_name.R ====` line before each script's output.
@@ -125,14 +143,23 @@ Each script reads `replies/` and what the scripts before it saved in
 They use base R and the jsonlite package, which each script loads and
 installs if it is missing.
 
-## What needs Python
+## Making the replies again
 
-Two replies cannot be rebuilt in R: `words.json`, the transcript with a
-time on every word, and `speakers.rttm`, the speaker segments. Both came
-from Python models run before class, as did the clip replies.
-`tools/SETUP.md` gives the environment, the model versions and the
-command line behind each one. With the replies saved here, the R scripts
-need neither Python nor the audio.
+Every reply in `replies/` came from Python models run before class:
+`words.json`, the transcript with a time on every word; `speakers.rttm`,
+the speaker segments; and the clip replies. `tools/SETUP.md` gives the
+environment, the model versions and the command line behind each one.
+
+R can transcribe as well. `code/5_transcribe.R` runs the same open models
+in R with the `whisper` package from CRAN, which installs without a
+compiler: the 30-second clip takes about 4 s with the tiny model once its
+151 MB file is downloaded. It gives no speaker labels, so `speakers.rttm`
+still needs Python. The audio.whisper package, built from source, is a
+faster R route; "The R route" in `tools/SETUP.md` says how it was built and
+the models downloaded, with run times.
+
+With the replies saved here, the other R scripts in `code/` need neither Python,
+audio.whisper nor the audio.
 
 ## Where the raw data came from
 
@@ -153,6 +180,6 @@ need neither Python nor the audio.
 - `clips/`: the WAV clips cut from `fomc20230201.wav` with ffmpeg, without
   re-encoding (`open2min.wav` 0 to 120 s, `schneider30.wav` 969.6 to
   999.6 s); the MP3s made from them with ffmpeg's LAME encoder at 64 kb/s
-  on 2 November 2026. `pause_2258.mp3`, `pause_4338.mp3` and `howard10.mp3`
-  were cut straight from `fomc20230201.wav` to 64 kb/s mono MP3 the same
-  day (no WAV kept); the commands are in `tools/SETUP.md`.
+  on 2 November 2026. `pause_2258.mp3`, `pause_4338.mp3`, `howard10.mp3` and
+  `yes6.mp3` were cut straight from `fomc20230201.wav` to 64 kb/s mono MP3 the same
+  day, `yes6.mp3` on 3 November (no WAV kept); the commands are in `tools/SETUP.md`.

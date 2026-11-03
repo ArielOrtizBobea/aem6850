@@ -1,6 +1,6 @@
 # =============================================================
 # AEM 6850 - Session 19: Audio
-# Script 4 of 6 - one row per turn: who, when, and what was said.
+# Script 4 of 7 - one row per turn: who, when, and what was said.
 #
 # Collapses the labelled words (script 3) into an utterance table, the
 # shape most research uses: speaker, start, end and text of each turn.

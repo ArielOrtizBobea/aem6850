@@ -97,6 +97,7 @@ on 2 November 2026 at 16:05 EST, from `data/media/` into `data/clips/`:
 ffmpeg -ss 1370 -t 10 -i fomc20230201.wav -ac 1 -c:a libmp3lame -b:a 64k pause_2258.mp3   # 22:50 to 23:00
 ffmpeg -ss 2610 -t 14 -i fomc20230201.wav -ac 1 -c:a libmp3lame -b:a 64k pause_4338.mp3   # 43:30 to 43:44
 ffmpeg -ss 919  -t 10 -i fomc20230201.wav -ac 1 -c:a libmp3lame -b:a 64k howard10.mp3     # 15:19 to 15:29
+ffmpeg -ss 1294 -t 6.4 -i fomc20230201.wav -ac 1 -c:a libmp3lame -b:a 64k yes6.mp3      # 21:34 to 21:40
 ```
 
 ## Each reply
@@ -164,7 +165,7 @@ scripts/run_mlx.sh audio/schneider30.wav turbo mlx-community/whisper-large-v3-tu
 The Words column counts word rows, the words that carry a time. For
 `clip30_turbo_prompt.json` the `text` field holds 109 words: the word rows
 give each of its three restart dashes ("would-", "We-", "we've-") a row of
-its own, and the word-error rate in `code/6_wer.R` splits the `text` field.
+its own, and the word-error rate in `code/7_wer.R` splits the `text` field.
 
 ## The two reference texts
 
@@ -209,3 +210,94 @@ huggingface.co, accept the conditions on
 `pyannote/speaker-diarization-community-1`, also gated), make a read token
 under Settings > Access Tokens, and store it with `hf auth login` or as
 `HF_TOKEN` in `~/.zshrc` (or `~/.Renviron` for R).
+
+## The R route
+
+The live run in class uses R, not Python: the audio.whisper package runs
+the same open Whisper models through whisper.cpp, a C++ version of them,
+on the laptop. It made none of the shipped replies. Everything below was
+done on the instructor's laptop on 2 and 3 November 2026.
+
+**The package.** audio.whisper 0.5.0 is on neither CRAN nor r-universe, so
+R compiles it from source once. The build calls cmake, which this Mac
+lacked, and needs the Xcode command line tools. cmake came from pip in a
+throwaway environment (Homebrew's `brew install cmake` does the same), and
+the 0.5.0 release tarball from GitHub went through `R CMD INSTALL`, in 66 s
+with ten parallel jobs. Metal and Accelerate are built in by default on a
+Mac: the build log says "Including METAL backend" and "Including BLAS
+backend".
+
+```bash
+python3 -m venv ~/cmake-env && ~/cmake-env/bin/pip install cmake
+export PATH=~/cmake-env/bin:$PATH
+curl -L -o audio.whisper_0.5.0.tar.gz \
+  https://github.com/bnosac/audio.whisper/archive/refs/tags/0.5.0.tar.gz
+MAKEFLAGS=-j10 R CMD INSTALL audio.whisper_0.5.0.tar.gz      # 66 s
+```
+
+The same from R, with cmake on the PATH; it compiles only when the package
+is missing:
+
+```r
+want <- c("remotes")
+need <- want[!(want %in% installed.packages()[,"Package"])]
+if (length(need)) install.packages(need)
+if (!requireNamespace("audio.whisper", quietly = TRUE))
+  remotes::install_github("bnosac/audio.whisper", ref = "0.5.0")
+library(audio.whisper)
+```
+
+**The models.** One line per model file, from the project folder, into
+`data/media/models/` (kept out of git and out of the zip). Download times
+here: base 5.5 s, small 16.9 s, large-v3-turbo 54.4 s, large-v3 93.5 s.
+
+```r
+whisper_download_model("large-v3-turbo", model_dir = "data/media/models", overwrite = FALSE)
+whisper_download_model("base",           model_dir = "data/media/models", overwrite = FALSE)
+```
+
+**The live run.** From the project folder, in a fresh R session:
+
+```r
+library(audio.whisper)
+m   <- whisper("data/media/models/ggml-large-v3-turbo.bin", use_gpu = TRUE)
+out <- predict(m, "data/clips/schneider30.wav", token_timestamps = TRUE)
+out$data[1:3, c("from", "text")]
+```
+
+`use_gpu = TRUE` runs the model on the Apple GPU through Metal; the default,
+`FALSE`, runs it on the CPU. Rehearsed 3 November 2026 at 00:03 EST:
+`predict()` took 1.6 to 2.2 s and `whisper()` 0.9 to 1.1 s, and a fresh R
+session doing everything took 3.2 to 3.8 s wall (mlx-whisper: 8.5 s). The
+first Metal load on this Mac once took 10.9 s. The console is in
+`logs/live_run_r.txt`. `out$data` has one row per segment (`segment`,
+`segment_offset`, `from`, `to`, `text`); `out$tokens` one row per token
+(`segment`, `token_id`, `token`, `token_prob`, `token_from`, `token_to`).
+A token is a piece of a word (126 tokens for the clip's 101 words); a
+token that starts with a space starts a word.
+
+The run writes 101 words in 10 segments. Against `clip30_turbo.json` (104
+words) it drops one "you know" and does not guess "time." at the cut;
+against `clip30_fed.txt` it makes 4 deletions, a word-error rate of 0.038.
+
+**Run times.** `predict()` alone with `language = "en"`, `n_threads = 8`,
+the model already loaded; word-error rate on the 30-second clip against
+`clip30_fed.txt`, scored with `to_words()` and `word_edits()` from
+`code/7_wer.R`.
+
+| Model file | Size | Clip, Metal | Clip, CPU | The 44:37 conference | Words | Word-error rate |
+|:--|--:|--:|--:|:--|--:|--:|
+| `ggml-base.bin` | 148 MB | 1.1 s | 1.2 s | 33.7 s, Metal | 101 | 0.067 |
+| `ggml-small.bin` | 488 MB | 1.1 s | 4.1 s | 3 min 48 s, CPU | 102 | 0.067 |
+| `ggml-large-v3-turbo.bin` | 1,625 MB | 2.3 s | 13.2 s | 2 min 5 s, Metal; 13 min 3 s, CPU | 101 | 0.038 |
+| `ggml-large-v3.bin` | 3,095 MB | 3.7 s | not run | not run | 100 | 0.048 |
+
+On the full file large-v3-turbo looped once, on Metal and on the CPU alike:
+"I don't think there's a much more information on the market." eight times
+from 32:34 to 32:39 (on the CPU, another sentence 14 times to 32:45). Base
+on Metal and small on the CPU had no loop.
+
+**No speaker labels.** `predict(..., diarize = TRUE)` only splits a stereo
+file by the energy in each channel, and the WAV is mono. The tinydiarize
+model is not in `whisper_download_model()`'s list. `speakers.rttm` needs
+the Python speaker model above.

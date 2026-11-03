@@ -11,7 +11,7 @@
 # Preliminary ----
 # Clean up workspace and load or install necessary packages if necessary
   rm(list=ls())
-  want <- c("jsonlite","tuneR")
+  want <- c("jsonlite","torch","tuneR","whisper")
   need <- want[!(want %in% installed.packages()[,"Package"])]
   if (length(need)) install.packages(need)
   lapply(want, function(i) require(i, character.only=TRUE))
@@ -96,26 +96,6 @@ table(turn_label)
 head(sort(table(w$speaker), decreasing = TRUE), 3)
 
 
-# = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
-# Exercise 1 (5 minutes) ----
-# Exercise 1 (5 minutes). The two files joined, the turns counted.
-# 1. words and seg as built in Part 3 (run this script to that point,
-#    or source code/1_words.R and code/2_speakers.R).
-# 2. Give each word the label at its midpoint (findInterval() at the midpoint,
-#    the two NA cases); count the words with no label.
-# 3. Number the turns with cumsum(); turn_label; powell = the label with the most words.
-# 4. The moderator calls each reporter by name. Print the words between 417.5 and
-#    421.5 s, her first name call, and read their labels:
-#    words[words$start > 417.5 & words$start < 421.5, c("word", "start", "speaker")]
-# 5. Compare: rbind(model = c(powell = ..., moderator = ...), fed = c(30, 17))
-# Two answers to compare with the room (say them aloud): your two counts against
-# 30 and 17, and the label on "Chris Rugeber." at 07:00, the moderator's first
-# name call.
-# = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
-
-
-
-
 utt <- data.frame(
   speaker = tapply(w$speaker, w$turn, unique),
   start   = tapply(w$start,   w$turn, min),
@@ -130,6 +110,32 @@ print(first, right = FALSE)
 who <- c(SPK00 = "Powell", SPK02 = "Rugaber (AP)")
 utt$name <- who[utt$speaker]       # NA for the labels not yet named
 head(utt[, c("speaker", "name", "start")], 3)
+
+
+# The 30-second clip transcribed in R ----
+want <- c("whisper")
+need <- want[!(want %in% installed.packages()[,"Package"])]
+if (length(need)) install.packages(need)
+rscript <- file.path(R.home("bin"), "Rscript")    # torch's own library, once, in a separate R
+if (system2(rscript, c("-e", shQuote("quit(status = !torch::torch_is_installed())"))) != 0)
+  system2(rscript, c("-e", shQuote("torch::install_torch()")))
+library(whisper)
+options(whisper.consent = TRUE)                   # lets it download the model file once
+out <- transcribe("data/clips/schneider30.wav", model = "tiny", language = "en")
+cat(strwrap(out$text, 80), sep = "\n")
+
+
+# = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+# Exercise 1 (5 minutes) ----
+# Exercise 1 (5 minutes). The 30-second clip transcribed, beside the Fed's text.
+# 1. source("code/5_transcribe.R"): the tiny model's words, then the Fed's.
+# 2. Find three places where the two texts differ.
+# 3. In the script, set model <- "base" and run it again. Which remain?
+# Compare with your neighbours: the differences you found, and which
+# survive the larger model.
+# = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+
+
 
 
 utt <- read.csv("data_clean/utterances.csv")

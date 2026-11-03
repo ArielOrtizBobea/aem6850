@@ -1,0 +1,63 @@
+```{=html}
+<div id="sync19">
+<style>
+#sync19 { font-family: inherit; font-size: 0.9em; margin: 1em 0 1.5em; }
+#sync19 .lede { margin: 0 0 0.4em; color: #555; }
+#sync19 audio { display: block; width: 100%; margin-bottom: 0.6em; }
+#sync19 .cols { display: grid; grid-template-columns: 1fr 1fr; gap: 1em; }
+@media (max-width: 600px) { #sync19 .cols { grid-template-columns: 1fr; } }
+#sync19 .hd { font-weight: 600; margin-bottom: 0.3em; }
+#sync19 .box { position: relative; max-height: 260px; overflow-y: auto; scroll-behavior: smooth;
+  padding: 0.5em 0.7em; border: 1px solid #ddd; border-radius: 4px; line-height: 1.6; }
+#sync19 .box span { cursor: pointer; border-radius: 3px; }
+#sync19 .box span.said { color: #999; }
+#sync19 .box span.now { font-weight: bold; color: #222; background: #fbd3d3; }
+</style>
+<p class="lede">34:30 to 36:00 of the recording; press play: each column lights the word its model wrote for that moment.</p>
+<audio controls preload="none" src="data/19-audio/data/clips/loop90.mp3"></audio>
+<div class="cols">
+<div><div class="hd">Large model</div><div class="box" data-model="large"></div></div>
+<div><div class="hd">Small model</div><div class="box" data-model="small"></div></div>
+</div>
+</div>
+<script src="figures/19-audio/sync-loop90.js"></script>
+<script>
+(function () {
+  const root = document.getElementById("sync19");
+  const audio = root.querySelector("audio");
+  // The word being spoken at time t: the last one whose start has passed.
+  // (The small model gives 274 of its words no duration, so s <= t < e alone
+  // would light nothing while it loops.)
+  function current(words, t) {
+    let k = -1;
+    while (k + 1 < words.length && words[k + 1].s <= t) k++;
+    return k;
+  }
+  const cols = [...root.querySelectorAll(".box")].map(function (box) {
+    const words = sync19[box.dataset.model];
+    const spans = words.map(function (x, i) {
+      if (i > 0 && !/^[.,%?!']/.test(x.w)) box.append(" ");
+      const sp = document.createElement("span");
+      sp.textContent = x.w;
+      sp.addEventListener("click", function () { audio.currentTime = x.s; update(); });
+      box.append(sp);
+      return sp;
+    });
+    return { box: box, words: words, spans: spans, k: null };
+  });
+  function update() {
+    const t = audio.currentTime;
+    cols.forEach(function (c) {
+      const k = current(c.words, t);
+      if (k === c.k) return;
+      c.k = k;
+      c.spans.forEach(function (sp, i) { sp.className = i < k ? "said" : i === k ? "now" : ""; });
+      if (k >= 0) c.box.scrollTop = c.spans[k].offsetTop - c.box.clientHeight / 3;
+    });
+  }
+  function tick() { update(); if (!audio.paused) requestAnimationFrame(tick); }
+  audio.addEventListener("timeupdate", update);
+  audio.addEventListener("play", tick);
+})();
+</script>
+```

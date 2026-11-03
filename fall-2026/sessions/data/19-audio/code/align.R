@@ -7,8 +7,8 @@
 # I insertion. align() walks that path and prints each edit with its
 # position in the reference, the reference word and the model's word.
 #
-# Needs word_edits(), defined in code/6_wer.R (step 1) and on the slides.
-# Sourced by code/6_wer.R.
+# Needs word_edits(), defined in code/7_wer.R (step 1) and on the slides.
+# Sourced by code/7_wer.R.
 #
 #   source("code/align.R")
 #   align(ref, hyp)        # ref and hyp: two vectors of words

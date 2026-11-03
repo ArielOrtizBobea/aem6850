@@ -1,6 +1,6 @@
 # =============================================================
 # AEM 6850 - Session 19: Audio
-# Script 2 of 6 - who spoke when, as the speaker model saw it.
+# Script 2 of 7 - who spoke when, as the speaker model saw it.
 #
 # Reads the speaker labels for the full press conference: one line per
 # stretch of one voice, with a label the clustering gave that voice
