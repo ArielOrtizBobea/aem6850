@@ -102,7 +102,7 @@ What we are going to do today
    [Congress · the Fed · listeners]{.topics}
 3. **Measuring pitch and loudness in R**\
    [A known tone · one clip · Exercise 1]{.topics}
-4. **Voice models**\
+4. **Emotion and tone models**\
    [What they are · actors and executives]{.topics}
 5. **The emotion score against your ear**\
    [A random draw · Exercise 2]{.topics}
@@ -263,11 +263,14 @@ other and give no absolute loudness.
 
 Emotion research scores speech on two scales. **Arousal** is how activated a
 speaker sounds, **valence** how positive. An **emotion model** returns both,
-roughly from 0 to 1.
+roughly from 0 to 1. The red dots are the two answers you just heard.
+
+<button class="clip-play" type="button" data-src="data/20-audio-ii/data/clips/calm.mp3" data-start="0" data-end="15">▶ Calm, 39:49</button>
+<button class="clip-play" type="button" data-src="data/20-audio-ii/data/clips/activated.mp3" data-start="0" data-end="15">▶ Activated, 25:15</button>
 
 :::
 
-![](figures/20-audio-ii/f4-scatter.png){width="66%" fig-align="center"}
+![](figures/20-audio-ii/f4-scatter.png){width="60%" fig-align="center"}
 
 [First 15 s of each of Powell's 571 answers, one dot each. The answer at 25:15 of
 3 Nov 2021 has the highest arousal of the 571. A third score, dominance,
@@ -662,34 +665,37 @@ The clip that is lower in hertz is the higher one against its own day.
 
 :::
 
-# 4 · Voice models {#part-models}
+# 4 · Emotion and tone models {#part-models}
 
-## What a voice model is {#what-voice-model}
+## What emotion and tone models are {#what-models}
 
 ::: {.slide-text}
 
-Pitch and energy came from a fixed rule. A voice model is trained, and turns speech into
-scores for how it sounds. Speech-to-text and speaker-label models turn the same sound into
-words and speaker labels.
+Pitch and energy came from a fixed rule. Emotion and tone models are audio models trained to
+measure how speech sounds. Speech-to-text, also an audio model, writes the words instead.
 
-| | Speech-to-text | Speaker labels | Emotion model |
-|:--|:--|:--|:--|
-| Returns, for Powell at 25:15 | "That's a decision for the Committee." | SPK00 | arousal 0.547, valence 0.507 |
-| Learned from | recordings with transcripts | recordings of known speakers | clips rated by people |
-| Checked against | a reference transcript | the turns in a transcript | ratings by ear |
+| Model | Returns | Compared with |
+|:--|:--|:--|
+| Emotion model | scores on scales: arousal 0.547, valence 0.507 | what listeners hear |
+| Tone classifier | a label: positive, neutral or negative | what listeners hear |
+| Speech-to-text | words: "That's a decision for the Committee." | a transcript |
 
-: {tbl-colwidths="[24,30,24,22]"}
+: {tbl-colwidths="[22,52,26]"}
 
-:::
-
-::: {.dashes}
-
-- Speech-to-text can be scored right or wrong, because a transcript records what was said.
-- Tone has no such record. An emotion score can only be compared with what listeners hear.
+A transcript records what was said. Nothing records how speech sounds, so these models
+can only be compared with listeners.
 
 :::
 
-[Press conference of 3 Nov 2021, first 15 s of the answer at 25:15.]{.source}
+[Valence is close to text sentiment, read from the sound. Arousal has no counterpart in text.
+Scores and words: Powell at 25:15, press conference of 3 Nov 2021.]{.source}
+
+::: {.content-visible unless-format="revealjs"}
+
+Papers use these names loosely, and some emotion models are themselves classifiers, with
+labels such as "happy" and "angry". The split above is how this session uses the terms.
+
+:::
 
 ## How an emotion model is trained {#training}
 
@@ -729,8 +735,8 @@ later joined by trained students, with at least five raters per speaking turn
 
 ::: {.slide-text}
 
-The study on the next slide tests a classifier, another kind of voice model: each sentence gets
-a probability of positive, neutral and negative. **AUC** scores how well those probabilities rank
+The study on the next slide tests tone classifiers: each sentence gets a probability of
+positive, neutral and negative. **AUC** scores how well those probabilities rank
 the sentences.
 
 | Probability of "negative" | Other sentence: 0.7 | Other sentence: 0.6 | Other sentence: 0.2 |
@@ -769,7 +775,7 @@ sentence. The 89% comes from their 5,000 call sentences, labelled by three autho
 
 ::: {.slide-text}
 
-Many emotion models learn from actors instead of rated natural speech. Tested on
+Many emotion and tone models learn from actors instead of rated natural speech. Tested on
 executives, they do little better than guessing. One retrained on calls does better.
 
 :::
@@ -787,7 +793,7 @@ executives, they do little better than guessing. One retrained on calls does bet
 :::
 
 [**AUC** as on the slide before: 50 is guessing, 100 is perfect.
-[Ewertz, Knickrehm, Nienhaus & Reichmann (JAR, 2026)](https://doi.org/10.1111/1475-679x.70015), p. 245: 5,000 sentences from quarterly earnings calls.]{.source}
+[Ewertz, Knickrehm, Nienhaus & Reichmann (JAR, 2026)](https://doi.org/10.1111/1475-679x.70015), Table 2, p. 245, charted by us: 5,000 sentences from quarterly earnings calls.]{.source}
 
 ::: {.content-visible unless-format="revealjs"}
 
@@ -812,13 +818,13 @@ to firm performance.
 
 ::: {.slide-text}
 
-Before class we ran today's emotion model, trained on podcast clips, on the audio of all 24
-press conferences, one 10-s window at a time. It runs in Python, so R only reads its scores.
-You test those scores by ear in the next part.
+Its authors trained today's emotion model on podcast clips. We only ran it, before class, on
+the audio of all 24 press conferences, one 10-s window at a time. It runs in Python, so R only
+reads its scores. You test those scores by ear in the next part.
 
 :::
 
-```{.python filename="tools/emotion_windows.py (part, simplified): ran before class, about half a minute per conference; you do not run it"}
+```{.python filename="tools/emotion_windows.py (part, simplified): ran before class, about half a minute per conference; not run in class, and in the zip for later"}
 model_name = "audeering/wav2vec2-large-robust-12-ft-emotion-msp-dim"
 W = int(10 * sr)                           # 10 s = 160,000 samples
 for s in range(0, len(x), W):              # one window at a time
@@ -845,7 +851,9 @@ score at 0.547 to 0.546, since the model rescales the sound before scoring it.]{
 model. The model's licence is CC BY-NC-SA 4.0, for research use; the scores were
 made on 2 Nov 2026. The recordings come from the Fed's video with
 `ffmpeg -vn -ac 1 -ar 16000`; `tools/pitch_all.R` wrote the pitch and energy columns
-of `tone.csv` from them in about a minute, and `tools/SETUP.md` has the rest.
+of `tone.csv` from them in about a minute, and `tools/SETUP.md` has the rest. To score your own recording later, install the packages it
+lists and run `python -I tools/emotion_windows.py clip.wav out.csv --win 15`; the first run
+downloads the model (661 MB).
 
 :::
 
@@ -853,8 +861,9 @@ of `tone.csv` from them in about a minute, and `tools/SETUP.md` has the rest.
 
 ::: {.slide-text}
 
-Do the model's two scores repeat what R can measure? Pitch level, pitch range and energy
-explain 37% of its arousal score and 7% of its valence score.
+The model returns two scores. **Arousal** is how activated a speaker sounds, and **valence**
+is how positive. Do they repeat what R can measure? Pitch level, pitch range and energy explain
+37% of arousal and 7% of valence.
 
 :::
 
@@ -869,7 +878,7 @@ explain 37% of its arousal score and 7% of its valence score.
 
 :::
 
-[**Arousal**: how activated a speaker sounds. **Valence**: how positive. Each answer averages its 10-s windows.
+[Each answer averages its 10-s windows.
 571 answers, each measure z-scored within its conference. **Explain**: the R-squared of a regression. In Canada's House of Commons, transcripts capture sentiment and
 miss arousal ([Cochrane et al., Political Communication, 2022](https://doi.org/10.1080/10584609.2021.1952497)).]{.source}
 
@@ -901,7 +910,8 @@ speaker. You rate before seeing any score.
 ::: {.dashes}
 
 - Rate the voice, setting the content aside as far as you can.
-- The model trained on podcast clips. It has no record of accuracy on this speaker.
+- The model is already trained, on podcast clips, with no record on this speaker. Your
+  ratings only check it.
 - The clips play from the instructor's laptop. You may instead use earbuds and the
   numbered buttons on the session page.
 

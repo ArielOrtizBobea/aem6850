@@ -128,8 +128,8 @@ plot(ans$arousal15, ans$valence15, pch = 16, cex = 0.7, col = adjustcolor(other,
      xlab = "Arousal: calm to excited", ylab = "Valence: negative to positive", cex.lab = 1.1)
 k <- ans$date == "2021-11-03" & abs(ans$start - c(2388.72)) < 0.02; j <- ans$date == "2021-11-03" & abs(ans$start - 1514.68) < 0.02
 points(ans$arousal15[k | j], ans$valence15[k | j], pch = 19, col = acc, cex = 1.4)
-text(ans$arousal15[k], ans$valence15[k], "39:49", pos = 1, col = acc, cex = 1.1)
-text(ans$arousal15[j], ans$valence15[j], "25:15", pos = 3, col = acc, cex = 1.1)
+text(ans$arousal15[k], ans$valence15[k], "Calm, 39:49", pos = 1, col = acc, cex = 1.1, font = 2)
+text(ans$arousal15[j] + 0.006, ans$valence15[j] + 0.035, "Activated, 25:15", adj = c(1, 0), col = acc, cex = 1.1, font = 2)
 dev.off(); print(c(ans$arousal15[k], ans$valence15[k], ans$arousal15[j], ans$valence15[j]))
 # ==== END BLOCK ====
 
