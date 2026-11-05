@@ -15,7 +15,7 @@
 # Open 20-audio-ii.Rproj first. It sits at the project root, so the
 # working directory is 20-audio-ii/ and every path below is relative to it.
 #
-#   source("code/5_meetings.R")
+#   source("tools/build/5_meetings.R")
 # =============================================================
 
 

@@ -1,4 +1,65 @@
-# Session 20 data: FOMC press conferences, 2021-2023
+# 20-audio-ii
+
+The project for AEM 6850, session 20, Audio II: tone and emotion (Thursday,
+November 5, 2026): pitch level, pitch range, energy and an emotion model's scores in
+Jerome Powell's answers at the Fed's 24 press conferences of 2021-2023.
+
+Open `20-audio-ii.Rproj` first. R then starts in this folder, and every path in the
+slides, the live script and the scripts below is relative to it. The scripts install
+what they need. Nobody needs Python, an account or the network.
+
+## What is where
+
+```
+20-audio-ii/
+  20-audio-ii.Rproj
+  README.md      this file
+  code/          the scripts, numbered in the order the lecture uses them
+  data/clips/    15-s clips of Powell cut from the recordings (WAV and MP3), one 160-s excerpt
+  data_clean/    tone.csv, clips.csv, meetings.csv, turns_excerpt.csv, quiet.csv
+  replies/       the emotion model's scores, as returned
+  logs/          run times, printed output
+  tools/         what made replies/ and data_clean/ from the full recordings
+```
+
+| Script | What it does |
+|---|---|
+| `code/1_pitch_energy.R` | a known tone, one clip, half the volume, per turn, a clip against the baseline, Exercise 1 |
+| `code/2_ear.R` | the seeded draw of eight clips, Exercise 2 |
+| `code/3_conferences.R` | across conferences, hikes against holds, arousal through the Q&A |
+| `code/run_everything.R` | all three, in a few seconds |
+
+Packages: wrassp and tuneR, from CRAN.
+
+**`data_clean/tone.csv`**, one row per turn, 24 conferences. `pitch` (median over voiced
+frames, Hz), `pitch_iqr` (their interquartile range, the pitch range), `voiced`, `energy`
+(mean dB) cover the whole turn; `arousal`, `dominance`, `valence` average the 10-s windows.
+For answers of 15 s or more, `pitch15`, `iqr15`, `energy15`, `voiced15` measure the first
+15 s, and `arousal15`, `dominance15`, `valence15` are the model's score on that 15-s stretch.
+
+**`data_clean/clips.csv`**, the eight clips of Exercise 2 in playing order. `start` is the
+drawn time; `cut` is where the clip starts. Clips 4 and 7 start 0.35 s and 0.42 s later,
+past the reporter's "Thanks." and a fragment of a phrase. `pitch`, `range` and `energy` are
+measured on the cut as recorded; `gain` (dB) is what brought it to the level it plays at.
+`arousal` and `valence` are the model's score on the 15 s, `replies/emotion_clips.csv`.
+
+**Named clips.** `calm` and `activated` (3 Nov 2021, 39:49 and 25:15), `jun2022` and `sep2023`
+(15 Jun 2022, 9:44; 20 Sep 2023, 9:11), `answer_20211103` and `answer_20230201` (8:25 and 7:33).
+All as recorded. `tools/cut_clips.R` makes them.
+
+**Not in the zip.** `data/media/` (the recordings, 7 GB), `data/transcripts/` (the Fed's PDFs,
+linked from each conference's page), `data_clean/words.csv`, `segments.csv`, `utterances.csv`,
+and the transcription and speaker replies in `replies/`. The sections below describe them.
+
+Emotion model: CC BY-NC-SA 4.0, research use. Fed recordings and transcripts: public domain.
+
+# How the full data were built, before class
+
+The scripts now in `tools/build/` turn the replies into `data_clean/`. Then
+`tools/pitch_all.R` adds the pitch and energy columns to `tone.csv` and writes `quiet.csv`, and
+`tools/cut_clips.R` cuts the clips. The scores in `replies/emotion_openings.csv` and
+`replies/emotion_clips.csv` come from `tools/emotion_windows.py` with `--win 15`, one 15-s
+stretch at a time.
 
 The 24 press conferences that followed the scheduled FOMC meetings from January 2021 to
 December 2023. Each conference was downloaded, transcribed with word timestamps, split into
@@ -23,9 +84,9 @@ progress of the build is in `logs/STATUS.md`.
 | `logs/failures.tsv` | steps that failed, with the reason |
 | `logs/run_all.log` | console output of the background run |
 | `logs/STATUS.md` | conferences finished per step, loops flagged, failures, how to resume |
-| `code/1_words.R` ... `5_meetings.R`, `code/run_everything.R` | the R scripts that turn the replies into the tables in `data_clean/` (next section) |
+| `tools/build/1_words.R` ... `5_meetings.R`, `tools/build/run_everything.R` | the R scripts that turn the replies into the tables in `data_clean/` (next section) |
 | `data_clean/` | words, segments, utterances, tone and meetings tables, one CSV each |
-| `logs/run_everything.log` | console output of `code/run_everything.R` |
+| `logs/run_everything.log` | console output of `tools/build/run_everything.R` |
 
 Speaker labels are cluster numbers (`SPK00`, `SPK01`, ...) numbered by first appearance. They
 are not names. The Chair is normally the cluster with the most speaking time.
@@ -89,9 +150,9 @@ used the same download and `ffmpeg` commands; every other file was made by `run_
 
 ## data_clean/
 
-Five CSV files made from `data/meetings.csv` and `replies/` by the R scripts in `code/` (base R
-and `jsonlite`). Open `20-audio-ii.Rproj` and run `source("code/run_everything.R")`, or
-`Rscript code/run_everything.R` from the project folder; the five scripts take about 6 s and
+Five CSV files made from `data/meetings.csv` and `replies/` by the R scripts in `tools/build/` (base R
+and `jsonlite`). Open `20-audio-ii.Rproj` and run `source("tools/build/run_everything.R")`, or
+`Rscript tools/build/run_everything.R` from the project folder; the five scripts take about 6 s and
 print what they did (`logs/run_everything.log`). Built 2026-11-02. The number in brackets is the
 script that writes the file. Dates are written `2021-01-27`; times are seconds from the start of
 the recording, the same clock as the video.
@@ -190,7 +251,7 @@ background run started 2026-11-02 at 15:01.
   sometimes a wrong name such as "CHAIR YELLEN." or "CHAIRMAN BERNANKE." They carry word
   timestamps and count as words (1 to 45 per conference; 15 to 45 in 2021). 2023-02-01,
   2023-05-03 and 2023-06-14 have none. `logs/STATUS.md` counts them per conference;
-  `code/1_words.R` removes them before anything is counted.
+  `tools/build/1_words.R` removes them before anything is counted.
 - Last seconds. Several first passes end with "Thank you." repeated within the last half second
   of the file, which is what flagged 2021-03-17.
 - Speaker clusters were not checked against the transcripts. The number of clusters is close to
