@@ -1,0 +1,137 @@
+---
+title: "HW5 · Do justices speak differently to the side they vote against?"
+subtitle: "Out Tue Nov 10 · due Tue Nov 17, 11:59 pm"
+pagetitle: "AEM 6850 · HW5"
+---
+
+**AI assistance is recommended on this one.** Use it, disclose it, and
+write the note yourself.
+
+---
+
+## The question
+
+At a Supreme Court oral argument, a lawyer for each side answers the nine
+justices' questions for about half an hour. The petitioner asks the Court
+to overturn a lower court's decision and the respondent defends it. Months
+later each justice votes for one side. Epstein, Landes & Posner
+([JOURNAL OF LEGAL STUDIES, 2010](https://doi.org/10.1086/651511)) found
+that the side the justices question more is more likely to lose. Dietrich,
+Enos & Sen
+([POLITICAL ANALYSIS, 2019](https://doi.org/10.1017/pan.2018.47)) found
+that a justice's voice is higher toward the side they go on to vote
+against. Measure both, and speed, for each justice in the 2023, 2024 and
+2025 terms.
+
+## Target image
+
+![Target image](https://arielortizbobea.github.io/assets/data/hw5_target.png)
+
+## Data
+
+1. **Arguments and recordings: the Oyez API, no key.**
+   `https://api.oyez.org/cases?per_page=0&filter=term:2025` lists a term's
+   cases. Each case's `href` gives its lawyers (`advocates`, with a
+   description of the side each argued for) and its arguments
+   (`oral_argument_audio`). Each argument's `href` gives the MP3
+   (`media_file`) and the transcript: one section each time a lawyer takes
+   the lectern, and in each section the turns, with `speaker`, `start` and
+   `stop` in seconds, and the words in `text_blocks`. A speaker is a
+   justice when their `roles` hold a `role_title` containing "Justice"; a
+   lawyer named Roberts argues one case.
+2. **Votes: the Supreme Court Database, a zipped CSV you download by
+   hand.** <https://scdb.la.psu.edu/data/2026-release-01/>, under "Justice
+   Centered Data", "Organized by Docket". The site refuses scripts. One
+   row per justice and docket: `term`, `docket`, `justiceName`, `majority`
+   (2 with the majority, 1 in dissent), `partyWinning` (1 the petitioner
+   won, 0 lost, 2 unclear) and `vote` (8 for an equally divided Court).
+3. **Pitch: from the MP3s.** Convert each to WAV with `av` and track the
+   pitch with `wrassp::ksvF0()`.
+
+The three terms are 183 arguments today and 3.8 GB of MP3s. Save every
+file and never request one twice. Wait a second between requests.
+
+## How long it took me
+
+About 15 minutes to download and 16 minutes to track the pitch, on a
+MacBook Pro with an M2 Max chip. No model is run.
+
+## Sides and votes
+
+- A section belongs to the lawyer who speaks the longest in it.
+- The lawyer's description decides the side: petitioner, appellant or
+  applicant on one side, respondent or appellee on the other. "Supporting
+  ..." overrides the party named: vacatur or reversal is the petitioner's
+  side, the judgment below is the respondent's. Leave out lawyers
+  supporting neither party.
+- About a dozen descriptions do not settle the side, mostly in cases that
+  join several dockets. Rule those by hand in a small CSV, with your
+  reason for each.
+- In a case that joins several dockets, use the docket Oyez files it
+  under, for the vote and for who is the petitioner.
+- A justice voted for the petitioner when in the majority and the
+  petitioner won, or in dissent and the petitioner lost. Drop recusals
+  (`majority` empty), equally divided votes, cases with no clear winner
+  and arguments SCDB has no decision for.
+
+## The measures
+
+For each justice in each argument, toward the side they voted for and
+toward the side they voted against:
+
+- **Length:** the words they say to that side. A justice who speaks to
+  one side only has zero words for the other.
+- **Speed:** words per minute, over their turns of 5 seconds or more.
+- **Pitch:** in Hz, the mean of the log pitch over the same turns where
+  there is a voice, leaving out half a second at each end of a turn.
+
+Speed and pitch count only when the justice has 30 seconds of such turns
+toward each side in that argument.
+
+## Output
+
+- `figures/hw5_target.png`, 11 × 5.8 inches at 200 dpi.
+- `data_clean/justice_arguments.csv`: one row per justice and argument,
+  with the term, the docket, Oyez's argument id, the justice, the vote,
+  and the words, speed and pitch toward the side voted for and the side
+  voted against.
+- `NOTES.md`: how many arguments you found, which ones have no vote and
+  why, the sides you ruled by hand, and an AI disclosure (tools, uses,
+  what you checked).
+
+## Figure rules
+
+- Three panels side by side, titled Length, Speed and Pitch, under one
+  title.
+- One row per justice in order of seniority, the Chief Justice on top.
+- In each row, a check mark at the justice's mean over arguments toward
+  the side they voted for and a cross at their mean toward the side they
+  voted against, joined by a line. One colour for the check marks and
+  another for the crosses, the same in every panel.
+- Pitch is in percent: how much higher or lower the voice is toward the
+  side voted against than toward the side voted for, compared inside each
+  argument. Every check mark sits at zero.
+- A key centred under the panels. A dark background.
+
+## How to submit
+
+Your repository is **`hw5-<your github username>`** in the course
+organization. Put the code in `code/`, with `code/run_everything.R`
+running it all, and paths relative to the project root. Push the code,
+`data_clean/justice_arguments.csv`, your CSV of hand rulings, the figure
+and `NOTES.md`. Keep the MP3s, the JSON files and SCDB's file in `data/`
+and list `data/` in `.gitignore`. The grader does not download anything,
+so the script that draws the figure must run from a fresh clone with
+`justice_arguments.csv` alone. Commit as you go; the grader uses the last
+commit pushed before the deadline.
+
+## AI on this one
+
+Recommended. Ask for the script rather than the answer, check what it
+gives you, and disclose in `NOTES.md` which tools you used, for what, and
+what you checked. Undisclosed use is treated as an integrity violation.
+
+## Rubric
+
+The course rubric, on the [Homework page](../assignments.qmd#rubric):
+five dimensions, three points each.
