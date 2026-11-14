@@ -1,0 +1,1032 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.37">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>AEM 6850 · HW6 – AEM 6850</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-7f8f88aac4f3542376d5c11b86a4c14d.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-9e1fa279bf766a6aa9044cbdb2ba542d.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="../../styles.css">
+</head>
+
+<body class="nav-sidebar docked quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../fall-2026/assignments.html">Homework</a></li><li class="breadcrumb-item"><a href="../../fall-2026/assignments/hw06-wildfire-damage.html">6 Can a model trained on one wildfire predict which homes another destroyed?</a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="../../">AEM 6850</a> 
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Home</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/syllabus.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Syllabus</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">Part I — Foundations</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/01-overview.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"> 1 Overview</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/02-r-essentials.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"> 2 R essentials I</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/03-r-essentials-ii.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"> 3 R essentials II</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/03b-wrangling.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">   Wrangling: dplyr</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/04-basic-plots.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"> 4 Basic plots I</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/05-basic-plots-ii.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"> 5 Basic plots II</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/06-how-to-code.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"> 6 How to code</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/07-git.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"> 7 Version control with git</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/08-ai-chat.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"> 8 AI I: chatbots</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/09-ai-code.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"> 9 AI II: coding agents</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/10-verification.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">10 Verification</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/11-reproducible-project.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">11 Reproducible projects</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/12-ggplot.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">12 Publication graphics</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
+ <span class="menu-text">Part II — Applications</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/13-landscape.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">13 The data economists use</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/14-apis.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">14 Channels I: APIs</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/15-scraping.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">15 Channels II: scraping</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/16-text-regex.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">16 Text I: regex</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/17-text-llms.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">17 Text II: LLMs</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/18-documents.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">18 Documents &amp; scans</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/19-audio.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">19 Audio I: speech to text</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/20-audio-ii.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">20 Audio II: tone &amp; emotion</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/21-photos.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">21 Photographs I</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/22-photos-ii.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">22 Photographs II</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/23-spatial-vector.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">23 Spatial I: vector</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/24-spatial-rasters.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">24 Spatial II: rasters</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/25-lidar-drones.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">25 LiDAR &amp; drone imagery</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/26-satellite-local.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">26 Satellite I: on your machine</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/27-satellite-gee.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">27 Satellite II: Earth Engine</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/sessions/28-moving-forward.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">28 Moving forward</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../../fall-2026/assignments.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Homework</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/assignments/hw01-air.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">1 How bad was the air?</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/assignments/hw02-wind.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">2 What was the wind doing?</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/assignments/hw03-corn-forecast.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">3 Did the May forecast survive the summer?</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/assignments/hw04-climate-hedging.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">4 How often do climate stories hedge on the science?</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/assignments/hw05-justices-speech.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">5 Do justices speak differently to the side they vote against?</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/assignments/hw06-wildfire-damage.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">6 Can a model trained on one wildfire predict which homes another destroyed?</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../../fall-2026/resources.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Resources</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/resources.html#stata" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Coming from Stata</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/resources.html#r" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Learning R</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/resources.html#economists" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Coding guides</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../fall-2026/resources.html#unstuck" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Getting unstuck</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#the-question" id="toc-the-question" class="nav-link active" data-scroll-target="#the-question">The question</a></li>
+  <li><a href="#target-image" id="toc-target-image" class="nav-link" data-scroll-target="#target-image">Target image</a></li>
+  <li><a href="#data" id="toc-data" class="nav-link" data-scroll-target="#data">Data</a></li>
+  <li><a href="#downloading-the-photos" id="toc-downloading-the-photos" class="nav-link" data-scroll-target="#downloading-the-photos">Downloading the photos</a></li>
+  <li><a href="#homes-and-views" id="toc-homes-and-views" class="nav-link" data-scroll-target="#homes-and-views">Homes and views</a></li>
+  <li><a href="#the-model" id="toc-the-model" class="nav-link" data-scroll-target="#the-model">The model</a></li>
+  <li><a href="#how-long-it-took-me" id="toc-how-long-it-took-me" class="nav-link" data-scroll-target="#how-long-it-took-me">How long it took me</a></li>
+  <li><a href="#output" id="toc-output" class="nav-link" data-scroll-target="#output">Output</a></li>
+  <li><a href="#what-the-model-misses" id="toc-what-the-model-misses" class="nav-link" data-scroll-target="#what-the-model-misses">What the model misses</a></li>
+  <li><a href="#figure-rules" id="toc-figure-rules" class="nav-link" data-scroll-target="#figure-rules">Figure rules</a></li>
+  <li><a href="#commits" id="toc-commits" class="nav-link" data-scroll-target="#commits">Commits</a></li>
+  <li><a href="#how-to-submit" id="toc-how-to-submit" class="nav-link" data-scroll-target="#how-to-submit">How to submit</a></li>
+  <li><a href="#ai-on-this-one" id="toc-ai-on-this-one" class="nav-link" data-scroll-target="#ai-on-this-one">AI on this one</a></li>
+  <li><a href="#rubric" id="toc-rubric" class="nav-link" data-scroll-target="#rubric">Rubric</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../fall-2026/assignments.html">Homework</a></li><li class="breadcrumb-item"><a href="../../fall-2026/assignments/hw06-wildfire-damage.html">6 Can a model trained on one wildfire predict which homes another destroyed?</a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title">HW6 · Can a model trained on one wildfire predict which homes another destroyed?</h1>
+<p class="subtitle lead">Out Fri Nov 13 · due Tue Nov 24, 11:59 pm</p>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p><strong>AI assistance is recommended on this one.</strong> Use it, disclose it, and write the note yourself.</p>
+<hr>
+<section id="the-question" class="level2">
+<h2 class="anchored" data-anchor-id="the-question">The question</h2>
+<p>In January 2025 two wildfires burned in Los Angeles County at the same time. The Palisades fire was on the coast. The Eaton fire was in Altadena, about 35 km inland. Together they killed 31 people and destroyed more than 16,000 buildings.</p>
+<p>Economists study the various impacts of disasters like this. Their questions often start from one fact about each property: was it destroyed? Hornbeck &amp; Keniston (<a href="https://doi.org/10.1257/aer.20141707">American Economic Review, 2017</a>) compare the plots of land that burned in Boston’s Great Fire of 1872 with those that did not. Fu &amp; Gregory (<a href="https://doi.org/10.3982/ecta14246">Econometrica, 2019</a>) study which damaged homes were rebuilt in New Orleans after Hurricane Katrina. Gallagher &amp; Hartley (<a href="https://doi.org/10.1257/pol.20140273">American Economic Journal: Economic Policy, 2017</a>) follow the debts of New Orleans residents by how badly their area was flooded.</p>
+<p>After a wildfire, inspectors walk to every building and write down how damaged it is. That takes many people and a lot of time. A plane is faster: NOAA photographed both burned areas from the air in one day, on 28 January.</p>
+<p>Can a model look at the photo of a home and say whether the home was destroyed? In this homework you train a model on the homes of the Palisades fire, where you know what the inspectors wrote. You use it to predict which homes the Eaton fire destroyed. Then you check your predictions against what the inspectors wrote in Eaton. You do this three times, with photos 20, 40 and 60 m wide around each home.</p>
+<p>This is a classification: the model puts each home in one of two groups, destroyed or undamaged.</p>
+</section>
+<section id="target-image" class="level2">
+<h2 class="anchored" data-anchor-id="target-image">Target image</h2>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://arielortizbobea.github.io/assets/data/hw6_target.png" class="img-fluid figure-img"></p>
+<figcaption>Target image</figcaption>
+</figure>
+</div>
+</section>
+<section id="data" class="level2">
+<h2 class="anchored" data-anchor-id="data">Data</h2>
+<p>All of it is public and needs no key. Each source has a page that describes it, linked below.</p>
+<ol type="1">
+<li><p><strong>Inspections, from CAL FIRE (an ArcGIS server).</strong> One point per building, with its type and its damage. Read <a href="https://hub-calfire-forestry.hub.arcgis.com/datasets/CALFIRE-Forestry::cal-fire-damage-inspection-dins-data/about">what the inspections record</a>. There is one layer per fire, described here for <a href="https://www.arcgis.com/home/item.html?id=c336759e45764c45861a1e62c4c5e2db">Palisades</a> and for <a href="https://www.arcgis.com/home/item.html?id=6254ba9f9c4f4b0f886f24c902c8eda3">Eaton</a>.</p>
+<pre class="text"><code>https://services1.arcgis.com/jUJYIo9tSA7EHvfZ/arcgis/rest/services/DINS_2025_Palisades_Public_View/FeatureServer/0
+https://services1.arcgis.com/jUJYIo9tSA7EHvfZ/arcgis/rest/services/DINS_2025_Eaton_Public_View/FeatureServer/0</code></pre>
+<p>Add this to either address. The server sends the points in pages (<code>resultOffset</code>, <code>resultRecordCount</code>).</p>
+<pre class="text"><code>/query?where=1=1&amp;outFields=OBJECTID,DAMAGE,STRUCTURETYPE&amp;outSR=4326&amp;orderByFields=OBJECTID&amp;f=json</code></pre></li>
+<li><p><strong>Photos, from NOAA (map tiles).</strong> The flight of 28 January 2025. Read <a href="https://oceanservice.noaa.gov/hazards/emergency-response-imagery.html">about NOAA’s emergency photos</a> and look at <a href="https://storms.ngs.noaa.gov/storms/2025_eri/index.html#12.11/34.04458/-118.50875">these photos on a map</a>.</p>
+<pre class="text"><code>https://stormscdn.ngs.noaa.gov/20250128a-rgb/{zoom}/{column}/{row}</code></pre>
+<p>This is the address scheme of any web map. A tile is 256 × 256 pixels. On the ground, a pixel is about 12 cm at zoom 20 and 25 cm at zoom 19. Those sizes include the latitude: a web map’s pixel covers 15 cm at zoom 20 on the equator, and that size times the cosine of the latitude (0.83 here) anywhere else. The address has no extension: a tile is a JPEG or a PNG, and a PNG of 1 × 1 pixel where the flight has no photo.</p></li>
+<li><p><strong>Map layers.</strong></p>
+<p>Elevation, as GeoTIFF tiles (<a href="https://registry.opendata.aws/terrain-tiles/">description</a>). Zoom 12 is enough for the map:</p>
+<pre class="text"><code>https://s3.amazonaws.com/elevation-tiles-prod/geotiff/{zoom}/{column}/{row}.tif</code></pre>
+<p>Fire perimeters, from CAL FIRE (<a href="https://www.arcgis.com/home/item.html?id=f287bfa78d714a5d8ba995f332177ba1">description</a>):</p>
+<pre class="text"><code>https://services1.arcgis.com/jUJYIo9tSA7EHvfZ/arcgis/rest/services/2025_California_Fire_Perimeters_View/FeatureServer/0</code></pre>
+<p>Roads, from the Census Bureau, layers 2, 6 and 8 (<a href="https://tigerweb.geo.census.gov/tigerwebmain/TIGERweb_main.html">description</a>):</p>
+<pre class="text"><code>https://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb/Transportation/MapServer</code></pre>
+<p>Parcels, from the Los Angeles County Assessor (<a href="https://www.arcgis.com/home/item.html?id=ae733177ea1a408b9d8fd357a9392a70">description</a>). The server sends them in pages too:</p>
+<pre class="text"><code>https://services.arcgis.com/RmCCgQtiZLDCtblq/arcgis/rest/services/2025_Wild_Fire_Parcels_100M_Plus_DINS_MaxMin_DAMAGE_VIEW/FeatureServer/0</code></pre></li>
+</ol>
+</section>
+<section id="downloading-the-photos" class="level2">
+<h2 class="anchored" data-anchor-id="downloading-the-photos">Downloading the photos</h2>
+<ul>
+<li>NOAA’s photo of this flight is huge. It spans 73 km from west to east and 24 km from south to north. At zoom 20, that is about 590,000 by 190,000 pixels. NOAA’s own download of the whole photo is one file of 28 GB.</li>
+<li>You need a small part of it: the squares around the homes. So download tiles, and only the tiles your views touch: 34,032 tiles, 1.1 GB in all. <code>curl::multi_download()</code> fetches many tiles at a time.</li>
+<li>Save every tile and never request one twice. Your script must be able to stop and start again where it left off.</li>
+<li>Build every step on 100 homes first, then run all of them.</li>
+<li>Tiles, views and the model’s numbers stay out of your repository: list their folders in <code>.gitignore</code> before your first commit. You need about 3 GB of disk.</li>
+</ul>
+</section>
+<section id="homes-and-views" class="level2">
+<h2 class="anchored" data-anchor-id="homes-and-views">Homes and views</h2>
+<ul>
+<li>Keep the single-family residences (<code>STRUCTURETYPE</code> starts with “Single Family Residence”) recorded as <code>Destroyed (&gt;50%)</code> or as <code>No Damage</code>: 19,399 homes.</li>
+<li>A view is a square centred on the inspector’s point, 20, 40 or 60 m wide on the ground, saved as a JPEG of 224 × 224 pixels. Cut the 20 m view from zoom 20 and the two others from zoom 19.</li>
+<li>The flight missed some homes. Keep a home when the photo covers at least 99% of each of its three views: 8,183 Palisades homes and 11,083 Eaton homes. That leaves out 133 homes, each with a view the flight did not photograph at all.</li>
+</ul>
+</section>
+<section id="the-model" class="level2">
+<h2 class="anchored" data-anchor-id="the-model">The model</h2>
+<ul>
+<li>Everything runs in R on your laptop’s processor, with no account and no key: <code>torch</code> and <code>torchvision</code> for the model, <code>magick</code> for the views, <code>sf</code> and <code>terra</code> for the map. The first use of <code>torch</code> downloads about 500 MB.</li>
+<li>The model is <code>model_resnet18(pretrained = TRUE)</code> with its last layer replaced by <code>nn_identity()</code>, in <code>$eval()</code> mode: 512 numbers for a view. Give it pixel values between 0 and 1, scaled by ImageNet’s means and standard deviations.</li>
+<li>For each width, reduce the 512 numbers to 20 summaries with <code>prcomp()</code> at its default settings and fit a logistic regression of destroyed on them, both on the Palisades homes alone. An Eaton home is predicted destroyed above a probability of one half.</li>
+<li>Nothing is drawn at random, and your number of homes should match mine exactly. The four counts in your tables can differ from mine by a few homes: a home with a probability close to one half changes side if its photo is cut or resized a little differently.</li>
+</ul>
+</section>
+<section id="how-long-it-took-me" class="level2">
+<h2 class="anchored" data-anchor-id="how-long-it-took-me">How long it took me</h2>
+<p>The first run, on a MacBook Pro with an M2 Max chip:</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th style="text-align: left;">Step</th>
+<th style="text-align: right;">Minutes</th>
+<th style="text-align: right;">Downloaded</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Download the inspections</td>
+<td style="text-align: right;">under 1</td>
+<td style="text-align: right;">5 MB</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Download the 34,032 photo tiles</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">1.13 GB</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Cut the three views of each home</td>
+<td style="text-align: right;">9</td>
+<td style="text-align: right;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Run the 57,798 views through the model</td>
+<td style="text-align: right;">27</td>
+<td style="text-align: right;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Fit the regression and predict</td>
+<td style="text-align: right;">under 1</td>
+<td style="text-align: right;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Download the map layers and draw the figure</td>
+<td style="text-align: right;">under 1</td>
+<td style="text-align: right;">14 MB</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><strong>Total</strong></td>
+<td style="text-align: right;"><strong>about 42</strong></td>
+<td style="text-align: right;"><strong>1.15 GB</strong></td>
+</tr>
+</tbody>
+</table>
+<p>Save the result of each step. With everything saved, a second run takes under a minute.</p>
+</section>
+<section id="output" class="level2">
+<h2 class="anchored" data-anchor-id="output">Output</h2>
+<ul>
+<li><code>figures/hw6_target.png</code>, 8.5 × 16.1 inches at 220 dpi.</li>
+<li><code>data_clean/predictions.csv</code>: one row per Eaton home kept, with CAL FIRE’s <code>OBJECTID</code>, the damage recorded, longitude and latitude, and at each width the probability and the cell.</li>
+<li><code>NOTES.md</code>: the number of homes at each step, the four counts at each width, your answer to the question below, and an AI disclosure (each tool with its model and version, what you used it for, what you checked).</li>
+</ul>
+</section>
+<section id="what-the-model-misses" class="level2">
+<h2 class="anchored" data-anchor-id="what-the-model-misses">What the model misses</h2>
+<p>Look at the photos of at least 20 false negatives (orange) and 20 false positives (yellow) at 20 m, starting with the ones the model was most sure of. In <code>NOTES.md</code>, name the reasons you see for each type of error and give the <code>OBJECTID</code> of two homes that show each reason. Then say in two or three sentences why the share correct falls as the photo widens.</p>
+</section>
+<section id="figure-rules" class="level2">
+<h2 class="anchored" data-anchor-id="figure-rules">Figure rules</h2>
+<ul>
+<li>A positive is a destroyed home. The figure has one title and a dark background, and the sources are at the bottom.</li>
+<li><strong>Panel A</strong>, a map of the Eaton fire. Each home is its parcel, coloured by its cell at 20 m: red for a true positive, orange for a false negative, yellow for a false positive, grey for a true negative, with a dot on every error. A home on a parcel larger than 5,000 m² is drawn as a dot. Behind the homes: the burned area, the relief coloured by altitude, roads and place names. The map has a key and a scale. A small map shows the coast with the sea in blue, both fires and the frame of the main map.</li>
+<li><strong>Panel B</strong>, a close-up of the area boxed in A, with home 6419 outlined.</li>
+<li><strong>Panel C</strong>, the Eaton home with <code>OBJECTID</code> 6419 at 20, 40 and 60 m. The 20 m square is marked on the two wider photos, and the share correct is written over each photo. Next to each photo, the four counts at that width in a 2 × 2 table: ground truth in rows, prediction in columns, the colours of the map.</li>
+</ul>
+</section>
+<section id="commits" class="level2">
+<h2 class="anchored" data-anchor-id="commits">Commits</h2>
+<p>Commit each step when it works. A healthy history for a project like this has a series of commits. For example:</p>
+<ol type="1">
+<li>The project organized: folders, <code>.gitignore</code>, <code>code/run_everything.R</code>.</li>
+<li>The code that gets the data: inspections, tiles, views.</li>
+<li>The code that makes the prediction: the model’s numbers, the regression, the four cells.</li>
+<li>Panel A of the figure.</li>
+<li>Panel B.</li>
+<li>Panel C.</li>
+<li>A last pass that cleans up the code.</li>
+</ol>
+<p>This order is just an example. You can adopt your own workflow.</p>
+</section>
+<section id="how-to-submit" class="level2">
+<h2 class="anchored" data-anchor-id="how-to-submit">How to submit</h2>
+<p>Your repository is <strong><code>hw6-&lt;your github username&gt;</code></strong> in the course organization. Put the code in <code>code/</code>, with <code>code/run_everything.R</code> running it all, and paths relative to the project root. Push the code, <code>data_clean/predictions.csv</code>, the figure, <code>NOTES.md</code>, and the files your figure script reads (the map layers and the three photos of home 6419, under 25 MB in all). The grader downloads nothing and runs no model, so the script that draws the figure must run from a fresh clone. The grader uses the last commit pushed before the deadline.</p>
+</section>
+<section id="ai-on-this-one" class="level2">
+<h2 class="anchored" data-anchor-id="ai-on-this-one">AI on this one</h2>
+<p>Recommended. Ask for the script rather than the answer, check what it gives you, and disclose in <code>NOTES.md</code> each tool with its model and version, what you used it for, and what you checked. Undisclosed use is treated as an integrity violation.</p>
+</section>
+<section id="rubric" class="level2">
+<h2 class="anchored" data-anchor-id="rubric">Rubric</h2>
+<p>The course rubric, on the <a href="../../fall-2026/assignments.html#rubric">Homework page</a>: five dimensions, three points each.</p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/arielortizbobea\.github\.io\/aem6850\/");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+            // target, if specified
+            link.setAttribute("target", "_blank");
+            if (link.getAttribute("rel") === null) {
+              link.setAttribute("rel", "noopener");
+            }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
