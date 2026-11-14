@@ -1,0 +1,266 @@
+---
+title: "HW6 · Can a model trained on one wildfire predict which homes another destroyed?"
+subtitle: "Out Fri Nov 13 · due Tue Nov 24, 11:59 pm"
+pagetitle: "AEM 6850 · HW6"
+---
+
+**AI assistance is recommended on this one.** Use it, disclose it, and
+write the note yourself.
+
+---
+
+## The question
+
+In January 2025 two wildfires burned in Los Angeles County at the same
+time. The Palisades fire was on the coast. The Eaton fire was in
+Altadena, about 35 km inland. Together they killed 31 people and
+destroyed more than 16,000 buildings.
+
+Economists study the various impacts of disasters like this. Their
+questions often start from one fact about each property: was it
+destroyed? Hornbeck & Keniston
+([American Economic Review, 2017](https://doi.org/10.1257/aer.20141707))
+compare the plots of land that burned in Boston's Great Fire of 1872 with
+those that did not. Fu & Gregory
+([Econometrica, 2019](https://doi.org/10.3982/ecta14246)) study which
+damaged homes were rebuilt in New Orleans after Hurricane Katrina.
+Gallagher & Hartley
+([American Economic Journal: Economic Policy, 2017](https://doi.org/10.1257/pol.20140273))
+follow the debts of New Orleans residents by how badly their area was
+flooded.
+
+After a wildfire, inspectors walk to every building and write down how
+damaged it is. That takes many people and a lot of time. A plane is
+faster: NOAA photographed both burned areas from the air in one day, on
+28 January.
+
+Can a model look at the photo of a home and say whether the home was
+destroyed? In this homework you train a model on the homes of the
+Palisades fire, where you know what the inspectors wrote. You use it to
+predict which homes the Eaton fire destroyed. Then you check your
+predictions against what the inspectors wrote in Eaton. You do this three
+times, with photos 20, 40 and 60 m wide around each home.
+
+This is a classification: the model puts each home in one of two groups,
+destroyed or undamaged.
+
+## Target image
+
+![Target image](https://arielortizbobea.github.io/assets/data/hw6_target.png)
+
+## Data
+
+All of it is public and needs no key. Each source has a page that
+describes it, linked below.
+
+1. **Inspections, from CAL FIRE (an ArcGIS server).** One point per
+   building, with its type and its damage. Read
+   [what the inspections record](https://hub-calfire-forestry.hub.arcgis.com/datasets/CALFIRE-Forestry::cal-fire-damage-inspection-dins-data/about).
+   There is one layer per fire, described here for
+   [Palisades](https://www.arcgis.com/home/item.html?id=c336759e45764c45861a1e62c4c5e2db)
+   and for
+   [Eaton](https://www.arcgis.com/home/item.html?id=6254ba9f9c4f4b0f886f24c902c8eda3).
+
+   ```text
+   https://services1.arcgis.com/jUJYIo9tSA7EHvfZ/arcgis/rest/services/DINS_2025_Palisades_Public_View/FeatureServer/0
+   https://services1.arcgis.com/jUJYIo9tSA7EHvfZ/arcgis/rest/services/DINS_2025_Eaton_Public_View/FeatureServer/0
+   ```
+
+   Add this to either address. The server sends the points in pages
+   (`resultOffset`, `resultRecordCount`).
+
+   ```text
+   /query?where=1=1&outFields=OBJECTID,DAMAGE,STRUCTURETYPE&outSR=4326&orderByFields=OBJECTID&f=json
+   ```
+
+2. **Photos, from NOAA (map tiles).** The flight of 28 January 2025. Read
+   [about NOAA's emergency photos](https://oceanservice.noaa.gov/hazards/emergency-response-imagery.html)
+   and look at
+   [these photos on a map](https://storms.ngs.noaa.gov/storms/2025_eri/index.html#12.11/34.04458/-118.50875).
+
+   ```text
+   https://stormscdn.ngs.noaa.gov/20250128a-rgb/{zoom}/{column}/{row}
+   ```
+
+   This is the address scheme of any web map. A tile is 256 × 256
+   pixels. On the ground, a pixel is about 12 cm at zoom 20 and 25 cm at
+   zoom 19. Those sizes include the latitude: a web map's pixel covers
+   15 cm at zoom 20 on the equator, and that size times the cosine of the
+   latitude (0.83 here) anywhere else. The address has no extension: a
+   tile is a JPEG or a PNG, and a PNG of 1 × 1 pixel where the flight has
+   no photo.
+
+3. **Map layers.**
+
+   Elevation, as GeoTIFF tiles
+   ([description](https://registry.opendata.aws/terrain-tiles/)). Zoom 12
+   is enough for the map:
+
+   ```text
+   https://s3.amazonaws.com/elevation-tiles-prod/geotiff/{zoom}/{column}/{row}.tif
+   ```
+
+   Fire perimeters, from CAL FIRE
+   ([description](https://www.arcgis.com/home/item.html?id=f287bfa78d714a5d8ba995f332177ba1)):
+
+   ```text
+   https://services1.arcgis.com/jUJYIo9tSA7EHvfZ/arcgis/rest/services/2025_California_Fire_Perimeters_View/FeatureServer/0
+   ```
+
+   Roads, from the Census Bureau, layers 2, 6 and 8
+   ([description](https://tigerweb.geo.census.gov/tigerwebmain/TIGERweb_main.html)):
+
+   ```text
+   https://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb/Transportation/MapServer
+   ```
+
+   Parcels, from the Los Angeles County Assessor
+   ([description](https://www.arcgis.com/home/item.html?id=ae733177ea1a408b9d8fd357a9392a70)).
+   The server sends them in pages too:
+
+   ```text
+   https://services.arcgis.com/RmCCgQtiZLDCtblq/arcgis/rest/services/2025_Wild_Fire_Parcels_100M_Plus_DINS_MaxMin_DAMAGE_VIEW/FeatureServer/0
+   ```
+
+## Downloading the photos
+
+- NOAA's photo of this flight is huge. It spans 73 km from west to east
+  and 24 km from south to north. At zoom 20, that is about 590,000 by
+  190,000 pixels. NOAA's own download of the whole photo is one file of
+  28 GB.
+- You need a small part of it: the squares around the homes. So download
+  tiles, and only the tiles your views touch: 34,032 tiles, 1.1 GB in
+  all. `curl::multi_download()` fetches many tiles at a time.
+- Save every tile and never request one twice. Your script must be able
+  to stop and start again where it left off.
+- Build every step on 100 homes first, then run all of them.
+- Tiles, views and the model's numbers stay out of your repository: list
+  their folders in `.gitignore` before your first commit. You need about
+  3 GB of disk.
+
+## Homes and views
+
+- Keep the single-family residences (`STRUCTURETYPE` starts with "Single
+  Family Residence") recorded as `Destroyed (>50%)` or as `No Damage`:
+  19,399 homes.
+- A view is a square centred on the inspector's point, 20, 40 or 60 m
+  wide on the ground, saved as a JPEG of 224 × 224 pixels. Cut the 20 m
+  view from zoom 20 and the two others from zoom 19.
+- The flight missed some homes. Keep a home when the photo covers at
+  least 99% of each of its three views: 8,183 Palisades homes and 11,083
+  Eaton homes. That leaves out 133 homes, each with a view the flight did
+  not photograph at all.
+
+## The model
+
+- Everything runs in R on your laptop's processor, with no account and
+  no key: `torch` and `torchvision` for the model, `magick` for the
+  views, `sf` and `terra` for the map. The first use of `torch` downloads
+  about 500 MB.
+- The model is `model_resnet18(pretrained = TRUE)` with its last layer
+  replaced by `nn_identity()`, in `$eval()` mode: 512 numbers for a view.
+  Give it pixel values between 0 and 1, scaled by ImageNet's means and
+  standard deviations.
+- For each width, reduce the 512 numbers to 20 summaries with `prcomp()`
+  at its default settings and fit a logistic regression of destroyed on
+  them, both on the Palisades homes alone. An Eaton home is predicted destroyed above a
+  probability of one half.
+- Nothing is drawn at random, and your number of homes should match
+  mine exactly. The four counts in your tables can differ from mine by a
+  few homes: a home with a probability close to one half changes side if
+  its photo is cut or resized a little differently.
+
+## How long it took me
+
+The first run, on a MacBook Pro with an M2 Max chip:
+
+| Step | Minutes | Downloaded |
+|:--|--:|--:|
+| Download the inspections | under 1 | 5 MB |
+| Download the 34,032 photo tiles | 5 | 1.13 GB |
+| Cut the three views of each home | 9 | |
+| Run the 57,798 views through the model | 27 | |
+| Fit the regression and predict | under 1 | |
+| Download the map layers and draw the figure | under 1 | 14 MB |
+| **Total** | **about 42** | **1.15 GB** |
+
+Save the result of each step. With everything saved, a second run takes
+under a minute.
+
+## Output
+
+- `figures/hw6_target.png`, 8.5 × 16.1 inches at 220 dpi.
+- `data_clean/predictions.csv`: one row per Eaton home kept, with CAL
+  FIRE's `OBJECTID`, the damage recorded, longitude and latitude, and at
+  each width the probability and the cell.
+- `NOTES.md`: the number of homes at each step, the four counts at each
+  width, your answer to the question below, and an AI disclosure (each
+  tool with its model and version, what you used it for, what you
+  checked).
+
+## What the model misses
+
+Look at the photos of at least 20 false negatives (orange) and 20 false
+positives (yellow) at 20 m, starting with the ones the model was most
+sure of. In `NOTES.md`, name the reasons you see for each type of error
+and give the `OBJECTID` of two homes that show each reason. Then say in
+two or three sentences why the share correct falls as the photo widens.
+
+## Figure rules
+
+- A positive is a destroyed home. The figure has one title and a dark
+  background, and the sources are at the bottom.
+- **Panel A**, a map of the Eaton fire. Each home is its parcel, coloured
+  by its cell at 20 m: red for a true positive, orange for a false
+  negative, yellow for a false positive, grey for a true negative, with a
+  dot on every error. A home on a parcel larger than 5,000 m² is drawn as
+  a dot. Behind the homes: the burned area, the relief coloured by
+  altitude, roads and place names. The map has a key and a scale. A small
+  map shows the coast with the sea in blue, both fires and the frame of
+  the main map.
+- **Panel B**, a close-up of the area boxed in A, with home 6419
+  outlined.
+- **Panel C**, the Eaton home with `OBJECTID` 6419 at 20, 40 and 60 m.
+  The 20 m square is marked on the two wider photos, and the share
+  correct is written over each photo. Next to each photo, the four counts
+  at that width in a 2 × 2 table: ground truth in rows, prediction in
+  columns, the colours of the map.
+
+## Commits
+
+Commit each step when it works. A healthy history for a project like
+this has a series of commits. For example:
+
+1. The project organized: folders, `.gitignore`, `code/run_everything.R`.
+2. The code that gets the data: inspections, tiles, views.
+3. The code that makes the prediction: the model's numbers, the
+   regression, the four cells.
+4. Panel A of the figure.
+5. Panel B.
+6. Panel C.
+7. A last pass that cleans up the code.
+
+This order is just an example. You can adopt your own workflow.
+
+## How to submit
+
+Your repository is **`hw6-<your github username>`** in the course
+organization. Put the code in `code/`, with `code/run_everything.R`
+running it all, and paths relative to the project root. Push the code,
+`data_clean/predictions.csv`, the figure, `NOTES.md`, and the files your
+figure script reads (the map layers and the three photos of home 6419,
+under 25 MB in all). The grader downloads nothing and runs no model, so
+the script that draws the figure must run from a fresh clone. The grader
+uses the last commit pushed before the deadline.
+
+## AI on this one
+
+Recommended. Ask for the script rather than the answer, check what it
+gives you, and disclose in `NOTES.md` each tool with its model and
+version, what you used it for, and what you checked. Undisclosed use is
+treated as an integrity violation.
+
+## Rubric
+
+The course rubric, on the [Homework page](../assignments.qmd#rubric):
+five dimensions, three points each.
