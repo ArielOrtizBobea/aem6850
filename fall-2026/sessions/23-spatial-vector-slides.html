@@ -1,0 +1,1986 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-html/tabby.min.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/light-border.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-7f8f88aac4f3542376d5c11b86a4c14d.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
+  <meta name="generator" content="quarto-1.9.37">
+
+  <title>AEM 6850 – AEM 6850 · 23 Spatial I: vectors</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="../../site_libs/revealjs/dist/reset.css">
+  <link rel="stylesheet" href="../../site_libs/revealjs/dist/reveal.css">
+  <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+      vertical-align: middle;
+    }
+    /* CSS for syntax highlighting */
+    html { -webkit-text-size-adjust: 100%; }
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      { color: #003b4f; background-color: #f1f3f5; }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span { color: #003b4f; } /* Normal */
+    code span.al { color: #ad0000; } /* Alert */
+    code span.an { color: #5e5e5e; } /* Annotation */
+    code span.at { color: #657422; } /* Attribute */
+    code span.bn { color: #ad0000; } /* BaseN */
+    code span.bu { } /* BuiltIn */
+    code span.cf { color: #003b4f; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #20794d; } /* Char */
+    code span.cn { color: #8f5902; } /* Constant */
+    code span.co { color: #5e5e5e; } /* Comment */
+    code span.cv { color: #5e5e5e; font-style: italic; } /* CommentVar */
+    code span.do { color: #5e5e5e; font-style: italic; } /* Documentation */
+    code span.dt { color: #ad0000; } /* DataType */
+    code span.dv { color: #ad0000; } /* DecVal */
+    code span.er { color: #ad0000; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #ad0000; } /* Float */
+    code span.fu { color: #4758ab; } /* Function */
+    code span.im { color: #00769e; } /* Import */
+    code span.in { color: #5e5e5e; } /* Information */
+    code span.kw { color: #003b4f; font-weight: bold; } /* Keyword */
+    code span.op { color: #5e5e5e; } /* Operator */
+    code span.ot { color: #003b4f; } /* Other */
+    code span.pp { color: #ad0000; } /* Preprocessor */
+    code span.sc { color: #5e5e5e; } /* SpecialChar */
+    code span.ss { color: #20794d; } /* SpecialString */
+    code span.st { color: #20794d; } /* String */
+    code span.va { color: #111111; } /* Variable */
+    code span.vs { color: #20794d; } /* VerbatimString */
+    code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
+  </style>
+  <link rel="stylesheet" href="../../site_libs/revealjs/dist/theme/quarto-65c5645dc437e5e50f9cbc8a5c09eca9.css">
+  <link href="../../site_libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
+  <link href="../../site_libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
+  <link href="../../site_libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
+  <link href="../../site_libs/revealjs/plugin/quarto-support/footer.css" rel="stylesheet">
+  <style type="text/css">
+    .reveal div.sourceCode {
+      margin: 0;
+      overflow: auto;
+    }
+    .reveal div.hanging-indent {
+      margin-left: 1em;
+      text-indent: -1em;
+    }
+    .reveal .slide:not(.center) {
+      height: 100%;
+    }
+    .reveal .slide.scrollable {
+      overflow-y: auto;
+    }
+    .reveal .footnotes {
+      height: 100%;
+      overflow-y: auto;
+    }
+    .reveal .slide .absolute {
+      position: absolute;
+      display: block;
+    }
+    .reveal .footnotes ol {
+      counter-reset: ol;
+      list-style-type: none; 
+      margin-left: 0;
+    }
+    .reveal .footnotes ol li:before {
+      counter-increment: ol;
+      content: counter(ol) ". "; 
+    }
+    .reveal .footnotes ol li > p:first-child {
+      display: inline-block;
+    }
+    .reveal .slide ul,
+    .reveal .slide ol {
+      margin-bottom: 0.5em;
+    }
+    .reveal .slide ul li,
+    .reveal .slide ol li {
+      margin-top: 0.4em;
+      margin-bottom: 0.2em;
+    }
+    .reveal .slide ul[role="tablist"] li {
+      margin-bottom: 0;
+    }
+    .reveal .slide ul li > *:first-child,
+    .reveal .slide ol li > *:first-child {
+      margin-block-start: 0;
+    }
+    .reveal .slide ul li > *:last-child,
+    .reveal .slide ol li > *:last-child {
+      margin-block-end: 0;
+    }
+    .reveal .slide .columns:nth-child(3) {
+      margin-block-start: 0.8em;
+    }
+    .reveal blockquote {
+      box-shadow: none;
+    }
+    .reveal .tippy-content>* {
+      margin-top: 0.2em;
+      margin-bottom: 0.7em;
+    }
+    .reveal .tippy-content>*:last-child {
+      margin-bottom: 0.2em;
+    }
+    .reveal .slide > img.stretch.quarto-figure-center,
+    .reveal .slide > img.r-stretch.quarto-figure-center {
+      display: block;
+      margin-left: auto;
+      margin-right: auto; 
+    }
+    .reveal .slide > img.stretch.quarto-figure-left,
+    .reveal .slide > img.r-stretch.quarto-figure-left  {
+      display: block;
+      margin-left: 0;
+      margin-right: auto; 
+    }
+    .reveal .slide > img.stretch.quarto-figure-right,
+    .reveal .slide > img.r-stretch.quarto-figure-right  {
+      display: block;
+      margin-left: auto;
+      margin-right: 0; 
+    }
+  </style>
+</head>
+<body class="quarto-light">
+  <div class="reveal">
+    <div class="slides">
+
+<section id="title-slide" class="center">
+  <p class="ttl-number">AEM 6850</p>
+  <p class="ttl-course">Empirical Methods for Applied Economists</p>
+  <p class="ttl-prof">Prof. Ariel Ortiz-Bobea</p>
+  <h1 class="title">23 · Spatial I: vectors</h1>
+  <p class="subtitle">Tuesday, November 17, 2026</p>
+  <img class="ttl-seal" src="../images/cornell_seal.svg" alt="Cornell University">
+</section>
+<section id="plan" class="slide level2">
+<h2>Plan for today</h2>
+<div class="slide-text">
+<p>What we are going to do today</p>
+<ol type="1">
+<li><strong>Vector data in R</strong><br>
+<span class="topics">Points, lines and polygons · a layer as a data frame · joining by location and by ID · Exercise 1</span></li>
+<li><strong>Measuring areas, distances and angles</strong><br>
+<span class="topics">Degrees and metres · area · distance to a point and to a border · buffers · length inside a polygon · direction</span></li>
+<li><strong>Relations between places</strong><br>
+<span class="topics">Nearest feature · neighbours · shortest routes · Exercise 2 · straight lines between cities · friendship as distance · standard errors for nearby places</span></li>
+<li><strong>An application to wildfire smoke</strong><br>
+<span class="topics">Daily smoke maps · counties under smoke each day · people under heavy smoke · ground monitors</span></li>
+</ol>
+</div>
+<p><span class="source">Today covers spatial data stored as points, lines and polygons. For each tool I show a published study that used it, then R code on a small example. Not covered: grids of cells such as satellite images, interactive web maps, turning addresses into coordinates, and spatial regression models.</span></p>
+</section>
+<section>
+<section id="part-vector" class="title-slide slide level1 center">
+<h1>1 · Vector data in R</h1>
+
+</section>
+<section id="overview-1" class="slide level2">
+<h2>Overview of part 1</h2>
+<div class="slide-text">
+<p>How R stores spatial data.</p>
+</div>
+<div class="columns">
+<div class="column" style="width:58%;">
+<div class="dashes">
+<ul>
+<li><strong>Objects:</strong> R’s sf package stores points, lines and polygons in a table. Each row is one place, and one column holds its shape.</li>
+<li><strong>Reading and subsetting:</strong> the Census county file and New York’s counties.</li>
+<li><strong>Joining:</strong> the county that contains Warren Hall, then that county’s population.</li>
+<li><strong>Exercise 1:</strong> the county and population of a place you pick.</li>
+</ul>
+</div>
+</div><div class="column" style="width:40%;">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="figures/23-spatial-vector/f22_join.png" class="quarto-figure quarto-figure-center" height="270"></p>
+</figure>
+</div>
+<p><span class="source">Later in this part: Warren Hall is in Tompkins County, code 36109.</span></p>
+</div></div>
+</section>
+<section id="types" class="slide level2">
+<h2>Points, lines and polygons</h2>
+<div class="slide-text">
+<ul>
+<li>Vector data store each place as a point, a line or a polygon, with a row of data.</li>
+<li>Warren Hall is a point, I-90 is a line and Tompkins County is a polygon.</li>
+<li>A <strong>layer</strong> is a table with one row per place.</li>
+</ul>
+</div>
+
+<img data-src="figures/23-spatial-vector/f1_types.png" class="quarto-figure quarto-figure-center r-stretch" style="width:96.0%"><p><span class="source">Warren Hall is the Cornell building that houses this course’s department, in Ithaca. Ithaca is in Tompkins County. A county is the level of government below the state. A MULTIPOLYGON can have several parts, such as a county with islands. Data: Census Bureau county and road files, 2024.</span></p>
+</section>
+<section id="project" class="slide level2">
+<h2>The project folder</h2>
+<div class="slide-text">
+<ul>
+<li>Download the zip from the session page, unzip it and open <code>23-spatial-vector.Rproj</code>.</li>
+<li>Every path on the slides then works.</li>
+<li>I downloaded all the data before class, so you need no account, key or internet connection.</li>
+</ul>
+</div>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>23-spatial-vector/, as its README.md describes it</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1" data-filename="23-spatial-vector/, as its README.md describes it"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb1-1"><a aria-hidden="true" tabindex="-1"></a>data/census/    county and state outlines (cb_2024_us_*_500k.zip); county population, 2020-2024</span>
+<span id="cb1-2"><a aria-hidden="true" tabindex="-1"></a>data/noaa/hms/  NOAA's smoke outlines, one zip per day of June 2023</span>
+<span id="cb1-3"><a aria-hidden="true" tabindex="-1"></a>data_clean/     interstates_ny_box.gpkg: the Census Interstate lines near New York</span>
+<span id="cb1-4"><a aria-hidden="true" tabindex="-1"></a>                sci_tompkins.csv: Facebook friendship links between Tompkins and every county</span>
+<span id="cb1-5"><a aria-hidden="true" tabindex="-1"></a>                pm25_june2023.csv: EPA daily fine particles at 947 monitors, June 2023</span>
+<span id="cb1-6"><a aria-hidden="true" tabindex="-1"></a>data/inpe/, data/osm/, and the other files in data_clean/: the page's two worked examples</span>
+<span id="cb1-7"><a aria-hidden="true" tabindex="-1"></a>code/           1_vector.R ... 4_smoke.R in lecture order; 5_medicaid.R, 6_amazon.R; run_everything.R</span>
+<span id="cb1-8"><a aria-hidden="true" tabindex="-1"></a>23-spatial-vector.R   the live script: every code slide in order</span>
+<span id="cb1-9"><a aria-hidden="true" tabindex="-1"></a>tools/         what made data_clean/ from the full downloads before class (these need the network)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p><span class="source">NOAA is the US weather and ocean agency. Meta runs Facebook. A <strong>box</strong> is a rectangle that sets a map’s area. A .gpkg file holds one map layer. The scripts install <code>sf</code>, <code>igraph</code>, <code>fixest</code> and <code>magick</code> if needed. The README gives each file’s source and licence.</span></p>
+</section>
+<section id="read" class="slide level2">
+<h2>Reading the county file</h2>
+<div class="slide-text">
+<ul>
+<li><code>st_read()</code> reads the Census county file.</li>
+<li>The result is a table of 3,235 counties, with 12 columns of data and one column of shapes.</li>
+<li><code>print(co, n = 0)</code> shows only the header: the shape type, the bounding box and the coordinate system.</li>
+</ul>
+</div>
+<div class="cell" data-layout-align="center" data-script="Load or install sf">
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>R Console, in the 23-spatial-vector folder. Installs sf if missing</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a aria-hidden="true" tabindex="-1"></a>want <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"sf"</span>)</span>
+<span id="cb2-2"><a aria-hidden="true" tabindex="-1"></a>need <span class="ot">&lt;-</span> want[<span class="sc">!</span>(want <span class="sc">%in%</span> <span class="fu">installed.packages</span>()[,<span class="st">"Package"</span>])]</span>
+<span id="cb2-3"><a aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="fu">length</span>(need)) <span class="fu">install.packages</span>(need)</span>
+<span id="cb2-4"><a aria-hidden="true" tabindex="-1"></a><span class="fu">lapply</span>(want, <span class="cf">function</span>(i) <span class="fu">require</span>(i, <span class="at">character.only =</span> <span class="cn">TRUE</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+<div class="cell" data-layout-align="center" data-script="Reading the county file">
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>R Console, in the 23-spatial-vector folder; reads data/census/cb_2024_us_county_500k.zip</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a aria-hidden="true" tabindex="-1"></a><span class="fu">unzip</span>(<span class="st">"data/census/cb_2024_us_county_500k.zip"</span>, <span class="at">exdir =</span> <span class="st">"data_clean/counties"</span>)   <span class="co"># seven files</span></span>
+<span id="cb3-2"><a aria-hidden="true" tabindex="-1"></a>co <span class="ot">&lt;-</span> <span class="fu">st_read</span>(<span class="st">"data_clean/counties/cb_2024_us_county_500k.shp"</span>, <span class="at">quiet =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb3-3"><a aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(co, <span class="at">n =</span> <span class="dv">0</span>)                                      <span class="co"># the header alone, no rows</span></span>
+<span id="cb3-4"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Simple feature collection with 3235 features and 12 fields</span></span>
+<span id="cb3-5"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Geometry type: MULTIPOLYGON</span></span>
+<span id="cb3-6"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Dimension:     XY</span></span>
+<span id="cb3-7"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Bounding box:  xmin: -179.1467 ymin: -14.5487 xmax: 179.7785 ymax: 71.38782</span></span>
+<span id="cb3-8"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Geodetic CRS:  NAD83</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+<p><span class="source">A <strong>shapefile</strong> is several files with the same name. The <code>.shp</code> file holds the shapes, <code>.dbf</code> the table and <code>.prj</code> the coordinate system. The <strong>bounding box</strong> is the smallest rectangle around all the counties. It runs from −179 to 180 because Alaska’s islands cross the 180th meridian. The coordinate system, NAD83, is in degrees of longitude and latitude.</span></p>
+</section>
+<section id="sf-df" class="slide level2">
+<h2>An sf object is a data frame</h2>
+<div class="slide-text">
+<p>An sf object is a data frame with one extra column, the geometry. The shapes come along when you pick rows and columns.</p>
+</div>
+<div class="cell" data-layout-align="center" data-script="An sf object is a data frame">
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>R Console, in the 23-spatial-vector folder; co from the slide before</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>(co)</span>
+<span id="cb4-2"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] "sf"         "data.frame"</span></span>
+<span id="cb4-3"><a aria-hidden="true" tabindex="-1"></a>co[<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>, <span class="fu">c</span>(<span class="st">"GEOID"</span>, <span class="st">"NAME"</span>, <span class="st">"STUSPS"</span>, <span class="st">"ALAND"</span>)]        <span class="co"># three rows, four columns: the geometry comes too</span></span>
+<span id="cb4-4"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Simple feature collection with 3 features and 4 fields</span></span>
+<span id="cb4-5"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Geometry type: MULTIPOLYGON</span></span>
+<span id="cb4-6"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Dimension:     XY</span></span>
+<span id="cb4-7"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Bounding box:  xmin: -88.47323 ymin: 30.99708 xmax: -84.88908 ymax: 32.51019</span></span>
+<span id="cb4-8"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Geodetic CRS:  NAD83</span></span>
+<span id="cb4-9"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   GEOID    NAME STUSPS      ALAND                       geometry</span></span>
+<span id="cb4-10"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 01069 Houston     AL 1501742250 MULTIPOLYGON (((-85.71209 3...</span></span>
+<span id="cb4-11"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2 01023 Choctaw     AL 2365900084 MULTIPOLYGON (((-88.47323 3...</span></span>
+<span id="cb4-12"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3 01113 Russell     AL 1660653961 MULTIPOLYGON (((-85.4347 32...</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+<p><span class="source"><strong>GEOID</strong> is the county code: two digits for the state, then three for the county. Tompkins is 36109: New York is 36 and Tompkins is 109. Alabama’s codes start with 01, so the leading zero matters. <strong>STUSPS</strong> is the state’s two letters. <strong>ALAND</strong> and <strong>AWATER</strong> are land and water area in m². The file has 3,144 counties in the 50 states and DC, plus 91 rows for five territories.</span></p>
+</section>
+<section id="subset" class="slide level2">
+<h2>Subsetting and plotting New York’s counties</h2>
+<div class="slide-text">
+<ul>
+<li><code>[</code> keeps the rows that meet a condition, as with any data frame.</li>
+<li>New York has 62 counties.</li>
+<li><code>plot(st_geometry())</code> draws their shapes.</li>
+</ul>
+</div>
+<div class="cell" data-layout-align="center" data-script="Subsetting and plotting New York's counties">
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>R Console, in the 23-spatial-vector folder; co from the slides before</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a aria-hidden="true" tabindex="-1"></a>ny <span class="ot">&lt;-</span> co[co<span class="sc">$</span>STUSPS <span class="sc">==</span> <span class="st">"NY"</span>, ]          <span class="co"># rows by a condition</span></span>
+<span id="cb5-2"><a aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(ny)</span>
+<span id="cb5-3"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 62</span></span>
+<span id="cb5-4"><a aria-hidden="true" tabindex="-1"></a>tk <span class="ot">&lt;-</span> ny[ny<span class="sc">$</span>NAME <span class="sc">==</span> <span class="st">"Tompkins"</span>, ]      <span class="co"># Tompkins County, used again below</span></span>
+<span id="cb5-5"><a aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mar =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>))</span>
+<span id="cb5-6"><a aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">st_geometry</span>(ny), <span class="at">col =</span> <span class="fu">ifelse</span>(ny<span class="sc">$</span>NAME <span class="sc">==</span> <span class="st">"Tompkins"</span>, <span class="st">"#B31B1B"</span>, <span class="st">"grey90"</span>), <span class="at">border =</span> <span class="st">"white"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+
+</div>
+<img data-src="23-spatial-vector_files/figure-revealjs/subset-ny-1.png" class="quarto-figure quarto-figure-center r-stretch" style="width:78.0%"><p><span class="source"><code>st_geometry()</code> keeps only the shapes. <code>plot()</code> on the whole sf object would draw one map per column. Tompkins is in red.</span></p>
+</section>
+<section id="use-join" class="slide level2">
+<h2>Joining by location</h2>
+<div class="columns">
+<div class="column" style="width:47%;">
+<div class="dashes">
+<ul>
+<li><strong>Question:</strong> <a href="https://doi.org/10.1257/aer.20150774">Berman, Couttenier, Rohner &amp; Thoenig (AER, 2017)</a> asked whether minerals fuel conflict in Africa.</li>
+<li><strong>Method:</strong> They joined each mine and each conflict event to a grid of square cells about 55 km wide. Then they followed each cell as world mineral prices moved.</li>
+<li><strong>Data:</strong> every cell of Africa, 1997-2010.</li>
+<li><strong>Result:</strong> Violence rose in a cell when the price of its mineral rose. Rising prices may explain up to a quarter of average violence.</li>
+</ul>
+</div>
+</div><div class="column" style="width:51%;">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="figures/23-spatial-vector/p_bcrt_join.png" class="quarto-figure quarto-figure-center" height="250"></p>
+</figure>
+</div>
+</div></div>
+<p><span class="source">A <strong>spatial join</strong> matches each point to the polygon that contains it. The maps are Figure 3 of “This Mine Is Mine! How Minerals Fuel Conflicts in Africa”. Left: conflict events. Right: cells with mines in black, their neighbours in grey.</span></p>
+</section>
+<section id="points" class="slide level2">
+<h2>Points from longitude and latitude</h2>
+<div class="slide-text">
+<ul>
+<li>To find Warren Hall’s county, first turn its coordinates into an sf point.</li>
+<li><code>st_as_sf()</code> turns a table with longitude and latitude columns into points.
+<ul>
+<li>Longitude comes first.</li>
+<li><code>crs = 4326</code> marks the numbers as GPS degrees.</li>
+</ul></li>
+</ul>
+</div>
+<div class="cell" data-layout-align="center" data-script="Points from longitude and latitude">
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>R Console, in the 23-spatial-vector folder; sf loaded</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a aria-hidden="true" tabindex="-1"></a>wh <span class="ot">&lt;-</span> <span class="fu">st_as_sf</span>(<span class="fu">data.frame</span>(<span class="at">name =</span> <span class="st">"Warren Hall"</span>, <span class="at">lon =</span> <span class="sc">-</span><span class="fl">76.4797</span>, <span class="at">lat =</span> <span class="fl">42.4490</span>),</span>
+<span id="cb6-2"><a aria-hidden="true" tabindex="-1"></a>               <span class="at">coords =</span> <span class="fu">c</span>(<span class="st">"lon"</span>, <span class="st">"lat"</span>), <span class="at">crs =</span> <span class="dv">4326</span>)        <span class="co"># x (longitude) first, then y (latitude)</span></span>
+<span id="cb6-3"><a aria-hidden="true" tabindex="-1"></a>wh</span>
+<span id="cb6-4"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Simple feature collection with 1 feature and 1 field</span></span>
+<span id="cb6-5"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Geometry type: POINT</span></span>
+<span id="cb6-6"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Dimension:     XY</span></span>
+<span id="cb6-7"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Bounding box:  xmin: -76.4797 ymin: 42.449 xmax: -76.4797 ymax: 42.449</span></span>
+<span id="cb6-8"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Geodetic CRS:  WGS 84</span></span>
+<span id="cb6-9"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;          name                geometry</span></span>
+<span id="cb6-10"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 Warren Hall POINT (-76.4797 42.449)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+<p><span class="source"><strong>Longitude</strong> is degrees east or west of Greenwich, negative in the Americas. <strong>Latitude</strong> is degrees north or south of the equator. 4326 is the code for GPS coordinates (WGS 84). Web maps show latitude first: 42.4490, −76.4797. A table of households or firms with coordinates works the same way.</span></p>
+</section>
+<section id="join" class="slide level2">
+<h2>The county that holds Warren Hall</h2>
+<div class="columns">
+<div class="column" style="width:58%;">
+<div class="slide-text">
+<ul>
+<li><code>st_join()</code> adds to each point the columns of the county that contains it.</li>
+<li>Warren Hall is in Tompkins County, code 36109.</li>
+<li>A point outside every county, such as one at sea, gets NA.</li>
+</ul>
+</div>
+</div><div class="column" style="width:40%;">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="figures/23-spatial-vector/f22_join.png" class="quarto-figure quarto-figure-center" height="260"></p>
+</figure>
+</div>
+</div></div>
+<div class="cell" data-layout-align="center" data-script="The county that holds Warren Hall">
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>R Console, in the 23-spatial-vector folder; co and wh from the slides before</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a aria-hidden="true" tabindex="-1"></a>wh <span class="ot">&lt;-</span> <span class="fu">st_transform</span>(wh, <span class="fu">st_crs</span>(co))                          <span class="co"># the point in the counties' CRS</span></span>
+<span id="cb7-2"><a aria-hidden="true" tabindex="-1"></a><span class="fu">st_drop_geometry</span>(<span class="fu">st_join</span>(wh, co[<span class="fu">c</span>(<span class="st">"GEOID"</span>, <span class="st">"NAME"</span>, <span class="st">"STUSPS"</span>)]))</span>
+<span id="cb7-3"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;          name GEOID     NAME STUSPS</span></span>
+<span id="cb7-4"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 Warren Hall 36109 Tompkins     NY</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+<p><span class="source"><code>co</code> is the county layer. Both layers must use the same coordinate system (CRS), so <code>st_transform()</code> converts the point first. Otherwise <code>st_join()</code> stops with an error. <code>st_drop_geometry()</code> drops the shapes and returns a plain data frame.</span></p>
+</section>
+<section id="merge" class="slide level2">
+<h2>Merging population by GEOID</h2>
+<div class="slide-text">
+<ul>
+<li>Population comes from a separate Census table.</li>
+<li><code>merge()</code> joins it to the counties by GEOID, the county code.</li>
+<li>Read the codes as text with <code>colClasses</code>.
+<ul>
+<li>As numbers, “01” becomes 1 and only 1,150 of the 3,144 counties match.</li>
+</ul></li>
+<li>Tompkins had 105,602 people in 2024.</li>
+</ul>
+</div>
+<div class="cell" data-layout-align="center" data-script="Merging population by GEOID">
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>R Console, in the 23-spatial-vector folder; co from the slides before; reads data/census/co-est2024-alldata.csv</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a aria-hidden="true" tabindex="-1"></a>pop <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"data/census/co-est2024-alldata.csv"</span>, <span class="at">fileEncoding =</span> <span class="st">"latin1"</span>,</span>
+<span id="cb8-2"><a aria-hidden="true" tabindex="-1"></a>                <span class="at">colClasses =</span> <span class="fu">c</span>(<span class="at">STATE =</span> <span class="st">"character"</span>, <span class="at">COUNTY =</span> <span class="st">"character"</span>))   <span class="co"># codes stay text: "01"</span></span>
+<span id="cb8-3"><a aria-hidden="true" tabindex="-1"></a>pop <span class="ot">&lt;-</span> pop[pop<span class="sc">$</span>SUMLEV <span class="sc">==</span> <span class="dv">50</span>, ]</span>
+<span id="cb8-4"><a aria-hidden="true" tabindex="-1"></a>pop<span class="sc">$</span>GEOID <span class="ot">&lt;-</span> <span class="fu">paste0</span>(pop<span class="sc">$</span>STATE, pop<span class="sc">$</span>COUNTY)</span>
+<span id="cb8-5"><a aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(pop<span class="sc">$</span>GEOID, <span class="dv">3</span>)</span>
+<span id="cb8-6"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] "01001" "01003" "01005"</span></span>
+<span id="cb8-7"><a aria-hidden="true" tabindex="-1"></a>cp <span class="ot">&lt;-</span> <span class="fu">merge</span>(co, pop[<span class="fu">c</span>(<span class="st">"GEOID"</span>, <span class="st">"POPESTIMATE2024"</span>)], <span class="at">by =</span> <span class="st">"GEOID"</span>)</span>
+<span id="cb8-8"><a aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(cp)</span>
+<span id="cb8-9"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 3144</span></span>
+<span id="cb8-10"><a aria-hidden="true" tabindex="-1"></a><span class="fu">st_drop_geometry</span>(cp[cp<span class="sc">$</span>GEOID <span class="sc">==</span> <span class="st">"36109"</span>, <span class="fu">c</span>(<span class="st">"NAME"</span>, <span class="st">"POPESTIMATE2024"</span>)])</span>
+<span id="cb8-11"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;          NAME POPESTIMATE2024</span></span>
+<span id="cb8-12"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1885 Tompkins          105602</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+<p><span class="source"><code>colClasses</code> sets a column’s type when R reads the file. <code>merge()</code> keeps the rows found in both tables, so the 91 territory rows drop out. <code>all.x = TRUE</code> would keep them, with NA. <code>cp</code> holds the counties with population, and <code>co</code> is unchanged. POPESTIMATE2024 is the estimate for July 1, 2024.</span></p>
+</section>
+<section id="exercise-1" class="slide level2">
+<h2>Exercise 1</h2>
+<div class="panel-tabset">
+<ul id="tabset-1" class="panel-tabset-tabby"><li><a data-tabby-default="" href="#tabset-1-1">Exercise</a></li><li><a href="#tabset-1-2">Solution</a></li></ul>
+<div class="tab-content">
+<div id="tabset-1-1">
+<p>4 minutes. Find the county and the population of a place you pick, with a spatial join and a merge. <code>co</code> is the county layer and <code>pop</code> the population table from the slides before.</p>
+<ol type="1">
+<li>Pick any spot in the United States on a web map. Right-click it to see its coordinates. Web maps show latitude first, but <code>st_as_sf()</code> takes longitude first.</li>
+<li>Make the point and put it in the counties’ CRS: <code>p &lt;- st_as_sf(data.frame(name = "my place", lon = ..., lat = ...), coords = c("lon", "lat"), crs = 4326)</code>, then <code>p &lt;- st_transform(p, st_crs(co))</code>.</li>
+<li>Its county, by location: <code>j &lt;- st_join(p, co[c("GEOID", "NAME", "STUSPS")])</code>, then <code>st_drop_geometry(j)</code>.</li>
+<li>Its population, by GEOID: <code>merge(st_drop_geometry(j), pop[c("GEOID", "POPESTIMATE2024")], by = "GEOID")</code>.</li>
+<li>Try a point on water near a coast, such as the middle of a bridge.</li>
+</ol>
+<p><span class="source">Compare with the room: the largest county population anyone found. Then share a spot that returned no county, and why.</span></p>
+</div>
+<div id="tabset-1-2">
+<div class="cell" data-layout-align="center">
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>R Console, in the 23-spatial-vector folder; co and pop from the slides before</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a aria-hidden="true" tabindex="-1"></a>pl <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">name =</span> <span class="fu">c</span>(<span class="st">"Times Square"</span>, <span class="st">"Willis Tower"</span>, <span class="st">"Hollywood sign"</span>, <span class="st">"Golden Gate Bridge"</span>),</span>
+<span id="cb9-2"><a aria-hidden="true" tabindex="-1"></a>                 <span class="at">lon =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="fl">73.9855</span>, <span class="sc">-</span><span class="fl">87.6359</span>, <span class="sc">-</span><span class="fl">118.3217</span>, <span class="sc">-</span><span class="fl">122.4783</span>),</span>
+<span id="cb9-3"><a aria-hidden="true" tabindex="-1"></a>                 <span class="at">lat =</span> <span class="fu">c</span>(<span class="fl">40.7580</span>, <span class="fl">41.8789</span>, <span class="fl">34.1341</span>, <span class="fl">37.8199</span>))</span>
+<span id="cb9-4"><a aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">st_transform</span>(<span class="fu">st_as_sf</span>(pl, <span class="at">coords =</span> <span class="fu">c</span>(<span class="st">"lon"</span>, <span class="st">"lat"</span>), <span class="at">crs =</span> <span class="dv">4326</span>), <span class="fu">st_crs</span>(co))</span>
+<span id="cb9-5"><a aria-hidden="true" tabindex="-1"></a>j <span class="ot">&lt;-</span> <span class="fu">st_join</span>(p, co[<span class="fu">c</span>(<span class="st">"GEOID"</span>, <span class="st">"NAME"</span>, <span class="st">"STUSPS"</span>)])</span>
+<span id="cb9-6"><a aria-hidden="true" tabindex="-1"></a><span class="fu">merge</span>(<span class="fu">st_drop_geometry</span>(j), pop[<span class="fu">c</span>(<span class="st">"GEOID"</span>, <span class="st">"POPESTIMATE2024"</span>)], <span class="at">by =</span> <span class="st">"GEOID"</span>, <span class="at">all.x =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb9-7"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   GEOID               name        NAME STUSPS POPESTIMATE2024</span></span>
+<span id="cb9-8"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 06037     Hollywood sign Los Angeles     CA         9757179</span></span>
+<span id="cb9-9"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2 17031       Willis Tower        Cook     IL         5182617</span></span>
+<span id="cb9-10"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3 36061       Times Square    New York     NY         1660664</span></span>
+<span id="cb9-11"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4  &lt;NA&gt; Golden Gate Bridge        &lt;NA&gt;   &lt;NA&gt;              NA</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+<p><span class="source">Los Angeles County is the largest, with 9,757,179 people. Manhattan is New York County. The middle of the Golden Gate Bridge returns no county, because the county shapes stop at the shoreline, about 630 m away.</span></p>
+</div>
+</div>
+</div>
+</section></section>
+<section>
+<section id="part-measure" class="title-slide slide level1 center">
+<h1>2 · Measuring areas, distances and angles</h1>
+
+</section>
+<section id="overview-2" class="slide level2">
+<h2>Overview of part 2</h2>
+<div class="slide-text">
+<p>How to measure areas, distances and directions in R.</p>
+</div>
+<div class="columns">
+<div class="column" style="width:58%;">
+<div class="dashes">
+<ul>
+<li><strong>Units:</strong> degrees and metres, and which coordinate system to use.</li>
+<li><strong>Area:</strong> Tompkins County, compared with the Census figure.</li>
+<li><strong>Distance:</strong> from each county to Times Square, and from Warren Hall to Pennsylvania.</li>
+<li><strong>Buffers and lengths:</strong> the counties within 50 km of Warren Hall, and the Interstate miles in New York.</li>
+<li><strong>Direction:</strong> from Warren Hall to Times Square.</li>
+<li>Each comes with a published study that used it.</li>
+</ul>
+</div>
+</div><div class="column" style="width:40%;">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="figures/23-spatial-vector/f4_border.png" class="quarto-figure quarto-figure-center" height="270"></p>
+</figure>
+</div>
+<p><span class="source">Later in this part: Warren Hall’s distance to Pennsylvania.</span></p>
+</div></div>
+</section>
+<section id="degrees" class="slide level2">
+<h2>Degrees and metres</h2>
+<div class="slide-text">
+<ul>
+<li>Longitude and latitude are angles.</li>
+<li>A degree of longitude spans 111 km at the equator, 82 km at Ithaca and nothing at the pole.</li>
+<li>To measure in kilometres, use the round Earth or a map projection in metres.</li>
+</ul>
+</div>
+
+<img data-src="figures/23-spatial-vector/f2_globe.png" class="quarto-figure quarto-figure-center r-stretch" style="width:72.0%"><p><span class="source">A <strong>geographic CRS</strong>, such as 4269 or 4326, gives degrees. A <strong>projected CRS</strong> gives metres on a flat map. Flattening the Earth always stretches something, the way an orange peel tears when pressed flat. Lengths on the round Earth here use a sphere of radius 6,371 km. Each coloured segment spans 15 degrees, and its label gives the length of one degree.</span></p>
+</section>
+<section id="crs" class="slide level2">
+<h2>Choosing a projection</h2>
+<div class="slide-text">
+<ul>
+<li>A coordinate reference system (CRS) is either geographic, in degrees on the round Earth, or projected, in metres on a flat map.</li>
+<li>Every flat map distorts something.</li>
+<li>Pick the projection that better meets your needs.</li>
+</ul>
+</div>
+
+<img data-src="figures/23-spatial-vector/f37_crs.png" class="quarto-figure quarto-figure-center r-stretch" style="width:100.0%"><p><span class="source">Red: the United States. Blue: Greenland, which has about a fifth of the US’s area. The codes come from the EPSG registry, and <code>st_crs()</code> shows a layer’s code. UTM is a conformal projection made of 60 strips, each 6° wide. Azimuthal projections keep directions from one point, as the Ithaca map does. Compromise projections, such as Robinson, keep nothing exactly but distort less overall. The grouping follows Lovelace, Nowosad &amp; Muenchow (<a href="https://r.geocompx.org/reproj-geo-data.html"><em>Geocomputation with R</em>, section 7.6</a>).</span></p>
+</section>
+<section id="area" class="slide level2">
+<h2>Area and perimeter of Tompkins County</h2>
+<div class="columns">
+<div class="column" style="width:64%;">
+<div class="slide-text">
+<ul>
+<li><code>st_area()</code> measures in the layer’s CRS, and the CRS changes the answer.
+<ul>
+<li>Conus Albers, an equal-area projection, gives 1,273.0 km², as the Census reports.</li>
+<li>Web Mercator gives 1.84 times as much.</li>
+</ul></li>
+<li>Measure areas on the round Earth or in an equal-area projection.</li>
+<li>When the attribute table reports an area, such as ALAND, use it.</li>
+</ul>
+</div>
+</div><div class="column" style="width:34%;">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="figures/23-spatial-vector/f3_area.png" class="quarto-figure quarto-figure-center" height="228"></p>
+</figure>
+</div>
+</div></div>
+<div class="cell" data-layout-align="center" data-script="Area and perimeter of Tompkins County">
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>R Console, in the 23-spatial-vector folder; tk from the slides before</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a aria-hidden="true" tabindex="-1"></a>tk_m <span class="ot">&lt;-</span> <span class="fu">st_transform</span>(tk, <span class="dv">5070</span>)                                  <span class="co"># Conus Albers: equal area, metres</span></span>
+<span id="cb10-2"><a aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">c</span>(<span class="at">albers       =</span> <span class="fu">as.numeric</span>(<span class="fu">st_area</span>(tk_m)) <span class="sc">/</span> <span class="fl">1e6</span>,         <span class="co"># km2</span></span>
+<span id="cb10-3"><a aria-hidden="true" tabindex="-1"></a>        <span class="at">web_mercator =</span> <span class="fu">as.numeric</span>(<span class="fu">st_area</span>(<span class="fu">st_transform</span>(tk, <span class="dv">3857</span>))) <span class="sc">/</span> <span class="fl">1e6</span>,</span>
+<span id="cb10-4"><a aria-hidden="true" tabindex="-1"></a>        <span class="at">round_earth  =</span> <span class="fu">as.numeric</span>(<span class="fu">st_area</span>(tk)) <span class="sc">/</span> <span class="fl">1e6</span>,           <span class="co"># degrees: sf measures on a sphere</span></span>
+<span id="cb10-5"><a aria-hidden="true" tabindex="-1"></a>        <span class="at">census       =</span> (tk<span class="sc">$</span>ALAND <span class="sc">+</span> tk<span class="sc">$</span>AWATER) <span class="sc">/</span> <span class="fl">1e6</span>), <span class="dv">1</span>)</span>
+<span id="cb10-6"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;       albers web_mercator  round_earth       census </span></span>
+<span id="cb10-7"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;       1273.0       2339.8       1271.0       1273.1</span></span>
+<span id="cb10-8"><a aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">as.numeric</span>(<span class="fu">st_length</span>(<span class="fu">st_boundary</span>(tk_m))) <span class="sc">/</span> <span class="fl">1e3</span>, <span class="dv">1</span>)       <span class="co"># perimeter, km</span></span>
+<span id="cb10-9"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 174.4</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+<p><span class="source">5070 is the EPSG code of Conus Albers. <code>st_area()</code> returns m². Web Mercator stretches areas by 1/cos²(latitude), which is 1.84 at Ithaca. For the perimeter, <code>st_boundary()</code> turns the polygon into a line and <code>st_length()</code> measures it. ALAND (1,229.3 km²) leaves out the county’s part of Cayuga Lake.</span></p>
+</section>
+<section id="use-point" class="slide level2">
+<h2>Distance to a point</h2>
+<div class="columns">
+<div class="column" style="width:55%;">
+<div class="dashes">
+<ul>
+<li><strong>Question:</strong> <a href="https://doi.org/10.1162/qjec.2009.124.2.531">Becker &amp; Woessmann (QJE, 2009)</a> asked why Protestant counties in Prussia were richer. Max Weber credited a Protestant work ethic.</li>
+<li><strong>Method:</strong> Protestantism spread outward from Wittenberg, where Luther began the Reformation. Each county’s distance to Wittenberg serves as an instrument for its share of Protestants.</li>
+<li><strong>Data:</strong> 452 Prussian counties in the census of 1871.</li>
+<li><strong>Result:</strong> Each 100 km from Wittenberg meant 9.5 percentage points fewer Protestants. Protestant counties were more literate, and literacy explains their higher incomes.</li>
+</ul>
+</div>
+</div><div class="column" style="width:43%;">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="figures/23-spatial-vector/p_bw.png" class="quarto-figure quarto-figure-center" height="340"></p>
+</figure>
+</div>
+</div></div>
+<p><span class="source">An <strong>instrument</strong> changes the treatment (here, the Protestant share) and affects the outcome only through it. The map is Figure III of “Was Weber Wrong? A Human Capital Theory of Protestant Economic History”. The cross marks Wittenberg.</span></p>
+</section>
+<section id="point" class="slide level2">
+<h2>Each county’s distance to Times Square</h2>
+<div class="columns">
+<div class="column" style="width:50%;">
+<div class="slide-text">
+<p><code>st_distance()</code> gives the distance from a point inside each New York county to Times Square. Tompkins is 280 km away; Niagara, the farthest, is 479 km away.</p>
+</div>
+</div><div class="column" style="width:48%;">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="figures/23-spatial-vector/f27_ts.png" class="quarto-figure quarto-figure-center" height="215"></p>
+</figure>
+</div>
+</div></div>
+<div class="cell" data-layout-align="center" data-script="Each county's distance to Times Square">
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>R Console, in the 23-spatial-vector folder; ny (New York's 62 counties) from Part 1</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a aria-hidden="true" tabindex="-1"></a>ts    <span class="ot">&lt;-</span> <span class="fu">st_as_sf</span>(<span class="fu">data.frame</span>(<span class="at">name =</span> <span class="st">"Times Square"</span>, <span class="at">lon =</span> <span class="sc">-</span><span class="fl">73.9855</span>, <span class="at">lat =</span> <span class="fl">40.7580</span>),</span>
+<span id="cb11-2"><a aria-hidden="true" tabindex="-1"></a>                  <span class="at">coords =</span> <span class="fu">c</span>(<span class="st">"lon"</span>, <span class="st">"lat"</span>), <span class="at">crs =</span> <span class="dv">4326</span>)</span>
+<span id="cb11-3"><a aria-hidden="true" tabindex="-1"></a>ny_co <span class="ot">&lt;-</span> <span class="fu">st_transform</span>(ny, <span class="dv">5070</span>)                                   <span class="co"># New York's counties, in metres</span></span>
+<span id="cb11-4"><a aria-hidden="true" tabindex="-1"></a>pt_ny <span class="ot">&lt;-</span> <span class="fu">st_point_on_surface</span>(<span class="fu">st_geometry</span>(ny_co))                  <span class="co"># a point inside each county</span></span>
+<span id="cb11-5"><a aria-hidden="true" tabindex="-1"></a>ny_co<span class="sc">$</span>km_ts <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(<span class="fu">st_distance</span>(pt_ny, <span class="fu">st_transform</span>(ts, <span class="dv">5070</span>))) <span class="sc">/</span> <span class="fl">1e3</span></span>
+<span id="cb11-6"><a aria-hidden="true" tabindex="-1"></a>km <span class="ot">&lt;-</span> <span class="fu">setNames</span>(<span class="fu">round</span>(ny_co<span class="sc">$</span>km_ts), ny_co<span class="sc">$</span>NAME); km[<span class="fu">c</span>(<span class="st">"Tompkins"</span>, <span class="fu">names</span>(<span class="fu">which.max</span>(km)))]</span>
+<span id="cb11-7"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Tompkins  Niagara </span></span>
+<span id="cb11-8"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;      280      479</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+<p><span class="source"><code>st_point_on_surface()</code> returns a point that is always inside the county. A <strong>centroid</strong>, the centre of the area, can fall outside a curved shape. Tompkins is outlined in red.</span></p>
+</section>
+<section id="use-border" class="slide level2">
+<h2>Distance to a border</h2>
+<div class="columns">
+<div class="column" style="width:48%;">
+<div class="dashes">
+<ul>
+<li><strong>Question:</strong> <a href="https://doi.org/10.1086/250026">Holmes (JPE, 1998)</a> asked whether state policies that favour business attract manufacturing.</li>
+<li><strong>Method:</strong> Counties on the two sides of a state border are alike except for their states’ policies. He compared counties near the borders between right-to-work states and other states.</li>
+<li><strong>Data:</strong> US counties near these borders, in bands of 25 miles.</li>
+<li><strong>Result:</strong> Manufacturing’s share of jobs is about a third higher on the right-to-work side.</li>
+</ul>
+</div>
+</div><div class="column" style="width:50%;">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="figures/23-spatial-vector/p_holmes.png" class="quarto-figure quarto-figure-center" height="320"></p>
+</figure>
+</div>
+</div></div>
+<p><span class="source">A <strong>right-to-work</strong> law bans contracts that require union membership. The map is Figure 3 of “The Effect of State Policies on the Location of Manufacturing: Evidence from State Borders” (working paper version, 1996). It shades the counties within 25 miles of these borders, dark on the right-to-work side.</span></p>
+</section>
+<section id="distance" class="slide level2">
+<h2>Distance to a state and its border</h2>
+<div class="columns">
+<div class="column" style="width:57%;">
+<div class="slide-text">
+<ul>
+<li>Warren Hall is 50.3 km from Pennsylvania.</li>
+<li>Its distance to New York is 0, because it is inside New York.</li>
+<li>Its distance to New York’s border, from <code>st_boundary()</code>, is also 50.3 km.</li>
+</ul>
+</div>
+</div><div class="column" style="width:41%;">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="figures/23-spatial-vector/f4_border.png" class="quarto-figure quarto-figure-center" height="228"></p>
+</figure>
+</div>
+</div></div>
+<div class="cell" data-layout-align="center" data-script="Distance to a state and its border">
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>R Console, in the 23-spatial-vector folder; wh from the slides before; reads data/census/cb_2024_us_state_500k.zip</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a aria-hidden="true" tabindex="-1"></a><span class="fu">unzip</span>(<span class="st">"data/census/cb_2024_us_state_500k.zip"</span>, <span class="at">exdir =</span> <span class="st">"data_clean/states"</span>)</span>
+<span id="cb12-2"><a aria-hidden="true" tabindex="-1"></a>states   <span class="ot">&lt;-</span> <span class="fu">st_read</span>(<span class="st">"data_clean/states/cb_2024_us_state_500k.shp"</span>, <span class="at">quiet =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb12-3"><a aria-hidden="true" tabindex="-1"></a>states_m <span class="ot">&lt;-</span> <span class="fu">st_transform</span>(states, <span class="dv">5070</span>); wh_m <span class="ot">&lt;-</span> <span class="fu">st_transform</span>(wh, <span class="dv">5070</span>)      <span class="co"># Conus Albers, metres</span></span>
+<span id="cb12-4"><a aria-hidden="true" tabindex="-1"></a>ny_m <span class="ot">&lt;-</span> states_m[states_m<span class="sc">$</span>STUSPS <span class="sc">==</span> <span class="st">"NY"</span>, ]</span>
+<span id="cb12-5"><a aria-hidden="true" tabindex="-1"></a>km <span class="ot">&lt;-</span> <span class="cf">function</span>(a, b) <span class="fu">round</span>(<span class="fu">as.numeric</span>(<span class="fu">st_distance</span>(a, b)) <span class="sc">/</span> <span class="fl">1e3</span>, <span class="dv">1</span>)</span>
+<span id="cb12-6"><a aria-hidden="true" tabindex="-1"></a><span class="fu">c</span>(<span class="at">to_PA =</span> <span class="fu">km</span>(wh_m, states_m[states_m<span class="sc">$</span>STUSPS <span class="sc">==</span> <span class="st">"PA"</span>, ]), <span class="at">to_NY =</span> <span class="fu">km</span>(wh_m, ny_m),</span>
+<span id="cb12-7"><a aria-hidden="true" tabindex="-1"></a>  <span class="at">to_NY_border =</span> <span class="fu">km</span>(wh_m, <span class="fu">st_boundary</span>(ny_m)))</span>
+<span id="cb12-8"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;        to_PA        to_NY to_NY_border </span></span>
+<span id="cb12-9"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;         50.3          0.0         50.3</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+<p><span class="source"><code>st_distance()</code> returns 0 for a point inside a polygon. 5070 is Conus Albers, an equal-area projection in metres. On the round Earth the distance is 50.0 km, 0.6% shorter.</span></p>
+</section>
+<section id="use-buffer" class="slide level2">
+<h2>Buffers</h2>
+<div class="columns">
+<div class="column" style="width:55%;">
+<div class="dashes">
+<ul>
+<li><strong>Question:</strong> <a href="https://doi.org/10.1257/aer.20121656">Currie, Davis, Greenstone &amp; Walker (AER, 2015)</a> asked how much toxic plants harm the people who live near them.</li>
+<li><strong>Method:</strong> They drew rings around about 1,600 plants that opened or closed. Then they compared homes and births inside and outside the rings, before and after.</li>
+<li><strong>Data:</strong> house prices within 0.5 mile and birth weight within 1 mile of each plant.</li>
+<li><strong>Result:</strong> An opening lowered house values within 0.5 mile by 11%. It raised the chance of low birth weight within 1 mile by about 3%.</li>
+</ul>
+</div>
+</div><div class="column" style="width:43%;">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="figures/23-spatial-vector/p_cdgw.png" class="quarto-figure quarto-figure-center" height="320"></p>
+</figure>
+</div>
+</div></div>
+<p><span class="source"><strong>Low birth weight</strong> is under 2,500 g. The figure is Figure 2 of “Environmental Health Risks and Housing Values: Evidence from 1,600 Toxic Plant Openings and Closings”. Air pollution falls with distance from the plant and is gone by about 1 mile, so the rings are small.</span></p>
+</section>
+<section id="buffer" class="slide level2">
+<h2>A 50 km buffer around Warren Hall</h2>
+<div class="slide-text">
+<p><code>st_buffer()</code> draws the area within 50 km of Warren Hall. It reaches 11 counties, all in New York, because Pennsylvania is 50.3 km away.</p>
+</div>
+<div class="columns">
+<div class="column" style="width:56%;">
+<div class="cell" data-layout-align="center" data-script="A 50 km buffer around Warren Hall">
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>R Console; co and wh_m from the slides before</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a aria-hidden="true" tabindex="-1"></a>b    <span class="ot">&lt;-</span> <span class="fu">st_buffer</span>(wh_m, <span class="dv">50000</span>)    <span class="co"># within 50,000 m</span></span>
+<span id="cb13-2"><a aria-hidden="true" tabindex="-1"></a>co_m <span class="ot">&lt;-</span> <span class="fu">st_transform</span>(co, <span class="dv">5070</span>)</span>
+<span id="cb13-3"><a aria-hidden="true" tabindex="-1"></a>near <span class="ot">&lt;-</span> co_m[b, ]                 <span class="co"># the counties b reaches</span></span>
+<span id="cb13-4"><a aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(near<span class="sc">$</span>STUSPS)</span>
+<span id="cb13-5"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb13-6"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; NY </span></span>
+<span id="cb13-7"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 11</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+</div><div class="column" style="width:42%;">
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="23-spatial-vector_files/figure-revealjs/buffer-map-figure-1.png" class="quarto-figure quarto-figure-center" style="width:100.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+</div></div>
+<p><span class="source">The distance is in the CRS’s units, metres in 5070. <code>co_m[b, ]</code> keeps the counties that touch or overlap the circle. The thick line is New York’s border. The code for the map is on the session page and in the live script.</span></p>
+</section>
+<section id="use-length" class="slide level2">
+<h2>Length inside a polygon</h2>
+<div class="columns">
+<div class="column" style="width:48%;">
+<div class="dashes">
+<ul>
+<li><strong>Question:</strong> <a href="https://doi.org/10.1093/restud/rds010">Duranton &amp; Turner (REStud, 2012)</a> asked whether more highways make cities grow.</li>
+<li><strong>Method:</strong> They cut the Interstates at each metropolitan area’s boundary and measured the kilometres inside. Older networks, cut the same way, serve as instruments.</li>
+<li><strong>Data:</strong> US metropolitan areas, 1983-2003. The older networks are the 1947 highway plan, the 1898 railroads and early exploration routes.</li>
+<li><strong>Result:</strong> 10% more highway in 1983 raised a city’s employment by about 1.5% over the next 20 years.</li>
+</ul>
+</div>
+</div><div class="column" style="width:50%;">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="figures/23-spatial-vector/p_dt.png" class="quarto-figure quarto-figure-center" height="300"></p>
+</figure>
+</div>
+</div></div>
+<p><span class="source">A <strong>metropolitan area</strong> is a city plus the counties that commute to it. The map shows the 1947 plan’s lines around Chicago, over the shaded metropolitan areas. It is part of Figure 2 of the 2008 working paper of “Urban Growth and Transportation”.</span></p>
+</section>
+<section id="interstates" class="slide level2">
+<h2>Interstate miles in New York</h2>
+<div class="columns">
+<div class="column" style="width:60%;">
+<div class="slide-text">
+<p><code>st_intersection()</code> keeps the part of each Interstate inside New York: 3,599 miles (5,792 km) in the file. TIGER draws each direction of a divided highway as its own line, so the road itself is about half that length.</p>
+</div>
+</div><div class="column" style="width:38%;">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="figures/23-spatial-vector/f5_twin.png" class="quarto-figure quarto-figure-center" height="230"></p>
+</figure>
+</div>
+</div></div>
+<div class="cell" data-layout-align="center" data-script="Interstate miles in New York">
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>R Console, in the 23-spatial-vector folder; ny_m (New York in 5070); reads data_clean/interstates_ny_box.gpkg</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a aria-hidden="true" tabindex="-1"></a>it    <span class="ot">&lt;-</span> <span class="fu">st_read</span>(<span class="st">"data_clean/interstates_ny_box.gpkg"</span>, <span class="at">quiet =</span> <span class="cn">TRUE</span>)   <span class="co"># Census Interstate lines near New York</span></span>
+<span id="cb14-2"><a aria-hidden="true" tabindex="-1"></a>it_ny <span class="ot">&lt;-</span> <span class="fu">st_intersection</span>(<span class="fu">st_transform</span>(it, <span class="dv">5070</span>), ny_m[<span class="st">"STUSPS"</span>])      <span class="co"># the parts inside New York</span></span>
+<span id="cb14-3"><a aria-hidden="true" tabindex="-1"></a><span class="co"># st_intersection() warns that attributes are assumed constant: expected here</span></span>
+<span id="cb14-4"><a aria-hidden="true" tabindex="-1"></a>it_ny<span class="sc">$</span>miles <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(<span class="fu">st_length</span>(it_ny)) <span class="sc">/</span> <span class="fl">1609.344</span></span>
+<span id="cb14-5"><a aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">sum</span>(it_ny<span class="sc">$</span>miles), <span class="dv">1</span>)</span>
+<span id="cb14-6"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 3599.1</span></span>
+<span id="cb14-7"><a aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">sort</span>(<span class="fu">tapply</span>(it_ny<span class="sc">$</span>miles, it_ny<span class="sc">$</span>FULLNAME, sum), <span class="at">decreasing =</span> <span class="cn">TRUE</span>)[<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>], <span class="dv">1</span>)</span>
+<span id="cb14-8"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; I- 90 I- 87 I- 86 </span></span>
+<span id="cb14-9"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 770.1 669.1 534.9</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+<p><span class="source"><strong>TIGER</strong> is the Census map database of roads and boundaries. RTTYP “I” marks an Interstate highway. A divided highway has a separate roadway for each direction. A GeoPackage (.gpkg) is one file with a layer’s shapes, table and CRS. One mile is 1,609.344 m.</span></p>
+</section>
+<section id="use-direction" class="slide level2">
+<h2>Direction</h2>
+<div class="columns">
+<div class="column" style="width:55%;">
+<div class="dashes">
+<ul>
+<li><strong>Question:</strong> <a href="https://doi.org/10.1093/jeea/jvz051">Anderson (JEEA, 2020)</a> asked whether years of breathing polluted air raise mortality.</li>
+<li><strong>Method:</strong> He found the direction from each home to its nearest major highway. With daily wind data, this gives the share of days the home was downwind.</li>
+<li><strong>Data:</strong> the homes of everyone who died in Los Angeles over three years.</li>
+<li><strong>Result:</strong> Doubling the time spent downwind raised mortality among people 75 and older by about 4% to 6.5%.</li>
+</ul>
+</div>
+</div><div class="column" style="width:43%;">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="figures/23-spatial-vector/p_anderson.png" class="quarto-figure quarto-figure-center" height="390"></p>
+</figure>
+</div>
+</div></div>
+<p><span class="source">A home’s direction from the highway is fixed, and the wind decides how often the home is downwind. The panels are Figure 1 of “As the Wind Blows: The Effects of Long-Term Exposure to Air Pollution on Mortality”. The hatched side is downwind for each wind direction.</span></p>
+</section>
+<section id="direction" class="slide level2">
+<h2>Direction from Warren Hall to Times Square</h2>
+<div class="slide-text">
+<ul>
+<li>A <strong>bearing</strong> is the angle clockwise from north.</li>
+<li>Measure it in the local UTM zone, a projection that keeps angles.
+<ul>
+<li>There, Times Square lies at 132° from Warren Hall, against 131° on the round Earth.</li>
+<li>Conus Albers gives 120°, because its north tilts 12° here.</li>
+</ul></li>
+</ul>
+</div>
+<div class="columns">
+<div class="column" style="width:57%;">
+<div class="cell" data-layout-align="center" data-script="Direction from Warren Hall to Times Square">
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>R Console; wh and ts from the slides before</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a aria-hidden="true" tabindex="-1"></a>bearing <span class="ot">&lt;-</span> <span class="cf">function</span>(a, b, crs) {   <span class="co"># degrees from map north</span></span>
+<span id="cb15-2"><a aria-hidden="true" tabindex="-1"></a>  d <span class="ot">&lt;-</span> <span class="fu">st_coordinates</span>(<span class="fu">st_transform</span>(b, crs)) <span class="sc">-</span></span>
+<span id="cb15-3"><a aria-hidden="true" tabindex="-1"></a>       <span class="fu">st_coordinates</span>(<span class="fu">st_transform</span>(a, crs))  <span class="co"># east, north (m)</span></span>
+<span id="cb15-4"><a aria-hidden="true" tabindex="-1"></a>  (<span class="fu">atan2</span>(d[<span class="dv">1</span>], d[<span class="dv">2</span>]) <span class="sc">*</span> <span class="dv">180</span> <span class="sc">/</span> pi) <span class="sc">%%</span> <span class="dv">360</span>   <span class="co"># 0 to 360</span></span>
+<span id="cb15-5"><a aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb15-6"><a aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">c</span>(<span class="at">utm_18N =</span> <span class="fu">bearing</span>(wh, ts, <span class="dv">32618</span>),</span>
+<span id="cb15-7"><a aria-hidden="true" tabindex="-1"></a>        <span class="at">albers  =</span> <span class="fu">bearing</span>(wh, ts, <span class="dv">5070</span>)), <span class="dv">1</span>)</span>
+<span id="cb15-8"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; utm_18N  albers </span></span>
+<span id="cb15-9"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   132.2   120.0</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+</div><div class="column" style="width:41%;">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="figures/23-spatial-vector/f25_direction.png" class="quarto-figure quarto-figure-center" height="250"></p>
+</figure>
+</div>
+</div></div>
+<p><span class="source">EPSG 32618 is UTM zone 18N, from 78°W to 72°W, which includes Ithaca and New York City. <code>atan2(east, north)</code> gives the angle from north in radians. Raw longitude and latitude give 124°, because they treat a degree east (82 km here) as equal to a degree north (111 km). UTM’s north is 1° off true north at Warren Hall.</span></p>
+</section></section>
+<section>
+<section id="part-routes" class="title-slide slide level1 center">
+<h1>3 · Relations between places</h1>
+
+</section>
+<section id="overview-3" class="slide level2">
+<h2>Overview of part 3</h2>
+<div class="slide-text">
+<p>How to find nearby places, neighbours and routes.</p>
+</div>
+<div class="columns">
+<div class="column" style="width:58%;">
+<div class="dashes">
+<ul>
+<li><strong>Nearest feature:</strong> the nearest Interstate to Warren Hall and to each county.</li>
+<li><strong>Neighbours:</strong> counties that touch, and counties two borders away.</li>
+<li><strong>Shortest routes:</strong> the fewest county lines from Tompkins to Los Angeles, and Exercise 2.</li>
+<li><strong>Other distances:</strong> straight lines between cities, and Facebook friendships.</li>
+<li><strong>Standard errors</strong> when nearby counties are alike.</li>
+</ul>
+</div>
+</div><div class="column" style="width:40%;">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="figures/23-spatial-vector/f8_graph.png" class="quarto-figure quarto-figure-center" height="270"></p>
+</figure>
+</div>
+<p><span class="source">Later in this part: each county is a dot, and a line joins two counties that touch.</span></p>
+</div></div>
+</section>
+<section id="use-nearest" class="slide level2">
+<h2>Nearest feature</h2>
+<div class="columns">
+<div class="column" style="width:46%;">
+<div class="dashes">
+<ul>
+<li><strong>Question:</strong> <a href="https://doi.org/10.1093/ej/ueaa013">Asher, Garg &amp; Novosad (EJ, 2020)</a> asked whether new roads in India cause deforestation.</li>
+<li><strong>Method:</strong> They compared new village roads with wider national highways. For each village, they measured the distance to the nearest road of each kind.</li>
+<li><strong>Data:</strong> forest cover across India, measured from satellite images.</li>
+<li><strong>Result:</strong> New roads to more than 100,000 villages had no effect on forest loss. Wider highways, 10,000 km of them, caused forest loss along their routes.</li>
+</ul>
+</div>
+</div><div class="column" style="width:52%;">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="figures/23-spatial-vector/p_agn.png" class="quarto-figure quarto-figure-center" height="290"></p>
+</figure>
+</div>
+</div></div>
+<p><span class="source">Forest cover is measured from satellite images. The maps are Figure 1 of the authors’ 2019 version of “The Ecological Impact of Transportation Infrastructure”. Left: the new national highways. Right: forest cover in 2001.</span></p>
+</section>
+<section id="nearest-it" class="slide level2">
+<h2>The nearest Interstate to Warren Hall</h2>
+<div class="columns">
+<div class="column" style="width:50%;">
+<div class="slide-text">
+<ul>
+<li><code>st_nearest_feature()</code> finds the nearest Interstate, and <code>st_distance()</code> measures how far it is.</li>
+<li>Warren Hall’s nearest Interstate is I-81, 30.4 km away.</li>
+<li>Among New York’s counties, St.&nbsp;Lawrence is farthest from an Interstate, at 75 km.</li>
+</ul>
+</div>
+</div><div class="column" style="width:48%;">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="figures/23-spatial-vector/f28_nearest.png" class="quarto-figure quarto-figure-center" height="215"></p>
+</figure>
+</div>
+</div></div>
+<div class="cell" data-layout-align="center" data-script="The nearest Interstate to Warren Hall">
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>R Console; wh_m, it_ny, ny_co and pt_ny from Part 2</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a aria-hidden="true" tabindex="-1"></a>k <span class="ot">&lt;-</span> <span class="fu">st_nearest_feature</span>(wh_m, it_ny)                       <span class="co"># row of the nearest Interstate piece</span></span>
+<span id="cb16-2"><a aria-hidden="true" tabindex="-1"></a><span class="fu">c</span>(it_ny<span class="sc">$</span>FULLNAME[k], <span class="fu">round</span>(<span class="fu">as.numeric</span>(<span class="fu">st_distance</span>(wh_m, it_ny[k, ])) <span class="sc">/</span> <span class="fl">1e3</span>, <span class="dv">1</span>))   <span class="co"># name, km</span></span>
+<span id="cb16-3"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] "I- 81" "30.4"</span></span>
+<span id="cb16-4"><a aria-hidden="true" tabindex="-1"></a>kk <span class="ot">&lt;-</span> <span class="fu">st_nearest_feature</span>(pt_ny, it_ny)                     <span class="co"># every New York county at once</span></span>
+<span id="cb16-5"><a aria-hidden="true" tabindex="-1"></a>ny_co<span class="sc">$</span>km_it <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(<span class="fu">st_distance</span>(pt_ny, it_ny[kk, ], <span class="at">by_element =</span> <span class="cn">TRUE</span>)) <span class="sc">/</span> <span class="fl">1e3</span></span>
+<span id="cb16-6"><a aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(<span class="fu">sort</span>(<span class="fu">setNames</span>(<span class="fu">round</span>(ny_co<span class="sc">$</span>km_it), ny_co<span class="sc">$</span>NAME), <span class="at">decreasing =</span> <span class="cn">TRUE</span>), <span class="dv">2</span>)   <span class="co"># km, farthest two</span></span>
+<span id="cb16-7"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; St. Lawrence     Franklin </span></span>
+<span id="cb16-8"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;           75           59</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+<p><span class="source"><code>wh_m</code> is Warren Hall in metres, <code>it_ny</code> the Interstates in New York and <code>pt_ny</code> a point inside each New York county. With <code>by_element = TRUE</code>, each point is measured to its own nearest road only.</span></p>
+</section>
+<section id="use-neighbours" class="slide level2">
+<h2>Counties that touch</h2>
+<div class="columns">
+<div class="column" style="width:48%;">
+<div class="dashes">
+<ul>
+<li><strong>Question:</strong> <a href="https://doi.org/10.1162/REST_a_00039">Dube, Lester &amp; Reich (REStat, 2010)</a> asked whether higher minimum wages cost jobs.</li>
+<li><strong>Method:</strong> They compared every pair of touching counties on opposite sides of a state line. Each pair shares a local economy, but each county follows its own state’s minimum wage.</li>
+<li><strong>Data:</strong> earnings and jobs in restaurants and other low-wage work, 1990-2006.</li>
+<li><strong>Result:</strong> Higher minimum wages raised earnings and cost no jobs.</li>
+</ul>
+</div>
+</div><div class="column" style="width:50%;">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="figures/23-spatial-vector/p_dlr.png" class="quarto-figure quarto-figure-center" height="330"></p>
+</figure>
+</div>
+</div></div>
+<p><span class="source">US states may set a minimum wage above the federal one. <code>st_touches()</code>, on the next slide, finds such pairs. The map is Figure 2 of “Minimum Wage Effects Across State Borders: Estimates Using Contiguous Counties”. Black counties are in a pair whose states had different minimum wages.</span></p>
+</section>
+<section id="touches" class="slide level2">
+<h2>Counties that share a border</h2>
+<div class="columns">
+<div class="column" style="width:56%;">
+<div class="slide-text">
+<p><code>st_touches()</code> lists, for each county, the counties that share part of its border. Tompkins has six: Cayuga, Chemung, Tioga, Seneca, Cortland and Schuyler.</p>
+</div>
+</div><div class="column" style="width:42%;">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="figures/23-spatial-vector/f6_neighbours.png" class="quarto-figure quarto-figure-center" height="250"></p>
+</figure>
+</div>
+</div></div>
+<div class="cell" data-layout-align="center" data-script="Counties that share a border">
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>R Console, in the 23-spatial-vector folder; co from Part 1</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a aria-hidden="true" tabindex="-1"></a>off <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"AK"</span>, <span class="st">"HI"</span>, <span class="st">"PR"</span>, <span class="st">"AS"</span>, <span class="st">"GU"</span>, <span class="st">"MP"</span>, <span class="st">"VI"</span>)        <span class="co"># Alaska, Hawaii and the five territories</span></span>
+<span id="cb17-2"><a aria-hidden="true" tabindex="-1"></a>low <span class="ot">&lt;-</span> <span class="fu">st_transform</span>(co[<span class="sc">!</span>co<span class="sc">$</span>STUSPS <span class="sc">%in%</span> off, ], <span class="dv">5070</span>)     <span class="co"># the lower 48 and DC, in metres</span></span>
+<span id="cb17-3"><a aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(low)</span>
+<span id="cb17-4"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 3109</span></span>
+<span id="cb17-5"><a aria-hidden="true" tabindex="-1"></a>nb <span class="ot">&lt;-</span> <span class="fu">st_touches</span>(low)                  <span class="co"># for each county, the rows of the counties it touches</span></span>
+<span id="cb17-6"><a aria-hidden="true" tabindex="-1"></a>i  <span class="ot">&lt;-</span> <span class="fu">which</span>(low<span class="sc">$</span>GEOID <span class="sc">==</span> <span class="st">"36109"</span>)      <span class="co"># Tompkins's row</span></span>
+<span id="cb17-7"><a aria-hidden="true" tabindex="-1"></a>low<span class="sc">$</span>NAME[nb[[i]]]</span>
+<span id="cb17-8"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] "Cayuga"   "Chemung"  "Tioga"    "Seneca"   "Cortland" "Schuyler"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+<p><span class="source">Two polygons <strong>touch</strong> when they share at least one border point. The result is a list: for each county, the row numbers of its neighbours. It takes about 2 seconds. Four island counties have no neighbours, because the file cuts counties at the shoreline. They are San Juan (WA), Nantucket and Dukes (MA), and Richmond (Staten Island, NY).</span></p>
+</section>
+<section id="graph" class="slide level2">
+<h2>Counties as a graph</h2>
+<div class="columns">
+<div class="column" style="width:56%;">
+<div class="slide-text">
+<p>A <strong>graph</strong> is a set of nodes joined by edges. Here each county is a node and each pair of touching counties an edge: 3,109 nodes and 9,061 edges.</p>
+</div>
+</div><div class="column" style="width:42%;">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="figures/23-spatial-vector/f8_graph.png" class="quarto-figure quarto-figure-center" height="198"></p>
+</figure>
+</div>
+</div></div>
+<div class="cell" data-layout-align="center" data-script="Load or install igraph">
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>R Console. Installs igraph if missing</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a aria-hidden="true" tabindex="-1"></a>want <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"igraph"</span>)</span>
+<span id="cb18-2"><a aria-hidden="true" tabindex="-1"></a>need <span class="ot">&lt;-</span> want[<span class="sc">!</span>(want <span class="sc">%in%</span> <span class="fu">installed.packages</span>()[,<span class="st">"Package"</span>])]</span>
+<span id="cb18-3"><a aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="fu">length</span>(need)) <span class="fu">install.packages</span>(need)</span>
+<span id="cb18-4"><a aria-hidden="true" tabindex="-1"></a><span class="fu">lapply</span>(want, <span class="cf">function</span>(i) <span class="fu">require</span>(i, <span class="at">character.only =</span> <span class="cn">TRUE</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+<div class="cell" data-layout-align="center" data-script="Counties as a graph">
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>R Console, in the 23-spatial-vector folder; igraph from the chunk above; nb from the slides before</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a aria-hidden="true" tabindex="-1"></a>g <span class="ot">&lt;-</span> <span class="fu">graph_from_adj_list</span>(nb, <span class="at">mode =</span> <span class="st">"all"</span>)     <span class="co"># node k is row k of low; an edge joins two neighbours</span></span>
+<span id="cb19-2"><a aria-hidden="true" tabindex="-1"></a><span class="fu">c</span>(<span class="at">nodes =</span> <span class="fu">vcount</span>(g), <span class="at">edges =</span> <span class="fu">ecount</span>(g))</span>
+<span id="cb19-3"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; nodes edges </span></span>
+<span id="cb19-4"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  3109  9061</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+<p><span class="source"><code>low</code> is the 3,109 counties of the lower 48 and DC, and <code>nb</code> lists each county’s neighbours. With a graph, igraph can count the fewest borders between any two counties. On the map, a dot is a county and a line joins two counties that touch. Tompkins’s six lines are red.</span></p>
+</section>
+<section id="order" class="slide level2">
+<h2>First and second neighbours</h2>
+<div class="columns">
+<div class="column" style="width:58%;">
+<div class="slide-text">
+<ul>
+<li>A county’s <strong>first neighbours</strong> touch it.</li>
+<li>Its <strong>second neighbours</strong> touch a first neighbour but not the county.</li>
+<li>Tompkins has 6 first and 12 second neighbours, 3 of them in Pennsylvania.</li>
+<li>The average of a variable over a county’s first neighbours is its <strong>spatial lag</strong>.
+<ul>
+<li>It is the usual way to put neighbours in a regression.</li>
+</ul></li>
+</ul>
+</div>
+</div><div class="column" style="width:40%;">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="figures/23-spatial-vector/f26_order.png" class="quarto-figure quarto-figure-center" height="215"></p>
+</figure>
+</div>
+</div></div>
+<div class="cell" data-layout-align="center" data-script="First and second neighbours">
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>R Console; low, nb, g and i from the slides before; pop from the population merge</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a aria-hidden="true" tabindex="-1"></a>n2 <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(<span class="fu">ego</span>(g, <span class="at">order =</span> <span class="dv">2</span>, <span class="at">nodes =</span> i, <span class="at">mindist =</span> <span class="dv">2</span>)[[<span class="dv">1</span>]])   <span class="co"># rows of the second neighbours</span></span>
+<span id="cb20-2"><a aria-hidden="true" tabindex="-1"></a>x    <span class="ot">&lt;-</span> pop<span class="sc">$</span>POPESTIMATE2024[<span class="fu">match</span>(low<span class="sc">$</span>GEOID, pop<span class="sc">$</span>GEOID)]           <span class="co"># population, 2024</span></span>
+<span id="cb20-3"><a aria-hidden="true" tabindex="-1"></a>x_nb <span class="ot">&lt;-</span> <span class="fu">sapply</span>(nb, <span class="cf">function</span>(k) <span class="fu">mean</span>(x[k]))                         <span class="co"># first neighbours' average</span></span>
+<span id="cb20-4"><a aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">c</span>(<span class="at">Tompkins =</span> x[i], <span class="at">first =</span> x_nb[i], <span class="at">second =</span> <span class="fu">mean</span>(x[n2])))</span>
+<span id="cb20-5"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Tompkins    first   second </span></span>
+<span id="cb20-6"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   105602    49829   113002</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+<p><span class="source"><code>g</code> is the graph and <code>i</code> is Tompkins’s row. <code>ego()</code> returns the counties within a given number of edges, and <code>mindist = 2</code> drops the county and its first neighbours. The second neighbours have more people because they include Syracuse and Binghamton. In matrix form the spatial lag is W<em>x</em>, where each row of W sums to 1. Second neighbours can instrument for the first neighbours’ average (Kelejian &amp; Prucha, <a href="https://doi.org/10.1023/A:1007707430416">Journal of Real Estate Finance and Economics, 1998</a>). <a href="https://doi.org/10.1016/j.jeconom.2008.12.021">Bramoullé, Djebbari &amp; Fortin (Journal of Econometrics, 2009)</a> use friends of friends the same way.</span></p>
+</section>
+<section id="market-access" class="slide level2">
+<h2>Shortest routes</h2>
+<div class="dashes">
+<ul>
+<li><strong>Question:</strong> <a href="https://doi.org/10.1093/qje/qjw002">Donaldson &amp; Hornbeck (QJE, 2016)</a> asked how much the railroads added to the US economy.</li>
+<li><strong>Method:</strong> They built a network of railroads, waterways and wagon roads, each with a cost per ton-mile. Then they found the cheapest freight route between every pair of counties.</li>
+<li><strong>Data:</strong> US counties and the value of their farmland, 1870 to 1890.</li>
+<li><strong>Result:</strong> Farmland was worth more where railroads cut the cost of reaching markets. Without railroads in 1890, it would have been worth about 60% less.</li>
+</ul>
+</div>
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="figures/23-spatial-vector/p_dh.png" class="quarto-figure quarto-figure-center" height="230"></p>
+</figure>
+</div>
+<p><span class="source"><strong>Market access</strong> measures how cheaply a county can reach buyers in every other county. The maps are panels C and D of Figure 2 in the 2013 working paper of “Railroads and American Economic Growth: A ‘Market Access’ Approach”.</span></p>
+</section>
+<section id="route" class="slide level2">
+<h2>Fewest county lines to Los Angeles</h2>
+<div class="columns">
+<div class="column" style="width:46%;">
+<div class="slide-text">
+<ul>
+<li>Without costs, each county line counts as one step.</li>
+<li>The shortest route from Tompkins County to Los Angeles County crosses 57 county lines.</li>
+<li>The route igraph returns passes through 58 counties in 14 states, north of the straight line.</li>
+</ul>
+</div>
+</div><div class="column" style="width:52%;">
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="23-spatial-vector_files/figure-revealjs/route-map-figure-1.png" class="quarto-figure quarto-figure-center" style="width:100.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+</div></div>
+<div class="cell" data-layout-align="center" data-script="Fewest county lines to Los Angeles">
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>R Console, in the 23-spatial-vector folder; low, g and i from the slides before</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a aria-hidden="true" tabindex="-1"></a>la <span class="ot">&lt;-</span> <span class="fu">which</span>(low<span class="sc">$</span>GEOID <span class="sc">==</span> <span class="st">"06037"</span>)                            <span class="co"># Los Angeles County</span></span>
+<span id="cb21-2"><a aria-hidden="true" tabindex="-1"></a><span class="fu">distances</span>(g, i, la)                                          <span class="co"># fewest county lines</span></span>
+<span id="cb21-3"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;      [,1]</span></span>
+<span id="cb21-4"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1,]   57</span></span>
+<span id="cb21-5"><a aria-hidden="true" tabindex="-1"></a>route <span class="ot">&lt;-</span> <span class="fu">shortest_paths</span>(g, <span class="at">from =</span> i, <span class="at">to =</span> la)<span class="sc">$</span>vpath[[<span class="dv">1</span>]]     <span class="co"># one route with 57</span></span>
+<span id="cb21-6"><a aria-hidden="true" tabindex="-1"></a><span class="fu">unique</span>(low<span class="sc">$</span>STUSPS[route])</span>
+<span id="cb21-7"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [1] "NY" "PA" "OH" "IN" "IL" "WI" "MN" "IA" "SD" "WY" "CO" "UT" "AZ" "CA"</span></span>
+<span id="cb21-8"><a aria-hidden="true" tabindex="-1"></a>cen <span class="ot">&lt;-</span> <span class="fu">st_centroid</span>(<span class="fu">st_geometry</span>(low))                         <span class="co"># each county's centre</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+<p><span class="source"><code>distances()</code> counts the borders crossed on the shortest route. <code>shortest_paths()</code> returns one such route; many routes tie at 57. The dashed line joins the two county centres, 3,692 km apart. The code for the map is on the session page and in the live script.</span></p>
+</section>
+<section id="exercise-2" class="slide level2">
+<h2>Exercise 2</h2>
+<div class="panel-tabset">
+<ul id="tabset-2" class="panel-tabset-tabby"><li><a data-tabby-default="" href="#tabset-2-1">Exercise</a></li><li><a href="#tabset-2-2">Solution</a></li></ul>
+<div class="tab-content">
+<div id="tabset-2-1">
+<p>4 minutes. Count the county lines from Tompkins to a county you pick, and the kilometres per line. From the slides before, <code>low</code> is the lower-48 counties and <code>g</code> their graph. <code>i</code> is Tompkins’s row and <code>cen</code> each county’s centre.</p>
+<ol type="1">
+<li>Find the county’s GEOID, since names repeat (three counties are called Cook): <code>st_drop_geometry(low[low$NAME == "Cook", c("GEOID", "NAME", "STUSPS")])</code>, then <code>j &lt;- which(low$GEOID == "17031")</code> (Cook County, Illinois).</li>
+<li>The fewest county lines, and the states on one route: <code>n &lt;- distances(g, i, j)</code>, then <code>unique(low$STUSPS[shortest_paths(g, from = i, to = j)$vpath[[1]]])</code>.</li>
+<li>Kilometres per county line: <code>d_km &lt;- as.numeric(st_distance(cen[i], cen[j])) / 1e3</code>, then <code>round(d_km / n[1], 1)</code>.</li>
+</ol>
+<p><span class="source">Compare with the room: the most county lines anyone found. Then compare the kilometres per line for an eastern county and a western one.</span></p>
+</div>
+<div id="tabset-2-2">
+<div class="cell" data-layout-align="center">
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>R Console, in the 23-spatial-vector folder; low, g, i and cen from the slides before</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a aria-hidden="true" tabindex="-1"></a>gid <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"36061"</span>, <span class="st">"17031"</span>, <span class="st">"12086"</span>, <span class="st">"48201"</span>, <span class="st">"53033"</span>, <span class="st">"06037"</span>, <span class="st">"53009"</span>)</span>
+<span id="cb22-2"><a aria-hidden="true" tabindex="-1"></a>j <span class="ot">&lt;-</span> <span class="fu">match</span>(gid, low<span class="sc">$</span>GEOID)</span>
+<span id="cb22-3"><a aria-hidden="true" tabindex="-1"></a>r <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">NAME =</span> low<span class="sc">$</span>NAME[j], <span class="at">STUSPS =</span> low<span class="sc">$</span>STUSPS[j], <span class="at">lines =</span> <span class="fu">as.vector</span>(<span class="fu">distances</span>(g, i, j)),</span>
+<span id="cb22-4"><a aria-hidden="true" tabindex="-1"></a>                <span class="at">km =</span> <span class="fu">round</span>(<span class="fu">as.numeric</span>(<span class="fu">st_distance</span>(cen[i], cen[j])) <span class="sc">/</span> <span class="fl">1e3</span>))</span>
+<span id="cb22-5"><a aria-hidden="true" tabindex="-1"></a>r<span class="sc">$</span>km_per_line <span class="ot">&lt;-</span> <span class="fu">round</span>(r<span class="sc">$</span>km <span class="sc">/</span> r<span class="sc">$</span>lines, <span class="dv">1</span>); r</span>
+<span id="cb22-6"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;          NAME STUSPS lines   km km_per_line</span></span>
+<span id="cb22-7"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1    New York     NY     8  279        34.9</span></span>
+<span id="cb22-8"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2        Cook     IL    23  933        40.6</span></span>
+<span id="cb22-9"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3  Miami-Dade     FL    40 1913        47.8</span></span>
+<span id="cb22-10"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4      Harris     TX    44 2190        49.8</span></span>
+<span id="cb22-11"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 5        King     WA    60 3579        59.6</span></span>
+<span id="cb22-12"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 6 Los Angeles     CA    57 3692        64.8</span></span>
+<span id="cb22-13"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 7     Clallam     WA    63 3734        59.3</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+<p><span class="source">Each county line covers about 35 to 45 km in the East. Near the West Coast it covers 60 to 65 km, because western counties are larger. The most is 63 lines, to Clallam County, WA. The four island counties cannot be reached.</span></p>
+</div>
+</div>
+</div>
+</section>
+<section id="use-lines" class="slide level2">
+<h2>Straight lines between cities</h2>
+<div class="slide-text">
+<p>Roads are built where trade already is, so their effect is hard to measure. Straight lines between cities depend only on where the cities are, so they can serve as an instrument for roads.</p>
+</div>
+<div class="dashes">
+<ul>
+<li><a href="https://doi.org/10.1093/restud/rdu010"><strong>Faber (REStud, 2014)</strong></a> drew the cheapest network joining the cities in China’s highway plan. Outlying counties on the highways grew about 18% less over nine years, as industry moved to the cities.</li>
+<li><a href="https://doi.org/10.1016/j.jdeveco.2020.102442"><strong>Banerjee, Duflo &amp; Qian (JDE, 2020)</strong></a> measured each Chinese county’s distance to straight lines between historical cities. Counties nearer the lines had higher GDP per person but did not grow faster.</li>
+</ul>
+</div>
+<p><span class="source">A <strong>minimum spanning tree</strong> is the shortest set of links that joins every city. “Trade Integration, Market Size, and Industrialization: Evidence from China’s National Trunk Highway System”; “On the Road: Access to Transportation Infrastructure and Economic Growth in China”.</span></p>
+</section>
+<section id="lines" class="slide level2">
+<h2>Straight lines between New York’s cities</h2>
+<div class="columns">
+<div class="column" style="width:50%;">
+<div class="slide-text">
+<ul>
+<li>igraph finds the shortest set of straight lines joining New York’s five largest cities, a <strong>minimum spanning tree</strong>. It follows I-90 and I-87.</li>
+<li>A county’s distance to these lines correlates 0.46 with its distance to the nearest Interstate.</li>
+<li>City locations alone predict where the roads are.</li>
+</ul>
+</div>
+</div><div class="column" style="width:48%;">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="figures/23-spatial-vector/f29_lines.png" class="quarto-figure quarto-figure-center" height="185"></p>
+</figure>
+</div>
+</div></div>
+<div class="cell" data-layout-align="center" data-script="Straight lines between New York's cities">
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>R Console; igraph loaded; pt_ny and ny_co from the slides before</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a aria-hidden="true" tabindex="-1"></a>city <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">name =</span> <span class="fu">c</span>(<span class="st">"New York"</span>, <span class="st">"Buffalo"</span>, <span class="st">"Rochester"</span>, <span class="st">"Syracuse"</span>, <span class="st">"Albany"</span>),   <span class="co"># each city hall</span></span>
+<span id="cb23-2"><a aria-hidden="true" tabindex="-1"></a>                   <span class="at">lon =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="fl">74.0060</span>, <span class="sc">-</span><span class="fl">78.8784</span>, <span class="sc">-</span><span class="fl">77.6088</span>, <span class="sc">-</span><span class="fl">76.1474</span>, <span class="sc">-</span><span class="fl">73.7562</span>),</span>
+<span id="cb23-3"><a aria-hidden="true" tabindex="-1"></a>                   <span class="at">lat =</span> <span class="fu">c</span>(<span class="fl">40.7128</span>, <span class="fl">42.8864</span>, <span class="fl">43.1566</span>, <span class="fl">43.0481</span>, <span class="fl">42.6526</span>))</span>
+<span id="cb23-4"><a aria-hidden="true" tabindex="-1"></a>city <span class="ot">&lt;-</span> <span class="fu">st_transform</span>(<span class="fu">st_as_sf</span>(city, <span class="at">coords =</span> <span class="fu">c</span>(<span class="st">"lon"</span>, <span class="st">"lat"</span>), <span class="at">crs =</span> <span class="dv">4326</span>), <span class="dv">5070</span>)</span>
+<span id="cb23-5"><a aria-hidden="true" tabindex="-1"></a>d_c  <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">as.numeric</span>(<span class="fu">st_distance</span>(city)), <span class="dv">5</span>) <span class="sc">/</span> <span class="fl">1e3</span>                   <span class="co"># km between every pair</span></span>
+<span id="cb23-6"><a aria-hidden="true" tabindex="-1"></a>tree <span class="ot">&lt;-</span> <span class="fu">mst</span>(<span class="fu">graph_from_adjacency_matrix</span>(d_c, <span class="at">mode =</span> <span class="st">"undirected"</span>, <span class="at">weighted =</span> <span class="cn">TRUE</span>))</span>
+<span id="cb23-7"><a aria-hidden="true" tabindex="-1"></a>e  <span class="ot">&lt;-</span> <span class="fu">as_edgelist</span>(tree, <span class="at">names =</span> <span class="cn">FALSE</span>); xy <span class="ot">&lt;-</span> <span class="fu">st_coordinates</span>(city)       <span class="co"># the 4 lines it keeps</span></span>
+<span id="cb23-8"><a aria-hidden="true" tabindex="-1"></a>ln <span class="ot">&lt;-</span> <span class="fu">st_sfc</span>(<span class="fu">lapply</span>(<span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(e), <span class="cf">function</span>(r) <span class="fu">st_linestring</span>(xy[e[r, ], ])), <span class="at">crs =</span> <span class="dv">5070</span>)</span>
+<span id="cb23-9"><a aria-hidden="true" tabindex="-1"></a>ny_co<span class="sc">$</span>km_line <span class="ot">&lt;-</span> <span class="fu">apply</span>(<span class="fu">st_distance</span>(pt_ny, ln), <span class="dv">1</span>, min) <span class="sc">/</span> <span class="fl">1e3</span>             <span class="co"># county to the nearest line</span></span>
+<span id="cb23-10"><a aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">cor</span>(ny_co<span class="sc">$</span>km_line, ny_co<span class="sc">$</span>km_it), <span class="dv">2</span>)</span>
+<span id="cb23-11"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 0.46</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+<p><span class="source">The five cities are the main cities of New York’s five largest metropolitan areas. The tree’s total length is 644 km. <code>st_linestring()</code> makes a line from a matrix of points.</span></p>
+</section>
+<section id="use-other" class="slide level2">
+<h2>Distance in other spaces</h2>
+<div class="slide-text">
+<p>Distance need not be on a map: firms can be close in what they patent, and counties in their Facebook friendships.</p>
+</div>
+<div class="dashes">
+<ul>
+<li><a href="https://doi.org/10.3982/ECTA9466"><strong>Bloom, Schankerman &amp; Van Reenen (Econometrica, 2013)</strong></a> placed firms by their patents in 426 technology classes. Firms close in this sense gain from each other’s research.</li>
+<li><a href="https://doi.org/10.1257/jep.32.3.259"><strong>Bailey, Cao, Kuchler, Stroebel &amp; Wong (JEP, 2018)</strong></a> counted Facebook friendships between US counties. 10% more distance means 14.8% fewer links.</li>
+</ul>
+</div>
+<p><span class="source">Two firms with the same shares of patents in each class are as close as possible. The social return to research is at least twice the private return. “Identifying Technology Spillovers and Product Market Rivalry”; “Social Connectedness: Measurement, Determinants, and Effects”.</span></p>
+</section>
+<section id="sci" class="slide level2">
+<h2>Tompkins County’s friends, by county</h2>
+<div class="columns">
+<div class="column" style="width:48%;">
+<div class="slide-text">
+<ul>
+<li>In Meta’s Facebook data, Tompkins has the most friendship links with its six neighbours.</li>
+<li>Links fall with distance: 1% farther, 0.77% fewer links.</li>
+<li>Far away, the most linked counties hold universities, like Tompkins: Charlottesville (VA), Orange (NC) and Boulder (CO).</li>
+</ul>
+</div>
+</div><div class="column" style="width:50%;">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="figures/23-spatial-vector/f30_sci.png" class="quarto-figure quarto-figure-center" height="185"></p>
+</figure>
+</div>
+</div></div>
+<div class="cell" data-layout-align="center" data-script="Tompkins County's friends, by county">
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>R Console, in the 23-spatial-vector folder; low, i, cen and pop from the slides before</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a aria-hidden="true" tabindex="-1"></a>sci <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"data_clean/sci_tompkins.csv"</span>, <span class="at">colClasses =</span> <span class="fu">c</span>(<span class="at">GEOID =</span> <span class="st">"character"</span>))</span>
+<span id="cb24-2"><a aria-hidden="true" tabindex="-1"></a>k   <span class="ot">&lt;-</span> <span class="fu">match</span>(sci<span class="sc">$</span>GEOID, low<span class="sc">$</span>GEOID)                           <span class="co"># NA outside the lower 48</span></span>
+<span id="cb24-3"><a aria-hidden="true" tabindex="-1"></a>sci<span class="sc">$</span>km <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(<span class="fu">st_distance</span>(cen[i], cen))[k] <span class="sc">/</span> <span class="fl">1e3</span>      <span class="co"># from Tompkins's centre</span></span>
+<span id="cb24-4"><a aria-hidden="true" tabindex="-1"></a>s <span class="ot">&lt;-</span> sci[sci<span class="sc">$</span>GEOID <span class="sc">!=</span> <span class="st">"36109"</span> <span class="sc">&amp;</span> <span class="sc">!</span><span class="fu">is.na</span>(k), ]</span>
+<span id="cb24-5"><a aria-hidden="true" tabindex="-1"></a><span class="fu">coef</span>(<span class="fu">lm</span>(<span class="fu">log</span>(sci) <span class="sc">~</span> <span class="fu">log</span>(km), s))[<span class="st">"log(km)"</span>]                   <span class="co"># % change in links per 1% more km</span></span>
+<span id="cb24-6"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    log(km) </span></span>
+<span id="cb24-7"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; -0.7664943</span></span>
+<span id="cb24-8"><a aria-hidden="true" tabindex="-1"></a>big <span class="ot">&lt;-</span> pop<span class="sc">$</span>GEOID[pop<span class="sc">$</span>POPESTIMATE2024 <span class="sc">&gt;</span> <span class="dv">40000</span>]                <span class="co"># counties over 40,000 people</span></span>
+<span id="cb24-9"><a aria-hidden="true" tabindex="-1"></a>far <span class="ot">&lt;-</span> s[s<span class="sc">$</span>km <span class="sc">&gt;</span> <span class="dv">500</span> <span class="sc">&amp;</span> s<span class="sc">$</span>GEOID <span class="sc">%in%</span> big, ]</span>
+<span id="cb24-10"><a aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(low<span class="sc">$</span>NAME[<span class="fu">match</span>(far<span class="sc">$</span>GEOID[<span class="fu">order</span>(<span class="sc">-</span>far<span class="sc">$</span>sci)], low<span class="sc">$</span>GEOID)], <span class="dv">3</span>)   <span class="co"># most linked, over 500 km away</span></span>
+<span id="cb24-11"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] "Charlottesville" "Orange"          "Boulder"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+<p><span class="source"><code>sci</code> is Meta’s Social Connectedness Index: friendship links between two counties, divided by the product of their numbers of Facebook users. <code>big</code> drops counties under 40,000 people, whose numbers are noisy. Over all county pairs, Bailey et al.&nbsp;find 1.48. I cut the file with <code>tools/cut_sci.R</code>.</span></p>
+</section>
+<section id="use-conley" class="slide level2">
+<h2>Standard errors for nearby places</h2>
+<div class="slide-text">
+<ul>
+<li>Nearby counties share weather and markets, so their regression errors are correlated.</li>
+<li>Standard errors that ignore this are too small.</li>
+<li><a href="https://doi.org/10.1016/S0304-4076(98)00084-0">Conley (Journal of Econometrics, 1999)</a> allows the errors of places closer than a cutoff distance to be correlated.</li>
+</ul>
+</div>
+<div class="dashes">
+<ul>
+<li><strong>In use:</strong> <a href="https://doi.org/10.1257/aer.20150774">Berman, Couttenier, Rohner &amp; Thoenig (AER, 2017)</a> report Conley standard errors within 500 km for mines and conflict in Africa.</li>
+<li>The estimate does not change. Its standard error grows.</li>
+<li>The researcher picks the cutoff distance, and should try several.</li>
+<li>In R, the <strong>fixest</strong> package computes Conley standard errors.</li>
+</ul>
+</div>
+<div class="cell" data-layout-align="center" data-script="Load or install fixest">
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>R Console. Installs fixest if missing</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a aria-hidden="true" tabindex="-1"></a>want <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"fixest"</span>)</span>
+<span id="cb25-2"><a aria-hidden="true" tabindex="-1"></a>need <span class="ot">&lt;-</span> want[<span class="sc">!</span>(want <span class="sc">%in%</span> <span class="fu">installed.packages</span>()[,<span class="st">"Package"</span>])]</span>
+<span id="cb25-3"><a aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="fu">length</span>(need)) <span class="fu">install.packages</span>(need)</span>
+<span id="cb25-4"><a aria-hidden="true" tabindex="-1"></a><span class="fu">lapply</span>(want, <span class="cf">function</span>(i) <span class="fu">require</span>(i, <span class="at">character.only =</span> <span class="cn">TRUE</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+<p><span class="source">A <strong>standard error</strong> measures how much an estimate would vary from sample to sample. Pairs of places get less weight the farther apart they are, and none beyond the cutoff. Conley’s paper is titled “GMM Estimation with Cross Sectional Dependence”.</span></p>
+</section>
+<section id="conley" class="slide level2">
+<h2>Conley standard errors with fixest</h2>
+<div class="slide-text">
+<ul>
+<li>Across the lower 48, denser counties grew faster from 2020 to 2024.</li>
+<li>Neighbouring counties have similar residuals, which the robust standard error ignores.
+<ul>
+<li>Allowing correlation within 100 km nearly doubles the standard error.</li>
+<li>Within 500 km, it is 4.6 times as large.</li>
+</ul></li>
+<li>The estimate stays 0.65 points of growth per log point of density.</li>
+</ul>
+</div>
+<div class="cell" data-layout-align="center" data-script="Conley standard errors with fixest">
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>R Console; fixest from the slide before; low and pop from the slides before</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a aria-hidden="true" tabindex="-1"></a>p  <span class="ot">&lt;-</span> pop[<span class="fu">match</span>(low<span class="sc">$</span>GEOID, pop<span class="sc">$</span>GEOID), ]</span>
+<span id="cb26-2"><a aria-hidden="true" tabindex="-1"></a>ll <span class="ot">&lt;-</span> <span class="fu">st_coordinates</span>(<span class="fu">st_transform</span>(<span class="fu">st_point_on_surface</span>(<span class="fu">st_geometry</span>(low)), <span class="dv">4326</span>))  <span class="co"># degrees, as conley() needs</span></span>
+<span id="cb26-3"><a aria-hidden="true" tabindex="-1"></a>dd <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">growth =</span> <span class="dv">100</span> <span class="sc">*</span> (p<span class="sc">$</span>POPESTIMATE2024 <span class="sc">/</span> p<span class="sc">$</span>POPESTIMATE2020 <span class="sc">-</span> <span class="dv">1</span>),     <span class="co"># % change, 2020 to 2024</span></span>
+<span id="cb26-4"><a aria-hidden="true" tabindex="-1"></a>                 <span class="at">ldens  =</span> <span class="fu">log</span>(p<span class="sc">$</span>POPESTIMATE2020 <span class="sc">/</span> (low<span class="sc">$</span>ALAND <span class="sc">/</span> <span class="fl">1e6</span>)),            <span class="co"># log people per km2, 2020</span></span>
+<span id="cb26-5"><a aria-hidden="true" tabindex="-1"></a>                 <span class="at">lon =</span> ll[, <span class="dv">1</span>], <span class="at">lat =</span> ll[, <span class="dv">2</span>])</span>
+<span id="cb26-6"><a aria-hidden="true" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">feols</span>(growth <span class="sc">~</span> ldens, dd); <span class="fu">round</span>(<span class="fu">coef</span>(m)[<span class="st">"ldens"</span>], <span class="dv">2</span>)</span>
+<span id="cb26-7"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ldens </span></span>
+<span id="cb26-8"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  0.65</span></span>
+<span id="cb26-9"><a aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">sapply</span>(<span class="fu">list</span>(<span class="at">robust =</span> <span class="st">"hetero"</span>, <span class="at">within_100km =</span> <span class="fu">conley</span>(<span class="dv">100</span>), <span class="at">within_500km =</span> <span class="fu">conley</span>(<span class="dv">500</span>)),</span>
+<span id="cb26-10"><a aria-hidden="true" tabindex="-1"></a>             <span class="cf">function</span>(v) <span class="fu">se</span>(<span class="fu">summary</span>(m, <span class="at">vcov =</span> v))[<span class="st">"ldens"</span>]), <span class="dv">3</span>)</span>
+<span id="cb26-11"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;       robust.ldens within_100km.ldens within_500km.ldens </span></span>
+<span id="cb26-12"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;              0.053              0.099              0.241</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+<p><span class="source"><strong>fixest</strong> is an R package for regressions; <code>feols()</code> fits one. <code>"hetero"</code> is the robust standard error, which allows unequal variances but no correlation. <code>conley(100)</code> allows correlation between counties up to 100 km apart.</span></p>
+</section></section>
+<section>
+<section id="part-smoke" class="title-slide slide level1 center">
+<h1>4 · An application to wildfire smoke</h1>
+
+</section>
+<section id="overview-4" class="slide level2">
+<h2>Overview of part 4</h2>
+<div class="slide-text">
+<p>How many people lived under wildfire smoke each day of June 2023.</p>
+</div>
+<div class="columns">
+<div class="column" style="width:58%;">
+<div class="dashes">
+<ul>
+<li><strong>A study:</strong> wildfire smoke and earnings, by county and day.</li>
+<li><strong>The data:</strong> NOAA’s smoke outlines, one file per day of June 2023.</li>
+<li><strong>The variable:</strong> each county’s smoke each day, and the people under heavy smoke.</li>
+<li><strong>A check:</strong> ground monitors, because smoke can pass high overhead.</li>
+</ul>
+</div>
+</div><div class="column" style="width:40%;">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="figures/23-spatial-vector/f33_counties0607.png" class="quarto-figure quarto-figure-center" height="250"></p>
+</figure>
+</div>
+<p><span class="source">Later in this part: each county’s smoke on 7 June 2023.</span></p>
+</div></div>
+</section>
+<section id="use-smoke" class="slide level2">
+<h2>Wildfire smoke and earnings</h2>
+<div class="columns">
+<div class="column" style="width:52%;">
+<div class="dashes">
+<ul>
+<li><strong>Question:</strong> <a href="https://doi.org/10.1162/rest_a_01243">Borgschulte, Molitor &amp; Zou (REStat, 2024)</a> asked whether wildfire smoke lowers earnings.</li>
+<li><strong>Method:</strong> Each day, NOAA analysts outline the smoke they see in satellite images. The authors counted the days a plume covered each whole US county.</li>
+<li><strong>Data:</strong> smoke days per county and quarter, and EPA monitors within 20 miles of each county’s centre.</li>
+<li><strong>Result:</strong> Each smoke day lowered earnings per person that quarter by about 0.1%.</li>
+</ul>
+</div>
+</div><div class="column" style="width:46%;">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="figures/23-spatial-vector/p_bmz_pair.png" class="quarto-figure quarto-figure-center" height="390"></p>
+</figure>
+</div>
+</div></div>
+<p><span class="source">Top: the outlines from NOAA’s Hazard Mapping System (HMS) on 7 June 2023, when smoke from fires in Quebec reached New York. Bottom: the paper’s Figure 1 (2022 working paper), the days each county was fully covered by smoke, 2007 to 2019.</span></p>
+</section>
+<section id="smoke-counties" class="slide level2">
+<h2>Counties under smoke on 7 June 2023</h2>
+<div class="columns">
+<div class="column" style="width:54%;">
+<div class="slide-text">
+<ul>
+<li>NOAA analysts drew 88 smoke plumes on 7 June, each light, medium or heavy.</li>
+<li>As in the earnings study, a county is under smoke when a plume covers all of it.</li>
+<li>Heavy smoke covered 639 counties, home to 106 million people.</li>
+</ul>
+</div>
+</div><div class="column" style="width:44%;">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="figures/23-spatial-vector/f33_counties0607.png" class="quarto-figure quarto-figure-center" height="170"></p>
+</figure>
+</div>
+</div></div>
+<div class="cell" data-layout-align="center" data-script="Counties under smoke on 7 June 2023">
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>R Console, in the 23-spatial-vector folder; low from Part 3, pop from Part 1; reads data/noaa/hms/</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a aria-hidden="true" tabindex="-1"></a>s <span class="ot">&lt;-</span> <span class="fu">st_read</span>(<span class="st">"/vsizip/data/noaa/hms/hms_smoke20230607.zip"</span>, <span class="at">quiet =</span> <span class="cn">TRUE</span>)   <span class="co"># /vsizip/ reads inside the zip</span></span>
+<span id="cb27-2"><a aria-hidden="true" tabindex="-1"></a>s <span class="ot">&lt;-</span> <span class="fu">st_transform</span>(<span class="fu">st_make_valid</span>(s), <span class="dv">5070</span>)                      <span class="co"># 88 plumes, in metres</span></span>
+<span id="cb27-3"><a aria-hidden="true" tabindex="-1"></a>lev <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="at">Light =</span> <span class="dv">1</span>, <span class="at">Medium =</span> <span class="dv">2</span>, <span class="at">Heavy =</span> <span class="dv">3</span>)                     <span class="co"># densities as numbers</span></span>
+<span id="cb27-4"><a aria-hidden="true" tabindex="-1"></a>densest <span class="ot">&lt;-</span> <span class="cf">function</span>(s) <span class="fu">sapply</span>(<span class="fu">st_within</span>(low, s), <span class="cf">function</span>(k) <span class="cf">if</span> (<span class="fu">length</span>(k)) <span class="fu">max</span>(lev[s<span class="sc">$</span>Density[k]]) <span class="cf">else</span> <span class="dv">0</span>)</span>
+<span id="cb27-5"><a aria-hidden="true" tabindex="-1"></a>d7 <span class="ot">&lt;-</span> <span class="fu">densest</span>(s)</span>
+<span id="cb27-6"><a aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(d7)                                                      <span class="co"># 0 none, 1 light, 2 medium, 3 heavy</span></span>
+<span id="cb27-7"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; d7</span></span>
+<span id="cb27-8"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    0    1    2    3 </span></span>
+<span id="cb27-9"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  427  894 1149  639</span></span>
+<span id="cb27-10"><a aria-hidden="true" tabindex="-1"></a>low<span class="sc">$</span>pop <span class="ot">&lt;-</span> pop<span class="sc">$</span>POPESTIMATE2023[<span class="fu">match</span>(low<span class="sc">$</span>GEOID, pop<span class="sc">$</span>GEOID)]   <span class="co"># people, July 2023</span></span>
+<span id="cb27-11"><a aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(low<span class="sc">$</span>pop[d7 <span class="sc">==</span> <span class="dv">3</span>]) <span class="sc">/</span> <span class="fl">1e6</span>                                    <span class="co"># millions under heavy smoke</span></span>
+<span id="cb27-12"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 105.6756</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+<p><span class="source"><code>low</code> is the 3,109 counties of the lower 48 and DC. <code>st_within(low, s)</code> finds, for each county, the plumes that cover all of it, and <code>max()</code> keeps the densest. Large counties are rarely fully covered. A point inside each county, or the share under smoke, would avoid this.</span></p>
+</section>
+<section id="smoke-panel" class="slide level2">
+<h2>Thirty days, one table</h2>
+<div class="columns">
+<div class="column" style="width:40%;">
+<div class="slide-text">
+<p>Running the same function on each day’s file gives a table of 3,109 counties by 30 days. Adding up the people in heavy-smoke counties gives the number under heavy smoke each day.</p>
+</div>
+</div><div class="column" style="width:58%;">
+<p><img data-src="figures/23-spatial-vector/f34_people.png" style="width:100.0%"></p>
+</div></div>
+<div class="cell" data-layout-align="center" data-script="Thirty days, one table">
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>R Console, in the 23-spatial-vector folder; densest and low from the slide before; reads data/noaa/hms/</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a aria-hidden="true" tabindex="-1"></a>hms_files <span class="ot">&lt;-</span> <span class="fu">list.files</span>(<span class="st">"data/noaa/hms"</span>, <span class="at">full.names =</span> <span class="cn">TRUE</span>)        <span class="co"># one zip per day of June 2023</span></span>
+<span id="cb28-2"><a aria-hidden="true" tabindex="-1"></a>smoke <span class="ot">&lt;-</span> <span class="cf">function</span>(f) <span class="fu">st_transform</span>(<span class="fu">st_make_valid</span>(<span class="fu">st_read</span>(<span class="fu">paste0</span>(<span class="st">"/vsizip/"</span>, f), <span class="at">quiet =</span> <span class="cn">TRUE</span>)), <span class="dv">5070</span>)</span>
+<span id="cb28-3"><a aria-hidden="true" tabindex="-1"></a>day   <span class="ot">&lt;-</span> <span class="fu">as.Date</span>(<span class="fu">substr</span>(<span class="fu">basename</span>(hms_files), <span class="dv">10</span>, <span class="dv">17</span>), <span class="st">"%Y%m%d"</span>)    <span class="co"># hms_smoke20230607.zip: 7 June</span></span>
+<span id="cb28-4"><a aria-hidden="true" tabindex="-1"></a>dens  <span class="ot">&lt;-</span> <span class="fu">sapply</span>(hms_files, <span class="cf">function</span>(f) <span class="fu">densest</span>(<span class="fu">smoke</span>(f)))           <span class="co"># counties x days, about 6 seconds</span></span>
+<span id="cb28-5"><a aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(dens) <span class="ot">&lt;-</span> <span class="fu">format</span>(day); <span class="fu">dim</span>(dens)</span>
+<span id="cb28-6"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 3109   30</span></span>
+<span id="cb28-7"><a aria-hidden="true" tabindex="-1"></a>heavy <span class="ot">&lt;-</span> <span class="fu">colSums</span>(low<span class="sc">$</span>pop <span class="sc">*</span> (dens <span class="sc">==</span> <span class="dv">3</span>), <span class="at">na.rm =</span> <span class="cn">TRUE</span>) <span class="sc">/</span> <span class="fl">1e6</span>        <span class="co"># millions under heavy smoke, each day</span></span>
+<span id="cb28-8"><a aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(heavy[<span class="fu">c</span>(<span class="st">"2023-06-07"</span>, <span class="st">"2023-06-15"</span>, <span class="st">"2023-06-29"</span>)])</span>
+<span id="cb28-9"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2023-06-07 2023-06-15 2023-06-29 </span></span>
+<span id="cb28-10"><a aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;        106         91         51</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+<p><span class="source">The table is a <strong>panel</strong>: each county over time, one column per day. Red marks the two days above 90 million people, June 7 and June 15. Tompkins had 5 days of heavy smoke in June. In all, 1,739 counties, home to 172 million people, had at least one.</span></p>
+</section>
+<section id="smoke-animation" class="slide level2">
+<h2>June 2023, day by day</h2>
+<div class="slide-text">
+<ul>
+<li>Each frame is one day of June 2023, with each county coloured by its smoke.</li>
+<li>The bars below show the people under heavy smoke.</li>
+</ul>
+</div>
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="figures/23-spatial-vector/f35_smoke.gif" class="quarto-figure quarto-figure-center" height="370"></p>
+</figure>
+</div>
+<p><span class="source">I drew the table <code>dens</code> once per day and joined the frames into a GIF with the <code>magick</code> package. The code is on the session page and in the live script.</span></p>
+</section>
+<section id="smoke-aloft" class="slide level2">
+<h2>Smoke aloft and smoke at the ground</h2>
+<div class="slide-text">
+<ul>
+<li>A satellite sees smoke at any height, and a plume can pass kilometres overhead.</li>
+<li>The EPA’s 947 ground monitors measure the fine particles people breathe.</li>
+<li>Under heavy plumes, the median monitor read 90 µg/m³ on June 8 and 114 on June 28.</li>
+<li>On June 15 it read only 14, below the daily standard of 35.
+<ul>
+<li>Heavy plumes still covered counties home to 91 million people that day.</li>
+</ul></li>
+</ul>
+</div>
+
+<img data-src="figures/23-spatial-vector/f36_monitors.png" class="quarto-figure quarto-figure-center r-stretch" style="width:88.0%"><p><span class="source">Each red point is the median of the monitors under a heavy plume that day. Grey is the median under no plume. Days with fewer than 10 monitors under a heavy plume are left out. <code>st_intersects()</code> finds the plumes over each monitor; the code is on the session page. <strong>PM2.5</strong> means particles 2.5 micrometres across or smaller, as a 24-hour average. A smoke variable built from the plumes should be compared with the monitors.</span></p>
+</section>
+<section id="practice" class="slide level2">
+<h2>Practice</h2>
+<p>The session page has twelve practice tasks, with solutions you can open. They run in the 23-spatial-vector folder. Task 4 downloads the Census road file (38 MB), and task 9 installs spData, an R package of world maps.</p>
+<ul>
+<li><strong>1–3</strong> Counties and their data: people per km² · how round each New York county is · the neighbours’ average population</li>
+<li><strong>4–6</strong> Measuring and routes: Interstate miles in Pennsylvania · each county’s distance to Pennsylvania · every county on the 57-line route to Los Angeles</li>
+<li><strong>7–8</strong> The page’s Medicaid example (public health insurance): one state border at a time · without Wisconsin, which covered low-income adults without expanding</li>
+<li><strong>9</strong> Distance by sea on a round world, from Los Angeles to Shanghai</li>
+<li><strong>10</strong> The page’s Cujubim example: clearing far from any mapped road · road distance to town by period</li>
+<li><strong>11–12</strong> Smoke: heavy-smoke days for each New York county · people under smoke, using a point inside each county instead of the whole county</li>
+</ul>
+
+
+</section></section>
+    </div>
+  <div class="quarto-auto-generated-content" style="display: none;">
+<div class="footer footer-default">
+<p>AEM 6850 · Session 23</p>
+</div>
+</div></div>
+
+  <script>window.backupDefine = window.define; window.define = undefined;</script>
+  <script src="../../site_libs/revealjs/dist/reveal.js"></script>
+  <!-- reveal.js plugins -->
+  <script src="../../site_libs/revealjs/plugin/quarto-line-highlight/line-highlight.js"></script>
+  <script src="../../site_libs/revealjs/plugin/pdf-export/pdfexport.js"></script>
+  <script src="../../site_libs/revealjs/plugin/reveal-menu/menu.js"></script>
+  <script src="../../site_libs/revealjs/plugin/reveal-menu/quarto-menu.js"></script>
+  <script src="../../site_libs/revealjs/plugin/quarto-support/support.js"></script>
+  
+
+  <script src="../../site_libs/revealjs/plugin/notes/notes.js"></script>
+  <script src="../../site_libs/revealjs/plugin/search/search.js"></script>
+  <script src="../../site_libs/revealjs/plugin/zoom/zoom.js"></script>
+  <script src="../../site_libs/revealjs/plugin/math/math.js"></script>
+  <script>window.define = window.backupDefine; window.backupDefine = undefined;</script>
+
+  <script>
+
+      // Full list of configuration options available at:
+      // https://revealjs.com/config/
+      Reveal.initialize({
+'controlsAuto': false,
+'previewLinksAuto': false,
+'pdfSeparateFragments': false,
+'autoAnimateEasing': "ease",
+'autoAnimateDuration': 1,
+'autoAnimateUnmatched': true,
+'jumpToSlide': true,
+'menu': {"side":"left","useTextContentForMissingTitles":true,"markers":false,"loadIcons":false,"custom":[{"title":"Tools","icon":"<i class=\"fas fa-gear\"></i>","content":"<ul class=\"slide-menu-items\">\n<li class=\"slide-tool-item active\" data-item=\"0\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.fullscreen(event)\"><kbd>f</kbd> Fullscreen</a></li>\n<li class=\"slide-tool-item\" data-item=\"1\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.speakerMode(event)\"><kbd>s</kbd> Speaker View</a></li>\n<li class=\"slide-tool-item\" data-item=\"2\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.overview(event)\"><kbd>o</kbd> Slide Overview</a></li>\n<li class=\"slide-tool-item\" data-item=\"3\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.togglePdfExport(event)\"><kbd>e</kbd> PDF Export Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"4\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.toggleScrollView(event)\"><kbd>r</kbd> Scroll View Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"5\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.keyboardHelp(event)\"><kbd>?</kbd> Keyboard Help</a></li>\n</ul>"}],"openButton":true},
+'smaller': false,
+ 
+        // Display controls in the bottom right corner
+        controls: true,
+
+        // Help the user learn the controls by providing hints, for example by
+        // bouncing the down arrow when they first encounter a vertical slide
+        controlsTutorial: false,
+
+        // Determines where controls appear, "edges" or "bottom-right"
+        controlsLayout: 'edges',
+
+        // Visibility rule for backwards navigation arrows; "faded", "hidden"
+        // or "visible"
+        controlsBackArrows: 'faded',
+
+        // Display a presentation progress bar
+        progress: true,
+
+        // Display the page number of the current slide
+        slideNumber: 'c/t',
+
+        // 'all', 'print', or 'speaker'
+        showSlideNumber: 'all',
+
+        // Add the current slide number to the URL hash so that reloading the
+        // page/copying the URL will return you to the same slide
+        hash: true,
+
+        // Start with 1 for the hash rather than 0
+        hashOneBasedIndex: false,
+
+        // Flags if we should monitor the hash and change slides accordingly
+        respondToHashChanges: true,
+
+        // Push each slide change to the browser history
+        history: false,
+
+        // Enable keyboard shortcuts for navigation
+        keyboard: true,
+
+        // Enable the slide overview mode
+        overview: true,
+
+        // Disables the default reveal.js slide layout (scaling and centering)
+        // so that you can use custom CSS layout
+        disableLayout: false,
+
+        // Vertical centering of slides
+        center: false,
+
+        // Enables touch navigation on devices with touch input
+        touch: true,
+
+        // Loop the presentation
+        loop: false,
+
+        // Change the presentation direction to be RTL
+        rtl: false,
+
+        // see https://revealjs.com/vertical-slides/#navigation-mode
+        navigationMode: 'linear',
+
+        // Randomizes the order of slides each time the presentation loads
+        shuffle: false,
+
+        // Turns fragments on and off globally
+        fragments: true,
+
+        // Flags whether to include the current fragment in the URL,
+        // so that reloading brings you to the same fragment position
+        fragmentInURL: false,
+
+        // Flags if the presentation is running in an embedded mode,
+        // i.e. contained within a limited portion of the screen
+        embedded: false,
+
+        // Flags if we should show a help overlay when the questionmark
+        // key is pressed
+        help: true,
+
+        // Flags if it should be possible to pause the presentation (blackout)
+        pause: true,
+
+        // Flags if speaker notes should be visible to all viewers
+        showNotes: false,
+
+        // Global override for autoplaying embedded media (null/true/false)
+        autoPlayMedia: null,
+
+        // Global override for preloading lazy-loaded iframes (null/true/false)
+        preloadIframes: null,
+
+        // Number of milliseconds between automatically proceeding to the
+        // next slide, disabled when set to 0, this value can be overwritten
+        // by using a data-autoslide attribute on your slides
+        autoSlide: 0,
+
+        // Stop auto-sliding after user input
+        autoSlideStoppable: true,
+
+        // Use this method for navigation when auto-sliding
+        autoSlideMethod: null,
+
+        // Specify the average time in seconds that you think you will spend
+        // presenting each slide. This is used to show a pacing timer in the
+        // speaker view
+        defaultTiming: null,
+
+        // Enable slide navigation via mouse wheel
+        mouseWheel: false,
+
+        // The display mode that will be used to show slides
+        display: 'block',
+
+        // Hide cursor if inactive
+        hideInactiveCursor: true,
+
+        // Time before the cursor is hidden (in ms)
+        hideCursorTime: 5000,
+
+        // Opens links in an iframe preview overlay
+        previewLinks: false,
+
+        // Transition style (none/fade/slide/convex/concave/zoom)
+        transition: 'none',
+
+        // Transition speed (default/fast/slow)
+        transitionSpeed: 'default',
+
+        // Transition style for full page slide backgrounds
+        // (none/fade/slide/convex/concave/zoom)
+        backgroundTransition: 'none',
+
+        // Number of slides away from the current that are visible
+        viewDistance: 3,
+
+        // Number of slides away from the current that are visible on mobile
+        // devices. It is advisable to set this to a lower number than
+        // viewDistance in order to save resources.
+        mobileViewDistance: 2,
+
+        // The "normal" size of the presentation, aspect ratio will be preserved
+        // when the presentation is scaled to fit different resolutions. Can be
+        // specified using percentage units.
+        width: 1050,
+
+        height: 700,
+
+        // Factor of the display size that should remain empty around the content
+        margin: 0.1,
+
+        math: {
+          mathjax: 'https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js',
+          config: 'TeX-AMS_HTML-full',
+          tex2jax: {
+            inlineMath: [['\\(','\\)']],
+            displayMath: [['\\[','\\]']],
+            balanceBraces: true,
+            processEscapes: false,
+            processRefs: true,
+            processEnvironments: true,
+            preview: 'TeX',
+            skipTags: ['script','noscript','style','textarea','pre','code'],
+            ignoreClass: 'tex2jax_ignore',
+            processClass: 'tex2jax_process'
+          },
+        },
+
+        // reveal.js plugins
+        plugins: [QuartoLineHighlight, PdfExport, RevealMenu, QuartoSupport,
+
+          RevealMath,
+          RevealNotes,
+          RevealSearch,
+          RevealZoom
+        ]
+      });
+    </script>
+    <script>
+      // Keep slide-by-slide navigation in narrow windows, such as a side pane.
+      // Reveal switches to a scrolling page when the window is 435 px wide or
+      // less; a width of 0 turns that off.
+      (function () {
+        function keepSlides() {
+          Reveal.configure({ scrollActivationWidth: 0 });
+          Reveal.layout();
+        }
+        window.addEventListener("load", function () {
+          if (!window.Reveal) return;
+          if (Reveal.isReady()) keepSlides(); else Reveal.on("ready", keepSlides);
+        });
+      })();
+    </script>
+    
+    <script>
+      // htmlwidgets need to know to resize themselves when slides are shown/hidden.
+      // Fire the "slideenter" event (handled by htmlwidgets.js) when the current
+      // slide changes (different for each slide format).
+      (function () {
+        // dispatch for htmlwidgets
+        function fireSlideEnter() {
+          const event = window.document.createEvent("Event");
+          event.initEvent("slideenter", true, true);
+          window.document.dispatchEvent(event);
+        }
+
+        function fireSlideChanged(previousSlide, currentSlide) {
+          fireSlideEnter();
+
+          // dispatch for shiny
+          if (window.jQuery) {
+            if (previousSlide) {
+              window.jQuery(previousSlide).trigger("hidden");
+            }
+            if (currentSlide) {
+              window.jQuery(currentSlide).trigger("shown");
+            }
+          }
+        }
+
+        // hookup for slidy
+        if (window.w3c_slidy) {
+          window.w3c_slidy.add_observer(function (slide_num) {
+            // slide_num starts at position 1
+            fireSlideChanged(null, w3c_slidy.slides[slide_num - 1]);
+          });
+        }
+
+      })();
+    </script>
+
+    <script id="quarto-html-after-body" type="application/javascript">
+      window.document.addEventListener("DOMContentLoaded", function (event) {
+        const tabsets =  window.document.querySelectorAll(".panel-tabset-tabby")
+        tabsets.forEach(function(tabset) {
+          const tabby = new Tabby('#' + tabset.id);
+        });
+        const isCodeAnnotation = (el) => {
+          for (const clz of el.classList) {
+            if (clz.startsWith('code-annotation-')) {                     
+              return true;
+            }
+          }
+          return false;
+        }
+        const onCopySuccess = function(e) {
+          // button target
+          const button = e.trigger;
+          // don't keep focus
+          button.blur();
+          // flash "checked"
+          button.classList.add('code-copy-button-checked');
+          var currentTitle = button.getAttribute("title");
+          button.setAttribute("title", "Copied!");
+          let tooltip;
+          if (window.bootstrap) {
+            button.setAttribute("data-bs-toggle", "tooltip");
+            button.setAttribute("data-bs-placement", "left");
+            button.setAttribute("data-bs-title", "Copied!");
+            tooltip = new bootstrap.Tooltip(button, 
+              { trigger: "manual", 
+                customClass: "code-copy-button-tooltip",
+                offset: [0, -8]});
+            tooltip.show();    
+          }
+          setTimeout(function() {
+            if (tooltip) {
+              tooltip.hide();
+              button.removeAttribute("data-bs-title");
+              button.removeAttribute("data-bs-toggle");
+              button.removeAttribute("data-bs-placement");
+            }
+            button.setAttribute("title", currentTitle);
+            button.classList.remove('code-copy-button-checked');
+          }, 1000);
+          // clear code selection
+          e.clearSelection();
+        }
+        const getTextToCopy = function(trigger) {
+          const outerScaffold = trigger.parentElement.cloneNode(true);
+          const codeEl = outerScaffold.querySelector('code');
+          for (const childEl of codeEl.children) {
+            if (isCodeAnnotation(childEl)) {
+              childEl.remove();
+            }
+          }
+          return codeEl.innerText;
+        }
+        const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+          text: getTextToCopy
+        });
+        clipboard.on('success', onCopySuccess);
+        if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+          const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+            text: getTextToCopy,
+            container: window.document.getElementById('quarto-embedded-source-code-modal')
+          });
+          clipboardModal.on('success', onCopySuccess);
+        }
+          var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+          var mailtoRegex = new RegExp(/^mailto:/);
+            var filterRegex = new RegExp("https:\/\/arielortizbobea\.github\.io\/aem6850\/");
+          var isInternal = (href) => {
+              return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+          }
+          // Inspect non-navigation links and adorn them if external
+         var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+          for (var i=0; i<links.length; i++) {
+            const link = links[i];
+            if (!isInternal(link.href)) {
+              // undo the damage that might have been done by quarto-nav.js in the case of
+              // links that we want to consider external
+              if (link.dataset.originalHref !== undefined) {
+                link.href = link.dataset.originalHref;
+              }
+                // target, if specified
+                link.setAttribute("target", "_blank");
+                if (link.getAttribute("rel") === null) {
+                  link.setAttribute("rel", "noopener");
+                }
+            }
+          }
+        function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+          const config = {
+            allowHTML: true,
+            maxWidth: 500,
+            delay: 100,
+            arrow: false,
+            appendTo: function(el) {
+                return el.closest('section.slide') || el.parentElement;
+            },
+            interactive: true,
+            interactiveBorder: 10,
+            theme: 'light-border',
+            placement: 'bottom-start',
+          };
+          if (contentFn) {
+            config.content = contentFn;
+          }
+          if (onTriggerFn) {
+            config.onTrigger = onTriggerFn;
+          }
+          if (onUntriggerFn) {
+            config.onUntrigger = onUntriggerFn;
+          }
+            config['offset'] = [0,0];
+            config['maxWidth'] = 700;
+          window.tippy(el, config); 
+        }
+        const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+        for (var i=0; i<noterefs.length; i++) {
+          const ref = noterefs[i];
+          tippyHover(ref, function() {
+            // use id or data attribute instead here
+            let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+            try { href = new URL(href).hash; } catch {}
+            const id = href.replace(/^#\/?/, "");
+            const note = window.document.getElementById(id);
+            if (note) {
+              return note.innerHTML;
+            } else {
+              return "";
+            }
+          });
+        }
+        const findCites = (el) => {
+          const parentEl = el.parentElement;
+          if (parentEl) {
+            const cites = parentEl.dataset.cites;
+            if (cites) {
+              return {
+                el,
+                cites: cites.split(' ')
+              };
+            } else {
+              return findCites(el.parentElement)
+            }
+          } else {
+            return undefined;
+          }
+        };
+        var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+        for (var i=0; i<bibliorefs.length; i++) {
+          const ref = bibliorefs[i];
+          const citeInfo = findCites(ref);
+          if (citeInfo) {
+            tippyHover(citeInfo.el, function() {
+              var popup = window.document.createElement('div');
+              citeInfo.cites.forEach(function(cite) {
+                var citeDiv = window.document.createElement('div');
+                citeDiv.classList.add('hanging-indent');
+                citeDiv.classList.add('csl-entry');
+                var biblioDiv = window.document.getElementById('ref-' + cite);
+                if (biblioDiv) {
+                  citeDiv.innerHTML = biblioDiv.innerHTML;
+                }
+                popup.appendChild(citeDiv);
+              });
+              return popup.innerHTML;
+            });
+          }
+        }
+      });
+      </script>
+    
+
+</body></html>
