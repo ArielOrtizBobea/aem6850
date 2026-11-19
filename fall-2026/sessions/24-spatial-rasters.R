@@ -112,7 +112,7 @@ unlist(extract(hot, wh, ID = FALSE))            # Warren Hall
 plot(mask(hot, ny)); lines(vect(ny))
 
 
-# Two grids with different cells ----
+# Moving the wind onto the temperature grid ----
 u <- rast("data_clean/u10_ny_20120717.tif")     # wind toward the east, m/s, one layer per hour
 res(u); res(tny)                                # cell size in degrees
 compareGeom(u, tny, stopOnError = FALSE)        # do the two grids have the same cells?

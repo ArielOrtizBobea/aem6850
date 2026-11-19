@@ -590,7 +590,7 @@ How to compute a new grid from the grids we have.
 
 - **Arithmetic cell by cell:** the 17 July layer against July's mean.
 - **Counting days:** the days above 30 °C in each cell.
-- **Two grids with different cells:** wind on 0.25-degree cells moved onto the
+- **Wind and temperature on different grids:** wind on 0.25-degree cells moved onto the
   4 km temperature grid.
 - **Wind speed and direction:** from the two wind layers, at Warren Hall.
 
@@ -691,9 +691,7 @@ estimates each cell from stations.
 
 ## Counting days in each cell {#use-counting}
 
-::::: {.columns}
-
-:::: {.column width="52%"}
+<!-- p_sr.png (corn panel of Figure 1, from the PMC copy) goes in a right-hand column once the PDF is saved -->
 
 ::: {.dashes}
 
@@ -709,19 +707,8 @@ estimates each cell from stations.
 
 :::
 
-::::
-
-:::: {.column width="46%"}
-
-![](figures/24-spatial-rasters/p_sr.png){height="320px" fig-align="center"}
-
-::::
-
-:::::
-
 [A **yield** is the harvest per unit of land. The **100th meridian** runs through
-the Great Plains. The figure is the corn panel of Figure 1, "Nonlinear relation
-between temperature and yields", from PubMed Central.]{.source}
+the Great Plains.]{.source}
 
 ## Days above 30 °C in New York {#hot-days}
 
@@ -775,36 +762,45 @@ plot(mask(hot, ny)); lines(vect(ny))
 [`tny` is July's 31 days cropped to New York. 30 °C is a round number for this
 example.]{.source}
 
-## Two grids with different cells {#regrid}
+## Wind and temperature on different grids {#regrid}
 
 :::: {.columns}
 
-::: {.column width="68%"}
+::: {.column width="38%"}
 
 ::: {.slide-text}
 
-Two grids combine only when they share the same cells. `project()` moves the
-wind onto the temperature grid's cells.
+To use wind and temperature in the same cell, both must be on the same grid.
 
-- A wind cell is 0.25 degrees and covers 36 temperature cells.
-- `compareGeom()` is TRUE when two grids have the same cells.
-- The finer grid holds the same wind: 4.78 m/s before, 4.73 after.
+- Question: what was the wind in Warren Hall's temperature cell at 2 pm on 17
+  July 2012?
+- Temperature comes from PRISM on 4 km cells.
+- Wind comes from ERA5 on 0.25-degree cells. One wind cell covers 36
+  temperature cells.
 
 :::
 
 :::
 
-::: {.column width="30%"}
+::: {.column width="60%"}
 
-![](figures/24-spatial-rasters/f05_windgrid.png){height="170px" fig-align="center"}
+![](figures/24-spatial-rasters/f05_windgrid.png){height="450px" fig-align="center"}
 
 :::
 
 ::::
 
+[ERA5 is the European weather centre's model run over past observations. A wind
+cell is about 21 by 28 km at Ithaca.]{.source}
+
+## Moving the wind onto the temperature grid {#regrid-code}
+
+`project()` gives every temperature cell the wind of the cells around it. The
+wind in Warren Hall's cell barely changes: 4.78 m/s before, 4.73 after.
+
 ```{r}
 #| label: regrid
-#| script: "Two grids with different cells"
+#| script: "Moving the wind onto the temperature grid"
 #| filename: "R Console, in the 24-spatial-rasters folder; tny and wh from part 1; reads data_clean/u10_ny_20120717.tif"
 u <- rast("data_clean/u10_ny_20120717.tif")     # wind toward the east, m/s, one layer per hour
 res(u); res(tny)                                # cell size in degrees
@@ -815,8 +811,8 @@ round(c(before = extract(u[["18:00"]], project(wh, crs(u)), ID = FALSE)[1, 1],
         after = extract(u4, wh, ID = FALSE)[1, 1]), 2)        # Warren Hall, m/s
 ```
 
-[ERA5 is the European weather centre's model run over past observations. A wind
-cell is about 21 by 28 km at Ithaca. 18 UTC is 2 pm there in July.]{.source}
+[`compareGeom()` is TRUE when two grids have the same cells. 18 UTC is 2 pm at
+Ithaca in July.]{.source}
 
 ## Wind speed and direction {#use-wind}
 
