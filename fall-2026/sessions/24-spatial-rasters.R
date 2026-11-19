@@ -8,8 +8,8 @@
 # (Mac) or Ctrl-Enter (Windows).
 # = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 
-# Load or install terra and sf ----
-want <- c("terra", "sf")
+# Load or install the four packages ----
+want <- c("terra", "sf", "exactextractr", "Matrix")
 need <- want[!(want %in% installed.packages()[,"Package"])]
 if (length(need)) install.packages(need)
 lapply(want, function(i) require(i, character.only = TRUE))
@@ -123,6 +123,7 @@ round(c(before = extract(u[["18:00"]], project(wh, crs(u)), ID = FALSE)[1, 1],
 
 
 # The wind at Warren Hall ----
+u    <- rast("data_clean/u10_ny_20120717.tif")  # wind toward the east, metres per second, one layer per hour
 v10  <- rast("data_clean/v10_ny_20120717.tif")  # wind toward the north, metres per second
 kmh  <- sqrt(u^2 + v10^2) * 3.6                 # speed: 1 metre per second is 3.6 km/h
 from <- (atan2(-u, -v10) * 180 / pi) %% 360     # where the wind comes from, clockwise from north
@@ -162,13 +163,6 @@ m0 <- extract(t17, ny, fun = mean, exact = TRUE, ID = FALSE)[, 1]   # without na
 ny$NAME[is.na(m0)]
 cc <- extract(t17, ny[ny$GEOID == "36109", ], ID = FALSE)   # the cells whose centre is inside
 c(cells = nrow(cc), mean = round(mean(cc[, 1]), 2))
-
-
-# Load or install exactextractr and Matrix ----
-want <- c("exactextractr", "Matrix")
-need <- want[!(want %in% installed.packages()[,"Package"])]
-if (length(need)) install.packages(need)
-lapply(want, function(i) require(i, character.only = TRUE))
 
 
 # The timings I measured ----

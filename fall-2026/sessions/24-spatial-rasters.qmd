@@ -174,6 +174,8 @@ A raster is a grid of equal cells. Each cell holds one number.
 [PRISM's daily maximum temperature, from Oregon State University. Warren Hall is
 a Cornell building in Ithaca, in Tompkins County, New York.]{.source}
 
+:::: {.content-visible unless-format="revealjs"}
+
 ## The project folder {#project}
 
 ::: {.slide-text}
@@ -203,6 +205,8 @@ tools/         how I downloaded the files and made data_clean/ (needs the networ
 
 [The README gives each file's source and licence.]{.source}
 
+::::
+
 ## Reading one day of temperature {#read}
 
 ::: {.slide-text}
@@ -219,11 +223,11 @@ coordinate system and range of values.
 
 ```{r}
 #| label: idiom-terra
-#| script: "Load or install terra and sf"
+#| script: "Load or install the four packages"
 #| output: false
 #| message: false
-#| filename: "R Console, in the 24-spatial-rasters folder. Installs terra and sf if missing"
-want <- c("terra", "sf")
+#| filename: "R Console, in the 24-spatial-rasters folder. Installs the four packages if missing"
+want <- c("terra", "sf", "exactextractr", "Matrix")
 need <- want[!(want %in% installed.packages()[,"Package"])]
 if (length(need)) install.packages(need)
 lapply(want, function(i) require(i, character.only = TRUE))
@@ -590,8 +594,6 @@ How to compute a new grid from the grids we have.
 
 - **Arithmetic cell by cell:** the 17 July layer against July's mean.
 - **Counting days:** the days above 30 °C in each cell.
-- **Wind and temperature on different grids:** wind on 0.25-degree cells moved onto the
-  4 km temperature grid.
 - **Wind speed and direction:** from the two wind layers, at Warren Hall.
 
 :::
@@ -762,6 +764,8 @@ plot(mask(hot, ny)); lines(vect(ny))
 [`tny` is July's 31 days cropped to New York. 30 °C is a round number for this
 example.]{.source}
 
+::::: {.content-visible unless-format="revealjs"}
+
 ## Wind and temperature on different grids {#regrid}
 
 :::: {.columns}
@@ -813,6 +817,8 @@ round(c(before = extract(u[["18:00"]], project(wh, crs(u)), ID = FALSE)[1, 1],
 
 [`compareGeom()` is TRUE when two grids have the same cells. 18 UTC is 2 pm at
 Ithaca in July.]{.source}
+
+:::::
 
 ## Wind speed and direction {#use-wind}
 
@@ -881,7 +887,8 @@ Wind comes as two layers: u toward the east and v toward the north. Speed is
 ```{r}
 #| label: wind
 #| script: "The wind at Warren Hall"
-#| filename: "R Console, in the 24-spatial-rasters folder; u and wh from the slides before; reads data_clean/v10_ny_20120717.tif"
+#| filename: "R Console, in the 24-spatial-rasters folder; wh from part 1; reads data_clean/u10_ny_20120717.tif and v10_ny_20120717.tif"
+u    <- rast("data_clean/u10_ny_20120717.tif")  # wind toward the east, metres per second, one layer per hour
 v10  <- rast("data_clean/v10_ny_20120717.tif")  # wind toward the north, metres per second
 kmh  <- sqrt(u^2 + v10^2) * 3.6                 # speed: 1 metre per second is 3.6 km/h
 from <- (atan2(-u, -v10) * 180 / pi) %% 360     # where the wind comes from, clockwise from north
@@ -891,9 +898,8 @@ round(unlist(extract(now, project(wh, crs(u)), ID = FALSE)), 1)    # Warren Hall
 ```
 
 [`atan2(east, north)` returns the angle of that arrow from north, in radians.
-`* 180 / pi` turns it into degrees, and `%% 360` keeps it between 0 and 360. The
-minus signs turn the direction the wind blows toward into the direction it comes
-from.]{.source}
+The minus signs turn the direction the wind blows toward into the direction it
+comes from.]{.source}
 
 ::: {.notes}
 Average u and v first, then compute the direction. Two winds from 350° and 10°
@@ -966,7 +972,8 @@ stations are few, so the choice of product can move an estimate.
 
 ::: {.slide-text}
 
-How to average a grid's cells over each county.
+How to average a grid's cells over each county. A summary of the cells inside
+each county is a **zonal statistic**.
 
 :::
 
@@ -1111,30 +1118,18 @@ c(cells = nrow(cc), mean = round(mean(cc[, 1]), 2))
 
 ::: {.slide-text}
 
-I timed the same call on the 3,109 counties of the lower 48 states. One day took
-29 seconds, three days in three calls 86 seconds, and 31 days in one call 30
-seconds.
+One call takes about 30 seconds, for 1 day of temperature or for 31. Three calls
+take three times as long.
 
-- The call is `extract(tmax, counties, fun = mean, exact = TRUE)`, as on the
-  slide before.
+- I timed `extract(tmax, counties, fun = mean, exact = TRUE)` on the 3,109
+  counties of the lower 48 states.
+- The time follows the number of calls. The number of days hardly matters.
 
 :::
 
-![](figures/24-spatial-rasters/f07_times.png){width="66%" fig-align="center"}
+![](figures/24-spatial-rasters/f07_times.png){width="84%" fig-align="center"}
 
-```{r}
-#| label: idiom-exactextractr
-#| script: "Load or install exactextractr and Matrix"
-#| output: false
-#| message: false
-#| filename: "R Console. Installs exactextractr and Matrix if missing; the next slides use them"
-want <- c("exactextractr", "Matrix")
-need <- want[!(want %in% installed.packages()[,"Package"])]
-if (length(need)) install.packages(need)
-lapply(want, function(i) require(i, character.only = TRUE))
-```
-
-[A **call** is one run of the function. I measured each case once on my laptop
+[A **call** is one run of `extract()`. I measured each case once on my laptop
 with tools/time_methods.R. The figure reads data_clean/timings.csv.]{.source}
 
 ::: {.notes}

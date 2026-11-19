@@ -388,14 +388,14 @@ cat("  f06: u", round(uu, 2), "v", round(vv, 2), "km/h", round(kmh, 1), "from", 
 # Slide 26. terra's extract(exact = TRUE) on the 3,109 counties of the lower 48, timed once each (tools/time_methods.R).
 tm <- read.csv(dpath("data_clean/timings.csv"))
 a  <- tm[tm$method == "terra extract(exact = TRUE)", ]
-s  <- c(a$seconds[a$days == 1], a$seconds[a$days == 3], a$seconds[a$days == 31])
-lab <- c("1 day, 1 call", "3 days, 3 calls", "31 days, 1 call")
-fig("f07_times.png", 8.0, 2.3, mar = c(2.6, 9.2, 0.3, 1.0), ps = 13)
+s  <- c(a$seconds[a$days == 1], a$seconds[a$days == 31], a$seconds[a$days == 3])
+lab <- c("1 call on 1 day", "1 call on all 31 days", "3 calls, 1 day each")
+fig("f07_times.png", 8.0, 2.9, mar = c(2.6, 10.6, 0.3, 1.0), ps = 13)
 par(las = 1, bty = "n", mgp = c(1.8, 0.5, 0))
 plot(NA, xlim = c(0, 100), ylim = c(0.45, 3.55), xaxs = "i", axes = FALSE, xlab = "", ylab = "")
 segments(seq(20, 100, 20), 0.45, seq(20, 100, 20), 3.55, col = light, lwd = 1)
 y <- 3:1
-rect(0, y - 0.32, s, y + 0.32, col = "#8C7B6B", border = NA)
+rect(0, y - 0.32, s, y + 0.32, col = c("#8C7B6B", "#8C7B6B", acc), border = NA)
 axis(1, at = seq(0, 100, 20), col = rule, col.ticks = rule, cex.axis = 0.95)
 axis(2, at = y, labels = lab, tick = FALSE, line = -0.1, cex.axis = 1)
 text(s, y, sprintf("%.1f s", s), pos = 4, font = 2, cex = 1)
