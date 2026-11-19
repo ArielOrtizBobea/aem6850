@@ -1,4 +1,4 @@
-# AEM 6850, session 24 (Spatial II: rasters). Computing on grids
+# AEM 6850, session 24 (Spatial II: rasters). Raster calculations
 # Script 2 of 5 - arithmetic cell by cell, counting days, two grids with different cells, wind speed and
 # direction, and three more uses of a grid (the session page)
 # Reads: data_clean/tmax_july2012.tif, data/census/cb_2024_us_county_500k.zip,

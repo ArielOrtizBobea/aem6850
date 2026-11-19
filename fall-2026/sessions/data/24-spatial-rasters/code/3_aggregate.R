@@ -1,4 +1,4 @@
-# AEM 6850, session 24 (Spatial II: rasters). Aggregating cells to counties
+# AEM 6850, session 24 (Spatial II: rasters). Combining rasters and polygons
 # Script 3 of 5 - county means with extract(), the timings, the cells of Tompkins County and their
 # fractions, the mean by hand, Exercise 2, the matrix product, the weight matrix P for every county,
 # sparse matrices, P %*% M, population weights

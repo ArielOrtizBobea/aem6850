@@ -401,14 +401,14 @@ points(fire, pch = 21, bg = "red", col = "white", cex = 1.6)
 #     which.max(values(...)) and which.min(), then xyFromCell(). Which counties are they in?
 #  3. Days above 32 °C in each New York cell, sum(tny_in > 32): the range, the share of cells
 #     with five or more, and Warren Hall's cell.
-# Computing on grids
+# Raster calculations
 #  4. Days above 35 °C across the country, sum(tmax > 35): the share of cells with at least one,
 #     the share with all 31, Warren Hall and St. Louis (-90.1848, 38.6247).
 #  5. The month's range in each New York cell, max(tny_in) - min(tny_in). Where is it largest?
 #  6. The wind at Warren Hall hour by hour: the speed at each of the 24 hours from u and v10.
 #     The strongest and weakest hour, the mean of the 24 speeds, and the speed and direction
 #     of the mean u and mean v.
-# Cells to counties
+# Rasters and polygons
 #  7. Cell centres against exact fractions: extract(t17, ny, fun = mean, na.rm = TRUE) without
 #     exact = TRUE. Which New York counties move most? How many cell centres does New York
 #     County (Manhattan) have, and how many cells does it touch?
