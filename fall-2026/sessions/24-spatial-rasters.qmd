@@ -102,7 +102,7 @@ What we are going to do today
 1. **Raster data in R**\
    [Cells, resolution and extent · reading one day of temperature · a raster as a matrix · one layer per day · cropping to New York · Exercise 1]{.topics}
 2. **Computing on grids**\
-   [Arithmetic cell by cell · counting days · two grids with different cells · wind speed and direction]{.topics}
+   [Arithmetic cell by cell · counting days · wind speed and direction]{.topics}
 3. **Aggregating cells to counties**\
    [One mean per county · the cells of one county · Exercise 2 · a weight matrix · sparse matrices · population weights]{.topics}
 4. **An application to heat and corn yields**\
@@ -321,7 +321,8 @@ One file can hold many layers on the same cells. `tmax_july2012.tif` holds 31,
 one for each day of July 2012.
 
 - A **layer** is one grid. A **stack** is several layers on the same cells.
-- Each layer is named by its date. `tmax[["2012-07-17"]]` is one day.
+- Each layer is named by its date. PRISM's day ends at 8 am in New York. The
+  layer dated 18 July holds the afternoon of 17 July.
 - `values()` of the stack is a matrix of cells by days.
 
 :::
@@ -348,8 +349,8 @@ dim(values(tmax))                               # cells by days
 values(tmax)[i, 16:18]                          # Warren Hall's cell on 16, 17 and 18 July
 ```
 
-[The file stores hundredths of a degree, so 30.977 reads 30.98. PRISM's day ends
-at 12:00 UTC, so the layer dated 18 July holds the afternoon of 17 July.]{.source}
+[The file stores hundredths of a degree, so 30.977 reads 30.98. I built it from
+PRISM's 31 daily files with tools/make_clean.R.]{.source}
 
 ::: {.content-visible unless-format="revealjs"}
 
@@ -887,7 +888,7 @@ Wind comes as two layers: u toward the east and v toward the north. Speed is
 ```{r}
 #| label: wind
 #| script: "The wind at Warren Hall"
-#| filename: "R Console, in the 24-spatial-rasters folder; wh from part 1; reads data_clean/u10_ny_20120717.tif and v10_ny_20120717.tif"
+#| filename: "R Console, in the 24-spatial-rasters folder; wh from part 1; reads the two wind files in data_clean/"
 u    <- rast("data_clean/u10_ny_20120717.tif")  # wind toward the east, metres per second, one layer per hour
 v10  <- rast("data_clean/v10_ny_20120717.tif")  # wind toward the north, metres per second
 kmh  <- sqrt(u^2 + v10^2) * 3.6                 # speed: 1 metre per second is 3.6 km/h
@@ -897,9 +898,8 @@ names(now) <- c("u", "v", "kmh", "from")
 round(unlist(extract(now, project(wh, crs(u)), ID = FALSE)), 1)    # Warren Hall at 18:00 UTC
 ```
 
-[`atan2(east, north)` returns the angle of that arrow from north, in radians.
-The minus signs turn the direction the wind blows toward into the direction it
-comes from.]{.source}
+[ERA5 is a weather model run over past observations, on 0.25-degree cells. 18 UTC
+is 2 pm at Ithaca in July.]{.source}
 
 ::: {.notes}
 Average u and v first, then compute the direction. Two winds from 350° and 10°
@@ -1121,9 +1121,10 @@ c(cells = nrow(cc), mean = round(mean(cc[, 1]), 2))
 One call takes about 30 seconds, for 1 day of temperature or for 31. Three calls
 take three times as long.
 
-- I timed `extract(tmax, counties, fun = mean, exact = TRUE)` on the 3,109
+- I timed `extract()` with `exact = TRUE`, as on the slide before, on the 3,109
   counties of the lower 48 states.
 - The time follows the number of calls. The number of days hardly matters.
+- At this rate, one call a month for 30 years takes about 3 hours.
 
 :::
 
@@ -1469,43 +1470,45 @@ which(low$GEOID == "36109")                     # Tompkins County's row
 
 ## Sparse matrices {#sparse}
 
-:::: {.columns}
-
-::: {.column width="64%"}
-
 ::: {.slide-text}
 
 A sparse matrix stores only the entries that are not zero: each one's row, column
-and value. P takes 10.3 MB that way, against 21.7 GB as an ordinary matrix.
+and value.
 
-- The small example is Tompkins and Cortland counties and four cells of New
-  York's grid (11,673 to 11,676). Dots are zeros.
-- For P, `i` is the county's row, `j` the cell's number and `x` the weight.
-
-:::
-
-:::
-
-::: {.column width="34%"}
-
-![](figures/24-spatial-rasters/f11b_sparse.png){height="170px" fig-align="center"}
+- The example has two counties, Tompkins and Cortland, and four cells of New
+  York's grid.
+- Cell 11,675 lies 35% in Tompkins and 65% in Cortland.
+- Five of the eight entries are not zero, so the table on the right has five
+  rows.
 
 :::
 
-::::
+![](figures/24-spatial-rasters/f11b_sparse.png){width="78%" fig-align="center"}
+
+## P as a sparse matrix {#sparse-P}
+
+::: {.slide-text}
+
+P holds every county's cell weights. It takes 10.3 MB as a sparse matrix,
+against 21.7 GB as an ordinary matrix.
+
+- `i` is the county's row, `j` the cell's number and `x` the weight.
+- The first call builds the small example. Dots are zeros.
+
+:::
 
 ```{r}
 #| label: sparse
-#| script: "Sparse matrices"
-#| filename: "R Console, in the 24-spatial-rasters folder; tabN, low and tmax from the slide before; Matrix loaded"
+#| script: "P as a sparse matrix"
+#| filename: "R Console, in the 24-spatial-rasters folder; tabN, low and tmax from the slide before"
 sparseMatrix(i = c(1, 1, 1, 2, 2), j = c(1, 2, 3, 3, 4), x = c(1, 1, 0.35, 0.65, 1), dims = c(2, 4))
 P <- sparseMatrix(i = tabN$county, j = tabN$cell, x = tabN$w, dims = c(nrow(low), ncell(tmax)))
 c(rows = nrow(P), columns = ncol(P), not_zero = nnzero(P))
 round(c(sparse_MB = as.numeric(object.size(P)) / 1e6, ordinary_GB = prod(dim(P)) * 8 / 1e9), 1)
 ```
 
-[Cell 11,675 lies 35% in Tompkins and 65% in Cortland. A number takes 8 bytes:
-3,109 × 872,505 × 8 bytes.]{.source}
+[`tabN` is the table of every county's cells and weights, and `low` is the 3,109
+counties. A number takes 8 bytes: 3,109 × 872,505 × 8 bytes is 21.7 GB.]{.source}
 
 ::: {.content-visible unless-format="revealjs"}
 
@@ -1525,7 +1528,7 @@ the same object in binary units.
 `P %*% M` returns every county's mean on every day, 3,109 counties by 31 days.
 It takes a few hundredths of a second once M is read.
 
-- M is the stack as a matrix, 872,505 cells by 31 days (about 220 MB).
+- M is July's 31 layers as a matrix, 872,505 cells by 31 days (about 220 MB).
 - Tompkins County's row matches the means computed by hand.
 - With P built, a month costs one `values()` (1.3 seconds) and the product.
 
@@ -1580,7 +1583,7 @@ NA.
 #| filename: "R Console, in the 24-spatial-rasters folder; low and cd from the slide before"
 #| fig-show: hide
 low$t18 <- as.vector(cd[, "2012-07-18"])
-plot(low["t18"], main = "", border = NA)
+plot(low["t18"], main = "°C, layer dated 18 July 2012", border = NA)
 ```
 
 **A year of days.** `values()` on 365 national layers needs about 2.5 GB. Read
@@ -1782,43 +1785,54 @@ c(report_2012 = sum(!is.na(yw[, "2012"])), with_8_years = sum(!is.na(low$chg)))
 
 :::: {.columns}
 
-::: {.column width="58%"}
+::: {.column width="40%"}
 
 ::: {.slide-text}
 
-Heat is each day's degrees above 29 °C, added over the 31 days of July. It runs
-from 0 to 555 across the lower 48 states.
+Heat is each day's degrees above 29 °C, added over the 31 days of July 2012.
 
 - A **degree day** is one degree above the threshold for one day. A day at
   35.8 °C counts 6.8, and a day at 28 °C counts 0.
-- `(tmax > 29)` is 1 on days above 29 °C and 0 on the others, so cooler days add
-  nothing.
-- Warren Hall's cell has 48.3 degree days. The largest total, 555, is in Death
-  Valley, California.
+- Warren Hall's cell has 48.3 degree days.
+- The largest total, 555, is in Death Valley, California.
 
 :::
 
 :::
 
-::: {.column width="40%"}
+::: {.column width="58%"}
 
-![](figures/24-spatial-rasters/f14_heat.png){height="270px" fig-align="center"}
+![](figures/24-spatial-rasters/f14_heat.png){height="440px" fig-align="center"}
 
 :::
 
 ::::
 
+[29 °C is corn's threshold in [Schlenker & Roberts (PNAS, 2009)](https://doi.org/10.1073/pnas.0906865106).]{.source}
+
+## Degree days from the 31 layers {#heat-code}
+
+::: {.slide-text}
+
+`(tmax - 29) * (tmax > 29)` is each day's degrees above 29 °C. `sum()` adds the 31
+days in each cell.
+
+- `(tmax > 29)` is 1 on days above 29 °C and 0 on the others, so cooler days add
+  nothing.
+- The heat runs from 0 to 555 degree days across the lower 48 states.
+
+:::
+
 ```{r}
 #| label: heat
-#| script: "Heat above 29 °C in each cell"
-#| filename: "R Console, in the 24-spatial-rasters folder; tmax and wh from part 1"
+#| script: "Degree days from the 31 layers"
+#| filename: "R Console, in the 24-spatial-rasters folder; tmax (July's 31 layers) and wh (Warren Hall) from part 1"
 heat <- sum((tmax - 29) * (tmax > 29))          # each day's degrees above 29, summed over 31 days
 round(range(values(heat), na.rm = TRUE))
 round(unlist(extract(heat, wh, ID = FALSE)), 1) # Warren Hall
 ```
 
-[29 °C is corn's threshold in [Schlenker & Roberts (PNAS, 2009)](https://doi.org/10.1073/pnas.0906865106).
-On a stack, `max()` returns one layer, the largest value across the 31 days, so
+[On a stack, `max()` returns one layer, the largest value across the 31 days, so
 the heat is written as a sum.]{.source}
 
 ::: {.content-visible unless-format="revealjs"}
@@ -1911,37 +1925,15 @@ lines(vect(st[st$STUSPS %in% low$STUSPS, ]), lwd = 0.4)
 
 ## County heat over cropland {#heat-cropland}
 
-:::: {.columns}
-
-::: {.column width="52%"}
-
 ::: {.slide-text}
 
 Each weight is now the cell's fraction in the county times its cropland share.
+In part 3 it was the fraction alone.
 
 - Champaign, Illinois: 151 degree days by either weight.
 - Sequatchie, Tennessee: 105 over cropland, 78 over the county.
 
 :::
-
-:::
-
-::: {.column width="46%"}
-
-```{r}
-#| label: heat-cropland-figure
-#| ref.label: [heat-cropland, heat-cropland-map]
-#| echo: false
-#| purl: false
-#| results: hide
-#| fig-width: 4.4
-#| fig-height: 2.3
-#| out-width: "100%"
-```
-
-:::
-
-::::
 
 ```{r}
 #| label: heat-cropland
@@ -1957,13 +1949,16 @@ data.frame(county = low$NAME[k], over_cropland = round(low$heat[k], 1),
            whole_county = round(low$heat_area[k], 1))
 ```
 
+[`tabN` is the table of every county's cells and fractions. `P` is the matrix of
+area weights, and `low` is the 3,109 counties.]{.source}
+
 ::: {.content-visible unless-format="revealjs"}
 
 Champaign County is 93% cropland. Nine counties have no cropland, so their heat
 is NaN, R's mark for 0/0. None of them reports a corn yield.
 
 The table of cells and fractions is the one built for temperature, and only the
-weights change. The map on the slide shows the heat over each county's
+weights change. The map shows the heat over each county's
 cropland, east of the 100th meridian. The nine counties with no cropland are Loving (Texas); Lake,
 Park, Jackson, Clear Creek, San Juan and Gilpin (Colorado); Monroe (Florida);
 and Keweenaw (Michigan). Tompkins County has 24.8 degree days over its cropland
@@ -1973,7 +1968,6 @@ and 24.2 over the county.
 #| label: heat-cropland-map
 #| script: "County heat over cropland, on a map"
 #| filename: "R Console, in the 24-spatial-rasters folder; low from the slide before"
-#| fig-show: hide
 east <- low[st_coordinates(st_centroid(st_geometry(low)))[, 1] > -100, ]   # east of 100 W
 plot(east["heat"], main = "", border = NA, key.pos = 1,                     # the key below the map
      breaks = seq(0, 320, 40), pal = hcl.colors(8, "YlOrRd", rev = TRUE))     # light to dark: more heat

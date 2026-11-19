@@ -243,7 +243,7 @@ sum(table(tabN$cell) > 1)                       # cells with a weight in more th
 which(low$GEOID == "36109")                     # Tompkins County's row
 
 
-# Sparse matrices ----
+# P as a sparse matrix ----
 sparseMatrix(i = c(1, 1, 1, 2, 2), j = c(1, 2, 3, 3, 4), x = c(1, 1, 0.35, 0.65, 1), dims = c(2, 4))
 P <- sparseMatrix(i = tabN$county, j = tabN$cell, x = tabN$w, dims = c(nrow(low), ncell(tmax)))
 c(rows = nrow(P), columns = ncol(P), not_zero = nnzero(P))
@@ -260,7 +260,7 @@ max(abs(as.matrix(cd) - as.matrix(ee)))         # the largest difference between
 
 # Every county's mean on 18 July, on a map ----
 low$t18 <- as.vector(cd[, "2012-07-18"])
-plot(low["t18"], main = "", border = NA)
+plot(low["t18"], main = "°C, layer dated 18 July 2012", border = NA)
 
 
 # Population weights in P ----
@@ -292,7 +292,7 @@ low$chg <- chg[match(low$GEOID, names(chg))]
 c(report_2012 = sum(!is.na(yw[, "2012"])), with_8_years = sum(!is.na(low$chg)))
 
 
-# Heat above 29 °C in each cell ----
+# Degree days from the 31 layers ----
 heat <- sum((tmax - 29) * (tmax > 29))          # each day's degrees above 29, summed over 31 days
 round(range(values(heat), na.rm = TRUE))
 round(unlist(extract(heat, wh, ID = FALSE)), 1) # Warren Hall
