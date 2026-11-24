@@ -3,7 +3,7 @@
 # Exercise 2 (the view from the ground), the view as polygons
 # Reads: data_clean/terrain/tompkins_dem_utm.tif, data_clean/terrain/tompkins_towns.gpkg
 # Writes: nothing
-# Open 25-lidar-drones.Rproj first, so R starts in the project folder; then
+# Open 25-radar-lidar.Rproj first, so R starts in the project folder; then
 #   source("code/5_views.R")
 
 # 1). Preliminary ----

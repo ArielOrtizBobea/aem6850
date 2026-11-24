@@ -1,5 +1,5 @@
 # AEM 6850, session 25. Downloads the USGS LiDAR points over Cornell's central campus, as fetched on 2026-11-23.
-# Run once, in the 25-lidar-drones folder (open 25-lidar-drones.Rproj first):
+# Run once, in the 25-radar-lidar folder (open 25-radar-lidar.Rproj first):
 #   source("tools/fetch_lidar.R")
 # Needs the network and curl. The class does not need it: data_clean/lidar/ holds what the slides read.
 # Source used: USGS's public copy of the flight on Amazon Web Services (AWS), project NY_FingerLakes_1_2020,

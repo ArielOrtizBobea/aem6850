@@ -53,14 +53,14 @@ local({
 # Every chunk runs in the project folder, so the paths on the page are the
 # paths students use.
 session_dir <- getwd()
-knitr::opts_knit$set(root.dir = file.path(session_dir, "data/25-lidar-drones"))
+knitr::opts_knit$set(root.dir = file.path(session_dir, "data/25-radar-lidar"))
 ```
 
 ::: {.content-hidden when-format="revealjs"}
 
 [Slides](25-lidar-drones-slides.html) · [Live script](25-lidar-drones.R) ·
 [Source](https://github.com/ArielOrtizBobea/aem6850/blob/main/fall-2026/sessions/25-lidar-drones.qmd) ·
-[the project](data/25-lidar-drones.zip)
+[the project](data/25-radar-lidar.zip)
 
 In this session we measure elevation, heights and hail with active sensors:
 radar and LiDAR. An active sensor sends its own signal and measures what comes
@@ -77,8 +77,8 @@ of Tompkins County, with 30 m cells. From it we compute slope, the view from
 McGraw Tower and the land that drains to Fall Creek. Each use comes with a
 published study.
 
-**The project.** Download the [zip on this page](data/25-lidar-drones.zip),
-unzip it and open `25-lidar-drones.Rproj`. R then starts in the project folder,
+**The project.** Download the [zip on this page](data/25-radar-lidar.zip),
+unzip it and open `25-radar-lidar.Rproj`. R then starts in the project folder,
 and every path on the slides is relative to it. The scripts install `lidR`,
 `terra`, `sf` and `exactextractr` if they are missing. I downloaded every file
 before class, so you do not need an account, a key or the network. The folder's
@@ -131,7 +131,7 @@ What we are going to do today
 
 ::: {.slide-text}
 
-Today's code and data are in [25-lidar-drones.zip](data/25-lidar-drones.zip) (53 MB).
+Today's code and data are in [25-radar-lidar.zip](data/25-radar-lidar.zip) (53 MB).
 
 :::
 
@@ -859,8 +859,8 @@ In this part we read radar data in R.
 
 :::
 
-[To run the code, download [25-lidar-drones.zip](data/25-lidar-drones.zip)
-(53 MB), unzip it and open `25-lidar-drones.Rproj`.]{.source}
+[To run the code, download [25-radar-lidar.zip](data/25-radar-lidar.zip)
+(53 MB), unzip it and open `25-radar-lidar.Rproj`.]{.source}
 
 ::::
 
@@ -897,7 +897,7 @@ In this part we read radar data in R.
 #| script: "Load or install the four packages"
 #| output: false
 #| message: false
-#| filename: "R Console, in the 25-lidar-drones folder; installs missing packages"
+#| filename: "R Console, in the 25-radar-lidar folder; installs missing packages"
 want <- c("lidR", "terra", "sf", "exactextractr")
 need <- want[!(want %in% installed.packages()[,"Package"])]
 if (length(need)) install.packages(need)
@@ -920,7 +920,7 @@ options(lidR.progress = FALSE); terraOptions(progress = 0)
 ```{r}
 #| label: radar-read
 #| script: "Radar elevation in Tompkins County"
-#| filename: "R Console, in the 25-lidar-drones folder; reads data_clean/radar/ and data_clean/terrain/"
+#| filename: "R Console, in the 25-radar-lidar folder; reads data_clean/radar/ and data_clean/terrain/"
 rad <- rast("data_clean/radar/tompkins_copernicus_utm.tif")   # radar elevation, m, 30 m cells
 dem <- rast("data_clean/terrain/tompkins_dem_utm.tif")        # USGS ground elevation, m
 compareGeom(rad, dem)                                         # TRUE: the same cells
@@ -939,7 +939,7 @@ cells of USGS's raster, so the two subtract cell by cell. The full printout:
 ```{r}
 #| label: radar-read-full
 #| purl: false
-#| filename: "R Console, in the 25-lidar-drones folder; rad from above"
+#| filename: "R Console, in the 25-radar-lidar folder; rad from above"
 rad
 ```
 
@@ -988,7 +988,7 @@ We subtract the two rasters, keep the county and drop Cayuga Lake.
 ```{r}
 #| label: radar-minus
 #| script: "Radar minus ground elevation"
-#| filename: "R Console, in the 25-lidar-drones folder; rad and dem from the slide before"
+#| filename: "R Console, in the 25-radar-lidar folder; rad and dem from the slide before"
 towns <- st_read("data_clean/terrain/tompkins_towns.gpkg", quiet = TRUE)
 diff <- mask(rad - dem + 0.49, vect(towns))   # radar minus ground in the county, m
 diff[dem < 116.45] <- NA                      # drop Cayuga Lake
@@ -1013,7 +1013,7 @@ Each town's share of land more than 5 m above the ground:
 ```{r}
 #| label: radar-towns
 #| script: "Each town's share of land above 5 m"
-#| filename: "R Console, in the 25-lidar-drones folder; diff and towns from above"
+#| filename: "R Console, in the 25-radar-lidar folder; diff and towns from above"
 tall <- exact_extract(diff > 5, towns, "mean", progress = FALSE)
 d <- data.frame(town = towns$NAMELSAD, pct_above_5m = round(100 * tall))
 d[order(-d$pct_above_5m), ]
@@ -1068,7 +1068,7 @@ each county.
 #| label: mesh-read
 #| script: "Reading the radar hail raster in R"
 #| out.lines: [2, 3, 4, 5, 9, 11]
-#| filename: "R Console, in the 25-lidar-drones folder; reads data_clean/hail/"
+#| filename: "R Console, in the 25-radar-lidar folder; reads data_clean/hail/"
 mesh <- rast("data_clean/hail/mesh_20220612.tif")       # largest hail in each cell, mm
 mesh
 counties <- vect("data_clean/hail/counties_7states.gpkg")
@@ -1088,7 +1088,7 @@ Amazon's cloud and cut them to the seven states.
 #| label: mesh-plot
 #| script: "Plot the two radar rasters"
 #| fig-show: hide
-#| filename: "R Console, in the 25-lidar-drones folder; mesh from above"
+#| filename: "R Console, in the 25-radar-lidar folder; mesh from above"
 plot(mesh > 0, main = "Cells with radar hail, 12 June 2022")
 refl <- rast("data_clean/hail/reflectivity_20220612.tif")   # reflectivity at midnight Central, dBZ
 plot(refl, main = "Radar reflectivity, dBZ")
@@ -1138,7 +1138,7 @@ I made them. The code below reads one day and maps it.
 #| label: hail-day
 #| script: "Radar hail on 12 June 2022"
 #| fig-show: hide
-#| filename: "R Console, in the 25-lidar-drones folder; reads data_clean/hail/"
+#| filename: "R Console, in the 25-radar-lidar folder; reads data_clean/hail/"
 hail <- read.csv("data_clean/hail/hail_county_day.csv", colClasses = c(geoid = "character"))
 cty  <- st_read("data_clean/hail/counties_7states.gpkg", quiet = TRUE)
 day  <- hail[hail$date == "2022-06-12", ]                     # one radar day
@@ -1168,7 +1168,7 @@ hail.
 ```{r}
 #| label: hail-reports
 #| script: "Radar hail, hail reports and crop insurance"
-#| filename: "R Console, in the 25-lidar-drones folder; reads data_clean/hail/hail_county_day.csv"
+#| filename: "R Console, in the 25-radar-lidar folder; reads data_clean/hail/hail_county_day.csv"
 hail <- read.csv("data_clean/hail/hail_county_day.csv", colClasses = c(geoid = "character"))
 big  <- hail[hail$km2_1in >= 25, ]      # 25 km2 or more of hail of 1 inch or more
 round(100 * mean(big$reports == 0))     # percent of these county-days with no report
@@ -1188,7 +1188,7 @@ the county-days.
 ```{r}
 #| label: hail-density
 #| script: "No report, by population density"
-#| filename: "R Console, in the 25-lidar-drones folder; big from above"
+#| filename: "R Console, in the 25-radar-lidar folder; big from above"
 round(100 * tapply(big$reports == 0, big$density_fifth, mean))   # Q1 is the least dense fifth
 ```
 
@@ -1208,7 +1208,7 @@ in months without one.
 ```{r}
 #| label: hail-auc
 #| script: "Radar hail and crop-insurance losses"
-#| filename: "R Console, in the 25-lidar-drones folder; reads data_clean/hail/hail_county_month.csv"
+#| filename: "R Console, in the 25-radar-lidar folder; reads data_clean/hail/hail_county_month.csv"
 hm  <- read.csv("data_clean/hail/hail_county_month.csv", colClasses = c(geoid = "character"))
 auc <- function(score, y) { r <- rank(score); n1 <- sum(y); n0 <- sum(!y); (sum(r[y]) - n1 * (n1 + 1) / 2) / (n1 * n0) }
 loss <- hm$loss_usd > 1e5                                       # more than $100,000 of hail losses
@@ -1310,7 +1310,7 @@ The lidR package reads LiDAR data in R.
 #| label: read-las
 #| script: "Reading LiDAR data in R"
 #| out.lines: [3, 4, 6, 8, 9]
-#| filename: "R Console, in the 25-lidar-drones folder, packages loaded in part 2; reads data_clean/lidar/campus.laz"
+#| filename: "R Console, in the 25-radar-lidar folder, packages loaded in part 2; reads data_clean/lidar/campus.laz"
 las <- readLAS("data_clean/lidar/campus.laz")   # about 2 seconds
 las
 ```
@@ -1319,8 +1319,8 @@ las
 
 x and y are metres east and north.
 
-To run this code, download [25-lidar-drones.zip](data/25-lidar-drones.zip) and
-open `25-lidar-drones.Rproj`.
+To run this code, download [25-radar-lidar.zip](data/25-radar-lidar.zip) and
+open `25-radar-lidar.Rproj`.
 
 The campus has 6.43 points per m² from 5.05 pulses per m², because some pulses
 come back more than once. Each point is one return of a pulse, with x, y and
@@ -1335,12 +1335,12 @@ lidR's outline around the points, a little under 600 × 600 m.
 ```{r}
 #| label: read-las-full
 #| purl: false
-#| filename: "R Console, in the 25-lidar-drones folder; las from above"
+#| filename: "R Console, in the 25-radar-lidar folder; las from above"
 las
 table(las$ReturnNumber)
 ```
 
-```{.default filename="25-lidar-drones/, as its README.md describes it"}
+```{.default filename="25-radar-lidar/, as its README.md describes it"}
 data_clean/lidar/      campus.laz: the USGS points, 600 x 600 m around McGraw Tower
                        campus_dtm.tif, campus_dsm.tif, campus_height.tif: the three 1 m grids
 data_clean/lidar_nyc/  esb_height.tif: height above ground around the Empire State Building
@@ -1374,7 +1374,7 @@ USGS labels each point with a class.
 ```{r}
 #| label: classes
 #| script: "Ground points"
-#| filename: "R Console, in the 25-lidar-drones folder; las from readLAS() on the slide before"
+#| filename: "R Console, in the 25-radar-lidar folder; las from readLAS() on the slide before"
 table(las$Classification)                               # 1 other, 2 ground, 7 and 18 noise
 las <- filter_poi(las, !Classification %in% c(7, 18))   # drop the noise
 npoints(las)
@@ -1419,7 +1419,7 @@ the points that meet a condition.
 #| label: side-strip
 #| script: "A slice through McGraw Tower"
 #| fig-show: hide
-#| filename: "R Console, in the 25-lidar-drones folder; las from the slide before"
+#| filename: "R Console, in the 25-radar-lidar folder; las from the slide before"
 strip <- filter_poi(las, abs(Y - 4700539.6) < 5, !Classification %in% c(7, 18))   # 10 m wide
 plot(strip$X - 377600, strip$Z, pch = ".", asp = 2, xlab = "Metres east", ylab = "Elevation, m",
      col = ifelse(strip$Classification == 2, "tan4", "cyan4"))
@@ -1461,7 +1461,7 @@ them. The ring marks McGraw Tower.]{.source}
 ```{r}
 #| label: dtm
 #| script: "Ground elevation"
-#| filename: "R Console, in the 25-lidar-drones folder; las, the campus points without noise"
+#| filename: "R Console, in the 25-radar-lidar folder; las, the campus points without noise"
 ground <- rasterize_terrain(las, res = 1, algorithm = tin())   # bare ground, 1 m cells
 ```
 
@@ -1506,7 +1506,7 @@ and trees.
 ```{r}
 #| label: dsm
 #| script: "Surface elevation"
-#| filename: "R Console, in the 25-lidar-drones folder; las, the campus points without noise"
+#| filename: "R Console, in the 25-radar-lidar folder; las, the campus points without noise"
 surface <- rasterize_canopy(las, res = 1, algorithm = p2r(na.fill = tin()))   # top point
 ```
 
@@ -1548,7 +1548,7 @@ below 0 m, and the lowest is −3.3 m.]{.source}
 ```{r}
 #| label: height
 #| script: "The height of buildings and trees"
-#| filename: "R Console, in the 25-lidar-drones folder; ground and surface from the slides before"
+#| filename: "R Console, in the 25-radar-lidar folder; ground and surface from the slides before"
 height <- surface - ground                         # height above ground, metres
 round(range(values(height), na.rm = TRUE), 1)      # lowest and highest
 ```
@@ -1598,7 +1598,7 @@ tallest cell within 5 m has a height of 0.09 m.]{.source}
 ```{r}
 #| label: lawn
 #| script: "Checking the rasters on a lawn"
-#| filename: "R Console, in the 25-lidar-drones folder; ground, surface, height from the slides before"
+#| filename: "R Console, in the 25-radar-lidar folder; ground, surface, height from the slides before"
 g3 <- c(ground, surface, height); names(g3) <- c("ground", "surface", "height")
 lawn <- vect(cbind(377964.8, 4700674.7), crs = crs(g3))   # a point on the Arts Quad lawn
 round(extract(g3, lawn), 2)
@@ -1814,7 +1814,7 @@ To measure the tower, we look at the cells within 20 m of it.
 ```{r}
 #| label: tower
 #| script: "Measuring McGraw Tower in R"
-#| filename: "R Console, in the 25-lidar-drones folder; g3, the three rasters stacked on the lawn slide"
+#| filename: "R Console, in the 25-radar-lidar folder; g3, the three rasters stacked on the lawn slide"
 tower <- vect(cbind(377876.1, 4700539.6), crs = crs(g3))   # McGraw Tower
 zone  <- buffer(tower, 20)                                 # every cell within 20 m
 e <- extract(g3, zone)
@@ -1878,7 +1878,7 @@ In 30 m cells, our height for the Empire State Building falls to 323.7 m.
 ```{r}
 #| label: esb
 #| script: "The Empire State Building in 30 m cells"
-#| filename: "R Console, in the 25-lidar-drones folder; reads data_clean/lidar_nyc/esb_height.tif"
+#| filename: "R Console, in the 25-radar-lidar folder; reads data_clean/lidar_nyc/esb_height.tif"
 esb <- rast("data_clean/lidar_nyc/esb_height.tif")                    # height above ground, 1 m
 b   <- buffer(vect(cbind(585631.7, 4511326.9), crs = crs(esb)), 60)   # 60 m around the building
 max(extract(esb, b)[[2]], na.rm = TRUE)
@@ -1899,7 +1899,7 @@ tip of the antenna. In 5 m and 10 m cells the building has these heights:
 ```{r}
 #| label: esb-sizes
 #| script: "The Empire State Building in 5 m and 10 m cells"
-#| filename: "R Console, in the 25-lidar-drones folder; esb and b from above"
+#| filename: "R Console, in the 25-radar-lidar folder; esb and b from above"
 sapply(c(5, 10), function(k) round(max(extract(aggregate(esb, fact = k, fun = "mean"), b)[[2]],
                                        na.rm = TRUE), 1))
 ```
@@ -1934,7 +1934,7 @@ height raster from part 3. `zone` is the 20 m circle around McGraw Tower.
 #| eval: false
 # Exercise 1 (4 minutes). McGraw Tower in 5 m and 10 m cells.
 # In 10 m cells McGraw Tower loses most of its height.
-# In the 25-lidar-drones folder, with height and zone as on the slides before
+# In the 25-radar-lidar folder, with height and zone as on the slides before
 # (or run code/3_heights.R first).
 # 1. h5 <- aggregate(height, fact = 5, fun = "mean")      # 5 m cells
 # 2. max(extract(h5, zone)[[2]], na.rm = TRUE)            # the tallest 5 m cell near the tower
@@ -1954,7 +1954,7 @@ share of its height it keeps. Without lidR, read
 ```{r}
 #| label: exercise-1-solution
 #| purl: false
-#| filename: "R Console, in the 25-lidar-drones folder; height and zone from the slides before"
+#| filename: "R Console, in the 25-radar-lidar folder; height and zone from the slides before"
 h5 <- aggregate(height, fact = 5, fun = "mean")
 max(extract(h5, zone)[[2]], na.rm = TRUE)
 h10 <- aggregate(height, fact = 10, fun = "mean")
@@ -2090,7 +2090,7 @@ polygons.
 #| label: dem
 #| script: "Reading the elevation raster and towns"
 #| out.lines: [2, 3, 5, 8, 9]
-#| filename: "R Console, in the 25-lidar-drones folder; reads data_clean/terrain/"
+#| filename: "R Console, in the 25-radar-lidar folder; reads data_clean/terrain/"
 dem   <- rast("data_clean/terrain/tompkins_dem_utm.tif")     # elevation, m, 30 m cells
 towns <- st_read("data_clean/terrain/tompkins_towns.gpkg", quiet = TRUE)
 dem
@@ -2105,7 +2105,7 @@ The full printout:
 ```{r}
 #| label: dem-full
 #| purl: false
-#| filename: "R Console, in the 25-lidar-drones folder; dem from above"
+#| filename: "R Console, in the 25-radar-lidar folder; dem from above"
 dem
 ```
 
@@ -2156,7 +2156,7 @@ dem <- project(ll, "EPSG:26918", res = 30, method = "bilinear")
 ```{r}
 #| label: slope
 #| script: "Slope with terrain()"
-#| filename: "R Console, in the 25-lidar-drones folder; dem from the slide before"
+#| filename: "R Console, in the 25-radar-lidar folder; dem from the slide before"
 slope_pct <- tan(terrain(dem, v = "slope", unit = "radians")) * 100   # percent
 steep     <- slope_pct > 15                                         # TRUE where steeper than 15%
 ```
@@ -2171,7 +2171,7 @@ changes:
 ```{r}
 #| label: slope-4
 #| script: "Slope from 4 neighbours"
-#| filename: "R Console, in the 25-lidar-drones folder; dem, towns and slope_pct from above"
+#| filename: "R Console, in the 25-radar-lidar folder; dem, towns and slope_pct from above"
 s4 <- tan(terrain(dem, v = "slope", unit = "radians", neighbors = 4)) * 100
 round(100 * c(eight = sum(exact_extract((slope_pct > 15) * 900, towns, "sum", progress = FALSE)),
               four  = sum(exact_extract((s4 > 15) * 900, towns, "sum", progress = FALSE))) /
@@ -2217,7 +2217,7 @@ Six lines of R give the same slope as `terrain()` at the tower's cell.
 ```{r}
 #| label: by-hand
 #| script: "The slope by hand in R"
-#| filename: "R Console, in the 25-lidar-drones folder; dem and slope_pct from the slides before"
+#| filename: "R Console, in the 25-radar-lidar folder; dem and slope_pct from the slides before"
 tw <- project(vect(cbind(-76.48505, 42.44757), crs = "EPSG:4326"), crs(dem))   # McGraw Tower
 rc <- rowColFromCell(dem, cellFromXY(dem, crds(tw)))                          # row 753, col 651
 w  <- matrix(values(dem, row = rc[1] - 1, nrows = 3, col = rc[2] - 1, ncols = 3), 3, byrow = TRUE)
@@ -2247,7 +2247,7 @@ In Newfield and Caroline, about a third of the land is steeper than 15%.
 ```{r}
 #| label: steep-towns
 #| script: "Steep land in each town"
-#| filename: "R Console, in the 25-lidar-drones folder; steep and towns from the slides before"
+#| filename: "R Console, in the 25-radar-lidar folder; steep and towns from the slides before"
 s <- exact_extract(steep * 900, towns, "sum", progress = FALSE)     # m2 steeper than 15%
 d <- data.frame(town = towns$NAMELSAD, pct_of_land = round(100 * s / towns$ALAND, 1))
 d[order(-d$pct_of_land), ]
@@ -2268,7 +2268,7 @@ town 15.5, Caroline 31.4, Groton 5.4 and Lansing 5.9.
 ```{r}
 #| label: steep-county
 #| script: "Steep land in the county"
-#| filename: "R Console, in the 25-lidar-drones folder; s and towns from above"
+#| filename: "R Console, in the 25-radar-lidar folder; s and towns from above"
 round(c(km2_steep = sum(s) / 1e6, km2_land = sum(towns$ALAND) / 1e6,
         pct = 100 * sum(s) / sum(towns$ALAND)), 1)
 ```
@@ -2356,7 +2356,7 @@ From the top of McGraw Tower, we can see 236.5 km² of land and lake.
 ```{r}
 #| label: view
 #| script: "Computing the view in R"
-#| filename: "R Console, in the 25-lidar-drones folder; dem (the 30 m raster) and towns from the slides before"
+#| filename: "R Console, in the 25-radar-lidar folder; dem (the 30 m raster) and towns from the slides before"
 tw   <- project(vect(cbind(-76.48505, 42.44757), crs = "EPSG:4326"), crs(dem))   # McGraw Tower
 top  <- viewshed(dem, crds(tw), observer = 53, target = 0)    # TRUE where visible
 round(global(top, "sum", na.rm = TRUE)[[1]] * 900 / 1e6, 1)   # km2 in view
@@ -2406,7 +2406,7 @@ lake, and `towns` holds the towns.
 #| eval: false
 # Exercise 2 (4 minutes). The view from the ground at McGraw Tower.
 # What you see depends on how high your eye is.
-# In the 25-lidar-drones folder, with dem, tw, land and towns as on the slides before
+# In the 25-radar-lidar folder, with dem, tw, land and towns as on the slides before
 # (or run code/5_views.R up to this exercise).
 # 1. gnd <- viewshed(dem, crds(tw), observer = 1.7, target = 0)
 # 2. The area in view in km2, as on the slide before.
@@ -2424,7 +2424,7 @@ all their view.]{.source}
 ```{r}
 #| label: exercise-2-solution
 #| purl: false
-#| filename: "R Console, in the 25-lidar-drones folder; dem, tw, land and towns from the slides before"
+#| filename: "R Console, in the 25-radar-lidar folder; dem, tw, land and towns from the slides before"
 gnd <- viewshed(dem, crds(tw), observer = 1.7, target = 0)
 round(global(gnd, "sum", na.rm = TRUE)[[1]] * 900 / 1e6, 1)
 towns$gnd <- round(100 * exact_extract(gnd * land * 900, towns, "sum", progress = FALSE) /
@@ -2479,7 +2479,7 @@ To join the view with home sales or farm fields, we turn it into polygons.
 ```{r}
 #| label: view-polygons
 #| script: "Turning the view into polygons"
-#| filename: "R Console, in the 25-lidar-drones folder; top, the view raster from viewshed()"
+#| filename: "R Console, in the 25-radar-lidar folder; top, the view raster from viewshed()"
 view <- disagg(as.polygons(ifel(top, 1, NA)))   # one polygon per separate piece
 nrow(view)
 ```
@@ -2492,7 +2492,7 @@ raster gave 236.5 km².
 ```{r}
 #| label: view-area
 #| script: "The area of the pieces"
-#| filename: "R Console, in the 25-lidar-drones folder; view from above"
+#| filename: "R Console, in the 25-radar-lidar folder; view from above"
 round(sum(expanse(view)) / 1e6, 1)
 ```
 
@@ -2626,7 +2626,7 @@ raster around Fall Creek.
 ```{r}
 #| label: flow
 #| script: "Flow direction and accumulation in R"
-#| filename: "R Console, in the 25-lidar-drones folder; reads data_clean/terrain/fallcreek_dem_filled.tif"
+#| filename: "R Console, in the 25-radar-lidar folder; reads data_clean/terrain/fallcreek_dem_filled.tif"
 filled <- rast("data_clean/terrain/fallcreek_dem_filled.tif")   # 30 m, pits filled before class
 fd  <- terrain(filled, v = "flowdir")                          # the neighbour each cell drains to
 acc <- flowAccumulation(fd)                                    # cells draining through each cell
@@ -2686,7 +2686,7 @@ The land that drains to the USGS gauge on Fall Creek covers 324.6 km².
 ```{r}
 #| label: basin
 #| script: "Computing the watershed in R"
-#| filename: "R Console, in the 25-lidar-drones folder; fd and acc from the slide before"
+#| filename: "R Console, in the 25-radar-lidar folder; fd and acc from the slide before"
 gauge <- project(vect(cbind(-76.47278, 42.45333), crs = "EPSG:4269"), crs(fd))
 e  <- extract(acc, buffer(gauge, 150), cells = TRUE)
 ws <- terra::watershed(fd, xyFromCell(acc, e$cell[which.max(e[[2]])]))   # 1 = drains to the gauge
@@ -2722,7 +2722,7 @@ Ten practice tasks extend today's code. The solutions are on the page.
 #| exercise: true
 #| script: "Practice"
 #| eval: false
-# Practice. Run in the 25-lidar-drones folder after the slides' code has built
+# Practice. Run in the 25-radar-lidar folder after the slides' code has built
 # las, ground, surface, height, g3, dem, towns, slope_pct, steep, tw, land, top, fd and acc.
 
 # Heights

@@ -1,5 +1,5 @@
 # AEM 6850, session 25. Downloads the USGS LiDAR points over a wider view of Cornell's campus, for the figures only.
-# Run once, in the 25-lidar-drones folder (open 25-lidar-drones.Rproj first):
+# Run once, in the 25-radar-lidar folder (open 25-radar-lidar.Rproj first):
 #   source("tools/fetch_lidar_wide.R")
 # Needs the network and curl. The class does not need it: the students read the 600 m square in data_clean/lidar/.
 # The box: 1.6 x 1.6 km, from Cascadilla Gorge in the south to Fall Creek gorge and Balch Hall in the north,

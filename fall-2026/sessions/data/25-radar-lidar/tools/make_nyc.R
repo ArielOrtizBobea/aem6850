@@ -1,5 +1,5 @@
 # AEM 6850, session 25. Clips the USGS LiDAR point cloud around the Empire State Building and builds three 1 m grids.
-# Run in the 25-lidar-drones folder (open 25-lidar-drones.Rproj first), after tools/fetch_nyc.R:
+# Run in the 25-radar-lidar folder (open 25-radar-lidar.Rproj first), after tools/fetch_nyc.R:
 #   source("tools/make_nyc.R")
 # What it does: reads the EPT nodes from USGS's AWS copy of NY_NewYorkCity (Web Mercator), moves them to
 #   NAD83(2011) / UTM zone 18N (EPSG:6347), clips a 400 x 400 m box centred on the building, builds the ground,

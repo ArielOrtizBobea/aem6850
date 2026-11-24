@@ -3,7 +3,7 @@
 # grids, the Arts Quad lawn
 # Reads: data_clean/lidar/campus.laz (the USGS points, clipped to 600 x 600 m around McGraw Tower)
 # Writes: nothing (data_clean/lidar/campus_dtm.tif, campus_dsm.tif and campus_height.tif hold the same grids)
-# Open 25-lidar-drones.Rproj first, so R starts in the project folder; then
+# Open 25-radar-lidar.Rproj first, so R starts in the project folder; then
 #   source("code/2_lidar.R")
 # Every section matches a slide of the same name. Takes about 10 seconds.
 

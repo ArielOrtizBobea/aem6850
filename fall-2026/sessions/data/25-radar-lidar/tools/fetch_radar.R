@@ -1,5 +1,5 @@
 # AEM 6850, session 25. Downloads the radar-made elevation tile over Ithaca in data/copernicus/, as fetched on 2026-11-23.
-# Run once, in the 25-lidar-drones folder:
+# Run once, in the 25-radar-lidar folder:
 #   source("tools/fetch_radar.R")
 # Needs the network; about 44 MB in all. A file already on disk is never fetched again.
 # The tile is the Copernicus DEM GLO-30 (made from the TanDEM-X radar satellites), 42 to 43 N and 77 to 76 W,

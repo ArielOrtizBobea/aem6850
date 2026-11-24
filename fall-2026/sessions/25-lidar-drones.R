@@ -149,7 +149,7 @@ sapply(c(5, 10), function(k) round(max(extract(aggregate(esb, fact = k, fun = "m
 # Exercise 1 (4 minutes) ----
 # Exercise 1 (4 minutes). McGraw Tower in 5 m and 10 m cells.
 # In 10 m cells McGraw Tower loses most of its height.
-# In the 25-lidar-drones folder, with height and zone as on the slides before
+# In the 25-radar-lidar folder, with height and zone as on the slides before
 # (or run code/3_heights.R first).
 # 1. h5 <- aggregate(height, fact = 5, fun = "mean")      # 5 m cells
 # 2. max(extract(h5, zone)[[2]], na.rm = TRUE)            # the tallest 5 m cell near the tower
@@ -213,7 +213,7 @@ towns$top <- round(100 * exact_extract(top * land * 900, towns, "sum", progress 
 # Exercise 2 (4 minutes) ----
 # Exercise 2 (4 minutes). The view from the ground at McGraw Tower.
 # What you see depends on how high your eye is.
-# In the 25-lidar-drones folder, with dem, tw, land and towns as on the slides before
+# In the 25-radar-lidar folder, with dem, tw, land and towns as on the slides before
 # (or run code/5_views.R up to this exercise).
 # 1. gnd <- viewshed(dem, crds(tw), observer = 1.7, target = 0)
 # 2. The area in view in km2, as on the slide before.
@@ -250,7 +250,7 @@ round(global(ws, "sum", na.rm = TRUE)[[1]] * 900 / 1e6, 1)              # km2
 
 # = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 # Practice ----
-# Practice. Run in the 25-lidar-drones folder after the slides' code has built
+# Practice. Run in the 25-radar-lidar folder after the slides' code has built
 # las, ground, surface, height, g3, dem, towns, slope_pct, steep, tw, land, top, fd and acc.
 
 # Heights

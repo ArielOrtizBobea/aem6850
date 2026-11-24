@@ -1,5 +1,5 @@
 # AEM 6850, session 25. Where public LiDAR exists in the United States: USGS's LiDAR projects on AWS.
-# Run in the 25-lidar-drones folder (open 25-lidar-drones.Rproj first):
+# Run in the 25-radar-lidar folder (open 25-radar-lidar.Rproj first):
 #   source("tools/make_coverage.R")
 # What it does: downloads the index of every project in USGS's public AWS bucket (usgs-lidar-public), kept by
 #   Hobu Inc. on GitHub (hobuinc/usgs-lidar, boundaries/resources.geojson); counts the projects, their points and

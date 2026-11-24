@@ -1,5 +1,5 @@
 # AEM 6850, session 25. Downloads the raw terrain and drone files in data/, as fetched on 2026-11-23.
-# Run once, in the 25-lidar-drones folder:
+# Run once, in the 25-radar-lidar folder:
 #   source("tools/fetch_terrain.R")
 # Needs the network; about 72 MB in all. A file already on disk is never fetched again.
 # The LiDAR point cloud is fetched by its own script, not this one.

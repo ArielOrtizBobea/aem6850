@@ -1,5 +1,5 @@
 # AEM 6850, session 25. Copies the tables of my hail pilot (October 2026) into data_clean/hail/ and logs their numbers.
-# Run in the 25-lidar-drones folder:
+# Run in the 25-radar-lidar folder:
 #   source("tools/make_hail.R")
 # What it does: reads the pilot's county-day and county-month tables and its county outlines, keeps the columns the
 #   slides use, writes them to data_clean/hail/, and logs the numbers quoted on the slides with the code that made them.

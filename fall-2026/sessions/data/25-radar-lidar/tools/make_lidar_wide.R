@@ -1,5 +1,5 @@
 # AEM 6850, session 25. Builds 1 m ground, surface and height grids over a wider view of Cornell's campus, for the figures only.
-# Run in the 25-lidar-drones folder (open 25-lidar-drones.Rproj first), after tools/fetch_lidar_wide.R:
+# Run in the 25-radar-lidar folder (open 25-radar-lidar.Rproj first), after tools/fetch_lidar_wide.R:
 #   source("tools/make_lidar_wide.R")
 # What it does: reads the EPT nodes from USGS's AWS copy (Web Mercator), moves them to UTM 18N (EPSG:6347), clips a
 #   1.6 x 1.6 km box (Cascadilla Gorge to Fall Creek gorge, Libe Slope to Beebe Lake), drops the noise classes,

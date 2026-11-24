@@ -4,7 +4,7 @@
 # Reads: data_clean/terrain/tompkins_dem_utm.tif (USGS's 1 arc-second grid, projected to UTM zone 18N),
 #        data_clean/terrain/tompkins_towns.gpkg (the county's nine towns and the city of Ithaca)
 # Writes: nothing
-# Open 25-lidar-drones.Rproj first, so R starts in the project folder; then
+# Open 25-radar-lidar.Rproj first, so R starts in the project folder; then
 #   source("code/4_slope.R")
 
 # 1). Preliminary ----

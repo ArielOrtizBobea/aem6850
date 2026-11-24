@@ -1,5 +1,5 @@
 # AEM 6850, session 25. Builds the radar elevation grid of Tompkins County and compares it with USGS and LiDAR.
-# Run in the 25-lidar-drones folder, after tools/fetch_radar.R, tools/make_terrain.R and tools/make_lidar.R:
+# Run in the 25-radar-lidar folder, after tools/fetch_radar.R, tools/make_terrain.R and tools/make_lidar.R:
 #   source("tools/make_radar.R")
 # What it does: reads the Copernicus DEM GLO-30 tile (TanDEM-X radar), logs its facts, projects it onto the
 #   30 m grid of tompkins_dem_utm.tif; A. radar minus USGS over the county, before and after a constant offset;

@@ -3,7 +3,7 @@
 # Fall Creek
 # Reads: data_clean/terrain/fallcreek_dem_filled.tif (30 m elevation around Fall Creek, pits filled before class)
 # Writes: nothing
-# Open 25-lidar-drones.Rproj first, so R starts in the project folder; then
+# Open 25-radar-lidar.Rproj first, so R starts in the project folder; then
 #   source("code/6_watershed.R")
 # It loads terra, not lidR: lidR has a watershed() of its own, so the call below names terra's.
 

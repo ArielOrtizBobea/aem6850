@@ -1,6 +1,6 @@
 # AEM 6850, session 25. Downloads two NOAA MRMS radar grids for the radar day 12 June 2022 and crops them to the
 #   seven Plains states of the instructor's hail pilot, so the slides can show the radar data itself.
-# Run once, in the 25-lidar-drones folder:
+# Run once, in the 25-radar-lidar folder:
 #   source("tools/fetch_mrms.R")
 # Needs the network; about 3 MB kept, plus about 20 MB of reflectivity snapshots read once to pick the hour.
 # A file already on disk is never fetched again.

@@ -1,5 +1,5 @@
 # AEM 6850, session 25. Builds the terrain and drone files in data_clean/ and tests the numbers the slides show.
-# Run in the 25-lidar-drones folder, after tools/fetch_terrain.R:
+# Run in the 25-radar-lidar folder, after tools/fetch_terrain.R:
 #   source("tools/make_terrain.R")
 # What it does: crops and projects the 30 m elevation grid of Tompkins County; slope and steep land by town;
 #   what can be seen from McGraw Tower; the land that drains to the Fall Creek gauge; one drone mosaic at three pixel sizes.

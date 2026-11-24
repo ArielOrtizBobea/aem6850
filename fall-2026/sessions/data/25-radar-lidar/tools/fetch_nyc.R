@@ -1,5 +1,5 @@
 # AEM 6850, session 25. Downloads the USGS LiDAR points around a New York City skyscraper, as fetched on 2026-11-23.
-# Run once, in the 25-lidar-drones folder (open 25-lidar-drones.Rproj first):
+# Run once, in the 25-radar-lidar folder (open 25-radar-lidar.Rproj first):
 #   source("tools/fetch_nyc.R")                       # the Empire State Building, 400 x 400 m
 #   Rscript tools/fetch_nyc.R owtc                     # One World Trade Center (the size check only)
 # Needs the network and curl. The class does not need it: data_clean/lidar_nyc/ holds what the slides read.

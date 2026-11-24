@@ -4,7 +4,7 @@
 # Reads: data_clean/lidar/campus_dtm.tif, campus_dsm.tif, campus_height.tif (the grids script 2 builds),
 #        data_clean/lidar_nyc/esb_height.tif (height above ground around the Empire State Building, 1 m)
 # Writes: nothing
-# Open 25-lidar-drones.Rproj first, so R starts in the project folder; then
+# Open 25-radar-lidar.Rproj first, so R starts in the project folder; then
 #   source("code/3_heights.R")
 # It reads the saved grids, so it runs without lidR and without script 2.
 

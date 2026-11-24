@@ -1,5 +1,5 @@
 # AEM 6850, session 25 (Radar & LiDAR). Runs the six scripts in order.
-# Open 25-lidar-drones.Rproj first, so R starts in the project folder; then
+# Open 25-radar-lidar.Rproj first, so R starts in the project folder; then
 #   source("run_everything.R")
 # Each script installs the packages it needs (lidR, terra, sf, exactextractr) if they are missing.
 rm(list = ls())

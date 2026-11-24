@@ -9,7 +9,7 @@
 #        data_clean/hail/ (radar hail, hail reports and crop-insurance hail losses by county, seven Plains
 #          states, April to September 2021 to 2025, from my hail pilot)
 # Writes: nothing
-# Open 25-lidar-drones.Rproj first, so R starts in the project folder; then
+# Open 25-radar-lidar.Rproj first, so R starts in the project folder; then
 #   source("code/1_radar.R")
 # Every section matches a slide of the same name. Takes about 5 seconds.
 

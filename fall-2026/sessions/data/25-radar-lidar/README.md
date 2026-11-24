@@ -1,4 +1,4 @@
-# 25-lidar-drones
+# 25-radar-lidar
 
 The project for AEM 6850, session 25, Radar & LiDAR (Tuesday, November 24,
 2026). A plane times laser pulses, and R turns the returns into grids of heights.
@@ -9,7 +9,7 @@ builds the ground, surface and height grids. It measures McGraw Tower and the
 Empire State Building. Then it computes slope, the view from McGraw Tower and the
 Fall Creek basin from USGS's 30 m elevation grid of Tompkins County.
 
-Open `25-lidar-drones.Rproj` first. R then starts in this folder, and every path
+Open `25-radar-lidar.Rproj` first. R then starts in this folder, and every path
 in the slides and the scripts below is relative to it. Each script installs the
 packages it uses (`lidR`, `terra`, `sf`, `exactextractr`) if they are missing.
 Nobody needs an account, a key or the network: every file was downloaded before
@@ -18,8 +18,8 @@ class.
 ## What is where
 
 ```
-25-lidar-drones/
-  25-lidar-drones.Rproj
+25-radar-lidar/
+  25-radar-lidar.Rproj
   README.md              this file
   run_everything.R       runs the six scripts in order
   code/                  the scripts, numbered in the order the lecture uses them

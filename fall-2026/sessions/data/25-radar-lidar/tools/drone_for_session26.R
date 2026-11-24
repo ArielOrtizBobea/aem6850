@@ -5,7 +5,7 @@
 #        data_clean/drone/caldwell_roads_near_mosaic.gpkg (Census TIGER roads near the mosaic),
 #        data_clean/drone/tiger_offset.csv (the offsets measured before class)
 # Writes: nothing
-# Open 25-lidar-drones.Rproj first, so R starts in the project folder; then
+# Open 25-radar-lidar.Rproj first, so R starts in the project folder; then
 #   source("tools/drone_for_session26.R")
 
 # 1). Preliminary ----

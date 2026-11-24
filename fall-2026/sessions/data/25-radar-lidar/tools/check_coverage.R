@@ -1,5 +1,5 @@
 # AEM 6850, session 25. Does the coverage map tell the truth? A test of USGS's LiDAR footprints against the points.
-# Run in the 25-lidar-drones folder (open 25-lidar-drones.Rproj first):
+# Run in the 25-radar-lidar folder (open 25-radar-lidar.Rproj first):
 #   source("tools/check_coverage.R")
 # What it does:
 #   Test 1. Draws 300 random points on the land of the lower 48 states. For each point inside a project footprint

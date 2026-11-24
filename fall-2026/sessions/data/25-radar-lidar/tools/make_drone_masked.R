@@ -1,5 +1,5 @@
 # AEM 6850, session 25. Writes a copy of the drone mosaic with its black corners set to missing (NA).
-# Run in the 25-lidar-drones folder (open 25-lidar-drones.Rproj first), after tools/fetch_terrain.R:
+# Run in the 25-radar-lidar folder (open 25-radar-lidar.Rproj first), after tools/fetch_terrain.R:
 #   source("tools/make_drone_masked.R")
 # Why: the mosaic as downloaded marks no missing value, so the corners outside the flight read as black pixels
 #   (0 in all three layers). mask() on all 47 million pixels needs several GB of memory, too much for a student
