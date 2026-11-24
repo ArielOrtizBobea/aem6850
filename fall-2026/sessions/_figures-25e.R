@@ -2,8 +2,8 @@
 # Base R, terra, sf and exactextractr; jpeg for the viewer's image layers. Run from fall-2026/sessions:
 #   Rscript _figures-25e.R                    # every block
 #   Rscript _figures-25e.R f37_campus_wide    # setup, then one block (and its DEPS)
-# Writes figures/25-lidar-drones/<block>.png, and the image layers of the interactive viewer
-#   figures/25-lidar-drones/campus_wide.html in figures/25-lidar-drones/campus_wide/.
+# Writes figures/25-radar-lidar/<block>.png, and the image layers of the interactive viewer
+#   figures/25-radar-lidar/campus_wide.html in figures/25-radar-lidar/campus_wide/.
 # Inputs: data/25-radar-lidar/data_clean/lidar_wide/ (made by the project's tools/fetch_lidar_wide.R and
 #   tools/make_lidar_wide.R; not in the class zip) and data_clean/radar/tompkins_copernicus_utm.tif.
 # Landmarks: OpenStreetMap through the Overpass API, 2026-11-24; each object is listed in logs/prep_lidar_wide.txt.
@@ -36,7 +36,7 @@ local({
 
 # ==== BLOCK: setup ====
 suppressPackageStartupMessages({library(terra); library(sf); library(exactextractr)})
-out <- "figures/25-lidar-drones"; dat <- "data/25-radar-lidar"
+out <- "figures/25-radar-lidar"; dat <- "data/25-radar-lidar"
 dir.create(out, showWarnings = FALSE, recursive = TRUE)
 ink <- "#222222"; acc <- "#B31B1B"; grey <- "#666666"; light <- "#E4E2DC"; rule <- "#BBBBBB"
 blue <- "#3A6C9C"; amber <- "#E6A700"; red <- "#C0392B"; teal <- "#2A9D8F"

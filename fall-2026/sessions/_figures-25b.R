@@ -2,7 +2,7 @@
 # Base R, terra, sf and exactextractr. Run from fall-2026/sessions:
 #   Rscript _figures-25b.R              # every block
 #   Rscript _figures-25b.R f16_elevation  # setup, then one block (and its DEPS)
-# Writes figures/25-lidar-drones/<block>.png. Inputs: data/25-radar-lidar/data_clean/terrain/ (the session
+# Writes figures/25-radar-lidar/<block>.png. Inputs: data/25-radar-lidar/data_clean/terrain/ (the session
 # project, after its tools/make_terrain.R has run) and data/usgs_gauge/.
 # Drawn at res 200. A figure W inches wide shown at about 100 * W px on the 1050 x 700 slide
 # keeps its point sizes; every label is 10.5 pt or more at that width.
@@ -34,7 +34,7 @@ local({
 
 # ==== BLOCK: setup ====
 suppressPackageStartupMessages({library(terra); library(sf); library(exactextractr)})
-out <- "figures/25-lidar-drones"; dat <- "data/25-radar-lidar"
+out <- "figures/25-radar-lidar"; dat <- "data/25-radar-lidar"
 dir.create(out, showWarnings = FALSE, recursive = TRUE)
 ink <- "#222222"; acc <- "#B31B1B"; grey <- "#666666"; light <- "#E4E2DC"; rule <- "#BBBBBB"
 blue <- "#3A6C9C"; amber <- "#E6A700"; red <- "#C0392B"; teal <- "#2A9D8F"
