@@ -1,0 +1,190 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cornell campus LiDAR</title>
+<!-- AEM 6850, session 25. USGS LiDAR (flight NY_FingerLakes_1_2020, 13 May 2020) over a 1.6 x 1.6 km box of
+     Cornell's campus, 1 m cells, EPSG:6347, north up. Layers made by _figures-25e.R (block viewer_layers) from
+     data/25-lidar-drones/data_clean/lidar_wide/. Landmarks from OpenStreetMap (logs/prep_lidar_wide.txt).
+     No library and no network request: the page reads only the three images in campus_wide/. -->
+<style>
+  :root { --ink: #222; --rule: #bbb; --acc: #B31B1B; }
+  html, body { margin: 0; padding: 0; height: 100%; background: #fff; color: var(--ink);
+               font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; font-size: 15px; }
+  body { display: flex; flex-direction: column; overflow: hidden; }
+  .bar { display: flex; align-items: center; gap: 8px; padding: 6px 8px; border-bottom: 1px solid var(--rule); flex: none; flex-wrap: wrap; }
+  .bar button { font: inherit; font-size: 15px; padding: 4px 12px; border: 1px solid var(--rule); background: #fff; color: var(--ink);
+                border-radius: 4px; cursor: pointer; }
+  .bar button.on { background: var(--ink); color: #fff; border-color: var(--ink); }
+  .bar .hint { margin-left: auto; font-size: 15px; color: #555; }
+  .map { position: relative; flex: 1; overflow: hidden; background: #fff; cursor: grab; touch-action: none; user-select: none; }
+  .map.drag { cursor: grabbing; }
+  .world { position: absolute; left: 0; top: 0; width: 1600px; height: 1600px; transform-origin: 0 0; }
+  .world img { position: absolute; left: 0; top: 0; width: 1600px; height: 1600px; visibility: hidden; -webkit-user-drag: none; }
+  .world img.on { visibility: visible; }
+  .world.px img { image-rendering: pixelated; }
+  .labels { position: absolute; inset: 0; pointer-events: none; }
+  .lab { position: absolute; white-space: nowrap; font-size: 15px; font-weight: 700; line-height: 1;
+         text-shadow: 0 0 2px #fff, 0 0 2px #fff, 0 0 3px #fff, 0 0 4px #fff, 1px 1px 2px #fff, -1px -1px 2px #fff; }
+  .lab.nature { font-style: italic; color: #123f6b; }
+  .dot { position: absolute; width: 8px; height: 8px; margin: -5px 0 0 -5px; border-radius: 50%; background: #fff; border: 2px solid var(--ink); }
+  .box { position: absolute; background: rgba(255,255,255,0.94); border: 1px solid var(--rule); padding: 6px 8px; font-size: 15px; }
+  .legend { left: 8px; bottom: 8px; padding-right: 14px; }
+  .legend b { display: block; margin-bottom: 5px; }
+  .legend .ramp { display: flex; }
+  .legend .ramp span { width: 30px; height: 14px; }
+  .legend .ticks { position: relative; height: 18px; margin: 2px 10px 0 0; }
+  .legend .ticks span { position: absolute; transform: translateX(-50%); top: 0; }
+  .scale { right: 8px; bottom: 8px; text-align: center; }
+  .scale .rule { height: 6px; background: var(--ink); margin: 4px auto 0; }
+  .north { right: 8px; top: 8px; text-align: center; font-weight: 700; padding: 4px 9px; line-height: 1.1; }
+</style>
+</head>
+<body>
+<div class="bar">
+  <button data-layer="ground" class="on">Ground</button>
+  <button data-layer="surface">Surface</button>
+  <button data-layer="height">Height</button>
+  <button id="reset">Reset</button>
+  <span class="hint">Scroll or pinch to zoom, drag to pan, double click to reset</span>
+</div>
+<div class="map" id="map">
+  <div class="world" id="world">
+    <img data-layer="ground"  class="on" src="campus_wide/ground.jpg"  alt="Ground elevation, hillshaded" draggable="false">
+    <img data-layer="surface" src="campus_wide/surface.jpg" alt="Surface elevation, hillshaded" draggable="false">
+    <img data-layer="height"  src="campus_wide/height.jpg"  alt="Height above ground" draggable="false">
+  </div>
+  <div class="labels" id="labels"></div>
+  <div class="box legend" id="legend"></div>
+  <div class="box scale"><span id="scaletext">500 m</span><div class="rule" id="scalerule"></div></div>
+  <div class="box north">N<br>&#8593;</div>
+</div>
+<script>
+(function () {
+  var SIZE = 1600;                       // image pixels = metres; the west edge is x 377400, the north edge y 4701400 (EPSG:6347)
+  // px, py: image pixel of the OSM position; z: shown from this zoom (1 = full view); side: r = text right of a dot,
+  // c = text centred on the place (areas); dx, dy: screen-pixel nudge of the text
+  var L = [
+    {n: "McGraw Tower",          px: 477,  py: 860,  z: 1,   side: "r"},
+    {n: "Arts Quad",             px: 527,  py: 650,  z: 1,   side: "c"},
+    {n: "Ag Quad",               px: 1059, py: 735,  z: 1,   side: "c", dy: 14},
+    {n: "Warren Hall",           px: 1129, py: 690,  z: 1,   side: "r"},
+    {n: "Beebe Lake",            px: 1190, py: 465,  z: 1,   side: "c", nat: 1},
+    {n: "Fall Creek gorge",      px: 660,  py: 380,  z: 1,   side: "c", nat: 1, dy: -16},
+    {n: "Cascadilla Gorge",      px: 434,  py: 1396, z: 1,   side: "c", nat: 1},
+    {n: "Libe Slope",            px: 359,  py: 764,  z: 1.8, side: "c", nat: 1},
+    {n: "Suspension Bridge",     px: 402,  py: 361,  z: 1.8, side: "r"},
+    {n: "Triphammer Falls",      px: 926,  py: 393,  z: 1.8, side: "r", nat: 1},
+    {n: "Bradfield Hall",        px: 1238, py: 840,  z: 1.8, side: "r"},
+    {n: "Mann Library",          px: 1216, py: 733,  z: 1.8, side: "r"},
+    {n: "Barton Hall",           px: 827,  py: 1048, z: 1.8, side: "r"},
+    {n: "Bailey Hall",           px: 885,  py: 680,  z: 1.8, side: "r"},
+    {n: "Baker Laboratory",      px: 751,  py: 545,  z: 1.8, side: "r"},
+    {n: "Willard Straight Hall", px: 425,  py: 971,  z: 1.8, side: "r"},
+    {n: "Schoellkopf Field",     px: 1001, py: 1256, z: 1.8, side: "c"},
+    {n: "Balch Hall",            px: 929,  py: 222,  z: 1.8, side: "r"},
+    {n: "Heating plant chimney", px: 1304, py: 1396, z: 1.8, side: "r"}
+  ];
+  var LEG = {
+    ground: {t: "Ground elevation (m)", br: [150,160,170,180,190,200,210,220,230,240,250,260,270,280,290],
+             col: ["#201158","#00305C","#004660","#00595F","#006A58","#00794A","#368633","#729004","#A29700","#CF9B35","#EFA07A","#FFA9B0","#FFB8DB","#FFCEF4"],
+             show: [160, 200, 240, 280], w: 15},
+    surface: {t: "Highest return in each 1 m cell", br: null},
+    height: {t: "Height above ground (m)", br: [2,5,10,15,20,30,40,70],
+             col: ["#FCFFDD","#D7F4CF","#9ADCBB","#18BDB0","#0095AF","#005D9E","#26185F"], show: [2,5,10,15,20,30,40,70], w: 29}
+  };
+  var map = document.getElementById("map"), world = document.getElementById("world"), labs = document.getElementById("labels");
+  var s0 = 1, s = 1, tx = 0, ty = 0, layer = "ground";
+
+  L.forEach(function (d) {
+    d.el = document.createElement("div"); d.el.className = "lab" + (d.nat ? " nature" : ""); d.el.textContent = d.n;
+    labs.appendChild(d.el);
+    if (d.side === "r") { d.dot = document.createElement("div"); d.dot.className = "dot"; labs.appendChild(d.dot); }
+  });
+
+  function legend() {
+    var g = LEG[layer], el = document.getElementById("legend"), h = "<b>" + g.t + "</b>";
+    if (g.br) {
+      var n = g.col.length, w = g.w;
+      h += '<div class="ramp">' + g.col.map(function (c) { return '<span style="width:' + w + 'px;background:' + c + '"></span>'; }).join("") + "</div>";
+      h += '<div class="ticks" style="width:' + (n * w) + 'px">' + g.br.map(function (b, i) {
+        return g.show.indexOf(b) >= 0 ? '<span style="left:' + (i * w) + 'px">' + b + "</span>" : ""; }).join("") + "</div>";
+    }
+    el.innerHTML = h;
+  }
+  function nice(m) { var p = Math.pow(10, Math.floor(Math.log10(m))), f = m / p; return (f < 1.5 ? 1 : f < 3.5 ? 2 : f < 7.5 ? 5 : 10) * p; }
+  function clamp() {
+    var W = map.clientWidth, H = map.clientHeight, w = SIZE * s, m = 60;
+    tx = Math.min(W - m, Math.max(m - w, tx)); ty = Math.min(H - m, Math.max(m - w, ty));
+  }
+  function render() {
+    clamp();
+    world.style.transform = "translate(" + tx + "px," + ty + "px) scale(" + s + ")";
+    world.classList.toggle("px", s >= 4);
+    var z = s / s0;
+    L.forEach(function (d) {
+      var x = d.px * s + tx, y = d.py * s + ty, vis = z >= d.z - 1e-6;
+      d.el.style.display = vis ? "" : "none"; if (d.dot) d.dot.style.display = vis ? "" : "none";
+      if (!vis) return;
+      if (d.dot) { d.dot.style.left = x + "px"; d.dot.style.top = y + "px"; }
+      var r = d.el.getBoundingClientRect();
+      var lx = d.side === "r" ? x + 9 : x - r.width / 2, ly = y - r.height / 2;
+      d.el.style.left = (lx + (d.dx || 0)) + "px"; d.el.style.top = (ly + (d.dy || 0)) + "px";
+    });
+    var m = nice(110 / s);
+    document.getElementById("scaletext").textContent = m >= 1000 ? (m / 1000) + " km" : m + " m";
+    document.getElementById("scalerule").style.width = (m * s) + "px";
+  }
+  function reset() {
+    var W = map.clientWidth, H = map.clientHeight;
+    s0 = Math.min(W, H) / SIZE; s = s0; tx = (W - SIZE * s) / 2; ty = (H - SIZE * s) / 2; render();
+  }
+  function zoomAt(f, cx, cy) {
+    var ns = Math.min(12, Math.max(s0 * 0.8, s * f)); f = ns / s;
+    tx = cx - (cx - tx) * f; ty = cy - (cy - ty) * f; s = ns; render();
+  }
+  function setLayer(k) {
+    layer = k;
+    document.querySelectorAll(".bar button[data-layer]").forEach(function (b) { b.classList.toggle("on", b.dataset.layer === k); });
+    world.querySelectorAll("img").forEach(function (im) { im.classList.toggle("on", im.dataset.layer === k); });
+    legend();
+  }
+  document.querySelectorAll(".bar button[data-layer]").forEach(function (b) { b.addEventListener("click", function () { setLayer(b.dataset.layer); }); });
+  document.getElementById("reset").addEventListener("click", reset);
+  map.addEventListener("dblclick", function (e) { e.preventDefault(); reset(); });
+  map.addEventListener("wheel", function (e) {
+    e.preventDefault();
+    var r = map.getBoundingClientRect(), dy = e.deltaMode === 1 ? e.deltaY * 16 : e.deltaY;
+    zoomAt(Math.exp(-dy * 0.0015), e.clientX - r.left, e.clientY - r.top);
+  }, {passive: false});
+  // drag with one pointer, pinch with two
+  var P = {}, last = null;
+  function pts() { return Object.keys(P).map(function (k) { return P[k]; }); }
+  map.addEventListener("pointerdown", function (e) {
+    map.setPointerCapture(e.pointerId); var r = map.getBoundingClientRect();
+    P[e.pointerId] = {x: e.clientX - r.left, y: e.clientY - r.top}; last = null; map.classList.add("drag");
+  });
+  map.addEventListener("pointermove", function (e) {
+    if (!P[e.pointerId]) return;
+    var r = map.getBoundingClientRect(); P[e.pointerId] = {x: e.clientX - r.left, y: e.clientY - r.top};
+    var p = pts(), cur;
+    if (p.length === 1) cur = {x: p[0].x, y: p[0].y, d: 0};
+    else { var a = p[0], b = p[1]; cur = {x: (a.x + b.x) / 2, y: (a.y + b.y) / 2, d: Math.hypot(a.x - b.x, a.y - b.y)}; }
+    if (last && last.n === p.length) {
+      tx += cur.x - last.x; ty += cur.y - last.y;
+      if (p.length > 1 && last.d > 0) zoomAt(cur.d / last.d, cur.x, cur.y); else render();
+    }
+    cur.n = p.length; last = cur;
+  });
+  function up(e) { delete P[e.pointerId]; last = null; if (!pts().length) map.classList.remove("drag"); }
+  map.addEventListener("pointerup", up); map.addEventListener("pointercancel", up);
+  window.addEventListener("resize", function () {          // keep the reader's zoom; refit only from the full view
+    var full = Math.abs(s - s0) < 1e-9, W = map.clientWidth, H = map.clientHeight;
+    if (full) reset(); else { s0 = Math.min(W, H) / SIZE; render(); }
+  });
+  setLayer("ground"); reset();
+})();
+</script>
+</body>
+</html>
