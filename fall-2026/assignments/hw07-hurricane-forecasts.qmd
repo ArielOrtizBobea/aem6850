@@ -1,0 +1,270 @@
+---
+title: "HW7 · Have hurricane forecasts become more accurate?"
+subtitle: "Out Thu Nov 26 · due Sun Dec 6, 11:59 pm"
+pagetitle: "AEM 6850 · HW7"
+---
+
+**AI assistance is recommended on this one.** Use it, disclose it, and
+write the note yourself.
+
+---
+
+## The question
+
+Hurricane Katrina reached Louisiana on August 29, 2005. It killed 1,392
+people and caused 125 billion dollars of damage. Sixteen years later to
+the day, Hurricane Ida reached the same coast with winds of 240 km/h.
+
+The National Hurricane Center forecasts every Atlantic storm every six
+hours. A forecast says where the centre of the storm will be and how
+strong its wind will be, up to five days ahead. Around the forecast track
+the Center draws a cone. The cone is as wide as the Center's own errors
+of the five years before, so the storm stays inside it about two times
+out of three.
+
+People act on these forecasts. They leave, protect their homes and move
+goods, and a wrong forecast costs money and lives. Martinez
+([Econometrics, 2020](https://doi.org/10.3390/econometrics8020018)) finds
+that hurricanes whose landfall was forecast with a larger error caused
+more damage. Molina & Rudik
+([NBER Working Paper 32548, 2024](https://doi.org/10.3386/w32548)) find
+that better forecasts since 2007 cut the cost of a hurricane by 23%,
+about 2 billion dollars a storm.
+
+Have the forecasts become more accurate? In this homework you measure the
+error of every official forecast from 1970 to 2025. Then you compare two
+forecasts made on August 26, three days before the storm reached
+Louisiana: Katrina's in 2005 and Ida's in 2021.
+
+This is a spatial problem: distances between points, a polygon built from
+circles, a point inside a polygon, and a grid summed inside a polygon.
+
+## Target image
+
+![Target image](https://arielortizbobea.github.io/assets/data/hw7_target.png)
+
+## Data
+
+All of it is public and needs no key.
+
+1. **Forecasts, from the National Hurricane Center (one file per
+   storm).** A file holds every forecast made for a storm, by the Center
+   and by each computer model. Read
+   [the notes on the archive](https://ftp.nhc.noaa.gov/atcf/README) and
+   [what each field of a line is](https://science.nrlmry.navy.mil/atcf/docs/database/new/abdeck.txt).
+   There is one folder per year, from 1970 to 2025. The Atlantic files
+   start with `aal`. The second address is Katrina, storm 12 of 2005,
+   which the best track calls `AL122005`.
+
+   ```text
+   https://ftp.nhc.noaa.gov/atcf/archive/2005/
+   https://ftp.nhc.noaa.gov/atcf/archive/2005/aal122005.dat.gz
+   ```
+
+   Keep the lines of the technique `OFCL`, the Center's own forecast. A
+   file repeats a forecast on several lines: keep one line for each
+   storm, start of the forecast and hours ahead. A latitude of 0 means no
+   position was forecast, and a wind of 0 means no wind was forecast.
+
+2. **Best track, from the National Hurricane Center (one text file).**
+   The Center's final record of each storm: its position, its status and
+   its maximum sustained wind every six hours. Read
+   [how the file is laid out](https://www.nhc.noaa.gov/data/hurdat/hurdat2-format-atl-1851-2021.pdf).
+
+   ```text
+   https://www.nhc.noaa.gov/data/hurdat/hurdat2-1851-2025-092326.txt
+   ```
+
+3. **A cone the Center published (a shapefile in a zip).** The cone of
+   Hurricane Milton, advisory 12, made public on October 7, 2024 at
+   10 pm CDT. The cone is the file `al142024-012_5day_pgn.shp`. Read
+   [how the Center defines the cone](https://www.nhc.noaa.gov/aboutcone.shtml).
+
+   ```text
+   https://www.nhc.noaa.gov/gis/forecast/archive/al142024_5day_012.zip
+   ```
+
+4. **Population, from the Global Human Settlement Layer (tiles).** The
+   number of people in each cell of 30 arc-seconds, about 1 km, every
+   five years
+   ([description](https://human-settlement.emergency.copernicus.eu/ghs_pop2023.php)).
+   A tile covers 10 by 10 degrees. You need rows 6 and 7 and columns 9 to
+   11 of 2005, and rows 6 to 8 and the same columns of 2020. This is row
+   7, column 10 of 2020; for 2005, write `E2005` in place of `E2020` in
+   both places. The server is slow: raise R's time limit for a download
+   with `options(timeout = 900)`.
+
+   ```text
+   https://jeodpp.jrc.ec.europa.eu/ftp/jrc-opendata/GHSL/GHS_POP_GLOBE_R2023A/GHS_POP_E2020_GLOBE_R2023A_4326_30ss/V1-0/tiles/GHS_POP_E2020_GLOBE_R2023A_4326_30ss_V1_0_R7_C10.zip
+   ```
+
+5. **Map layers.**
+
+   The states, from the Census Bureau
+   ([description](https://www.census.gov/geographies/mapping-files/time-series/geo/cartographic-boundary.html)):
+
+   ```text
+   https://www2.census.gov/geo/tiger/GENZ2023/shp/cb_2023_us_state_20m.zip
+   ```
+
+   The land, from Natural Earth
+   ([description](https://www.naturalearthdata.com/downloads/50m-physical-vectors/50m-land/)):
+
+   ```text
+   https://naciscdn.org/naturalearth/50m/physical/ne_50m_land.zip
+   ```
+
+## The errors
+
+- Compare each forecast position with the best track at the time the
+  forecast was for: its start plus its hours. A forecast belongs to the
+  year it starts in.
+- The **distance error** is the distance between the forecast position
+  and the actual one, in km, along the Earth's surface (`st_distance()`
+  on longitude and latitude).
+- The **wind speed error** is the difference between the forecast wind
+  and the actual one, without its sign, in km/h. A knot is 1.852 km/h.
+  The archive has wind forecasts from 1990.
+- Count a forecast when the best track calls the storm `TS`, `SS` or `HU`
+  both at the start of the forecast and at the time it was for.
+- Panels C and D show a five-year average at 24, 48 and 72 hours: for
+  each year, the average over all the forecasts of that year, the two
+  years before and the two years after. At both ends of the series, use
+  the years there are.
+- For the forecasts of 2005 alone, my average distance error at 72 hours
+  is 278.0 km, over 242 forecasts. For 2021 alone it is 113.8 km, over
+  138 forecasts.
+
+## The cones
+
+Build each cone yourself. The Center's archive of cones starts in 2008,
+after Katrina.
+
+- **Radius.** For a storm of year *y*, take the forecasts of the five
+  years before *y*. The radius at a lead time is the distance error that
+  two-thirds of them stayed under (the 2/3 quantile). For the radii, also
+  count the forecasts where the storm was a depression, `TD` or `SD`, at
+  either time. The radius at the start of a forecast is 30 km (16
+  nautical miles).
+- **Shape.** Take the forecast positions at 0, 12, 24, 36, 48 and 72
+  hours. Fill in every hour between them: the position along a smooth
+  curve through the six positions, the radius along a straight line
+  between lead times. Draw a circle each hour. The cone is the area the
+  circles sweep. Work on a flat map in metres centred on the forecast. I
+  used a natural spline and an azimuthal equidistant projection.
+- **Check.** Build the cone of Milton's forecast that starts on October
+  8, 2024 at 00:00 UTC (storm 14 of 2024), with the positions at 96 and
+  120 hours added, and compare it with the Center's shapefile. The
+  overlap is the area both cones cover, divided by the area either
+  covers. It must be above 95%. Mine is 98.6%.
+- My radii at 24, 48 and 72 hours are 144, 267 and 386 km for 2005, and
+  73, 127 and 189 km for 2021.
+
+## The two forecasts
+
+- **Katrina**, storm 12 of 2005: the forecast that starts on August 26 at
+  12:00 UTC.
+- **Ida**, storm 9 of 2021: the forecast that starts on August 26 at
+  18:00 UTC.
+- For each, after 24, 48 and 72 hours: the distance error, the wind speed
+  error, and whether the storm was inside the cone.
+- For each, the **US residents inside the cone**: the sum of the
+  population grid over the part of the cone inside the lower 48 states
+  of the Census file (all states but Alaska, Hawaii and Puerto Rico).
+  Use the grid of 2005 for Katrina and of 2020 for Ida.
+
+## How long it took me
+
+The first run, on a MacBook Pro with an M2 Max chip:
+
+| Step | Minutes | Downloaded |
+|:--|--:|--:|
+| Download the 762 forecast files | about 6 | 339 MB |
+| Read them and keep the official forecasts | 2 | |
+| Download the best track and measure the errors | under 1 | 7 MB |
+| Build the cones and check Milton's | under 1 | |
+| Download the population tiles and count the residents | 1 | 69 MB |
+| Draw the figure | under 1 | |
+| **Total** | **about 10** | **415 MB** |
+
+Save each file you download. A second run then takes about two minutes.
+
+## Output
+
+- `figures/hw7_target.png`, about 14 × 14.4 inches at 200 dpi.
+- `data_clean/storms.csv`: one row per storm and day, six rows, with
+  `distance_km`, `wind_error_kmh`, `radius_km` and `inside_cone`.
+- `data_clean/yearly_errors.csv`: one row per year and lead time, with
+  the number of forecasts, the average of each error for that year and
+  its five-year average.
+- `NOTES.md`: the number of forecasts at each step, the overlap of your
+  cone of Milton with the Center's, the numbers of the two tables, your
+  answer to the question below, and an AI disclosure (each tool with its
+  model and version, what you used it for, what you checked).
+
+## What the figure says
+
+After three days, Ida's forecast was 33 km off and Katrina's 319 km.
+Over the three days, Ida's wind speed errors were as large as Katrina's.
+In `NOTES.md`, say in two or three sentences what panels C and D show
+about each error since 1990.
+
+## Figure rules
+
+- The figure has one title, a dark background and one line of sources at
+  the bottom. Titles, labels and colours are those of the target.
+- **Panels A and B**, the same area at the same scale: longitude -96.5
+  to -76, latitude 15.8 to 34.4. Behind each map, the people per km² in
+  2020 in four classes (from 1, 10, 100 and 1,000) and the sea in blue.
+  For the density, add up the people of 3 by 3 cells and divide by their
+  area. On each map: the cone and the forecast track to 72 hours, the
+  actual track from the start of the forecast to 78 hours later, and a
+  bar from the forecast position to the actual one after 1, 2 and 3
+  days. The days, the start of the forecast, the landfall in Louisiana
+  and New Orleans are labelled. Map A has two keys and both maps have a
+  scale.
+- **Under each map**, a table: the distance error and the wind speed
+  error after 1, 2 and 3 days, and the US residents inside the cone.
+- **Panels C and D**, one line per lead time, labelled at its end, with
+  the two forecasts marked. Panel D has the years of panel C: its lines
+  start in 1990 and the years before are shaded.
+- C sits under A and D under B, with the same left and right edges.
+
+## Commits
+
+Commit each step when it works. A healthy history for a project like
+this has a series of commits. For example:
+
+1. The project organized: folders, `.gitignore`, `code/run_everything.R`.
+2. The code that gets the data: forecasts and best track.
+3. The code that measures the errors.
+4. The cones and the check against the Center's.
+5. The residents inside each cone.
+6. Panels A and B, with their tables.
+7. Panels C and D.
+8. A last pass that cleans up the code.
+
+This order is just an example. You can adopt your own workflow.
+
+## How to submit
+
+Your repository is **`hw7-<your github username>`** in the course
+organization. Put the code in `code/`, with `code/run_everything.R`
+running it all, and paths relative to the project root. Push the code,
+the two tables, the figure, `NOTES.md`, and the files your figure script
+reads (the cones, the tracks and the map layers, under 25 MB in all). The
+grader downloads nothing, so the script that draws the figure must run
+from a fresh clone. The grader uses the last commit pushed before the
+deadline.
+
+## AI on this one
+
+Recommended. Ask for the script rather than the answer, check what it
+gives you, and disclose in `NOTES.md` each tool with its model and
+version, what you used it for, and what you checked. Undisclosed use is
+treated as an integrity violation.
+
+## Rubric
+
+The course rubric, on the [Homework page](../assignments.qmd#rubric):
+five dimensions, three points each.
